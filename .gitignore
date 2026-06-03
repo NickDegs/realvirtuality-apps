@@ -27,3 +27,12 @@ uretkenlik/
 podcast/
 bloc-kings-rn/
 shared/
+# kredensiyeller — ASLA yükleme
+*service-account*.json
+*-admin.json
+*.iam.gserviceaccount*
+google-play*.json
+GOOGLE-PLAY-ERISIM.md
+*.p8
+*.p12
+*.mobileprovision
