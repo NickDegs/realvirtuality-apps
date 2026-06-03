@@ -1,0 +1,10 @@
+{
+  "appId": "com.nickdegs.tarifler",
+  "appName": "Tarifler",
+  "webDir": "www",
+  "backgroundColor": "#0d0906",
+  "plugins": {
+    "SplashScreen": {"backgroundColor":"#0d0906","showSpinner":false,"launchAutoHide":true},
+    "StatusBar": {"style":"DARK","backgroundColor":"#0d0906"}
+  }
+}
