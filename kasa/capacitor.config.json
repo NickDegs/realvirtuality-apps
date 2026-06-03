@@ -1,0 +1,10 @@
+{
+  "appId": "com.nickdegs.kasa",
+  "appName": "Şifre Kasası",
+  "webDir": "www",
+  "backgroundColor": "#0a0608",
+  "plugins": {
+    "SplashScreen": {"backgroundColor":"#0a0608","showSpinner":false,"launchAutoHide":true},
+    "StatusBar": {"style":"DARK","backgroundColor":"#0a0608"}
+  }
+}

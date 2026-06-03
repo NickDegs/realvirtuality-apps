@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Bütçe & Harcama</title>
+<style>
+:root{--accent:#10b981;--exp:#f87171;--bg0:#05100c;--txt:#eafff6;--mut:#8fb8a8;--glass:rgba(255,255,255,.06);--glass-bd:rgba(255,255,255,.13);--radius:20px;--safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",system-ui,sans-serif;background:var(--bg0);color:var(--txt);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+.bgfx{position:fixed;inset:0;z-index:-2;overflow:hidden}
+.bgfx::before,.bgfx::after{content:"";position:absolute;width:70vw;height:70vw;border-radius:50%;filter:blur(85px);opacity:.32}
+.bgfx::before{background:var(--accent);top:-22vw;left:-16vw}.bgfx::after{background:#22d3ee;bottom:-26vw;right:-20vw}
+.app{max-width:680px;margin:0 auto;padding:var(--safe-top) 16px calc(30px + var(--safe-bot))}
+header{padding:14px 0 4px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:21px;background:linear-gradient(135deg,var(--accent),#22d3ee)}
+.brand .nm{font-size:15px;font-weight:600}
+.iconbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--glass-bd);background:var(--glass);color:var(--txt);font-size:16px;cursor:pointer}
+h1{font-size:26px;font-weight:800;letter-spacing:-.8px;padding:6px 0 2px}
+.hint{color:var(--mut);font-size:13px;margin-bottom:14px}
+.bal{background:var(--glass);border:1px solid var(--glass-bd);border-radius:var(--radius);padding:20px;text-align:center;margin-bottom:12px;backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%)}
+.bal .lbl{color:var(--mut);font-size:13px}
+.bal .amt{font-size:36px;font-weight:850;margin:4px 0;letter-spacing:-1px}
+.bal .two{display:flex;justify-content:space-around;margin-top:12px;font-size:14px}
+.bal .inc{color:var(--accent)}.bal .ex{color:var(--exp)}
+.add{display:flex;gap:8px;margin:12px 0}
+.add button{flex:1;padding:13px;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer}
+.add .bi{background:linear-gradient(135deg,var(--accent),#22d3ee);color:#05100c}
+.add .be{background:rgba(248,113,113,.18);border:1px solid rgba(248,113,113,.4);color:var(--exp)}
+.bars{margin:10px 0 16px}
+.bar{margin-bottom:9px}
+.bar .t{display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px}
+.bar .track{height:8px;background:var(--glass);border-radius:5px;overflow:hidden}
+.bar .fill{height:100%;background:linear-gradient(90deg,var(--accent),#22d3ee);border-radius:5px}
+.item{background:var(--glass);border:1px solid var(--glass-bd);border-radius:14px;padding:13px 15px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.item .em{font-size:20px}.item .mid{flex:1}.item .cat{font-size:15px;font-weight:600}.item .nt{font-size:12px;color:var(--mut)}
+.item .val{font-weight:700}.item .val.p{color:var(--accent)}.item .val.n{color:var(--exp)}
+.item .x{color:var(--exp);opacity:.5;cursor:pointer;font-size:16px}
+.empty{text-align:center;color:var(--mut);font-size:14px;padding:36px 10px}
+input,select{width:100%;background:var(--glass);border:1px solid var(--glass-bd);border-radius:14px;color:var(--txt);font-size:15px;padding:13px;margin-bottom:10px}
+.btn{width:100%;padding:14px;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--accent),#22d3ee);color:#05100c}
+.btn.sec{background:var(--glass);border:1px solid var(--glass-bd);color:var(--txt);margin-top:8px}
+.card{background:var(--glass);border:1px solid var(--glass-bd);border-radius:var(--radius);padding:16px;backdrop-filter:blur(30px)}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:.25s;z-index:40}
+.sheet-bg.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;transform:translateY(110%);transition:transform .3s cubic-bezier(.2,.9,.2,1);background:rgba(10,28,22,.9);backdrop-filter:blur(40px);border-top:1px solid var(--glass-bd);border-radius:28px 28px 0 0;padding:10px 16px calc(20px + var(--safe-bot));max-width:680px;margin:0 auto}
+.sheet.on{transform:translateY(0)}.grip{width:38px;height:5px;border-radius:3px;background:rgba(255,255,255,.25);margin:8px auto 14px}
+.langs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lang{padding:13px;border-radius:14px;background:var(--glass);border:1px solid var(--glass-bd);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:9px}
+.lang.sel{border-color:var(--accent);background:rgba(16,185,129,.2)}
+</style>
+</head>
+<body>
+<div class="bgfx"></div>
+<div class="app">
+  <header><div class="brand"><div class="ic">💸</div><div class="nm">NickDegs</div></div>
+  <button class="iconbtn" onclick="openLang()">🌐</button></header>
+  <h1 id="h1"></h1>
+  <div class="hint" id="hint"></div>
+  <div id="body"></div>
+</div>
+<div class="sheet-bg" id="sheetBg" onclick="closeLang()"></div>
+<div class="sheet" id="sheet"><div class="grip"></div><h3 id="langTitle" style="font-size:18px;font-weight:700;margin-bottom:12px"></h3><div class="langs" id="langGrid"></div></div>
+
+<script>
+const T={
+ tr:{title:["Paranı takip et","Bütçe & Harcama"],off:"Veri telefonda · çevrimdışı",bal:"Bakiye",inc:"Gelir",exp:"Gider",
+   addI:"+ Gelir",addE:"− Gider",amount:"Tutar",cat:"Kategori",note:"Not (isteğe bağlı)",save:"Kaydet",cancel:"Vazgeç",empty:"Henüz kayıt yok",breakdown:"Kategori dağılımı",lang:"Dil seç",cur:"₺",
+   cats:{maas:"Maaş",ek:"Ek gelir",market:"Market",fatura:"Fatura",ulasim:"Ulaşım",yemek:"Yemek",eglence:"Eğlence",saglik:"Sağlık",diger:"Diğer"}},
+ en:{title:["Track your money","Budget & Expenses"],off:"Data on your phone · offline",bal:"Balance",inc:"Income",exp:"Expense",
+   addI:"+ Income",addE:"− Expense",amount:"Amount",cat:"Category",note:"Note (optional)",save:"Save",cancel:"Cancel",empty:"No records yet",breakdown:"By category",lang:"Language",cur:"$",
+   cats:{maas:"Salary",ek:"Extra income",market:"Groceries",fatura:"Bills",ulasim:"Transport",yemek:"Food",eglence:"Fun",saglik:"Health",diger:"Other"}},
+ es:{title:["Controla tu dinero","Presupuesto"],off:"Datos en tu teléfono · sin conexión",bal:"Saldo",inc:"Ingreso",exp:"Gasto",addI:"+ Ingreso",addE:"− Gasto",amount:"Importe",cat:"Categoría",note:"Nota",save:"Guardar",cancel:"Cancelar",empty:"Sin registros",breakdown:"Por categoría",lang:"Idioma",cur:"€",cats:{maas:"Salario",ek:"Extra",market:"Comida",fatura:"Facturas",ulasim:"Transporte",yemek:"Restaurante",eglence:"Ocio",saglik:"Salud",diger:"Otro"}},
+ zh:{title:["管理你的钱","预算与支出"],off:"数据在手机 · 离线",bal:"余额",inc:"收入",exp:"支出",addI:"+ 收入",addE:"− 支出",amount:"金额",cat:"类别",note:"备注",save:"保存",cancel:"取消",empty:"暂无记录",breakdown:"按类别",lang:"语言",cur:"¥",cats:{maas:"工资",ek:"额外收入",market:"杂货",fatura:"账单",ulasim:"交通",yemek:"餐饮",eglence:"娱乐",saglik:"健康",diger:"其他"}},
+ ru:{title:["Следи за деньгами","Бюджет"],off:"Данные на телефоне · офлайн",bal:"Баланс",inc:"Доход",exp:"Расход",addI:"+ Доход",addE:"− Расход",amount:"Сумма",cat:"Категория",note:"Заметка",save:"Сохранить",cancel:"Отмена",empty:"Нет записей",breakdown:"По категориям",lang:"Язык",cur:"₽",cats:{maas:"Зарплата",ek:"Доп. доход",market:"Продукты",fatura:"Счета",ulasim:"Транспорт",yemek:"Еда",eglence:"Досуг",saglik:"Здоровье",diger:"Другое"}},
+ de:{title:["Behalte dein Geld im Blick","Budget"],off:"Daten am Gerät · offline",bal:"Kontostand",inc:"Einnahme",exp:"Ausgabe",addI:"+ Einnahme",addE:"− Ausgabe",amount:"Betrag",cat:"Kategorie",note:"Notiz",save:"Speichern",cancel:"Abbrechen",empty:"Keine Einträge",breakdown:"Nach Kategorie",lang:"Sprache",cur:"€",cats:{maas:"Gehalt",ek:"Extra",market:"Lebensmittel",fatura:"Rechnungen",ulasim:"Transport",yemek:"Essen",eglence:"Freizeit",saglik:"Gesundheit",diger:"Sonstiges"}},
+ fr:{title:["Suis ton argent","Budget"],off:"Données sur l'appareil · hors ligne",bal:"Solde",inc:"Revenu",exp:"Dépense",addI:"+ Revenu",addE:"− Dépense",amount:"Montant",cat:"Catégorie",note:"Note",save:"Enregistrer",cancel:"Annuler",empty:"Aucun enregistrement",breakdown:"Par catégorie",lang:"Langue",cur:"€",cats:{maas:"Salaire",ek:"Extra",market:"Courses",fatura:"Factures",ulasim:"Transport",yemek:"Repas",eglence:"Loisirs",saglik:"Santé",diger:"Autre"}},
+ it:{title:["Tieni d'occhio i soldi","Budget"],off:"Dati sul telefono · offline",bal:"Saldo",inc:"Entrata",exp:"Spesa",addI:"+ Entrata",addE:"− Spesa",amount:"Importo",cat:"Categoria",note:"Nota",save:"Salva",cancel:"Annulla",empty:"Nessun record",breakdown:"Per categoria",lang:"Lingua",cur:"€",cats:{maas:"Stipendio",ek:"Extra",market:"Spesa",fatura:"Bollette",ulasim:"Trasporti",yemek:"Cibo",eglence:"Svago",saglik:"Salute",diger:"Altro"}}
+};
+const FLAGS={tr:"🇹🇷",en:"🇬🇧",es:"🇪🇸",zh:"🇨🇳",ru:"🇷🇺",de:"🇩🇪",fr:"🇫🇷",it:"🇮🇹"},NAMES={tr:"Türkçe",en:"English",es:"Español",zh:"中文",ru:"Русский",de:"Deutsch",fr:"Français",it:"Italiano"};
+const CATEMO={maas:"💼",ek:"➕",market:"🛒",fatura:"🧾",ulasim:"🚌",yemek:"🍽️",eglence:"🎮",saglik:"💊",diger:"📦"};
+const INC_CATS=["maas","ek","diger"], EXP_CATS=["market","fatura","ulasim","yemek","eglence","saglik","diger"];
+let LANG=localStorage.getItem("lang")||(navigator.language||"tr").slice(0,2); if(!T[LANG])LANG="en";
+const t=k=>T[LANG][k];
+let items=JSON.parse(localStorage.getItem("budget")||"[]");
+const save=()=>localStorage.setItem("budget",JSON.stringify(items));
+const fmt=n=>t("cur")+n.toLocaleString(undefined,{maximumFractionDigits:2});
+const esc=s=>(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function render(){
+  document.documentElement.lang=LANG;
+  const m=t("title");
+  document.getElementById("h1").textContent=m[0];
+  document.getElementById("hint").textContent=m[1]+" · "+t("off");
+  const inc=items.filter(i=>i.type==="i").reduce((a,b)=>a+b.amt,0);
+  const exp=items.filter(i=>i.type==="e").reduce((a,b)=>a+b.amt,0);
+  const bal=inc-exp;
+  let h=`<div class="bal"><div class="lbl">${t("bal")}</div><div class="amt" style="color:${bal>=0?'var(--accent)':'var(--exp)'}">${fmt(bal)}</div>
+    <div class="two"><span class="inc">↑ ${t("inc")} ${fmt(inc)}</span><span class="ex">↓ ${t("exp")} ${fmt(exp)}</span></div></div>
+    <div class="add"><button class="bi" onclick="showAdd('i')">${t("addI")}</button><button class="be" onclick="showAdd('e')">${t("addE")}</button></div>`;
+  // kategori dağılımı (giderler)
+  const byCat={}; items.filter(i=>i.type==="e").forEach(i=>byCat[i.cat]=(byCat[i.cat]||0)+i.amt);
+  const cats=Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+  if(cats.length){
+    const max=Math.max(...cats.map(c=>c[1]));
+    h+=`<div class="hint" style="margin:6px 0 8px">${t("breakdown")}</div><div class="bars">`;
+    cats.forEach(([c,v])=>{h+=`<div class="bar"><div class="t"><span>${CATEMO[c]||"📦"} ${t("cats")[c]||c}</span><span>${fmt(v)}</span></div><div class="track"><div class="fill" style="width:${Math.round(v/max*100)}%"></div></div></div>`;});
+    h+=`</div>`;
+  }
+  // liste
+  if(!items.length) h+=`<div class="empty">${t("empty")}</div>`;
+  else h+=items.map((i,idx)=>`<div class="item"><span class="em">${CATEMO[i.cat]||"📦"}</span>
+    <div class="mid"><div class="cat">${t("cats")[i.cat]||i.cat}</div>${i.note?`<div class="nt">${esc(i.note)}</div>`:""}</div>
+    <span class="val ${i.type==='i'?'p':'n'}">${i.type==='i'?'+':'−'}${fmt(i.amt)}</span>
+    <span class="x" onclick="rm(${idx})">✕</span></div>`).join("");
+  document.getElementById("body").innerHTML=h;
+}
+function showAdd(type){
+  const cats=(type==="i"?INC_CATS:EXP_CATS);
+  document.getElementById("body").innerHTML=`<div class="card">
+    <input id="f_amt" type="number" inputmode="decimal" placeholder="${t("amount")} (${t("cur")})">
+    <select id="f_cat">${cats.map(c=>`<option value="${c}">${CATEMO[c]} ${t("cats")[c]}</option>`).join("")}</select>
+    <input id="f_note" placeholder="${t("note")}">
+    <button class="btn" onclick="addItem('${type}')">${t("save")}</button>
+    <button class="btn sec" onclick="render()">${t("cancel")}</button>
+  </div>`;
+}
+function addItem(type){const amt=parseFloat(document.getElementById("f_amt").value);if(!amt||amt<=0)return;items.unshift({type,amt,cat:document.getElementById("f_cat").value,note:document.getElementById("f_note").value,ts:Date.now()});save();render();}
+function rm(i){items.splice(i,1);save();render();}
+function openLang(){document.getElementById("langTitle").textContent=t("lang");document.getElementById("langGrid").innerHTML=Object.keys(NAMES).map(l=>`<div class="lang ${l===LANG?'sel':''}" onclick="setLang('${l}')"><span style="font-size:20px">${FLAGS[l]}</span><span>${NAMES[l]}</span></div>`).join("");document.getElementById("sheetBg").classList.add("on");document.getElementById("sheet").classList.add("on");}
+function closeLang(){document.getElementById("sheetBg").classList.remove("on");document.getElementById("sheet").classList.remove("on");}
+function setLang(l){LANG=l;localStorage.setItem("lang",l);closeLang();render();}
+render();
+</script>
+</body>
+</html>

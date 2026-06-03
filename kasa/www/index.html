@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Şifre Kasası</title>
+<style>
+:root{--accent:#ef4444;--bg0:#0a0608;--txt:#f6eef0;--mut:#b59aa0;--glass:rgba(255,255,255,.06);--glass-bd:rgba(255,255,255,.13);--radius:20px;--ok:#34d399;--safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",system-ui,sans-serif;background:var(--bg0);color:var(--txt);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+.bgfx{position:fixed;inset:0;z-index:-2;overflow:hidden}
+.bgfx::before,.bgfx::after{content:"";position:absolute;width:70vw;height:70vw;border-radius:50%;filter:blur(85px);opacity:.35}
+.bgfx::before{background:var(--accent);top:-22vw;left:-16vw}.bgfx::after{background:#f59e0b;bottom:-26vw;right:-20vw}
+.app{max-width:680px;margin:0 auto;padding:var(--safe-top) 16px calc(30px + var(--safe-bot))}
+header{padding:14px 0 4px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:21px;background:linear-gradient(135deg,var(--accent),#f59e0b)}
+.brand .nm{font-size:15px;font-weight:600}
+.iconbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--glass-bd);background:var(--glass);color:var(--txt);font-size:16px;cursor:pointer}
+h1{font-size:28px;font-weight:800;letter-spacing:-.8px;padding:6px 0 2px}
+.hint{color:var(--mut);font-size:13px;margin-bottom:16px}
+.card{background:var(--glass);border:1px solid var(--glass-bd);border-radius:var(--radius);padding:16px;margin-bottom:10px;backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%)}
+input{width:100%;background:var(--glass);border:1px solid var(--glass-bd);border-radius:14px;color:var(--txt);font-size:15px;padding:13px;margin-bottom:10px}
+.btn{width:100%;padding:14px;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--accent),#f59e0b);color:#0a0608}
+.btn.sec{background:var(--glass);border:1px solid var(--glass-bd);color:var(--txt)}
+.lock{text-align:center;margin-top:12vh}
+.lock .big{font-size:70px;margin-bottom:10px}
+.lock h2{font-size:22px;margin-bottom:6px}.lock p{color:var(--mut);font-size:14px;margin-bottom:22px}
+.add{display:flex;gap:8px;margin-bottom:14px}
+.add .btn{width:auto;flex:1}
+.entry .tt{font-size:16px;font-weight:650;display:flex;align-items:center;gap:8px}
+.entry .uu{color:var(--mut);font-size:14px;margin-top:3px;word-break:break-all}
+.erow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.chip{padding:8px 12px;border-radius:11px;background:var(--glass);border:1px solid var(--glass-bd);font-size:13px;font-weight:600;cursor:pointer;color:var(--txt)}
+.chip.del{color:var(--accent)}
+.empty{text-align:center;color:var(--mut);font-size:14px;padding:40px 10px}
+.pwfield{position:relative}.pwfield .eye{position:absolute;right:12px;top:11px;cursor:pointer;opacity:.6}
+.gen{display:flex;gap:8px;align-items:center;margin:-4px 0 10px}
+.gen .chip{flex:none}
+.toast{position:fixed;bottom:calc(24px + var(--safe-bot));left:50%;transform:translateX(-50%);background:var(--ok);color:#0a0608;padding:10px 20px;border-radius:20px;font-weight:700;font-size:14px;opacity:0;transition:.2s;z-index:50}
+.toast.on{opacity:1}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:.25s;z-index:40}
+.sheet-bg.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;transform:translateY(110%);transition:transform .3s cubic-bezier(.2,.9,.2,1);background:rgba(28,18,22,.9);backdrop-filter:blur(40px);border-top:1px solid var(--glass-bd);border-radius:28px 28px 0 0;padding:10px 16px calc(20px + var(--safe-bot));max-width:680px;margin:0 auto}
+.sheet.on{transform:translateY(0)}.grip{width:38px;height:5px;border-radius:3px;background:rgba(255,255,255,.25);margin:8px auto 14px}
+.langs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lang{padding:13px;border-radius:14px;background:var(--glass);border:1px solid var(--glass-bd);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:9px}
+.lang.sel{border-color:var(--accent);background:rgba(239,68,68,.2)}
+</style>
+</head>
+<body>
+<div class="bgfx"></div>
+<div class="app">
+  <header>
+    <div class="brand"><div class="ic">🔐</div><div class="nm">NickDegs</div></div>
+    <button class="iconbtn" onclick="openLang()">🌐</button>
+  </header>
+  <h1 id="h1"></h1>
+  <div class="hint" id="hint"></div>
+  <div id="body"></div>
+</div>
+<div class="sheet-bg" id="sheetBg" onclick="closeLang()"></div>
+<div class="sheet" id="sheet"><div class="grip"></div><h3 id="langTitle" style="font-size:18px;font-weight:700;margin-bottom:12px"></h3><div class="langs" id="langGrid"></div></div>
+<div class="toast" id="toast">✓</div>
+
+<script>
+const T={
+ tr:{title:["Parolaların güvende","Şifre Kasası"],off:"Şifreli · sadece bu cihazda",
+   setup:"Ana parola oluştur",setupHint:"Kasanı bu parola açar. UNUTMA — sıfırlanamaz.",create:"Kasayı oluştur",
+   unlock:"Kasayı aç",master:"Ana parola",open:"Aç",wrong:"Yanlış parola",
+   add:"Yeni kayıt",svc:"Servis / site",user:"Kullanıcı adı / e-posta",pass:"Parola",note:"Not (isteğe bağlı)",save:"Kaydet",
+   gen:"Üret",copy:"Kopyala",copied:"Kopyalandı",del:"Sil",lock:"Kilitle",reveal:"Göster",empty:"Henüz kayıt yok",
+   lang:"Dil seç",min:"En az 4 karakter",sure:"Silinsin mi?"},
+ en:{title:["Your passwords, safe","Password Vault"],off:"Encrypted · only on this device",
+   setup:"Create master password",setupHint:"This opens your vault. DON'T forget it — it can't be reset.",create:"Create vault",
+   unlock:"Unlock vault",master:"Master password",open:"Open",wrong:"Wrong password",
+   add:"New entry",svc:"Service / site",user:"Username / email",pass:"Password",note:"Note (optional)",save:"Save",
+   gen:"Generate",copy:"Copy",copied:"Copied",del:"Delete",lock:"Lock",reveal:"Show",empty:"No entries yet",
+   lang:"Language",min:"At least 4 characters",sure:"Delete this?"},
+ es:{title:["Tus contraseñas, seguras","Caja fuerte"],off:"Cifrado · solo en este dispositivo",setup:"Crear contraseña maestra",setupHint:"Abre tu caja. NO la olvides — no se puede restablecer.",create:"Crear",unlock:"Abrir caja",master:"Contraseña maestra",open:"Abrir",wrong:"Contraseña incorrecta",add:"Nueva entrada",svc:"Servicio / sitio",user:"Usuario / correo",pass:"Contraseña",note:"Nota (opcional)",save:"Guardar",gen:"Generar",copy:"Copiar",copied:"Copiado",del:"Eliminar",lock:"Bloquear",reveal:"Mostrar",empty:"Sin entradas",lang:"Idioma",min:"Mínimo 4 caracteres",sure:"¿Eliminar?"},
+ zh:{title:["密码安全保存","密码保险箱"],off:"加密 · 仅在本设备",setup:"创建主密码",setupHint:"用于打开保险箱。请勿忘记——无法重置。",create:"创建",unlock:"解锁",master:"主密码",open:"打开",wrong:"密码错误",add:"新条目",svc:"服务/网站",user:"用户名/邮箱",pass:"密码",note:"备注(可选)",save:"保存",gen:"生成",copy:"复制",copied:"已复制",del:"删除",lock:"锁定",reveal:"显示",empty:"暂无条目",lang:"语言",min:"至少4个字符",sure:"删除?"},
+ ru:{title:["Пароли в безопасности","Сейф паролей"],off:"Шифровано · только на устройстве",setup:"Создать мастер-пароль",setupHint:"Открывает сейф. НЕ забудьте — сброс невозможен.",create:"Создать",unlock:"Открыть",master:"Мастер-пароль",open:"Открыть",wrong:"Неверный пароль",add:"Новая запись",svc:"Сервис / сайт",user:"Логин / почта",pass:"Пароль",note:"Заметка",save:"Сохранить",gen:"Создать",copy:"Копир.",copied:"Скопировано",del:"Удалить",lock:"Заблокировать",reveal:"Показать",empty:"Нет записей",lang:"Язык",min:"Минимум 4 символа",sure:"Удалить?"},
+ de:{title:["Passwörter sicher","Passwort-Tresor"],off:"Verschlüsselt · nur auf diesem Gerät",setup:"Master-Passwort erstellen",setupHint:"Öffnet den Tresor. NICHT vergessen — nicht zurücksetzbar.",create:"Erstellen",unlock:"Entsperren",master:"Master-Passwort",open:"Öffnen",wrong:"Falsches Passwort",add:"Neuer Eintrag",svc:"Dienst / Seite",user:"Benutzer / E-Mail",pass:"Passwort",note:"Notiz",save:"Speichern",gen:"Erzeugen",copy:"Kopieren",copied:"Kopiert",del:"Löschen",lock:"Sperren",reveal:"Zeigen",empty:"Keine Einträge",lang:"Sprache",min:"Mind. 4 Zeichen",sure:"Löschen?"},
+ fr:{title:["Mots de passe en sécurité","Coffre-fort"],off:"Chiffré · sur cet appareil",setup:"Créer mot de passe maître",setupHint:"Ouvre votre coffre. NE l'oubliez pas — non réinitialisable.",create:"Créer",unlock:"Déverrouiller",master:"Mot de passe maître",open:"Ouvrir",wrong:"Mot de passe incorrect",add:"Nouvelle entrée",svc:"Service / site",user:"Identifiant / e-mail",pass:"Mot de passe",note:"Note",save:"Enregistrer",gen:"Générer",copy:"Copier",copied:"Copié",del:"Supprimer",lock:"Verrouiller",reveal:"Afficher",empty:"Aucune entrée",lang:"Langue",min:"4 caractères min.",sure:"Supprimer ?"},
+ it:{title:["Le tue password al sicuro","Cassaforte"],off:"Cifrato · solo su questo dispositivo",setup:"Crea password principale",setupHint:"Apre la cassaforte. NON dimenticarla — non reimpostabile.",create:"Crea",unlock:"Sblocca",master:"Password principale",open:"Apri",wrong:"Password errata",add:"Nuova voce",svc:"Servizio / sito",user:"Utente / email",pass:"Password",note:"Nota",save:"Salva",gen:"Genera",copy:"Copia",copied:"Copiato",del:"Elimina",lock:"Blocca",reveal:"Mostra",empty:"Nessuna voce",lang:"Lingua",min:"Minimo 4 caratteri",sure:"Eliminare?"}
+};
+const FLAGS={tr:"🇹🇷",en:"🇬🇧",es:"🇪🇸",zh:"🇨🇳",ru:"🇷🇺",de:"🇩🇪",fr:"🇫🇷",it:"🇮🇹"},NAMES={tr:"Türkçe",en:"English",es:"Español",zh:"中文",ru:"Русский",de:"Deutsch",fr:"Français",it:"Italiano"};
+let LANG=localStorage.getItem("lang")||(navigator.language||"tr").slice(0,2); if(!T[LANG])LANG="en";
+const t=k=>T[LANG][k];
+function toast(m){const e=document.getElementById("toast");e.textContent="✓ "+(m||t("copied"));e.classList.add("on");setTimeout(()=>e.classList.remove("on"),1200);}
+
+/* ===== kripto: PBKDF2 -> AES-GCM ===== */
+const enc=new TextEncoder(), dec=new TextDecoder();
+const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b))), unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function deriveKey(pw,salt){
+  const base=await crypto.subtle.importKey("raw",enc.encode(pw),"PBKDF2",false,["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:150000,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
+}
+async function encryptVault(obj,key){
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,enc.encode(JSON.stringify(obj)));
+  return {iv:b64(iv),ct:b64(ct)};
+}
+async function decryptVault(data,key){
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(data.iv)},key,unb64(data.ct));
+  return JSON.parse(dec.decode(pt));
+}
+
+/* ===== durum ===== */
+let KEY=null, SALT=null, entries=[];
+const hasVault=()=>!!localStorage.getItem("vault_data");
+function loadSalt(){let s=localStorage.getItem("vault_salt");if(s){SALT=unb64(s);}else{SALT=crypto.getRandomValues(new Uint8Array(16));localStorage.setItem("vault_salt",b64(SALT));}}
+async function persist(){const d=await encryptVault(entries,KEY);localStorage.setItem("vault_data",JSON.stringify(d));}
+
+/* ===== ekranlar ===== */
+function render(){
+  document.documentElement.lang=LANG;
+  const m=t("title");
+  document.getElementById("h1").textContent=m[0];
+  document.getElementById("hint").textContent=m[1]+" · "+t("off");
+  const b=document.getElementById("body");
+  if(!KEY){ b.innerHTML = hasVault()? screenUnlock() : screenSetup(); }
+  else { b.innerHTML = screenVault(); }
+}
+function screenSetup(){return `<div class="lock"><div class="big">🔐</div><h2>${t("setup")}</h2><p>${t("setupHint")}</p>
+  <div class="card"><input id="mp" type="password" placeholder="${t("master")}">
+  <button class="btn" onclick="doCreate()">${t("create")}</button></div></div>`;}
+function screenUnlock(){return `<div class="lock"><div class="big">🔒</div><h2>${t("unlock")}</h2>
+  <div class="card"><input id="mp" type="password" placeholder="${t("master")}" onkeydown="if(event.key==='Enter')doUnlock()">
+  <button class="btn" onclick="doUnlock()">${t("open")}</button></div></div>`;}
+function screenVault(){
+  let h=`<div class="add"><button class="btn" onclick="showAdd()">+ ${t("add")}</button><button class="btn sec" style="flex:none;width:auto;padding:14px 18px" onclick="lock()">${t("lock")} 🔒</button></div>`;
+  if(!entries.length) return h+`<div class="empty">${t("empty")}</div>`;
+  return h+entries.map((e,i)=>`<div class="card entry">
+    <div class="tt">🔑 ${esc(e.svc)}</div>
+    <div class="uu">${esc(e.user||"")}</div>
+    ${e.note?`<div class="uu" style="opacity:.7">${esc(e.note)}</div>`:""}
+    <div class="erow">
+      <span class="chip" onclick="cp('${i}','user')">${t("copy")} 👤</span>
+      <span class="chip" onclick="cp('${i}','pass')">${t("copy")} 🔑</span>
+      <span class="chip" onclick="rev(${i})">${t("reveal")} 👁</span>
+      <span class="chip del" onclick="rm(${i})">${t("del")}</span>
+    </div>
+    <div class="uu" id="rev${i}" style="display:none;margin-top:8px;color:var(--ok)"></div>
+  </div>`).join("");
+}
+function esc(s){return (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+async function doCreate(){const pw=document.getElementById("mp").value;if(pw.length<4)return toast(t("min"));loadSalt();KEY=await deriveKey(pw,SALT);entries=[];await persist();render();}
+async function doUnlock(){const pw=document.getElementById("mp").value;loadSalt();try{const k=await deriveKey(pw,SALT);entries=await decryptVault(JSON.parse(localStorage.getItem("vault_data")),k);KEY=k;render();}catch(e){toast(t("wrong"));}}
+function lock(){KEY=null;entries=[];render();}
+
+function showAdd(){
+  document.getElementById("body").innerHTML=`<div class="card">
+    <input id="f_svc" placeholder="${t("svc")}">
+    <input id="f_user" placeholder="${t("user")}">
+    <div class="pwfield"><input id="f_pass" type="text" placeholder="${t("pass")}"></div>
+    <div class="gen"><span class="chip" onclick="genPw()">🎲 ${t("gen")}</span></div>
+    <input id="f_note" placeholder="${t("note")}">
+    <button class="btn" onclick="saveEntry()">${t("save")}</button>
+    <button class="btn sec" style="margin-top:8px" onclick="render()">✕</button>
+  </div>`;
+}
+function genPw(){const ch="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%&*";let p="";const a=crypto.getRandomValues(new Uint32Array(18));for(let i=0;i<18;i++)p+=ch[a[i]%ch.length];document.getElementById("f_pass").value=p;}
+async function saveEntry(){const svc=document.getElementById("f_svc").value.trim();if(!svc)return toast(t("svc"));entries.unshift({svc,user:document.getElementById("f_user").value,pass:document.getElementById("f_pass").value,note:document.getElementById("f_note").value});await persist();render();}
+function cp(i,f){const v=entries[i][f]||"";navigator.clipboard&&navigator.clipboard.writeText(v);toast();}
+function rev(i){const el=document.getElementById("rev"+i);if(el.style.display==="none"){el.textContent="🔑 "+(entries[i].pass||"");el.style.display="block";}else{el.style.display="none";}}
+async function rm(i){if(!confirm(t("sure")))return;entries.splice(i,1);await persist();render();}
+
+function openLang(){document.getElementById("langTitle").textContent=t("lang");document.getElementById("langGrid").innerHTML=Object.keys(NAMES).map(l=>`<div class="lang ${l===LANG?'sel':''}" onclick="setLang('${l}')"><span style="font-size:20px">${FLAGS[l]}</span><span>${NAMES[l]}</span></div>`).join("");document.getElementById("sheetBg").classList.add("on");document.getElementById("sheet").classList.add("on");}
+function closeLang(){document.getElementById("sheetBg").classList.remove("on");document.getElementById("sheet").classList.remove("on");}
+function setLang(l){LANG=l;localStorage.setItem("lang",l);closeLang();render();}
+render();
+</script>
+</body>
+</html>

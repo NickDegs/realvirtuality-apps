@@ -1,0 +1,2 @@
+{"appId":"com.nickdegs.metin","appName":"Metin Pano","webDir":"www","backgroundColor":"#06070d",
+ "plugins":{"SplashScreen":{"backgroundColor":"#06070d","showSpinner":false,"launchAutoHide":true},"StatusBar":{"style":"DARK","backgroundColor":"#06070d"}}}

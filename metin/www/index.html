@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Metin & Pano</title>
+<style>
+:root{
+  --accent:#22d3ee; --bg0:#06070d; --txt:#f2f4fb; --mut:#9aa3bd;
+  --glass:rgba(255,255,255,.07); --glass-bd:rgba(255,255,255,.14); --radius:20px;
+  --ok:#34d399; --err:#f87171;
+  --safe-top:env(safe-area-inset-top,0px); --safe-bot:env(safe-area-inset-bottom,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",system-ui,sans-serif;
+  background:var(--bg0);color:var(--txt);-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+.bgfx{position:fixed;inset:0;z-index:-2;overflow:hidden}
+.bgfx::before,.bgfx::after{content:"";position:absolute;width:70vw;height:70vw;border-radius:50%;filter:blur(85px);opacity:.4}
+.bgfx::before{background:var(--accent);top:-22vw;left:-16vw}
+.bgfx::after{background:#6d5efc;bottom:-26vw;right:-20vw}
+.app{max-width:680px;margin:0 auto;padding:var(--safe-top) 16px calc(80px + var(--safe-bot))}
+header{padding:14px 0 4px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:21px;background:linear-gradient(135deg,var(--accent),#6d5efc)}
+.brand .nm{font-size:15px;font-weight:600}
+.iconbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--glass-bd);background:var(--glass);backdrop-filter:blur(20px);color:var(--txt);font-size:16px;cursor:pointer}
+h1{font-size:28px;font-weight:800;letter-spacing:-.8px;padding:6px 0 2px}
+.hint{color:var(--mut);font-size:13px;margin-bottom:14px}
+
+.card{background:var(--glass);border:1px solid var(--glass-bd);border-radius:var(--radius);padding:14px;margin-bottom:10px;
+  backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);box-shadow:0 6px 24px rgba(0,0,0,.28)}
+.add{display:flex;gap:8px;margin-bottom:14px}
+.add input{flex:1;background:var(--glass);border:1px solid var(--glass-bd);border-radius:14px;color:var(--txt);font-size:15px;padding:12px}
+.add button{width:48px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--accent),#6d5efc);color:#06070d;font-size:22px;font-weight:700;cursor:pointer}
+.item{display:flex;align-items:center;gap:11px}
+.item .chk{width:24px;height:24px;border-radius:50%;border:2px solid var(--mut);flex:none;cursor:pointer;display:grid;place-items:center;font-size:14px}
+.item .chk.on{background:var(--ok);border-color:var(--ok);color:#06070d}
+.item .tx{flex:1;font-size:15px;word-break:break-word}
+.item .tx.done{text-decoration:line-through;color:var(--mut)}
+.item .del{color:var(--err);font-size:18px;cursor:pointer;opacity:.6;background:none;border:none}
+.note .tt{font-size:16px;font-weight:650;margin-bottom:4px}
+.note .bd{font-size:14px;color:var(--mut);white-space:pre-wrap;word-break:break-word}
+.empty{text-align:center;color:var(--mut);font-size:14px;padding:40px 10px}
+
+/* pano (kanban) */
+.board{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}
+.col{min-width:75%;flex:none;background:rgba(255,255,255,.04);border:1px solid var(--glass-bd);border-radius:18px;padding:12px}
+.col h3{font-size:14px;font-weight:700;margin-bottom:10px;display:flex;justify-content:space-between}
+.pcard{background:var(--glass);border:1px solid var(--glass-bd);border-radius:12px;padding:10px;margin-bottom:8px;font-size:14px;display:flex;gap:8px;align-items:flex-start}
+.pcard .mv{margin-left:auto;display:flex;gap:6px}
+.pcard .mv span{cursor:pointer;color:var(--accent);font-weight:700}
+
+/* metin araçları */
+textarea{width:100%;background:var(--glass);border:1px solid var(--glass-bd);border-radius:14px;color:var(--txt);font-size:15px;padding:12px;min-height:110px;resize:vertical}
+.trow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.tbtn{flex:1;min-width:90px;padding:11px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:var(--glass);border:1px solid var(--glass-bd);color:var(--txt)}
+.tstat{margin-top:12px;color:var(--mut);font-size:14px;line-height:1.7}
+
+/* alt sekme çubuğu (iOS tab bar) */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:space-around;
+  padding:8px 6px calc(8px + var(--safe-bot));background:rgba(13,16,28,.8);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);border-top:1px solid var(--glass-bd)}
+.tab{flex:1;text-align:center;color:var(--mut);font-size:11px;cursor:pointer;padding:4px}
+.tab .ti{font-size:22px;display:block;margin-bottom:2px}
+.tab.on{color:var(--accent)}
+
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:.25s;z-index:40}
+.sheet-bg.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;transform:translateY(110%);transition:transform .3s cubic-bezier(.2,.9,.2,1);background:rgba(20,24,40,.85);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px);border-top:1px solid var(--glass-bd);border-radius:28px 28px 0 0;padding:10px 16px calc(20px + var(--safe-bot));max-width:680px;margin:0 auto}
+.sheet.on{transform:translateY(0)}
+.grip{width:38px;height:5px;border-radius:3px;background:rgba(255,255,255,.25);margin:8px auto 14px}
+.langs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lang{padding:13px;border-radius:14px;background:var(--glass);border:1px solid var(--glass-bd);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:9px}
+.lang.sel{border-color:var(--accent);background:rgba(34,211,238,.2)}
+</style>
+</head>
+<body>
+<div class="bgfx"></div>
+<div class="app">
+  <header>
+    <div class="brand"><div class="ic">📝</div><div class="nm">NickDegs</div></div>
+    <button class="iconbtn" onclick="openLang()">🌐</button>
+  </header>
+  <h1 id="h1"></h1>
+  <div class="hint" id="hint"></div>
+  <div id="body"></div>
+</div>
+
+<nav class="tabbar" id="tabbar"></nav>
+
+<div class="sheet-bg" id="sheetBg" onclick="closeLang()"></div>
+<div class="sheet" id="sheet"><div class="grip"></div><h3 id="langTitle" style="font-size:18px;font-weight:700;margin-bottom:12px"></h3><div class="langs" id="langGrid"></div></div>
+
+<script>
+/* ===== i18n (üst: sade açıklama, alt: kısa isim mantığı korunur) ===== */
+const T={
+ tr:{notlar:["Yazdıklarını sakla","Notlar"],yap:["Yapılacakları işaretle","Görevler"],pano:["Kartları sürükle düzenle","Pano"],arac:["Yazıyı düzenle","Metin araçları"],
+   off:"Her şey telefonunda · çevrimdışı",add_n:"Not ekle…",add_t:"Görev ekle…",add_p:"Kart ekle…",empty:"Henüz bir şey yok",lang:"Dil seç",
+   cols:["Yapılacak","Yapılıyor","Bitti"],up:"Büyük harf",low:"Küçük harf",cap:"Baş harf",clr:"Temizle",copy:"Kopyala",chars:"Karakter",words:"Kelime",lines:"Satır",ph:"Metni buraya yaz…"},
+ en:{notlar:["Save what you write","Notes"],yap:["Check off your tasks","To-do"],pano:["Organize cards","Board"],arac:["Edit your text","Text tools"],
+   off:"All on your phone · offline",add_n:"Add note…",add_t:"Add task…",add_p:"Add card…",empty:"Nothing yet",lang:"Language",
+   cols:["To do","Doing","Done"],up:"UPPER",low:"lower",cap:"Capitalize",clr:"Clear",copy:"Copy",chars:"Characters",words:"Words",lines:"Lines",ph:"Type text here…"},
+ es:{notlar:["Guarda lo que escribes","Notas"],yap:["Marca tus tareas","Tareas"],pano:["Organiza tarjetas","Tablero"],arac:["Edita tu texto","Texto"],
+   off:"Todo en tu teléfono · sin conexión",add_n:"Añadir nota…",add_t:"Añadir tarea…",add_p:"Añadir tarjeta…",empty:"Nada aún",lang:"Idioma",
+   cols:["Por hacer","Haciendo","Hecho"],up:"MAYÚS",low:"minús",cap:"Capitalizar",clr:"Borrar",copy:"Copiar",chars:"Caracteres",words:"Palabras",lines:"Líneas",ph:"Escribe aquí…"},
+ zh:{notlar:["保存你写的","笔记"],yap:["勾选任务","待办"],pano:["整理卡片","看板"],arac:["编辑文本","文本工具"],
+   off:"全部在手机上 · 离线",add_n:"添加笔记…",add_t:"添加任务…",add_p:"添加卡片…",empty:"暂无内容",lang:"语言",
+   cols:["待办","进行中","完成"],up:"大写",low:"小写",cap:"首字母",clr:"清除",copy:"复制",chars:"字符",words:"词",lines:"行",ph:"在此输入…"},
+ ru:{notlar:["Сохрани записи","Заметки"],yap:["Отмечай задачи","Задачи"],pano:["Организуй карточки","Доска"],arac:["Редактируй текст","Текст"],
+   off:"Всё на телефоне · офлайн",add_n:"Добавить заметку…",add_t:"Добавить задачу…",add_p:"Добавить карточку…",empty:"Пока пусто",lang:"Язык",
+   cols:["Сделать","В работе","Готово"],up:"ВЕРХ",low:"строч",cap:"С заглавной",clr:"Очистить",copy:"Копир.",chars:"Символы",words:"Слова",lines:"Строки",ph:"Введите текст…"},
+ de:{notlar:["Speichere Notizen","Notizen"],yap:["Aufgaben abhaken","Aufgaben"],pano:["Karten ordnen","Board"],arac:["Text bearbeiten","Text"],
+   off:"Alles auf dem Handy · offline",add_n:"Notiz hinzufügen…",add_t:"Aufgabe hinzufügen…",add_p:"Karte hinzufügen…",empty:"Noch nichts",lang:"Sprache",
+   cols:["Zu tun","Läuft","Fertig"],up:"GROSS",low:"klein",cap:"Großschr.",clr:"Löschen",copy:"Kopieren",chars:"Zeichen",words:"Wörter",lines:"Zeilen",ph:"Text hier…"},
+ fr:{notlar:["Garde tes écrits","Notes"],yap:["Coche tes tâches","Tâches"],pano:["Organise les cartes","Tableau"],arac:["Modifie ton texte","Texte"],
+   off:"Tout sur ton téléphone · hors ligne",add_n:"Ajouter note…",add_t:"Ajouter tâche…",add_p:"Ajouter carte…",empty:"Rien encore",lang:"Langue",
+   cols:["À faire","En cours","Fini"],up:"MAJUS",low:"minus",cap:"Capitale",clr:"Effacer",copy:"Copier",chars:"Caractères",words:"Mots",lines:"Lignes",ph:"Tape ici…"},
+ it:{notlar:["Salva ciò che scrivi","Note"],yap:["Spunta le attività","Attività"],pano:["Organizza schede","Bacheca"],arac:["Modifica il testo","Testo"],
+   off:"Tutto sul telefono · offline",add_n:"Aggiungi nota…",add_t:"Aggiungi attività…",add_p:"Aggiungi scheda…",empty:"Niente ancora",lang:"Lingua",
+   cols:["Da fare","In corso","Fatto"],up:"MAIUSC",low:"minusc",cap:"Iniziali",clr:"Pulisci",copy:"Copia",chars:"Caratteri",words:"Parole",lines:"Righe",ph:"Scrivi qui…"}
+};
+const FLAGS={tr:"🇹🇷",en:"🇬🇧",es:"🇪🇸",zh:"🇨🇳",ru:"🇷🇺",de:"🇩🇪",fr:"🇫🇷",it:"🇮🇹"},NAMES={tr:"Türkçe",en:"English",es:"Español",zh:"中文",ru:"Русский",de:"Deutsch",fr:"Français",it:"Italiano"};
+let LANG=localStorage.getItem("lang")||(navigator.language||"tr").slice(0,2); if(!T[LANG])LANG="en";
+const tr=k=>T[LANG][k];
+const TABS=["notlar","yap","pano","arac"]; const ICON={notlar:"📝",yap:"✅",pano:"📋",arac:"🔠"};
+let tab=localStorage.getItem("tab")||"notlar";
+
+/* ===== veri (localStorage) ===== */
+const DB={get:(k,d)=>JSON.parse(localStorage.getItem("mp_"+k)||JSON.stringify(d)),set:(k,v)=>localStorage.setItem("mp_"+k,JSON.stringify(v))};
+let notes=DB.get("notes",[]), tasks=DB.get("tasks",[]), board=DB.get("board",{0:[],1:[],2:[]});
+const save=()=>{DB.set("notes",notes);DB.set("tasks",tasks);DB.set("board",board);};
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ===== render ===== */
+function render(){
+  document.documentElement.lang=LANG;
+  const m=tr(tab);
+  document.getElementById("h1").textContent=m[0];           // ÜST: sade açıklama
+  document.getElementById("hint").textContent=m[1]+" · "+tr("off");  // ALT: kısa isim + offline
+  const b=document.getElementById("body");
+  if(tab==="notlar") b.innerHTML=viewNotes();
+  else if(tab==="yap") b.innerHTML=viewTasks();
+  else if(tab==="pano") b.innerHTML=viewBoard();
+  else b.innerHTML=viewTools();
+  document.getElementById("tabbar").innerHTML=TABS.map(t=>`<div class="tab ${t===tab?'on':''}" onclick="go('${t}')"><span class="ti">${ICON[t]}</span>${tr(t)[1]}</div>`).join("");
+}
+function go(t){tab=t;localStorage.setItem("tab",t);render();}
+
+function viewNotes(){
+  let h=`<div class="add"><input id="ni" placeholder="${tr('add_n')}" onkeydown="if(event.key==='Enter')addNote()"><button onclick="addNote()">+</button></div>`;
+  if(!notes.length) return h+`<div class="empty">${tr('empty')}</div>`;
+  return h+notes.map((n,i)=>`<div class="card note"><div style="display:flex"><div style="flex:1"><div class="bd">${esc(n)}</div></div><button class="del" onclick="delNote(${i})">✕</button></div></div>`).join("");
+}
+function addNote(){const v=document.getElementById("ni").value.trim();if(!v)return;notes.unshift(v);save();render();}
+function delNote(i){notes.splice(i,1);save();render();}
+
+function viewTasks(){
+  let h=`<div class="add"><input id="ti" placeholder="${tr('add_t')}" onkeydown="if(event.key==='Enter')addTask()"><button onclick="addTask()">+</button></div>`;
+  if(!tasks.length) return h+`<div class="empty">${tr('empty')}</div>`;
+  return h+tasks.map((t,i)=>`<div class="card"><div class="item"><div class="chk ${t.done?'on':''}" onclick="toggleTask(${i})">${t.done?'✓':''}</div><div class="tx ${t.done?'done':''}">${esc(t.t)}</div><button class="del" onclick="delTask(${i})">✕</button></div></div>`).join("");
+}
+function addTask(){const v=document.getElementById("ti").value.trim();if(!v)return;tasks.unshift({t:v,done:false});save();render();}
+function toggleTask(i){tasks[i].done=!tasks[i].done;save();render();}
+function delTask(i){tasks.splice(i,1);save();render();}
+
+function viewBoard(){
+  const cols=tr("cols");
+  let h=`<div class="add"><input id="pi" placeholder="${tr('add_p')}" onkeydown="if(event.key==='Enter')addCard()"><button onclick="addCard()">+</button></div><div class="board">`;
+  for(let c=0;c<3;c++){
+    h+=`<div class="col"><h3><span>${cols[c]}</span><span style="color:var(--mut)">${board[c].length}</span></h3>`;
+    h+=board[c].map((card,i)=>`<div class="pcard"><span style="flex:1">${esc(card)}</span><span class="mv">${c>0?`<span onclick="moveCard(${c},${i},-1)">‹</span>`:''}${c<2?`<span onclick="moveCard(${c},${i},1)">›</span>`:''}<span onclick="delCard(${c},${i})" style="color:var(--err)">✕</span></span></div>`).join("")||`<div style="color:var(--mut);font-size:13px">—</div>`;
+    h+=`</div>`;
+  }
+  return h+`</div>`;
+}
+function addCard(){const v=document.getElementById("pi").value.trim();if(!v)return;board[0].push(v);save();render();}
+function moveCard(c,i,d){const card=board[c].splice(i,1)[0];board[c+d].push(card);save();render();}
+function delCard(c,i){board[c].splice(i,1);save();render();}
+
+function viewTools(){
+  return `<textarea id="txt" placeholder="${tr('ph')}" oninput="stat()"></textarea>
+    <div class="trow">
+      <button class="tbtn" onclick="conv('up')">${tr('up')}</button>
+      <button class="tbtn" onclick="conv('low')">${tr('low')}</button>
+      <button class="tbtn" onclick="conv('cap')">${tr('cap')}</button>
+    </div>
+    <div class="trow">
+      <button class="tbtn" onclick="navigator.clipboard&&navigator.clipboard.writeText(document.getElementById('txt').value)">${tr('copy')}</button>
+      <button class="tbtn" onclick="document.getElementById('txt').value='';stat()">${tr('clr')}</button>
+    </div>
+    <div class="tstat" id="stat"></div>`;
+}
+function conv(m){const e=document.getElementById("txt");let v=e.value;e.value=m==='up'?v.toUpperCase():m==='low'?v.toLowerCase():v.replace(/\w\S*/g,w=>w[0].toUpperCase()+w.slice(1).toLowerCase());stat();}
+function stat(){const v=document.getElementById("txt").value;const w=(v.trim().match(/\S+/g)||[]).length;document.getElementById("stat").innerHTML=`${tr('chars')}: ${v.length}<br>${tr('words')}: ${w}<br>${tr('lines')}: ${v.split("\n").length}`;}
+
+function openLang(){document.getElementById("langTitle").textContent=tr("lang");document.getElementById("langGrid").innerHTML=Object.keys(NAMES).map(l=>`<div class="lang ${l===LANG?'sel':''}" onclick="setLang('${l}')"><span style="font-size:20px">${FLAGS[l]}</span><span>${NAMES[l]}</span></div>`).join("");document.getElementById("sheetBg").classList.add("on");document.getElementById("sheet").classList.add("on");}
+function closeLang(){document.getElementById("sheetBg").classList.remove("on");document.getElementById("sheet").classList.remove("on");}
+function setLang(l){LANG=l;localStorage.setItem("lang",l);closeLang();render();}
+render();
+</script>
+</body>
+</html>

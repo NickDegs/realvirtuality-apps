@@ -1,0 +1,29 @@
+# bağımlılıklar / üretilenler (CI yeniden üretir)
+node_modules/
+*/android/
+*/ios/
+**/build/
+**/.gradle/
+**/Pods/
+# çıktılar
+*.apk
+*.aab
+aab-cikti/
+*.zip
+# GİZLİ — asla yükleme
+*.keystore
+keystore-bilgi.txt
+*.conf
+*.secret
+token*.txt
+# geçici/önizleme
+ONIZLEME-*.html
+_icon.svg
+IOS-KURULUM.txt
+PLAY-YUKLEME.txt
+# eski sarmalayıcılar / alakasız projeler
+sohbet/
+uretkenlik/
+podcast/
+bloc-kings-rn/
+shared/

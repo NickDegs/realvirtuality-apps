@@ -1,0 +1,1 @@
+{"name":"sifre-kasasi","version":"1.0.0","private":true,"dependencies":{"@capacitor/android":"^6","@capacitor/core":"^6","@capacitor/ios":"^6.2.1","@capacitor/splash-screen":"^6","@capacitor/status-bar":"^6"},"devDependencies":{"@capacitor/assets":"^3.0.5","@capacitor/cli":"^6"}}

@@ -1,0 +1,98 @@
+{
+  "_aciklama": "8 uygulama. Element hariç hepsi OFFLINE (telefonda çalışır, sunucuya yük yok). Medya telif yüzünden mağazaya GİRMEZ.",
+  "ortak": {
+    "marka": "NickDegs",
+    "diller": [
+      "tr",
+      "en",
+      "es",
+      "zh",
+      "ru",
+      "de",
+      "fr",
+      "it"
+    ]
+  },
+  "uygulamalar": [
+    {
+      "slug": "mesaj",
+      "ad": "Şifreli Mesajlaşma",
+      "appId": "com.nickdegs.mesaj",
+      "emoji": "🔒",
+      "renk": "#6d5efc",
+      "tip": "online",
+      "store_kategori": "Sosyal",
+      "aciklama": "Uçtan uca şifreli sohbet (Element/Matrix)"
+    },
+    {
+      "slug": "metin",
+      "ad": "Metin & Pano",
+      "appId": "com.nickdegs.metin",
+      "emoji": "📝",
+      "renk": "#22d3ee",
+      "tip": "offline",
+      "store_kategori": "Verimlilik",
+      "aciklama": "Harf dönüştür, kelime say + notlar, yapılacaklar, kanban pano"
+    },
+    {
+      "slug": "haber",
+      "ad": "Haber, Podcast & Sync",
+      "appId": "com.nickdegs.haber",
+      "emoji": "📰",
+      "renk": "#f59e0b",
+      "tip": "offline",
+      "store_kategori": "Haberler",
+      "aciklama": "RSS okuyucu + podcast çalar + yerel yedek"
+    },
+    {
+      "slug": "konum",
+      "ad": "Konum & Harita",
+      "appId": "com.nickdegs.konum",
+      "emoji": "📍",
+      "renk": "#34d399",
+      "tip": "offline",
+      "store_kategori": "Navigasyon",
+      "aciklama": "Kullanıcının kendi konumu + geçmiş"
+    },
+    {
+      "slug": "kasa",
+      "ad": "Şifre Kasası",
+      "appId": "com.nickdegs.kasa",
+      "emoji": "🔐",
+      "renk": "#ef4444",
+      "tip": "offline",
+      "store_kategori": "Verimlilik",
+      "aciklama": "Offline şifreli parola kasası + biyometrik"
+    },
+    {
+      "slug": "araclar",
+      "ad": "URL & JSON Araçları",
+      "appId": "com.nickdegs.araclar",
+      "emoji": "🧰",
+      "renk": "#8b5cf6",
+      "tip": "offline",
+      "store_kategori": "Geliştirici",
+      "aciklama": "JSON, Base64, URL, Hash, JWT, UUID, Zaman, Renk — offline veri araçları"
+    },
+    {
+      "slug": "butce",
+      "ad": "Bütçe & Harcama",
+      "appId": "com.nickdegs.butce",
+      "emoji": "💸",
+      "renk": "#10b981",
+      "tip": "offline",
+      "store_kategori": "Finans",
+      "aciklama": "Offline gelir-gider takibi + grafik"
+    },
+    {
+      "slug": "tarayici",
+      "ad": "Belge Tarayıcı",
+      "appId": "com.nickdegs.tarayici",
+      "emoji": "📷",
+      "renk": "#0ea5e9",
+      "tip": "offline",
+      "store_kategori": "Verimlilik",
+      "aciklama": "Kamera ile belge -> PDF, offline"
+    }
+  ]
+}

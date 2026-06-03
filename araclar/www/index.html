@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Geliştirici Araçları</title>
+<style>
+:root{
+  --accent:#8b5cf6; --bg0:#06070d; --txt:#f2f4fb; --mut:#9aa3bd;
+  --glass:rgba(255,255,255,.07); --glass-bd:rgba(255,255,255,.14); --radius:22px;
+  --ok:#34d399; --err:#f87171;
+  --safe-top:env(safe-area-inset-top,0px); --safe-bot:env(safe-area-inset-bottom,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",system-ui,sans-serif;
+  background:var(--bg0);color:var(--txt);-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  padding:var(--safe-top) 0 var(--safe-bot);min-height:100vh}
+.bgfx{position:fixed;inset:0;z-index:-2;overflow:hidden}
+.bgfx::before,.bgfx::after{content:"";position:absolute;width:70vw;height:70vw;border-radius:50%;filter:blur(85px);opacity:.45}
+.bgfx::before{background:var(--accent);top:-22vw;left:-16vw;animation:f1 19s ease-in-out infinite}
+.bgfx::after{background:#22d3ee;bottom:-26vw;right:-20vw;animation:f2 23s ease-in-out infinite}
+@keyframes f1{50%{transform:translate(8vw,9vh) scale(1.15)}}
+@keyframes f2{50%{transform:translate(-9vw,-7vh) scale(1.12)}}
+.wrap{max-width:680px;margin:0 auto;padding:0 16px}
+header{padding:16px 0 4px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px}
+.brand .ic{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:23px;
+  background:linear-gradient(135deg,var(--accent),#22d3ee);box-shadow:0 8px 24px rgba(139,92,246,.45)}
+.brand .nm{font-size:16px;font-weight:600}
+.iconbtn{width:40px;height:40px;border-radius:50%;border:1px solid var(--glass-bd);background:var(--glass);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:var(--txt);font-size:17px;display:grid;place-items:center;cursor:pointer}
+h1{font-size:31px;font-weight:800;letter-spacing:-1px;padding:8px 0 2px}
+.sub{color:var(--mut);font-size:14px;margin-bottom:16px}
+
+/* araç ızgarası */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-bottom:30px}
+.tool{background:var(--glass);border:1px solid var(--glass-bd);border-radius:var(--radius);padding:16px;cursor:pointer;
+  backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);
+  box-shadow:0 8px 30px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.1);transition:transform .16s}
+.tool:active{transform:scale(.96)}
+.tool .e{font-size:26px}
+.tool .t{font-size:15px;font-weight:650;margin-top:8px;letter-spacing:-.2px}
+.tool .d{color:var(--mut);font-size:12px;margin-top:2px;line-height:1.3}
+
+/* araç detay (tam ekran cam panel) */
+.view{position:fixed;inset:0;z-index:30;background:var(--bg0);transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.9,.2,1);
+  padding:var(--safe-top) 0 var(--safe-bot);overflow-y:auto}
+.view.on{transform:translateX(0)}
+.vhead{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;position:sticky;top:0;background:rgba(6,7,13,.7);backdrop-filter:blur(20px);z-index:2}
+.back{font-size:16px;color:var(--accent);font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px}
+.vtitle{font-size:18px;font-weight:700}
+.vbody{padding:6px 16px 40px}
+label{display:block;font-size:13px;color:var(--mut);margin:14px 0 6px;font-weight:600}
+textarea,input,select{width:100%;background:var(--glass);border:1px solid var(--glass-bd);border-radius:14px;
+  color:var(--txt);font-size:15px;padding:13px;font-family:ui-monospace,Menlo,monospace;resize:vertical}
+textarea{min-height:120px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{flex:1;min-width:120px;padding:13px;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;
+  background:linear-gradient(135deg,var(--accent),#22d3ee);color:#06070d}
+.btn.sec{background:var(--glass);border:1px solid var(--glass-bd);color:var(--txt)}
+.out{margin-top:14px;background:rgba(0,0,0,.35);border:1px solid var(--glass-bd);border-radius:14px;padding:13px;
+  font-family:ui-monospace,Menlo,monospace;font-size:14px;white-space:pre-wrap;word-break:break-word;min-height:48px}
+.out.ok{border-color:rgba(52,211,153,.4)} .out.err{border-color:rgba(248,113,113,.5);color:var(--err)}
+.copied{position:fixed;bottom:calc(30px + var(--safe-bot));left:50%;transform:translateX(-50%);background:var(--ok);color:#06070d;
+  padding:10px 20px;border-radius:20px;font-weight:700;font-size:14px;opacity:0;transition:.2s;z-index:50}
+.copied.on{opacity:1}
+
+/* dil sayfası */
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:.25s;z-index:40}
+.sheet-bg.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;transform:translateY(110%);transition:transform .3s cubic-bezier(.2,.9,.2,1);
+  background:rgba(20,24,40,.85);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);
+  border-top:1px solid var(--glass-bd);border-radius:28px 28px 0 0;padding:10px 16px calc(20px + var(--safe-bot));max-width:680px;margin:0 auto}
+.sheet.on{transform:translateY(0)}
+.grip{width:38px;height:5px;border-radius:3px;background:rgba(255,255,255,.25);margin:8px auto 14px}
+.langs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lang{padding:13px;border-radius:14px;background:var(--glass);border:1px solid var(--glass-bd);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:9px}
+.lang.sel{border-color:var(--accent);background:rgba(139,92,246,.22)}
+</style>
+</head>
+<body>
+<div class="bgfx"></div>
+<div class="wrap">
+  <header>
+    <div class="brand"><div class="ic">🧰</div><div class="nm">NickDegs</div></div>
+    <button class="iconbtn" onclick="openLang()">🌐</button>
+  </header>
+  <h1 id="h1">Araçlar</h1>
+  <div class="sub" id="sub">Tamamen çevrimdışı · veri telefonda kalır</div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="view" id="view">
+  <div class="vhead"><span class="back" onclick="closeTool()">‹ <span id="backTxt">Geri</span></span><span class="vtitle" id="vtitle"></span></div>
+  <div class="vbody" id="vbody"></div>
+</div>
+
+<div class="sheet-bg" id="sheetBg" onclick="closeLang()"></div>
+<div class="sheet" id="sheet"><div class="grip"></div><h3 id="langTitle" style="font-size:18px;font-weight:700;margin-bottom:12px">Dil seç</h3><div class="langs" id="langGrid"></div></div>
+<div class="copied" id="copied">✓</div>
+
+<script>
+/* ===== i18n ===== */
+const T={
+ tr:{title:"Araçlar",sub:"Tamamen çevrimdışı · veri telefonda kalır",back:"Geri",lang:"Dil seç",copy:"Kopyala",copied:"Kopyalandı",clear:"Temizle",input:"Girdi",output:"Çıktı",generate:"Üret",convert:"Çevir",
+   t_json:["Veriyi düzenle","JSON"],t_b64:["Metni gizle/çöz","Base64"],t_url:["Bağlantı kodla","URL"],t_hash:["Parmak izi çıkar","Hash"],t_jwt:["Jetonu çöz","JWT"],t_uuid:["Kimlik üret","UUID"],t_time:["Tarihi çevir","Zaman damgası"],t_color:["Renk kodu çevir","HEX/RGB"],t_case:["Harf büyüt/küçült","Metin"],t_count:["Kelime say","Sayaç"]},
+ en:{title:"Tools",sub:"Fully offline · data stays on device",back:"Back",lang:"Language",copy:"Copy",copied:"Copied",clear:"Clear",input:"Input",output:"Output",generate:"Generate",convert:"Convert",
+   t_json:["Tidy your data","JSON"],t_b64:["Hide/decode text","Base64"],t_url:["Encode a link","URL"],t_hash:["Make fingerprint","Hash"],t_jwt:["Decode token","JWT"],t_uuid:["Make unique id","UUID"],t_time:["Convert date","Timestamp"],t_color:["Convert color","HEX/RGB"],t_case:["Change case","Text"],t_count:["Count words","Counter"]},
+ es:{title:"Herramientas",sub:"Sin conexión · datos en el dispositivo",back:"Atrás",lang:"Idioma",copy:"Copiar",copied:"Copiado",clear:"Borrar",input:"Entrada",output:"Salida",generate:"Generar",convert:"Convertir",
+   t_json:["Ordena datos","JSON"],t_b64:["Oculta texto","Base64"],t_url:["Codifica enlace","URL"],t_hash:["Huella digital","Hash"],t_jwt:["Lee el token","JWT"],t_uuid:["Crea un id","UUID"],t_time:["Convierte fecha","Timestamp"],t_color:["Convierte color","HEX/RGB"],t_case:["Mayús/minús","Texto"],t_count:["Cuenta palabras","Contador"]},
+ zh:{title:"工具",sub:"完全离线 · 数据保留在设备",back:"返回",lang:"语言",copy:"复制",copied:"已复制",clear:"清除",input:"输入",output:"输出",generate:"生成",convert:"转换",
+   t_json:["整理数据","JSON"],t_b64:["隐藏文本","Base64"],t_url:["编码链接","URL"],t_hash:["生成指纹","Hash"],t_jwt:["读取令牌","JWT"],t_uuid:["生成ID","UUID"],t_time:["转换日期","时间戳"],t_color:["转换颜色","HEX/RGB"],t_case:["大小写","文本"],t_count:["统计字数","计数"]},
+ ru:{title:"Инструменты",sub:"Офлайн · данные на устройстве",back:"Назад",lang:"Язык",copy:"Копировать",copied:"Скопировано",clear:"Очистить",input:"Ввод",output:"Вывод",generate:"Создать",convert:"Конвертировать",
+   t_json:["Привести данные","JSON"],t_b64:["Скрыть текст","Base64"],t_url:["Кодировать ссылку","URL"],t_hash:["Сделать отпечаток","Hash"],t_jwt:["Прочитать токен","JWT"],t_uuid:["Создать id","UUID"],t_time:["Преобразовать дату","Время"],t_color:["Преобразовать цвет","HEX/RGB"],t_case:["Регистр букв","Текст"],t_count:["Считать слова","Счётчик"]},
+ de:{title:"Werkzeuge",sub:"Komplett offline · Daten bleiben am Gerät",back:"Zurück",lang:"Sprache",copy:"Kopieren",copied:"Kopiert",clear:"Löschen",input:"Eingabe",output:"Ausgabe",generate:"Erzeugen",convert:"Umwandeln",
+   t_json:["Daten ordnen","JSON"],t_b64:["Text verstecken","Base64"],t_url:["Link kodieren","URL"],t_hash:["Fingerabdruck","Hash"],t_jwt:["Token lesen","JWT"],t_uuid:["ID erzeugen","UUID"],t_time:["Datum wandeln","Zeitstempel"],t_color:["Farbe wandeln","HEX/RGB"],t_case:["Groß/klein","Text"],t_count:["Wörter zählen","Zähler"]},
+ fr:{title:"Outils",sub:"Hors ligne · données sur l'appareil",back:"Retour",lang:"Langue",copy:"Copier",copied:"Copié",clear:"Effacer",input:"Entrée",output:"Sortie",generate:"Générer",convert:"Convertir",
+   t_json:["Ranger données","JSON"],t_b64:["Cacher texte","Base64"],t_url:["Coder un lien","URL"],t_hash:["Empreinte","Hash"],t_jwt:["Lire le jeton","JWT"],t_uuid:["Créer un id","UUID"],t_time:["Convertir date","Horodatage"],t_color:["Convertir couleur","HEX/RGB"],t_case:["Maj/min","Texte"],t_count:["Compter mots","Compteur"]},
+ it:{title:"Strumenti",sub:"Completamente offline · dati sul dispositivo",back:"Indietro",lang:"Lingua",copy:"Copia",copied:"Copiato",clear:"Pulisci",input:"Input",output:"Output",generate:"Genera",convert:"Converti",
+   t_json:["Ordina dati","JSON"],t_b64:["Nascondi testo","Base64"],t_url:["Codifica link","URL"],t_hash:["Impronta","Hash"],t_jwt:["Leggi token","JWT"],t_uuid:["Crea un id","UUID"],t_time:["Converti data","Timestamp"],t_color:["Converti colore","HEX/RGB"],t_case:["Maiusc/minusc","Testo"],t_count:["Conta parole","Contatore"]}
+};
+const FLAGS={tr:"🇹🇷",en:"🇬🇧",es:"🇪🇸",zh:"🇨🇳",ru:"🇷🇺",de:"🇩🇪",fr:"🇫🇷",it:"🇮🇹"},NAMES={tr:"Türkçe",en:"English",es:"Español",zh:"中文",ru:"Русский",de:"Deutsch",fr:"Français",it:"Italiano"};
+let LANG=localStorage.getItem("lang")||(navigator.language||"tr").slice(0,2); if(!T[LANG])LANG="en";
+const tr=k=>T[LANG][k];
+const TOOLS=["json","b64","url","hash","jwt","uuid","time","color"];
+const EMO={json:"{}",b64:"🔤",url:"🔗",hash:"#️⃣",jwt:"🎫",uuid:"🆔",time:"🕐",color:"🎨",case:"🔡",count:"🔢"};
+
+function toast(){const c=document.getElementById("copied");c.textContent="✓ "+tr("copied");c.classList.add("on");setTimeout(()=>c.classList.remove("on"),1200);}
+function copy(txt){navigator.clipboard&&navigator.clipboard.writeText(txt);toast();}
+
+function home(){
+  document.getElementById("h1").textContent=tr("title");
+  document.getElementById("sub").textContent=tr("sub");
+  document.getElementById("backTxt").textContent=tr("back");
+  document.getElementById("grid").innerHTML=TOOLS.map(k=>{
+    const m=tr("t_"+k);
+    return `<div class="tool" onclick="openTool('${k}')"><div class="e">${EMO[k]}</div><div class="t">${m[0]}</div><div class="d">${m[1]}</div></div>`;
+  }).join("");
+}
+
+/* ===== araç gövdeleri ===== */
+const ioBlock=(ph)=>`<label>${tr("input")}</label><textarea id="in" placeholder="${ph||''}"></textarea>`;
+const outBlock=`<div class="out" id="out"></div>`;
+function actions(buttons){return `<div class="row">${buttons}</div>`;}
+function setOut(s,ok){const o=document.getElementById("out");o.textContent=s;o.className="out "+(ok===false?"err":ok===true?"ok":"");}
+
+const VIEWS={
+ json:()=>ioBlock('{"a":1}')+actions(`<button class="btn" onclick="doJson()">${tr("convert")}</button><button class="btn sec" onclick="copy(document.getElementById('out').textContent)">${tr("copy")}</button>`)+outBlock,
+ b64:()=>ioBlock('')+actions(`<button class="btn" onclick="setOut(btoa(unescape(encodeURIComponent(val()))),true)">Encode</button><button class="btn sec" onclick="b64dec()">Decode</button>`)+outBlock,
+ url:()=>ioBlock('')+actions(`<button class="btn" onclick="setOut(encodeURIComponent(val()),true)">Encode</button><button class="btn sec" onclick="setOut(decodeURIComponent(val()),true)">Decode</button>`)+outBlock,
+ hash:()=>ioBlock('')+`<label>Algoritma</label><select id="alg"><option>SHA-256</option><option>SHA-1</option><option>SHA-512</option></select>`+actions(`<button class="btn" onclick="doHash()">${tr("generate")}</button><button class="btn sec" onclick="copy(document.getElementById('out').textContent)">${tr("copy")}</button>`)+outBlock,
+ jwt:()=>ioBlock('eyJ...')+actions(`<button class="btn" onclick="doJwt()">${tr("convert")}</button>`)+outBlock,
+ uuid:()=>actions(`<button class="btn" onclick="doUuid()">${tr("generate")}</button><button class="btn sec" onclick="copy(document.getElementById('out').textContent)">${tr("copy")}</button>`)+outBlock,
+ time:()=>`<label>Epoch (sn) / ISO</label><input id="in" placeholder="${Math.floor(Date.now()/1000)}">`+actions(`<button class="btn" onclick="doTime()">${tr("convert")}</button><button class="btn sec" onclick="document.getElementById('in').value=Math.floor(Date.now()/1000);doTime()">now</button>`)+outBlock,
+ color:()=>`<label>HEX (#rrggbb) / rgb(r,g,b)</label><input id="in" placeholder="#8b5cf6">`+actions(`<button class="btn" onclick="doColor()">${tr("convert")}</button>`)+`<div class="out" id="out"></div><div id="sw" style="height:46px;border-radius:12px;margin-top:10px;border:1px solid var(--glass-bd)"></div>`,
+ case:()=>ioBlock('')+actions(`<button class="btn" onclick="setOut(val().toUpperCase(),true)">ABC</button><button class="btn sec" onclick="setOut(val().toLowerCase(),true)">abc</button><button class="btn sec" onclick="setOut(val().replace(/\\w\\S*/g,w=>w[0].toUpperCase()+w.slice(1).toLowerCase()),true)">Abc</button>`)+outBlock,
+ count:()=>ioBlock('')+actions(`<button class="btn" onclick="doCount()">${tr("convert")}</button>`)+outBlock
+};
+const val=()=>document.getElementById("in").value;
+function doJson(){try{setOut(JSON.stringify(JSON.parse(val()),null,2),true)}catch(e){setOut("✗ "+e.message,false)}}
+function b64dec(){try{setOut(decodeURIComponent(escape(atob(val()))),true)}catch(e){setOut("✗ geçersiz Base64",false)}}
+async function doHash(){const a=document.getElementById("alg").value;const buf=await crypto.subtle.digest(a,new TextEncoder().encode(val()));setOut([...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join(""),true)}
+function doJwt(){try{const p=val().split(".");const dec=s=>JSON.parse(decodeURIComponent(escape(atob(s.replace(/-/g,"+").replace(/_/g,"/")))));setOut("HEADER:\n"+JSON.stringify(dec(p[0]),null,2)+"\n\nPAYLOAD:\n"+JSON.stringify(dec(p[1]),null,2),true)}catch(e){setOut("✗ geçersiz JWT",false)}}
+function doUuid(){setOut(crypto.randomUUID(),true)}
+function doTime(){const v=val().trim();let d;if(/^\d+$/.test(v)){d=new Date(parseInt(v)*(v.length>10?1:1000))}else{d=new Date(v)}if(isNaN(d))return setOut("✗ geçersiz",false);setOut("ISO: "+d.toISOString()+"\nYerel: "+d.toLocaleString()+"\nEpoch: "+Math.floor(d.getTime()/1000),true)}
+function doColor(){const v=val().trim();let r,g,b;let m=v.match(/^#?([0-9a-f]{6})$/i);if(m){const n=parseInt(m[1],16);r=n>>16;g=(n>>8)&255;b=n&255}else{m=v.match(/(\d+)[,\s]+(\d+)[,\s]+(\d+)/);if(!m)return setOut("✗ geçersiz",false);[r,g,b]=[+m[1],+m[2],+m[3]]}const hex="#"+[r,g,b].map(x=>x.toString(16).padStart(2,"0")).join("");setOut("HEX: "+hex+"\nRGB: rgb("+r+", "+g+", "+b+")",true);document.getElementById("sw").style.background=hex}
+function doCount(){const t=val();const w=(t.trim().match(/\S+/g)||[]).length;setOut("Karakter: "+t.length+"\nKelime: "+w+"\nSatır: "+t.split("\n").length,true)}
+
+let cur=null;
+function openTool(k){cur=k;const m=tr("t_"+k);document.getElementById("vtitle").textContent=m[0];document.getElementById("vbody").innerHTML=VIEWS[k]();document.getElementById("view").classList.add("on")}
+function closeTool(){document.getElementById("view").classList.remove("on")}
+function openLang(){document.getElementById("langTitle").textContent=tr("lang");document.getElementById("langGrid").innerHTML=Object.keys(NAMES).map(l=>`<div class="lang ${l===LANG?'sel':''}" onclick="setLang('${l}')"><span style="font-size:20px">${FLAGS[l]}</span><span>${NAMES[l]}</span></div>`).join("");document.getElementById("sheetBg").classList.add("on");document.getElementById("sheet").classList.add("on")}
+function closeLang(){document.getElementById("sheetBg").classList.remove("on");document.getElementById("sheet").classList.remove("on")}
+function setLang(l){LANG=l;localStorage.setItem("lang",l);closeLang();home();if(cur&&document.getElementById("view").classList.contains("on"))openTool(cur)}
+document.documentElement.lang=LANG; home();
+</script>
+</body>
+</html>

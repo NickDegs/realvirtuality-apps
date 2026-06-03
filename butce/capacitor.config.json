@@ -1,0 +1,2 @@
+{"appId":"com.nickdegs.butce","appName":"Butce Harcama","webDir":"www","backgroundColor":"#05100c",
+ "plugins":{"SplashScreen":{"backgroundColor":"#05100c","showSpinner":false,"launchAutoHide":true},"StatusBar":{"style":"DARK","backgroundColor":"#05100c"}}}
