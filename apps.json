@@ -1,5 +1,5 @@
 {
-  "_aciklama": "8 uygulama + tarifler. Element hariç hepsi OFFLINE (telefonda çalışır, sunucuya yük yok). Medya telif yüzünden mağazaya GİRMEZ.",
+  "_aciklama": "8 uygulama + tarifler + rolyef + el-isciligi (planlanıyor).",
   "ortak": {
     "marka": "NickDegs",
     "diller": ["tr","en","es","zh","ru","de","fr","it"]
@@ -13,6 +13,8 @@
     {"slug":"araclar","ad":"URL & JSON Araçları","appId":"com.nickdegs.araclar","emoji":"🧰","renk":"#8b5cf6","tip":"offline","store_kategori":"Geliştirici","aciklama":"JSON, Base64, URL, Hash, JWT, UUID, Zaman, Renk — offline veri araçları"},
     {"slug":"butce","ad":"Bütçe & Harcama","appId":"com.nickdegs.butce","emoji":"💸","renk":"#10b981","tip":"offline","store_kategori":"Finans","aciklama":"Offline gelir-gider takibi + grafik"},
     {"slug":"tarayici","ad":"Belge Tarayıcı","appId":"com.nickdegs.tarayici","emoji":"📷","renk":"#0ea5e9","tip":"offline","store_kategori":"Verimlilik","aciklama":"Kamera ile belge -> PDF, offline"},
-    {"slug":"tarifler","ad":"Tarifler & El İşçiliği","appId":"com.nickdegs.tarifler","emoji":"🍳","renk":"#f97316","tip":"online","store_kategori":"Yiyecek & İçecek","aciklama":"Türk mutfağı + rölyef + el işçiliği tarifleri. TheMealDB + özel içerik. Premium abonelik."}
+    {"slug":"tarifler","ad":"Yemek Tarifleri","appId":"com.nickdegs.tarifler","emoji":"🍳","renk":"#f97316","tip":"online","store_kategori":"Yiyecek ve İçecek","aciklama":"Türk mutfağı tarifleri — TheMealDB. Kategori filtresi, arama, favoriler. 8 dil."},
+    {"slug":"rolyef","ad":"Rölyef Sanatı","appId":"com.nickdegs.rolyef","emoji":"🎨","renk":"#a78bfa","tip":"offline","store_kategori":"Eğitim","aciklama":"Planlanıyor — alçı rölyef ve 3D sanat rehberleri"},
+    {"slug":"el-isciligi","ad":"El İşçiliği","appId":"com.nickdegs.elisciligi","emoji":"🧵","renk":"#fb7185","tip":"offline","store_kategori":"Eğitim","aciklama":"Planlanıyor — makrome, keçe, tığ işi ve el işi projeleri"}
   ]
 }
