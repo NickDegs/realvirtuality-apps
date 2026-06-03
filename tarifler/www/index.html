@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Tarifler</title>
+<style>
+:root{
+  --bg0:#0d0906;--bg1:#151209;--bg2:#1c1810;
+  --ac1:#f97316;--ac2:#a78bfa;--ac3:#fb7185;--ac4:#fbbf24;
+  --txt:#f5f0ea;--txt2:#c0a890;--mut:#806050;
+  --glass:rgba(255,255,255,.07);--glass-bd:rgba(255,255,255,.12);
+  --r:20px;--ok:#34d399;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+  --th:60px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg0)}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",system-ui,sans-serif;color:var(--txt);-webkit-font-smoothing:antialiased}
+
+/* ── LAYOUT ── */
+#app{position:fixed;inset:0;display:flex;flex-direction:column}
+#pages{flex:1;overflow:hidden;position:relative}
+.page{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding-top:calc(var(--st)+58px);padding-bottom:calc(var(--th)+var(--sb)+16px);
+  opacity:0;pointer-events:none;transition:opacity .18s}
+.page.active{opacity:1;pointer-events:auto}
+
+/* ── TOPBAR ── */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:30;padding-top:var(--st);
+  background:linear-gradient(to bottom,var(--bg0) 75%,transparent)}
+.tb{height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 14px}
+.brand{display:flex;align-items:center;gap:9px}
+.b-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:19px;
+  background:linear-gradient(135deg,var(--ac1),var(--ac3))}
+.b-nm{font-size:14px;font-weight:700;letter-spacing:-.2px}
+.tb-r{display:flex;gap:6px}
+.ibtn{width:36px;height:36px;border-radius:50%;border:1px solid var(--glass-bd);background:var(--glass);
+  color:var(--txt);font-size:15px;cursor:pointer;display:grid;place-items:center;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+
+/* ── TABS ── */
+#tabbar{position:fixed;bottom:0;left:0;right:0;z-index:30;padding-bottom:var(--sb);
+  background:rgba(13,9,6,.88);backdrop-filter:blur(30px) saturate(180%);
+  -webkit-backdrop-filter:blur(30px) saturate(180%);border-top:1px solid var(--glass-bd)}
+.tabs{display:flex;height:var(--th)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;cursor:pointer;opacity:.4;transition:opacity .15s,color .15s;font-size:10px;font-weight:600}
+.tab.sel{opacity:1;color:var(--ac1)}
+.tab-ic{font-size:22px;line-height:1}
+
+/* ── BG FX ── */
+.bgfx{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
+.bgfx::before,.bgfx::after{content:"";position:absolute;width:55vw;height:55vw;border-radius:50%;filter:blur(88px);opacity:.22}
+.bgfx::before{background:var(--ac1);top:-18vw;right:-8vw}
+.bgfx::after{background:var(--ac2);bottom:-22vw;left:-12vw}
+
+/* ── CATEGORY CARDS ── */
+.cc{position:relative;margin:0 14px 12px;min-height:124px;border-radius:var(--r);overflow:hidden;
+  cursor:pointer;transition:transform .12s;display:flex;flex-direction:column;justify-content:flex-end;padding:18px}
+.cc:active{transform:scale(.97)}
+.cc::before{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.68) 0%,transparent 55%);z-index:1}
+.cc-em{position:absolute;top:12px;right:14px;font-size:46px;opacity:.55;z-index:2;filter:drop-shadow(0 4px 10px rgba(0,0,0,.4))}
+.cc-inf{position:relative;z-index:2}
+.cc-nm{font-size:21px;font-weight:800;letter-spacing:-.4px}
+.cc-ct{font-size:12px;opacity:.65;margin-top:2px}
+.c-yemek{background:linear-gradient(135deg,#7c2d12,#c2410c)}
+.c-rolyef{background:linear-gradient(135deg,#3b0764,#6d28d9)}
+.c-el{background:linear-gradient(135deg,#881337,#be123c)}
+
+/* ── SECTION ── */
+.sh{display:flex;align-items:center;justify-content:space-between;padding:14px 14px 8px}
+.st{font-size:18px;font-weight:800;letter-spacing:-.4px}
+.sm{color:var(--ac1);font-size:13px;font-weight:600;cursor:pointer}
+
+/* ── RECIPE GRID ── */
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:0 14px 12px}
+.rc{border-radius:16px;overflow:hidden;cursor:pointer;background:var(--glass);
+  border:1px solid var(--glass-bd);transition:transform .12s}
+.rc:active{transform:scale(.95)}
+.rc img,.rc .rcp{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:var(--bg1)}
+.rcp{display:grid;place-items:center;font-size:36px}
+.rc-inf{padding:9px 9px 11px}
+.rc-nm{font-size:13px;font-weight:700;line-height:1.3;margin-bottom:3px}
+.rc-mt{font-size:11px;color:var(--mut);display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.lock-badge{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.7);border-radius:8px;padding:3px 7px;font-size:11px;font-weight:700;color:var(--ac4)}
+
+/* ── RECIPE ROWS ── */
+.rl{padding:0 14px;display:flex;flex-direction:column;gap:9px}
+.rr{display:flex;gap:11px;align-items:center;background:var(--glass);border:1px solid var(--glass-bd);
+  border-radius:15px;padding:11px;cursor:pointer;transition:transform .12s;overflow:hidden;position:relative}
+.rr:active{transform:scale(.97)}
+.rr img,.rr .rrp{width:66px;height:66px;border-radius:11px;object-fit:cover;flex-shrink:0;background:var(--bg1)}
+.rr img{display:block}
+.rrp{display:grid;place-items:center;font-size:28px}
+.rr-inf{flex:1;min-width:0}
+.rr-nm{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rr-cat{font-size:11px;opacity:.55;margin-top:2px}
+.rr-tm{font-size:11px;color:var(--mut);margin-top:3px}
+
+/* ── SKELETON ── */
+.sk{background:linear-gradient(90deg,var(--bg1) 25%,rgba(255,255,255,.04) 50%,var(--bg1) 75%);
+  background-size:200% 100%;animation:shim 1.4s infinite;border-radius:12px}
+@keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ── SLIDE PAGES ── */
+.sp{position:fixed;inset:0;z-index:50;background:var(--bg0);overflow-y:auto;-webkit-overflow-scrolling:touch;
+  transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.9,.2,1)}
+.sp.open{transform:translateX(0)}
+.sp-back{position:sticky;top:0;z-index:5;padding:calc(var(--st)+8px) 14px 10px;
+  background:linear-gradient(to bottom,var(--bg0) 78%,transparent);
+  display:flex;align-items:center;gap:11px}
+.sp-back h2{font-size:21px;font-weight:900}
+.sp-sub{font-size:12px;color:var(--mut);padding:0 14px 8px}
+
+/* ── DETAIL ── */
+.d-hero{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:var(--bg1)}
+.d-hero-p{width:100%;aspect-ratio:16/9;display:grid;place-items:center;font-size:76px;background:var(--bg1)}
+.d-over{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;
+  padding:calc(var(--st)+8px) 12px}
+.d-ic{width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.52);backdrop-filter:blur(18px);
+  display:grid;place-items:center;font-size:18px;cursor:pointer;border:1px solid rgba(255,255,255,.14)}
+.d-ic:active{transform:scale(.87)}
+.d-body{padding:14px 14px calc(40px + var(--sb))}
+.d-title{font-size:25px;font-weight:900;letter-spacing:-.5px;margin-bottom:5px}
+.d-desc{color:var(--txt2);font-size:13px;line-height:1.55;margin-bottom:13px}
+.d-meta{display:flex;gap:10px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.d-meta::-webkit-scrollbar{display:none}
+.mc{flex-shrink:0;background:var(--glass);border:1px solid var(--glass-bd);border-radius:11px;
+  padding:8px 11px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:5px}
+.mc-i{font-size:13px}
+.mc-l{opacity:.55;font-size:10px}
+.d-tabs{display:flex;margin-bottom:13px;background:var(--bg1);border-radius:12px;padding:3px}
+.dt{flex:1;padding:9px;text-align:center;font-size:13px;font-weight:700;cursor:pointer;
+  border-radius:10px;transition:.15s;color:var(--mut)}
+.dt.sel{background:var(--glass-bd);color:var(--txt)}
+.ing-list{list-style:none}
+.ing-list li{padding:10px 0;border-bottom:1px solid var(--glass-bd);font-size:14px;
+  display:flex;align-items:center;gap:9px}
+.ing-list li:last-child{border-bottom:none}
+.ing-list li::before{content:"·";color:var(--ac1);font-size:18px;font-weight:900}
+.step-list{list-style:none}
+.si{display:flex;gap:13px;padding:11px 0;border-bottom:1px solid var(--glass-bd)}
+.si:last-child{border-bottom:none}
+.sn{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--ac1),var(--ac3));
+  display:grid;place-items:center;font-size:12px;font-weight:800;flex-shrink:0;margin-top:3px}
+.st-txt{font-size:13px;line-height:1.6;flex:1;padding-top:4px}
+.yt-btn{display:flex;align-items:center;gap:8px;background:rgba(255,0,0,.15);border:1px solid rgba(255,0,0,.25);
+  border-radius:12px;padding:11px 14px;cursor:pointer;margin-top:14px;font-size:13px;font-weight:600}
+
+/* ── SEARCH ── */
+.srch-wrap{padding:0 14px 12px;position:relative;display:flex;align-items:center}
+.srch-in{width:100%;background:var(--glass);border:1px solid var(--glass-bd);
+  border-radius:14px;color:var(--txt);font-size:15px;padding:12px 12px 12px 42px;
+  outline:none;-webkit-appearance:none}
+.srch-in::placeholder{color:var(--mut)}
+.srch-ic{position:absolute;left:26px;font-size:17px;opacity:.45;pointer-events:none}
+.srch-cl{position:absolute;right:24px;font-size:14px;cursor:pointer;opacity:.5;padding:5px}
+
+/* ── PREMIUM ── */
+.lock-overlay{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  display:grid;place-items:center;z-index:3;border-radius:15px}
+.lock-icon{font-size:28px}
+.prem-sheet{position:fixed;inset:0;z-index:70;display:none;align-items:flex-end}
+.prem-sheet.on{display:flex}
+.prem-bg{position:absolute;inset:0;background:rgba(0,0,0,.6)}
+.prem-box{position:relative;z-index:1;width:100%;background:rgba(18,12,8,.95);
+  backdrop-filter:blur(40px);border-top:1px solid var(--glass-bd);
+  border-radius:28px 28px 0 0;padding:12px 16px calc(24px + var(--sb));max-width:600px;margin:0 auto}
+.prem-grip{width:38px;height:5px;border-radius:3px;background:rgba(255,255,255,.2);margin:8px auto 18px}
+.prem-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--ac4),var(--ac1));
+  border-radius:10px;padding:5px 12px;font-size:12px;font-weight:800;color:#0d0906;margin-bottom:12px}
+.prem-title{font-size:24px;font-weight:900;margin-bottom:6px}
+.prem-desc{color:var(--txt2);font-size:14px;line-height:1.5;margin-bottom:18px}
+.prem-feats{list-style:none;margin-bottom:20px}
+.prem-feats li{padding:6px 0;font-size:14px;display:flex;align-items:center;gap:9px}
+.prem-feats li::before{content:"✓";color:var(--ok);font-weight:800}
+.btn-prem{width:100%;padding:14px;border:none;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;
+  background:linear-gradient(135deg,var(--ac4),var(--ac1));color:#0d0906;margin-bottom:10px}
+.btn-sec{width:100%;padding:13px;border:1px solid var(--glass-bd);border-radius:14px;font-size:14px;
+  font-weight:600;cursor:pointer;background:var(--glass);color:var(--txt2)}
+
+/* ── SHEET ── */
+.sh-bg{position:fixed;inset:0;background:rgba(0,0,0,.58);backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;transition:.22s;z-index:60}
+.sh-bg.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-width:600px;margin:0 auto;
+  transform:translateY(110%);transition:transform .28s cubic-bezier(.2,.9,.2,1);
+  background:rgba(18,13,8,.94);backdrop-filter:blur(40px);
+  border-top:1px solid var(--glass-bd);border-radius:28px 28px 0 0;
+  padding:10px 14px calc(20px + var(--sb))}
+.sheet.on{transform:translateY(0)}
+.grip{width:38px;height:5px;border-radius:3px;background:rgba(255,255,255,.18);margin:8px auto 14px}
+.lng-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lng-item{padding:12px;border-radius:14px;background:var(--glass);border:1px solid var(--glass-bd);
+  font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:.15s}
+.lng-item.sel{border-color:var(--ac1);background:rgba(249,115,22,.12)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:calc(var(--th)+var(--sb)+14px);left:50%;transform:translateX(-50%);
+  background:var(--ok);color:#0d0906;padding:9px 18px;border-radius:18px;font-weight:700;
+  font-size:13px;opacity:0;transition:.18s;z-index:90;white-space:nowrap;pointer-events:none}
+.toast.on{opacity:1}
+
+/* ── EMPTY ── */
+.emp{text-align:center;padding:52px 20px;color:var(--mut)}
+.emp .big{font-size:60px;margin-bottom:10px}
+.emp h3{font-size:17px;font-weight:700;color:var(--txt);margin-bottom:5px}
+.emp p{font-size:13px;line-height:1.5}
+
+/* ── SPINNER ── */
+.spin{display:inline-block;width:18px;height:18px;border:2px solid var(--glass-bd);
+  border-top-color:var(--ac1);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.loading-row{display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:20px;color:var(--mut);font-size:13px}
+
+@media(min-width:580px){.rg{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div class="bgfx"></div>
+
+<div id="app">
+  <div id="topbar">
+    <div class="tb">
+      <div class="brand">
+        <div class="b-ic">🍳</div>
+        <div class="b-nm" id="appTitle">Tarifler</div>
+      </div>
+      <div class="tb-r">
+        <button class="ibtn" id="refreshBtn" onclick="refreshAll()" title="Yenile">↻</button>
+        <button class="ibtn" onclick="openLang()">🌐</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="pages">
+    <div class="page active" id="pg-home" data-tab="home"><div id="home-cnt"></div></div>
+    <div class="page" id="pg-search" data-tab="search">
+      <div class="srch-wrap">
+        <span class="srch-ic">🔍</span>
+        <input type="search" class="srch-in" id="srchIn" oninput="onSearch(this.value)" placeholder="">
+        <span class="srch-cl" id="srchCl" onclick="clrSearch()" style="display:none">✕</span>
+      </div>
+      <div id="srch-res"></div>
+    </div>
+    <div class="page" id="pg-favs" data-tab="favs"><div id="favs-cnt"></div></div>
+  </div>
+
+  <div id="tabbar">
+    <div class="tabs">
+      <div class="tab sel" data-tab="home" onclick="swTab('home')"><span class="tab-ic">🏠</span><span data-k="tabHome"></span></div>
+      <div class="tab" data-tab="search" onclick="swTab('search')"><span class="tab-ic">🔍</span><span data-k="tabSearch"></span></div>
+      <div class="tab" data-tab="favs" onclick="swTab('favs')"><span class="tab-ic">❤️</span><span data-k="tabFavs"></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Category slide page -->
+<div class="sp" id="catPage">
+  <div id="cat-cnt"></div>
+</div>
+
+<!-- Recipe detail slide page -->
+<div class="sp" id="detPage">
+  <div id="det-cnt" style="position:relative"></div>
+</div>
+
+<!-- Premium sheet -->
+<div class="prem-sheet" id="premSheet" onclick="closePrem(event)">
+  <div class="prem-bg"></div>
+  <div class="prem-box" id="premBox">
+    <div class="prem-grip"></div>
+    <div class="prem-badge">⭐ <span data-k="premium"></span></div>
+    <h2 class="prem-title" data-k="premTitle"></h2>
+    <p class="prem-desc" data-k="premDesc"></p>
+    <ul class="prem-feats" id="premFeats"></ul>
+    <button class="btn-prem" onclick="doPurchase()" data-k="premBtn"></button>
+    <button class="btn-sec" onclick="closePrem()" data-k="premRestore"></button>
+  </div>
+</div>
+
+<!-- Language sheet -->
+<div class="sh-bg" id="shBg" onclick="closeLang()"></div>
+<div class="sheet" id="langSh">
+  <div class="grip"></div>
+  <h3 style="font-size:17px;font-weight:800;margin-bottom:12px" id="langShTitle"></h3>
+  <div class="lng-grid" id="lngGrid"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════
+const TMDB = 'https://www.themealdb.com/api/json/v1/1';
+const CUSTOM_URL = 'https://raw.githubusercontent.com/NickDegs/realvirtuality-apps/main/tarifler/data.json';
+const CK_LIST  = 'tmdb_tr_list';
+const CK_DET   = 'tmdb_det_';
+const CK_CUST  = 'tarifler_custom';
+const CK_FAV   = 'tarifler_favs';
+const CK_LANG  = 'tarifler_lang';
+const CK_PREM  = 'tarifler_premium';
+const TTL      = 24 * 3600000; // 24 saat
+
+// ══════════════════════════════════════
+// TRANSLATIONS
+// ══════════════════════════════════════
+const TR = {
+  tr:{appName:'Tarifler',tabHome:'Ana Sayfa',tabSearch:'Ara',tabFavs:'Favoriler',
+    cats:{yemek:'Türk Mutfağı',rolyef:'Rölyef',el:'El İşçiliği'},
+    catDesc:{yemek:'Geleneksel Türk lezzetleri',rolyef:'3D alçı ve rölyef sanatı',el:'El yapımı projeler'},
+    recCnt:n=>`${n} tarif`,featured:'Öne Çıkanlar',allRec:'Tümünü Gör',
+    noRec:'Henüz tarif yok',noFavs:'Favori tarifiniz yok',noFavsHint:'Tariflerde ❤️ dokunun',
+    srchPh:'Tarif veya malzeme ara…',noRes:'Sonuç bulunamadı',
+    ing:'Malzemeler',steps:'Adımlar',prep:'Hazırlık',cook:'Pişirme',total:'Toplam',serv:'Porsiyon',
+    favAdd:'Favorilere eklendi',favRm:'Favorilerden çıkarıldı',
+    loading:'Yükleniyor…',errCache:'Önceki veri gösteriliyor',noNet:'İnternet bağlantısı yok',
+    watchVideo:'YouTube\'da İzle',
+    premium:'Premium',premTitle:'Premium\'a Yükselt',
+    premDesc:'Tüm rölyef ve el işçiliği tariflerini, adım adım rehberleri ve özel içerikleri açın.',
+    premFeats:['Tüm premium tarifler','Adım adım videolar','Yeni içerikler önce siz','Reklamsız deneyim'],
+    premBtn:'Premium\'a Geç — ₺49,99/ay',premRestore:'Satın alımı geri yükle',
+    langTitle:'Dil Seçin',updated:'Güncellendi',
+    mins:'dk',hours:'sa',
+  },
+  en:{appName:'Recipes',tabHome:'Home',tabSearch:'Search',tabFavs:'Favorites',
+    cats:{yemek:'Turkish Cuisine',rolyef:'Relief Art',el:'Handicrafts'},
+    catDesc:{yemek:'Traditional Turkish delicacies',rolyef:'3D plaster & relief art',el:'Handmade projects'},
+    recCnt:n=>`${n} recipes`,featured:'Featured',allRec:'See All',
+    noRec:'No recipes yet',noFavs:'No favorites yet',noFavsHint:'Tap ❤️ on any recipe',
+    srchPh:'Search recipes or ingredients…',noRes:'No results found',
+    ing:'Ingredients',steps:'Steps',prep:'Prep',cook:'Cook',total:'Total',serv:'Servings',
+    favAdd:'Added to favorites',favRm:'Removed from favorites',
+    loading:'Loading…',errCache:'Showing cached data',noNet:'No internet connection',
+    watchVideo:'Watch on YouTube',
+    premium:'Premium',premTitle:'Go Premium',
+    premDesc:'Unlock all relief and handicraft recipes, step-by-step guides and exclusive content.',
+    premFeats:['All premium recipes','Step-by-step videos','New content first','Ad-free experience'],
+    premBtn:'Go Premium — £3.99/month',premRestore:'Restore purchase',
+    langTitle:'Select Language',updated:'Updated',
+    mins:'min',hours:'hr',
+  },
+  es:{appName:'Recetas',tabHome:'Inicio',tabSearch:'Buscar',tabFavs:'Favoritos',
+    cats:{yemek:'Cocina Turca',rolyef:'Arte en Relieve',el:'Artesanía'},
+    catDesc:{yemek:'Delicias turcas tradicionales',rolyef:'Arte en relieve y yeso',el:'Proyectos artesanales'},
+    recCnt:n=>`${n} recetas`,featured:'Destacados',allRec:'Ver todo',
+    noRec:'Sin recetas',noFavs:'Sin favoritos',noFavsHint:'Toca ❤️ en una receta',
+    srchPh:'Buscar recetas…',noRes:'Sin resultados',
+    ing:'Ingredientes',steps:'Pasos',prep:'Prep.',cook:'Cocción',total:'Total',serv:'Porciones',
+    favAdd:'Añadido',favRm:'Eliminado',loading:'Cargando…',errCache:'Mostrando caché',noNet:'Sin conexión',
+    watchVideo:'Ver en YouTube',
+    premium:'Premium',premTitle:'Hazte Premium',
+    premDesc:'Desbloquea todas las recetas premium, guías paso a paso y contenido exclusivo.',
+    premFeats:['Todas las recetas premium','Videos paso a paso','Contenido nuevo primero','Sin anuncios'],
+    premBtn:'Hazte Premium — €3,99/mes',premRestore:'Restaurar compra',
+    langTitle:'Idioma',updated:'Actualizado',mins:'min',hours:'h',
+  },
+  zh:{appName:'菜谱',tabHome:'首页',tabSearch:'搜索',tabFavs:'收藏',
+    cats:{yemek:'土耳其美食',rolyef:'浮雕艺术',el:'手工艺'},
+    catDesc:{yemek:'传统土耳其美味',rolyef:'3D石膏浮雕艺术',el:'手工项目'},
+    recCnt:n=>`${n} 个食谱`,featured:'精选',allRec:'查看全部',
+    noRec:'暂无食谱',noFavs:'暂无收藏',noFavsHint:'点击食谱上的❤️',
+    srchPh:'搜索食谱…',noRes:'无结果',
+    ing:'食材',steps:'步骤',prep:'准备',cook:'烹饪',total:'总计',serv:'份量',
+    favAdd:'已收藏',favRm:'已取消',loading:'加载中…',errCache:'显示缓存',noNet:'无网络',
+    watchVideo:'在YouTube观看',
+    premium:'Premium',premTitle:'升级会员',
+    premDesc:'解锁所有高级食谱、逐步指南和独家内容。',
+    premFeats:['所有高级食谱','步骤视频','抢先获取新内容','无广告体验'],
+    premBtn:'升级会员 — ¥28/月',premRestore:'恢复购买',
+    langTitle:'选择语言',updated:'已更新',mins:'分钟',hours:'小时',
+  },
+  ru:{appName:'Рецепты',tabHome:'Главная',tabSearch:'Поиск',tabFavs:'Избранное',
+    cats:{yemek:'Турецкая кухня',rolyef:'Рельефное искусство',el:'Рукоделие'},
+    catDesc:{yemek:'Традиционные турецкие блюда',rolyef:'3D рельефное искусство',el:'Проекты рукоделия'},
+    recCnt:n=>`${n} рецептов`,featured:'Рекомендуем',allRec:'Все рецепты',
+    noRec:'Нет рецептов',noFavs:'Нет избранного',noFavsHint:'Нажмите ❤️ на рецепте',
+    srchPh:'Поиск рецептов…',noRes:'Ничего не найдено',
+    ing:'Ингредиенты',steps:'Шаги',prep:'Подг.',cook:'Готовка',total:'Итого',serv:'Порций',
+    favAdd:'Добавлено',favRm:'Удалено',loading:'Загрузка…',errCache:'Кэш',noNet:'Нет сети',
+    watchVideo:'Смотреть на YouTube',
+    premium:'Премиум',premTitle:'Перейти на Премиум',
+    premDesc:'Разблокируйте все рецепты, пошаговые видео и эксклюзивный контент.',
+    premFeats:['Все премиум-рецепты','Видео шаг за шагом','Новый контент первым','Без рекламы'],
+    premBtn:'Премиум — 299₽/мес',premRestore:'Восстановить покупку',
+    langTitle:'Язык',updated:'Обновлено',mins:'мин',hours:'ч',
+  },
+  de:{appName:'Rezepte',tabHome:'Start',tabSearch:'Suche',tabFavs:'Favoriten',
+    cats:{yemek:'Türkische Küche',rolyef:'Reliefkunst',el:'Handwerk'},
+    catDesc:{yemek:'Traditionelle türkische Küche',rolyef:'3D Gips & Reliefkunst',el:'Handwerksprojekte'},
+    recCnt:n=>`${n} Rezepte`,featured:'Empfohlen',allRec:'Alle anzeigen',
+    noRec:'Keine Rezepte',noFavs:'Keine Favoriten',noFavsHint:'❤️ auf Rezept tippen',
+    srchPh:'Rezepte suchen…',noRes:'Keine Ergebnisse',
+    ing:'Zutaten',steps:'Schritte',prep:'Vorb.',cook:'Kochen',total:'Gesamt',serv:'Portionen',
+    favAdd:'Hinzugefügt',favRm:'Entfernt',loading:'Laden…',errCache:'Cache',noNet:'Kein Netz',
+    watchVideo:'Auf YouTube ansehen',
+    premium:'Premium',premTitle:'Premium werden',
+    premDesc:'Schalte alle Premium-Rezepte, Schritt-für-Schritt-Videos und exklusive Inhalte frei.',
+    premFeats:['Alle Premium-Rezepte','Schritt-für-Schritt-Videos','Neue Inhalte zuerst','Werbefrei'],
+    premBtn:'Premium — 3,99 €/Monat',premRestore:'Kauf wiederherstellen',
+    langTitle:'Sprache',updated:'Aktualisiert',mins:'Min',hours:'Std',
+  },
+  fr:{appName:'Recettes',tabHome:'Accueil',tabSearch:'Recherche',tabFavs:'Favoris',
+    cats:{yemek:'Cuisine Turque',rolyef:'Art en Relief',el:'Artisanat'},
+    catDesc:{yemek:'Délices turcs traditionnels',rolyef:'Art en relief 3D',el:'Projets artisanaux'},
+    recCnt:n=>`${n} recettes`,featured:'En vedette',allRec:'Tout voir',
+    noRec:'Pas de recettes',noFavs:'Pas de favoris',noFavsHint:'Appuyez sur ❤️',
+    srchPh:'Rechercher des recettes…',noRes:'Aucun résultat',
+    ing:'Ingrédients',steps:'Étapes',prep:'Prép.',cook:'Cuisson',total:'Total',serv:'Portions',
+    favAdd:'Ajouté',favRm:'Retiré',loading:'Chargement…',errCache:'Cache affiché',noNet:'Hors ligne',
+    watchVideo:'Voir sur YouTube',
+    premium:'Premium',premTitle:'Passer Premium',
+    premDesc:'Débloquez toutes les recettes premium, vidéos étape par étape et contenu exclusif.',
+    premFeats:['Toutes les recettes premium','Vidéos étape par étape','Nouveau contenu en avant-première','Sans publicité'],
+    premBtn:'Premium — 3,99 €/mois',premRestore:'Restaurer achat',
+    langTitle:'Langue',updated:'Mis à jour',mins:'min',hours:'h',
+  },
+  it:{appName:'Ricette',tabHome:'Home',tabSearch:'Cerca',tabFavs:'Preferiti',
+    cats:{yemek:'Cucina Turca',rolyef:'Arte in Rilievo',el:'Artigianato'},
+    catDesc:{yemek:'Delizie turche tradizionali',rolyef:'Arte in rilievo 3D',el:'Progetti artigianali'},
+    recCnt:n=>`${n} ricette`,featured:'In evidenza',allRec:'Vedi tutto',
+    noRec:'Nessuna ricetta',noFavs:'Nessun preferito',noFavsHint:'Tocca ❤️ su una ricetta',
+    srchPh:'Cerca ricette…',noRes:'Nessun risultato',
+    ing:'Ingredienti',steps:'Passaggi',prep:'Prep.',cook:'Cottura',total:'Totale',serv:'Porzioni',
+    favAdd:'Aggiunto',favRm:'Rimosso',loading:'Caricamento…',errCache:'Cache',noNet:'Offline',
+    watchVideo:'Guarda su YouTube',
+    premium:'Premium',premTitle:'Passa al Premium',
+    premDesc:'Sblocca tutte le ricette premium, video passo passo e contenuti esclusivi.',
+    premFeats:['Tutte le ricette premium','Video passo passo','Nuovi contenuti in anteprima','Senza pubblicità'],
+    premBtn:'Premium — 3,99 €/mese',premRestore:'Ripristina acquisto',
+    langTitle:'Lingua',updated:'Aggiornato',mins:'min',hours:'ore',
+  },
+};
+const FLAGS={tr:'🇹🇷',en:'🇬🇧',es:'🇪🇸',zh:'🇨🇳',ru:'🇷🇺',de:'🇩🇪',fr:'🇫🇷',it:'🇮🇹'};
+const LNAMES={tr:'Türkçe',en:'English',es:'Español',zh:'中文',ru:'Русский',de:'Deutsch',fr:'Français',it:'Italiano'};
+
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+let LANG = localStorage.getItem(CK_LANG) || (navigator.language||'tr').slice(0,2);
+if(!TR[LANG]) LANG='tr';
+let tmdbList = [];      // [{idMeal,strMeal,strMealThumb}]
+let customRecs = [];    // [{id,source,category,name,...}]
+let favs = JSON.parse(localStorage.getItem(CK_FAV)||'[]');
+let isPremium = localStorage.getItem(CK_PREM)==='1';
+let currentCat = null;
+let currentId = null;
+let currentSrc = null;
+let loadingDet = false;
+
+const t = k => { const v = TR[LANG][k]; return (typeof v==='function'?v:v)||k; };
+const esc = s => (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function toast(msg,dur=1600){const e=document.getElementById('toast');e.textContent=msg;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),dur);}
+
+// ══════════════════════════════════════
+// CACHE HELPERS
+// ══════════════════════════════════════
+function cGet(key){try{const d=JSON.parse(localStorage.getItem(key)||'null');if(!d)return null;if(d.ts&&Date.now()-d.ts>TTL)return null;return d.v;}catch{return null;}}
+function cSet(key,v){try{localStorage.setItem(key,JSON.stringify({v,ts:Date.now()}));}catch{}}
+
+// ══════════════════════════════════════
+// DATA LOADING
+// ══════════════════════════════════════
+async function loadAll(force=false){
+  setRefSpinner(true);
+  const [t1,t2] = await Promise.allSettled([loadTmdb(force), loadCustom(force)]);
+  setRefSpinner(false);
+  renderAll();
+}
+
+async function loadTmdb(force=false){
+  if(!force){const c=cGet(CK_LIST);if(c){tmdbList=c;return;}}
+  try{
+    const r=await fetch(`${TMDB}/filter.php?a=Turkish`);
+    if(!r.ok)throw 0;
+    const d=await r.json();
+    tmdbList=d.meals||[];
+    cSet(CK_LIST,tmdbList);
+  }catch{
+    const c=cGet(CK_LIST);if(c)tmdbList=c;
+  }
+}
+
+async function loadCustom(force=false){
+  if(!force){const c=cGet(CK_CUST);if(c){customRecs=c;return;}}
+  try{
+    const r=await fetch(CUSTOM_URL+'?_='+Date.now());
+    if(!r.ok)throw 0;
+    const d=await r.json();
+    customRecs=d.recipes||[];
+    cSet(CK_CUST,customRecs);
+  }catch{
+    const c=cGet(CK_CUST);if(c)customRecs=c;
+  }
+}
+
+async function refreshAll(){
+  await loadAll(true);
+  toast('✓ '+t('updated'));
+}
+
+function setRefSpinner(on){
+  const b=document.getElementById('refreshBtn');
+  b.style.animation=on?'sp .7s linear infinite':'';
+}
+
+// ══════════════════════════════════════
+// TMDB DETAIL (lazy, cached)
+// ══════════════════════════════════════
+async function getTmdbDetail(id){
+  const ck=CK_DET+id;
+  const c=cGet(ck); if(c)return c;
+  const r=await fetch(`${TMDB}/lookup.php?i=${id}`);
+  const d=await r.json();
+  const m=d.meals?.[0]; if(!m)throw 0;
+  cSet(ck,m);
+  return m;
+}
+
+// ══════════════════════════════════════
+// RENDER HELPERS
+// ══════════════════════════════════════
+const CAT_EM={yemek:'🍳',rolyef:'🎨',el:'🧵'};
+const CAT_PH={yemek:'🍲',rolyef:'🏺',el:'🧶'};
+const CAT_CL={yemek:'c-yemek',rolyef:'c-rolyef',el:'c-el'};
+
+function getCounts(){
+  const c={yemek:tmdbList.length,rolyef:0,el:0};
+  customRecs.forEach(r=>{if(c[r.category]!==undefined)c[r.category]++;});
+  return c;
+}
+
+function thumbHtml(rec,cls,ph_size=36,small=true){
+  const url = rec.strMealThumb ? (small?rec.strMealThumb+'/small':rec.strMealThumb) : null;
+  const ph = CAT_PH[rec.category||'yemek'];
+  if(url) return `<img class="${cls}" src="${esc(url)}" loading="lazy" onerror="this.style.display='none';this.nextSibling.style.display='grid'" alt=""><div class="${cls}" style="display:none;font-size:${ph_size}px;background:var(--bg1);grid-template-columns:1fr;place-items:center">${ph}</div>`;
+  return `<div class="${cls}" style="font-size:${ph_size}px;background:var(--bg1);display:grid;place-items:center">${ph}</div>`;
+}
+
+function recCard(rec,locked=false){
+  return `<div class="rc" style="position:relative" onclick="${locked?`openPrem()`:`openRec('${esc(rec.id||rec.idMeal)}','${rec.source||'tmdb'}')`}">
+    ${thumbHtml(rec,'rcp',36,true)}
+    ${locked?`<div class="lock-overlay"><span class="lock-icon">🔒</span></div>`:''}
+    <div class="rc-inf">
+      <div class="rc-nm">${esc(rec.name||rec.strMeal)}</div>
+      <div class="rc-mt">${rec.cookTime?`⏱ ${rec.cookTime}${t('mins')}`:(rec.prepTime?`⏱ ${rec.prepTime}${t('mins')}`:'')}</div>
+    </div>
+  </div>`;
+}
+
+function recRow(rec,locked=false){
+  const nm=rec.name||rec.strMeal;
+  const catKey=rec.category||'yemek';
+  return `<div class="rr" onclick="${locked?`openPrem()`:`openRec('${esc(rec.id||rec.idMeal)}','${rec.source||'tmdb'}')`}">
+    ${thumbHtml(rec,'rrp',28,true)}
+    <div class="rr-inf">
+      <div class="rr-nm">${esc(nm)}</div>
+      <div class="rr-cat">${esc(TR[LANG].cats[catKey]||catKey)}</div>
+      ${rec.cookTime||rec.prepTime?`<div class="rr-tm">⏱ ${rec.cookTime||rec.prepTime} ${t('mins')}</div>`:''}
+    </div>
+    ${locked?`<span>🔒</span>`:`<span style="font-size:18px;opacity:.35">›</span>`}
+  </div>`;
+}
+
+// ══════════════════════════════════════
+// HOME
+// ══════════════════════════════════════
+function renderHome(){
+  const c=getCounts();
+  let html='<div style="padding-bottom:4px">';
+  ['yemek','rolyef','el'].forEach(k=>{
+    html+=`<div class="cc ${CAT_CL[k]}" onclick="openCat('${k}')">
+      <div class="cc-em">${CAT_EM[k]}</div>
+      <div class="cc-inf"><div class="cc-nm">${esc(TR[LANG].cats[k])}</div><div class="cc-ct">${TR[LANG].recCnt(c[k])}</div></div>
+    </div>`;
+  });
+  // Featured: mix of tmdb (first 4) + custom (first 2)
+  const feat=[...tmdbList.slice(0,4).map(m=>({...m,source:'tmdb',category:'yemek'})),
+              ...customRecs.filter(r=>!r.premium).slice(0,2)];
+  if(feat.length){
+    html+=`<div class="sh"><span class="st">${t('featured')}</span><span class="sm" onclick="openCat(null)">${t('allRec')}</span></div>
+    <div class="rg">${feat.map(r=>recCard(r,false)).join('')}</div>`;
+  }
+  html+='</div>';
+  document.getElementById('home-cnt').innerHTML=html;
+}
+
+// ══════════════════════════════════════
+// CATEGORY PAGE
+// ══════════════════════════════════════
+function openCat(key){
+  currentCat=key;
+  renderCat();
+  document.getElementById('catPage').classList.add('open');
+  history.pushState({p:'cat'},'');
+}
+
+function renderCat(){
+  const key=currentCat;
+  let recs;
+  if(!key){
+    recs=[...tmdbList.map(m=>({...m,source:'tmdb',category:'yemek'})),...customRecs];
+  } else if(key==='yemek'){
+    recs=tmdbList.map(m=>({...m,source:'tmdb',category:'yemek'}));
+  } else {
+    recs=customRecs.filter(r=>r.category===key);
+  }
+  const title=key?TR[LANG].cats[key]:t('allRec');
+  let html=`<div class="sp-back">
+    <button class="ibtn" onclick="closeSp('catPage')">‹</button>
+    <div><h2>${esc(title)}</h2></div>
+  </div>
+  <div class="sp-sub">${TR[LANG].recCnt(recs.length)}</div>`;
+  if(!recs.length){
+    html+=`<div class="emp"><div class="big">${CAT_EM[key]||'📋'}</div><h3>${t('noRec')}</h3></div>`;
+  } else {
+    html+=`<div class="rl">${recs.map(r=>{
+      const locked=r.premium&&!isPremium;
+      return recRow(r,locked);
+    }).join('')}</div><div style="height:20px"></div>`;
+  }
+  document.getElementById('cat-cnt').innerHTML=html;
+}
+
+// ══════════════════════════════════════
+// RECIPE DETAIL
+// ══════════════════════════════════════
+function openRec(id,src){
+  currentId=id; currentSrc=src;
+  document.getElementById('det-cnt').innerHTML=`<div class="loading-row"><div class="spin"></div><span>${t('loading')}</span></div>`;
+  document.getElementById('detPage').classList.add('open');
+  history.pushState({p:'det'},'');
+  renderDet('ing');
+}
+
+async function renderDet(tab='ing'){
+  const el=document.getElementById('det-cnt');
+  let rec;
+  if(currentSrc==='tmdb'){
+    try{
+      const m=await getTmdbDetail(currentId);
+      // Build ingredients list
+      const ings=[];
+      for(let i=1;i<=20;i++){
+        const ing=(m[`strIngredient${i}`]||'').trim();
+        const meas=(m[`strMeasure${i}`]||'').trim();
+        if(ing)ings.push(meas?`${meas} ${ing}`:ing);
+      }
+      const steps=(m.strInstructions||'').split(/\r?\n/).map(s=>s.trim()).filter(s=>s.length>3);
+      rec={id:m.idMeal,source:'tmdb',name:m.strMeal,category:'yemek',
+        description:'',image:m.strMealThumb,strMealThumb:m.strMealThumb,
+        youtube:m.strYoutube,ingredients:ings,steps,premium:false};
+    }catch{el.innerHTML=`<div class="emp"><div class="big">⚠️</div><h3>${t('noNet')}</h3></div>`;return;}
+  } else {
+    rec=customRecs.find(r=>String(r.id)===String(currentId));
+    if(!rec){el.innerHTML='';return;}
+  }
+  const isFav=favs.includes(String(rec.id));
+  const locked=rec.premium&&!isPremium;
+  const thumb=rec.strMealThumb||rec.image;
+  let html=`<div style="position:relative">`;
+  if(thumb){html+=`<img class="d-hero" src="${esc(thumb)}" loading="lazy" alt="">`;}
+  else{html+=`<div class="d-hero-p">${CAT_PH[rec.category||'yemek']}</div>`;}
+  html+=`<div class="d-over">
+    <button class="d-ic" onclick="closeSp('detPage')">‹</button>
+    <button class="d-ic" id="favBtn" onclick="toggleFav('${esc(String(rec.id))}')"><span>${isFav?'❤️':'🤍'}</span></button>
+  </div></div>
+  <div class="d-body">
+    <h1 class="d-title">${esc(rec.name)}</h1>
+    ${rec.description?`<p class="d-desc">${esc(rec.description)}</p>`:''}`;
+  // Meta chips
+  const chips=[];
+  if(rec.prepTime)chips.push(`<div class="mc"><span class="mc-i">🔪</span><div><div class="mc-l">${t('prep')}</div><div>${rec.prepTime}${t('mins')}</div></div></div>`);
+  if(rec.cookTime)chips.push(`<div class="mc"><span class="mc-i">🔥</span><div><div class="mc-l">${t('cook')}</div><div>${rec.cookTime}${t('mins')}</div></div></div>`);
+  if(rec.servings)chips.push(`<div class="mc"><span class="mc-i">🍽</span><div><div class="mc-l">${t('serv')}</div><div>${esc(String(rec.servings))}</div></div></div>`);
+  if(chips.length)html+=`<div class="d-meta">${chips.join('')}</div>`;
+  // Tabs
+  const ings=rec.ingredients||[];const stps=rec.steps||[];
+  html+=`<div class="d-tabs">
+    <div class="dt ${tab==='ing'?'sel':''}" onclick="renderDet('ing')">${t('ing')} ${ings.length?`(${ings.length})`:''}</div>
+    <div class="dt ${tab==='steps'?'sel':''}" onclick="renderDet('steps')">${t('steps')} ${stps.length?`(${stps.length})`:''}</div>
+  </div>`;
+  if(locked){
+    html+=`<div style="text-align:center;padding:30px 0">
+      <div style="font-size:48px;margin-bottom:12px">🔒</div>
+      <p style="color:var(--txt2);margin-bottom:16px;font-size:14px">${t('premDesc')}</p>
+      <button class="btn-prem" style="width:auto;padding:12px 24px" onclick="openPrem()">${t('premBtn')}</button>
+    </div>`;
+  } else if(tab==='ing'){
+    html+=ings.length?`<ul class="ing-list">${ings.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`:`<div class="emp" style="padding:24px 0"><p>—</p></div>`;
+  } else {
+    html+=stps.length?`<ol class="step-list">${stps.map((s,i)=>`<li class="si"><div class="sn">${i+1}</div><div class="st-txt">${esc(typeof s==='string'?s:s.text||s.name||'')}</div></li>`).join('')}</ol>`:`<div class="emp" style="padding:24px 0"><p>—</p></div>`;
+  }
+  // YouTube button
+  if(rec.youtube){html+=`<div class="yt-btn" onclick="window.open('${esc(rec.youtube)}','_blank')"><span style="font-size:20px">▶️</span>${t('watchVideo')}</div>`;}
+  html+='</div>';
+  el.innerHTML=html;
+}
+
+function toggleFav(id){
+  const idx=favs.indexOf(id);
+  if(idx>=0){favs.splice(idx,1);toast(t('favRm'));}
+  else{favs.push(id);toast(t('favAdd'));}
+  localStorage.setItem(CK_FAV,JSON.stringify(favs));
+  const btn=document.getElementById('favBtn');
+  if(btn)btn.querySelector('span').textContent=favs.includes(id)?'❤️':'🤍';
+  if(currentTab==='favs')renderFavs();
+}
+
+// ══════════════════════════════════════
+// SEARCH
+// ══════════════════════════════════════
+let srchTimer=null;
+function onSearch(q){
+  clearTimeout(srchTimer);
+  document.getElementById('srchCl').style.display=q?'':'none';
+  srchTimer=setTimeout(()=>doSearch(q),220);
+}
+function clrSearch(){document.getElementById('srchIn').value='';document.getElementById('srchCl').style.display='none';doSearch('');}
+function doSearch(q){
+  const el=document.getElementById('srch-res');
+  if(!q.trim()){el.innerHTML=`<div class="emp" style="padding-top:40px"><div class="big">🔍</div><h3>${esc(t('srchPh'))}</h3></div>`;return;}
+  const ql=q.toLowerCase();
+  const tmdbR=tmdbList.filter(m=>(m.strMeal||'').toLowerCase().includes(ql)).map(m=>({...m,source:'tmdb',category:'yemek'}));
+  const custR=customRecs.filter(r=>(r.name||'').toLowerCase().includes(ql)||(r.description||'').toLowerCase().includes(ql)||((r.ingredients||[]).some(i=>i.toLowerCase().includes(ql))));
+  const all=[...tmdbR,...custR];
+  if(!all.length){el.innerHTML=`<div class="emp"><div class="big">🤷</div><h3>${t('noRes')}</h3><p>"${esc(q)}"</p></div>`;return;}
+  el.innerHTML=`<div class="rl">${all.map(r=>{const lk=r.premium&&!isPremium;return recRow(r,lk);}).join('')}</div>`;
+}
+
+// ══════════════════════════════════════
+// FAVS
+// ══════════════════════════════════════
+function renderFavs(){
+  const allRecs=[...tmdbList.map(m=>({...m,source:'tmdb',category:'yemek',id:m.idMeal,name:m.strMeal})),...customRecs];
+  const favRecs=allRecs.filter(r=>favs.includes(String(r.id||r.idMeal)));
+  let html='';
+  if(!favRecs.length){html=`<div class="emp"><div class="big">❤️</div><h3>${t('noFavs')}</h3><p>${t('noFavsHint')}</p></div>`;}
+  else{html=`<div class="rl">${favRecs.map(r=>recRow(r,false)).join('')}</div>`;}
+  document.getElementById('favs-cnt').innerHTML=html;
+}
+
+// ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
+let currentTab='home';
+function swTab(t2){
+  currentTab=t2;
+  document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('sel',el.dataset.tab===t2));
+  document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id==='pg-'+t2));
+  if(t2==='search')setTimeout(()=>document.getElementById('srchIn')?.focus(),200);
+  if(t2==='favs')renderFavs();
+}
+
+function closeSp(id){
+  document.getElementById(id).classList.remove('open');
+  if(history.state?.p)history.back();
+}
+
+window.addEventListener('popstate',()=>{
+  if(document.getElementById('detPage').classList.contains('open'))
+    document.getElementById('detPage').classList.remove('open');
+  else if(document.getElementById('catPage').classList.contains('open'))
+    document.getElementById('catPage').classList.remove('open');
+});
+
+// ══════════════════════════════════════
+// PREMIUM
+// ══════════════════════════════════════
+function openPrem(){
+  const feats=TR[LANG].premFeats||[];
+  document.getElementById('premFeats').innerHTML=feats.map(f=>`<li>${esc(f)}</li>`).join('');
+  document.getElementById('premSheet').classList.add('on');
+}
+function closePrem(e){
+  if(!e||e.target.classList.contains('prem-bg')||e.target.id==='premSheet')
+    document.getElementById('premSheet').classList.remove('on');
+}
+function doPurchase(){
+  /* ── IAP HOOK ──────────────────────────────────────
+   * RevenueCat entegrasyonu için:
+   * import Purchases from '@revenuecat/purchases-capacitor';
+   * await Purchases.purchasePackage({aPackage: ...});
+   * isPremium = true;
+   * localStorage.setItem(CK_PREM,'1');
+   * ─────────────────────────────────────────────── */
+  toast('⏳ Yakında aktif olacak!',2000);
+  document.getElementById('premSheet').classList.remove('on');
+}
+
+// ══════════════════════════════════════
+// LANGUAGE
+// ══════════════════════════════════════
+function openLang(){
+  document.getElementById('langShTitle').textContent=t('langTitle');
+  document.getElementById('lngGrid').innerHTML=Object.keys(LNAMES).map(l=>`<div class="lng-item ${l===LANG?'sel':''}" onclick="setLang('${l}')"><span style="font-size:18px">${FLAGS[l]}</span>${LNAMES[l]}</div>`).join('');
+  document.getElementById('shBg').classList.add('on');
+  document.getElementById('langSh').classList.add('on');
+}
+function closeLang(){document.getElementById('shBg').classList.remove('on');document.getElementById('langSh').classList.remove('on');}
+function setLang(l){LANG=l;localStorage.setItem(CK_LANG,l);closeLang();renderAll();}
+
+// ══════════════════════════════════════
+// RENDER ALL
+// ══════════════════════════════════════
+function renderAll(){
+  document.documentElement.lang=LANG;
+  document.getElementById('appTitle').textContent=TR[LANG].appName||'Tarifler';
+  document.querySelectorAll('[data-k]').forEach(el=>{const k=el.dataset.k;const v=TR[LANG][k];if(v&&typeof v==='string')el.textContent=v;});
+  const si=document.getElementById('srchIn');if(si)si.placeholder=t('srchPh');
+  renderHome();
+  if(currentTab==='favs')renderFavs();
+  if(currentTab==='search')doSearch(document.getElementById('srchIn')?.value||'');
+  if(document.getElementById('catPage').classList.contains('open'))renderCat();
+}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+renderAll();
+loadAll();
+</script>
+</body>
+</html>
