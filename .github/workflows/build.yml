@@ -3,6 +3,9 @@ on:
   push: { branches: [main] }
   workflow_dispatch:
 
+env:
+  APPS: '["kasa","araclar","metin","butce","konum","tarayici","mesaj","haber"]'
+
 jobs:
   android:
     runs-on: ubuntu-latest
@@ -15,18 +18,28 @@ jobs:
         with: { distribution: temurin, java-version: '17' }
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-      - name: Build Android (.apk)
+      - name: Hazırla
         working-directory: ${{ matrix.app }}
         run: |
           npm install
           npx cap add android
           npx @capacitor/assets generate --android || true
           npx cap sync android
-          cd android && chmod +x gradlew && ./gradlew assembleDebug --no-daemon
+      - name: İmzalı .aab üret
+        working-directory: ${{ matrix.app }}/android
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+          chmod +x gradlew
+          ./gradlew bundleRelease --no-daemon \
+            -Pandroid.injected.signing.store.file=$(pwd)/release.keystore \
+            -Pandroid.injected.signing.store.password='${{ secrets.ANDROID_KEYSTORE_PASSWORD }}' \
+            -Pandroid.injected.signing.key.alias='${{ secrets.ANDROID_KEY_ALIAS }}' \
+            -Pandroid.injected.signing.key.password='${{ secrets.ANDROID_KEYSTORE_PASSWORD }}'
+          rm -f release.keystore
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.app }}-android-apk
-          path: ${{ matrix.app }}/android/app/build/outputs/apk/debug/*.apk
+          name: ${{ matrix.app }}-aab
+          path: ${{ matrix.app }}/android/app/build/outputs/bundle/release/*.aab
 
   ios:
     runs-on: macos-latest
@@ -37,12 +50,19 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-      - name: Build iOS (derleme, imzasız test)
+      - name: Hazırla + cihaz ayarı (iPhone 12+ / iPad)
         working-directory: ${{ matrix.app }}
         run: |
           npm install
           npx cap add ios
           npx @capacitor/assets generate --ios || true
           npx cap sync ios
-          cd ios/App && pod install
+          PBX=ios/App/App.xcodeproj/project.pbxproj
+          # iOS 14 (iPhone 12+ kapsar) + iPhone&iPad (1,2)
+          sed -i '' -E 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]+;/IPHONEOS_DEPLOYMENT_TARGET = 14.0;/g' "$PBX" || true
+          sed -i '' -E 's/TARGETED_DEVICE_FAMILY = "?[12,]+"?;/TARGETED_DEVICE_FAMILY = "1,2";/g' "$PBX" || true
+      - name: iOS derle (imzasız test)
+        working-directory: ${{ matrix.app }}/ios/App
+        run: |
+          pod install
           xcodebuild -workspace App.xcworkspace -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
