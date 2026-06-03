@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Şifreli Mesajlaşma</title>
+<style>
+:root{--accent:#6d5efc;--bg0:#08060f;--txt:#f1eefb;--mut:#a99fc4;--safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",system-ui,sans-serif;background:var(--bg0);color:var(--txt);min-height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.bgfx{position:fixed;inset:0;z-index:-2;overflow:hidden}
+.bgfx::before,.bgfx::after{content:"";position:absolute;width:75vw;height:75vw;border-radius:50%;filter:blur(90px);opacity:.4}
+.bgfx::before{background:var(--accent);top:-20vw;left:-15vw}.bgfx::after{background:#22d3ee;bottom:-22vw;right:-18vw}
+.wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:calc(var(--safe-top) + 30px) 28px calc(var(--safe-bot) + 30px)}
+.logo{width:104px;height:104px;border-radius:28px;background:linear-gradient(135deg,var(--accent),#22d3ee);display:grid;place-items:center;font-size:52px;box-shadow:0 16px 50px rgba(109,94,252,.5);margin-bottom:24px}
+h1{font-size:30px;font-weight:850;letter-spacing:-.8px;margin-bottom:10px}
+p{color:var(--mut);font-size:16px;max-width:340px;margin-bottom:8px;line-height:1.5}
+.feat{display:flex;gap:18px;margin:22px 0 30px;flex-wrap:wrap;justify-content:center}
+.feat span{font-size:13px;color:var(--txt);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:8px 14px}
+.btn{width:100%;max-width:320px;padding:16px;border:none;border-radius:16px;font-size:17px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--accent),#22d3ee);color:#08060f;box-shadow:0 12px 36px rgba(109,94,252,.45)}
+.lang{position:absolute;top:calc(var(--safe-top) + 14px);right:16px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.06);color:var(--txt);font-size:17px;cursor:pointer}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:.25s;z-index:40}
+.sheet-bg.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;transform:translateY(110%);transition:transform .3s cubic-bezier(.2,.9,.2,1);background:rgba(20,16,34,.95);backdrop-filter:blur(40px);border-top:1px solid rgba(255,255,255,.13);border-radius:28px 28px 0 0;padding:10px 16px calc(20px + var(--safe-bot));max-width:680px;margin:0 auto}
+.sheet.on{transform:translateY(0)}.grip{width:38px;height:5px;border-radius:3px;background:rgba(255,255,255,.25);margin:8px auto 14px}
+.langs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lng{padding:13px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.13);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:9px;color:var(--txt)}
+.lng.sel{border-color:var(--accent);background:rgba(109,94,252,.22)}
+</style>
+</head>
+<body>
+<div class="bgfx"></div>
+<button class="lang" onclick="openLang()">🌐</button>
+<div class="wrap">
+  <div class="logo">🔒</div>
+  <h1 id="h1"></h1>
+  <p id="p1"></p>
+  <div class="feat" id="feat"></div>
+  <button class="btn" id="startBtn" onclick="openChat()"></button>
+</div>
+<div class="sheet-bg" id="sheetBg" onclick="closeLang()"></div>
+<div class="sheet" id="sheet"><div class="grip"></div><h3 id="langTitle" style="font-size:18px;font-weight:700;margin-bottom:12px"></h3><div class="langs" id="langGrid"></div></div>
+
+<script>
+const SERVER="https://app.element.io"; // Matrix istemcisi (herhangi bir sunucuya bağlanır)
+const T={
+ tr:{h1:"Şifreli Mesajlaşma",p:"Uçtan uca şifreli, özel sohbet. Reklam yok, takip yok.",start:"Sohbete başla",f:["🔐 Uçtan uca şifreli","🚫 Reklamsız","🌐 Açık standart (Matrix)"],lang:"Dil seç"},
+ en:{h1:"Encrypted Chat",p:"End-to-end encrypted private messaging. No ads, no tracking.",start:"Start chatting",f:["🔐 End-to-end encrypted","🚫 Ad-free","🌐 Open standard (Matrix)"],lang:"Language"},
+ es:{h1:"Chat cifrado",p:"Mensajería privada cifrada de extremo a extremo. Sin anuncios.",start:"Empezar a chatear",f:["🔐 Cifrado E2E","🚫 Sin anuncios","🌐 Estándar abierto"],lang:"Idioma"},
+ zh:{h1:"加密聊天",p:"端到端加密的私密消息。无广告，无追踪。",start:"开始聊天",f:["🔐 端到端加密","🚫 无广告","🌐 开放标准"],lang:"语言"},
+ ru:{h1:"Шифрованный чат",p:"Приватные сообщения со сквозным шифрованием. Без рекламы.",start:"Начать чат",f:["🔐 E2E-шифрование","🚫 Без рекламы","🌐 Открытый стандарт"],lang:"Язык"},
+ de:{h1:"Verschlüsselter Chat",p:"Ende-zu-Ende verschlüsselte private Nachrichten. Keine Werbung.",start:"Chat starten",f:["🔐 E2E-verschlüsselt","🚫 Werbefrei","🌐 Offener Standard"],lang:"Sprache"},
+ fr:{h1:"Chat chiffré",p:"Messagerie privée chiffrée de bout en bout. Sans publicité.",start:"Commencer",f:["🔐 Chiffré E2E","🚫 Sans pub","🌐 Standard ouvert"],lang:"Langue"},
+ it:{h1:"Chat crittografata",p:"Messaggi privati con crittografia end-to-end. Senza pubblicità.",start:"Inizia a chattare",f:["🔐 Crittografia E2E","🚫 Senza pubblicità","🌐 Standard aperto"],lang:"Lingua"}
+};
+const FLAGS={tr:"🇹🇷",en:"🇬🇧",es:"🇪🇸",zh:"🇨🇳",ru:"🇷🇺",de:"🇩🇪",fr:"🇫🇷",it:"🇮🇹"},NAMES={tr:"Türkçe",en:"English",es:"Español",zh:"中文",ru:"Русский",de:"Deutsch",fr:"Français",it:"Italiano"};
+let LANG=localStorage.getItem("lang")||(navigator.language||"tr").slice(0,2); if(!T[LANG])LANG="en";
+const t=k=>T[LANG][k];
+function apply(){
+  document.documentElement.lang=LANG;
+  document.getElementById("h1").textContent=t("h1");
+  document.getElementById("p1").textContent=t("p");
+  document.getElementById("startBtn").textContent=t("start");
+  document.getElementById("feat").innerHTML=t("f").map(x=>`<span>${x}</span>`).join("");
+}
+function openChat(){
+  try{
+    if(window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.Browser){
+      window.Capacitor.Plugins.Browser.open({url:SERVER,presentationStyle:"fullscreen"});return;
+    }
+  }catch(e){}
+  window.location.href=SERVER;
+}
+function openLang(){document.getElementById("langTitle").textContent=t("lang");document.getElementById("langGrid").innerHTML=Object.keys(NAMES).map(l=>`<div class="lng ${l===LANG?'sel':''}" onclick="setLang('${l}')"><span style="font-size:20px">${FLAGS[l]}</span><span>${NAMES[l]}</span></div>`).join("");document.getElementById("sheetBg").classList.add("on");document.getElementById("sheet").classList.add("on");}
+function closeLang(){document.getElementById("sheetBg").classList.remove("on");document.getElementById("sheet").classList.remove("on");}
+function setLang(l){LANG=l;localStorage.setItem("lang",l);closeLang();apply();}
+apply();
+</script>
+</body>
+</html>

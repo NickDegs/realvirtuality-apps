@@ -1,0 +1,17 @@
+{
+  "appId": "com.nickdegs.konum",
+  "appName": "Konum & Harita",
+  "webDir": "www",
+  "backgroundColor": "#04130d",
+  "plugins": {
+    "SplashScreen": {
+      "backgroundColor": "#04130d",
+      "showSpinner": false,
+      "launchAutoHide": true
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#04130d"
+    }
+  }
+}

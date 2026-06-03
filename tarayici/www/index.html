@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Belge Tarayıcı</title>
+<style>
+:root{--accent:#0ea5e9;--bg0:#040b14;--txt:#e9f4ff;--mut:#8aa6bd;--glass:rgba(255,255,255,.07);--glass-bd:rgba(255,255,255,.14);--ok:#34d399;--safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",system-ui,sans-serif;background:var(--bg0);color:var(--txt);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+.bgfx{position:fixed;inset:0;z-index:-2;overflow:hidden}
+.bgfx::before,.bgfx::after{content:"";position:absolute;width:70vw;height:70vw;border-radius:50%;filter:blur(85px);opacity:.32}
+.bgfx::before{background:var(--accent);top:-22vw;left:-16vw}.bgfx::after{background:#6d5efc;bottom:-26vw;right:-20vw}
+.app{max-width:680px;margin:0 auto;padding:var(--safe-top) 16px calc(30px + var(--safe-bot))}
+header{padding:14px 0 4px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:21px;background:linear-gradient(135deg,var(--accent),#6d5efc)}
+.brand .nm{font-size:15px;font-weight:600}
+.iconbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--glass-bd);background:var(--glass);color:var(--txt);font-size:16px;cursor:pointer}
+h1{font-size:26px;font-weight:800;letter-spacing:-.8px;padding:6px 0 2px}
+.hint{color:var(--mut);font-size:13px;margin-bottom:16px}
+.big{display:block;width:100%;padding:20px;border:2px dashed var(--glass-bd);border-radius:20px;background:var(--glass);color:var(--txt);text-align:center;cursor:pointer;margin-bottom:16px}
+.big .e{font-size:40px}.big .t{font-size:16px;font-weight:600;margin-top:8px}.big .s{font-size:13px;color:var(--mut);margin-top:2px}
+.pages{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+.pg{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--glass-bd);aspect-ratio:3/4;background:#000}
+.pg img{width:100%;height:100%;object-fit:cover}
+.pg .num{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.6);border-radius:8px;padding:2px 7px;font-size:12px;font-weight:700}
+.pg .x{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.6);border-radius:50%;width:24px;height:24px;display:grid;place-items:center;color:#f87171;cursor:pointer}
+.btn{width:100%;padding:15px;border:none;border-radius:16px;font-size:16px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--accent),#6d5efc);color:#040b14}
+.btn:disabled{opacity:.4}
+.empty{text-align:center;color:var(--mut);font-size:14px;padding:30px}
+.toast{position:fixed;bottom:calc(24px + var(--safe-bot));left:50%;transform:translateX(-50%);background:var(--ok);color:#040b14;padding:10px 20px;border-radius:20px;font-weight:700;font-size:14px;opacity:0;transition:.2s;z-index:50}
+.toast.on{opacity:1}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:.25s;z-index:40}
+.sheet-bg.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;transform:translateY(110%);transition:transform .3s cubic-bezier(.2,.9,.2,1);background:rgba(8,18,30,.95);backdrop-filter:blur(40px);border-top:1px solid var(--glass-bd);border-radius:28px 28px 0 0;padding:10px 16px calc(20px + var(--safe-bot));max-width:680px;margin:0 auto}
+.sheet.on{transform:translateY(0)}.grip{width:38px;height:5px;border-radius:3px;background:rgba(255,255,255,.25);margin:8px auto 14px}
+.langs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lang{padding:13px;border-radius:14px;background:var(--glass);border:1px solid var(--glass-bd);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:9px}
+.lang.sel{border-color:var(--accent);background:rgba(14,165,233,.2)}
+</style>
+</head>
+<body>
+<div class="bgfx"></div>
+<div class="app">
+  <header><div class="brand"><div class="ic">📷</div><div class="nm">NickDegs</div></div>
+  <button class="iconbtn" onclick="openLang()">🌐</button></header>
+  <h1 id="h1"></h1>
+  <div class="hint" id="hint"></div>
+
+  <label class="big" for="cam">
+    <span class="e">📸</span>
+    <div class="t" id="addT"></div>
+    <div class="s" id="addS"></div>
+  </label>
+  <input id="cam" type="file" accept="image/*" capture="environment" multiple style="display:none" onchange="addPages(event)">
+
+  <div id="pagesWrap"></div>
+  <button class="btn" id="pdfBtn" onclick="makePdf()" disabled></button>
+</div>
+
+<div class="sheet-bg" id="sheetBg" onclick="closeLang()"></div>
+<div class="sheet" id="sheet"><div class="grip"></div><h3 id="langTitle" style="font-size:18px;font-weight:700;margin-bottom:12px"></h3><div class="langs" id="langGrid"></div></div>
+<div class="toast" id="toast">✓</div>
+
+<script src="lib/jspdf.js"></script>
+<script>
+const T={
+ tr:{title:["Belgeyi PDF yap","Belge Tarayıcı"],hint:"Çevrimdışı · belgeler cihazında kalır",add:"Sayfa çek / seç",addS:"Kamera veya galeriden",make:"PDF oluştur",empty:"Henüz sayfa yok",done:"PDF kaydedildi",lang:"Dil seç",pages:"sayfa"},
+ en:{title:["Turn paper into PDF","Document Scanner"],hint:"Offline · documents stay on device",add:"Scan / pick page",addS:"From camera or gallery",make:"Create PDF",empty:"No pages yet",done:"PDF saved",lang:"Language",pages:"pages"},
+ es:{title:["Convierte en PDF","Escáner"],hint:"Sin conexión · en tu dispositivo",add:"Escanear página",addS:"Cámara o galería",make:"Crear PDF",empty:"Sin páginas",done:"PDF guardado",lang:"Idioma",pages:"páginas"},
+ zh:{title:["文档转PDF","文档扫描"],hint:"离线 · 保留在设备",add:"扫描/选择页面",addS:"相机或相册",make:"生成PDF",empty:"暂无页面",done:"已保存",lang:"语言",pages:"页"},
+ ru:{title:["Документ в PDF","Сканер"],hint:"Офлайн · на устройстве",add:"Снять страницу",addS:"Камера или галерея",make:"Создать PDF",empty:"Нет страниц",done:"PDF сохранён",lang:"Язык",pages:"стр."},
+ de:{title:["Papier zu PDF","Dokumentenscanner"],hint:"Offline · bleibt am Gerät",add:"Seite scannen",addS:"Kamera oder Galerie",make:"PDF erstellen",empty:"Keine Seiten",done:"PDF gespeichert",lang:"Sprache",pages:"Seiten"},
+ fr:{title:["Papier en PDF","Scanner"],hint:"Hors ligne · sur l'appareil",add:"Scanner une page",addS:"Caméra ou galerie",make:"Créer le PDF",empty:"Aucune page",done:"PDF enregistré",lang:"Langue",pages:"pages"},
+ it:{title:["Documento in PDF","Scanner"],hint:"Offline · sul dispositivo",add:"Scansiona pagina",addS:"Fotocamera o galleria",make:"Crea PDF",empty:"Nessuna pagina",done:"PDF salvato",lang:"Lingua",pages:"pagine"}
+};
+const FLAGS={tr:"🇹🇷",en:"🇬🇧",es:"🇪🇸",zh:"🇨🇳",ru:"🇷🇺",de:"🇩🇪",fr:"🇫🇷",it:"🇮🇹"},NAMES={tr:"Türkçe",en:"English",es:"Español",zh:"中文",ru:"Русский",de:"Deutsch",fr:"Français",it:"Italiano"};
+let LANG=localStorage.getItem("lang")||(navigator.language||"tr").slice(0,2); if(!T[LANG])LANG="en";
+const t=k=>T[LANG][k];
+let pages=[]; // dataURL listesi
+function toast(m){const e=document.getElementById("toast");e.textContent="✓ "+(m||t("done"));e.classList.add("on");setTimeout(()=>e.classList.remove("on"),1300);}
+
+function applyLang(){
+  document.documentElement.lang=LANG;
+  const m=t("title");
+  document.getElementById("h1").textContent=m[0];
+  document.getElementById("hint").textContent=t("hint");
+  document.getElementById("addT").textContent=t("add");
+  document.getElementById("addS").textContent=t("addS");
+  document.getElementById("pdfBtn").textContent="📄 "+t("make");
+  render();
+}
+function addPages(ev){
+  const files=[...ev.target.files];
+  let done=0;
+  files.forEach(f=>{
+    const r=new FileReader();
+    r.onload=e=>{pages.push(e.target.result);done++;if(done===files.length)render();};
+    r.readAsDataURL(f);
+  });
+  ev.target.value="";
+}
+function render(){
+  const w=document.getElementById("pagesWrap");
+  if(!pages.length){w.innerHTML=`<div class="empty">${t("empty")}</div>`;}
+  else{w.innerHTML=`<div class="hint" style="margin-bottom:8px">${pages.length} ${t("pages")}</div><div class="pages">`+pages.map((p,i)=>`<div class="pg"><img src="${p}"><span class="num">${i+1}</span><span class="x" onclick="rm(${i})">✕</span></div>`).join("")+`</div>`;}
+  document.getElementById("pdfBtn").disabled=!pages.length;
+}
+function rm(i){pages.splice(i,1);render();}
+function makePdf(){
+  const {jsPDF}=window.jspdf;
+  const pdf=new jsPDF({unit:"pt",format:"a4"});
+  const W=pdf.internal.pageSize.getWidth(), H=pdf.internal.pageSize.getHeight();
+  let count=0;
+  pages.forEach((dataUrl,idx)=>{
+    const img=new Image();
+    img.onload=function(){
+      const r=Math.min(W/img.width,H/img.height);
+      const w=img.width*r, h=img.height*r, x=(W-w)/2, y=(H-h)/2;
+      if(idx>0) pdf.addPage();
+      pdf.addImage(dataUrl,'JPEG',x,y,w,h);
+      count++;
+      if(count===pages.length){pdf.save("belge-"+Date.now()+".pdf");toast();}
+    };
+    img.src=dataUrl;
+  });
+}
+function openLang(){document.getElementById("langTitle").textContent=t("lang");document.getElementById("langGrid").innerHTML=Object.keys(NAMES).map(l=>`<div class="lang ${l===LANG?'sel':''}" onclick="setLang('${l}')"><span style="font-size:20px">${FLAGS[l]}</span><span>${NAMES[l]}</span></div>`).join("");document.getElementById("sheetBg").classList.add("on");document.getElementById("sheet").classList.add("on");}
+function closeLang(){document.getElementById("sheetBg").classList.remove("on");document.getElementById("sheet").classList.remove("on");}
+function setLang(l){LANG=l;localStorage.setItem("lang",l);closeLang();applyLang();}
+applyLang();
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "appId": "com.nickdegs.haber",
+  "appName": "Haber & Podcast",
+  "webDir": "www",
+  "backgroundColor": "#120c04",
+  "plugins": {
+    "SplashScreen": {
+      "backgroundColor": "#120c04",
+      "showSpinner": false,
+      "launchAutoHide": true
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#120c04"
+    }
+  }
+}

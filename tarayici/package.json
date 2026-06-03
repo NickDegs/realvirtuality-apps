@@ -1,0 +1,16 @@
+{
+  "name": "tarayici",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@capacitor/core": "^6",
+    "@capacitor/android": "^6",
+    "@capacitor/ios": "^6",
+    "@capacitor/splash-screen": "^6",
+    "@capacitor/status-bar": "^6"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6",
+    "@capacitor/assets": "^3"
+  }
+}

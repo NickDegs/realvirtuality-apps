@@ -1,0 +1,17 @@
+{
+  "appId": "com.nickdegs.mesaj",
+  "appName": "Sifreli Mesajlasma",
+  "webDir": "www",
+  "backgroundColor": "#08060f",
+  "plugins": {
+    "SplashScreen": {
+      "backgroundColor": "#08060f",
+      "showSpinner": false,
+      "launchAutoHide": true
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#08060f"
+    }
+  }
+}

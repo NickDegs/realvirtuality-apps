@@ -1,0 +1,17 @@
+{
+  "appId": "com.nickdegs.tarayici",
+  "appName": "Belge Tarayici",
+  "webDir": "www",
+  "backgroundColor": "#040b14",
+  "plugins": {
+    "SplashScreen": {
+      "backgroundColor": "#040b14",
+      "showSpinner": false,
+      "launchAutoHide": true
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#040b14"
+    }
+  }
+}
