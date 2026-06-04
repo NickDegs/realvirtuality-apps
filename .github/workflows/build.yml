@@ -114,16 +114,14 @@ jobs:
         working-directory: ${{ matrix.app }}/ios/App
         run: |
           pod install
+          # Archive: imzalamayı atla (export adımı imzalayacak)
           xcodebuild \
             -workspace App.xcworkspace -scheme App \
             -destination 'generic/platform=iOS' -configuration Release -archivePath App.xcarchive \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8 \
-            -authenticationKeyID ${{ secrets.APPLE_ASC_KEY_ID }} \
-            -authenticationKeyIssuerID ${{ secrets.APPLE_ASC_ISSUER_ID }} \
             DEVELOPMENT_TEAM=${{ secrets.APPLE_ASC_TEAM_ID }} \
-            CODE_SIGN_STYLE=Automatic \
-            PROVISIONING_PROFILE_SPECIFIER="" archive
+            CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            archive
+          # Export: Distribution cert (keychain) + ASC API ile profil oluştur
           xcodebuild -exportArchive \
             -archivePath App.xcarchive -exportOptionsPlist ExportOptions.plist \
             -exportPath ./ipa-out -allowProvisioningUpdates \
