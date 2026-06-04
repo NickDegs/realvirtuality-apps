@@ -26,6 +26,8 @@ jobs:
           # SDK 35 zorunlu (Google Play Agustos 2025+)
           find . -name "variables.gradle" | xargs sed -i 's/targetSdkVersion = 34/targetSdkVersion = 35/g' 2>/dev/null || true
           find . -name "variables.gradle" | xargs sed -i 's/compileSdkVersion = 34/compileSdkVersion = 35/g' 2>/dev/null || true
+          # Her build'de benzersiz versionCode
+          find . -name "build.gradle" -path "*/app/build.gradle" | xargs sed -i "s/versionCode [0-9]*/versionCode ${{ github.run_number }}/g" 2>/dev/null || true
       - name: İmzalı .aab üret
         working-directory: ${{ matrix.app }}/android
         run: |
