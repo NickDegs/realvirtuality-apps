@@ -8,11 +8,11 @@
 <style>
 /* ─── LIQUID GLASS — iOS 26 ──────────────────────────── */
 :root {
-  /* ── Purple theme (default) ── */
-  --bg-base:  #1c1140;
-  --nav-bg:   rgba(28,17,66,0.72);
-  --bar-bg:   rgba(26,15,60,0.52);
-  --bnav-bg:  rgba(22,12,52,0.84);
+  /* ── Red theme (default) — iştah açıcı ── */
+  --bg-base:  #1c0608;
+  --nav-bg:   rgba(32,8,10,0.72);
+  --bar-bg:   rgba(28,6,8,0.52);
+  --bnav-bg:  rgba(24,5,8,0.86);
   --blur:     blur(22px) saturate(180%);
   --blur-hvy: blur(36px) saturate(220%);
   --gl:       rgba(255,255,255,0.08);
@@ -34,6 +34,21 @@
   --spring: cubic-bezier(0.34,1.56,0.64,1);
   --ease-out: cubic-bezier(0.22,1,0.36,1);
   --ease-in: cubic-bezier(0.55,0,1,0.45);
+}
+
+/* ── Purple theme ── */
+body[data-theme="purple"] {
+  --bg-base:  #1c1140;
+  --nav-bg:   rgba(28,17,66,0.72);
+  --bar-bg:   rgba(26,15,60,0.52);
+  --bnav-bg:  rgba(22,12,52,0.84);
+}
+body[data-theme="purple"]::before {
+  background:
+    radial-gradient(ellipse 70% 55% at 15% 12%, rgba(160,60,255,0.28) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 50% at 85% 25%, rgba(100,20,200,0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 65% 70% at 50% 88%, rgba(200,30,150,0.20) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 40% at 70% 60%, rgba(130,60,220,0.14) 0%, transparent 55%);
 }
 
 /* ── Light theme ── */
@@ -79,11 +94,11 @@ body::before {
   content: '';
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background:
-    radial-gradient(ellipse 70% 55% at 15% 12%, rgba(160,60,255,0.28) 0%, transparent 60%),
-    radial-gradient(ellipse 55% 50% at 85% 25%, rgba(100,20,200,0.22) 0%, transparent 55%),
-    radial-gradient(ellipse 65% 70% at 50% 88%, rgba(200,30,150,0.20) 0%, transparent 60%),
-    radial-gradient(ellipse 45% 40% at 70% 60%, rgba(130,60,220,0.14) 0%, transparent 55%);
-  transition: opacity 0.5s;
+    radial-gradient(ellipse 70% 55% at 15% 12%, rgba(220,30,20,0.32) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 50% at 85% 25%, rgba(160,10,18,0.24) 0%, transparent 55%),
+    radial-gradient(ellipse 65% 70% at 50% 88%, rgba(100,5,30,0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 40% at 70% 60%, rgba(200,55,10,0.14) 0%, transparent 55%);
+  transition: background 0.4s;
 }
 body[data-theme="light"]::before {
   background:
@@ -629,7 +644,7 @@ body[data-theme="light"] .hero-input { color: var(--txt); border-color: rgba(120
   <div id="nav">
     <span id="nav-back" onclick="navBack()">←</span>
     <span id="nav-title">Yemek Tarifleri</span>
-    <button class="nav-btn" id="theme-btn" onclick="cycleTheme()" title="Tema">🔮</button>
+    <button class="nav-btn" id="theme-btn" onclick="cycleTheme()" title="Tema">🍎</button>
     <button class="nav-btn" onclick="openSheet('lang')">🌐</button>
   </div>
   <div id="search-wrap">
@@ -1433,6 +1448,7 @@ function selectMode(m){
 
 // ===== THEME =====
 const THEMES=[
+  {key:'red',    icon:'🍎', label:'Kırmızı'},
   {key:'purple', icon:'🔮', label:'Mor'},
   {key:'light',  icon:'☀️', label:'Açık'},
   {key:'dark',   icon:'🌑', label:'Koyu'}
@@ -1442,7 +1458,7 @@ function applyTheme(idx){
   themeIdx=idx;
   const t=THEMES[idx];
   document.body.removeAttribute('data-theme');
-  if(t.key!=='purple') document.body.setAttribute('data-theme',t.key);
+  if(t.key!=='red') document.body.setAttribute('data-theme',t.key);
   const btn=document.getElementById('theme-btn');
   if(btn) btn.textContent=t.icon;
   localStorage.setItem('theme',t.key);
