@@ -1,1 +1,177 @@
-{"version":"2.0","note":"Tarifler artık sadece TheMealDB Turkish API kullanıyor."}
+{
+  "version": "3.0",
+  "lastUpdated": "2026-06-04",
+  "recipes": [
+    {
+      "id": "orgu001",
+      "source": "custom",
+      "category": "orgu",
+      "premium": false,
+      "name": "Başlangıç Atkısı",
+      "description": "İlk örgünüz için ideal düz atkı. Yalnızca düz ilmek kullanılır, 2-3 saatte tamamlanır.",
+      "image": null,
+      "prepTime": 15,
+      "cookTime": 150,
+      "servings": "160 × 18 cm",
+      "tags": ["şiş", "başlangıç", "atkı"],
+      "ingredients": [
+        "200 gr kalın ip (akrilik veya yün, 100-120 m/100 gr)",
+        "8 mm örgü şişi (1 çift)",
+        "Makas",
+        "Tapestry iğnesi (uç saklama)"
+      ],
+      "steps": [
+        "İpi hazırlayın. Çalışma başı: 20 ilmek atın (yaklaşık 20 cm'lik kuyruk bırakın).",
+        "Her sıra aynı: tüm ilmekleri düz ilmekle örerek gidin, sıra sonunda dönün.",
+        "İstenilen uzunluğa (yaklaşık 160 cm) ulaşana dek sıraları tekrarlayın.",
+        "Son sırada kapama: ilk ilmeği örerek ikinci ilmeği üstüne geçirin, bu işlemi tüm ilmeklere uygulayın.",
+        "Son ilmekten 10 cm ip bırakarak kesin, ilmekten geçirip sıkın.",
+        "Tapestry iğnesiyle baş ve son ip uçlarını örgünün içine saklayın."
+      ]
+    },
+    {
+      "id": "orgu002",
+      "source": "custom",
+      "category": "orgu",
+      "premium": false,
+      "name": "Kolay Tığ İşi Bere",
+      "description": "Tek tığ ve yarım sütun ilmeğiyle yapılan sıcak ve şık bere. Yaklaşık 2 saatte hazır.",
+      "image": null,
+      "prepTime": 10,
+      "cookTime": 120,
+      "servings": "Yetişkin (56-58 cm)",
+      "tags": ["tığ", "başlangıç", "bere", "aksesuar"],
+      "ingredients": [
+        "100 gr orta kalınlıkta ip (akrilik/yün karışımı)",
+        "5 mm tığ",
+        "Dikiş iğnesi",
+        "Makas",
+        "Ölçü bandı"
+      ],
+      "steps": [
+        "Zincir 4 ilmek yapın, ilk ilmeğe sıkı ilmekle birleştirip halka oluşturun.",
+        "1. tur: her ilmeğe 2 yarım sütun (artırım), toplam 8 ilmek. Sıkı ilmekle kapatın.",
+        "2-6. turlar: kademeli artırımla genişleyin (her tur +6 ilmek). 6. turda 44 ilmek olmalı.",
+        "7-18. turlar: düz öreyin, artırım yok. Çevre sabit 44 ilmek.",
+        "Baş ölçüsüne göre tur sayısını ayarlayın (56 cm çevre).",
+        "Son turda sıkı ilmekle kapatın. İpi kesin, tapestry iğnesiyle uçları saklayın."
+      ]
+    },
+    {
+      "id": "orgu003",
+      "source": "custom",
+      "category": "orgu",
+      "premium": false,
+      "name": "Çok Renkli Bileklik",
+      "description": "Şişle örülen basit çizgili bileklik. İki renk ip ile harika bir hediye.",
+      "image": null,
+      "prepTime": 10,
+      "cookTime": 60,
+      "servings": "Ayarlanabilir",
+      "tags": ["şiş", "başlangıç", "bileklik", "hediye"],
+      "ingredients": [
+        "50 gr ince ip — renk A (ana renk)",
+        "50 gr ince ip — renk B (kontrast)",
+        "4 mm örgü şişi",
+        "Düğme veya çıtçıt (1 adet)",
+        "Dikiş iğnesi"
+      ],
+      "steps": [
+        "Renk A ile 10 ilmek atın.",
+        "2 sıra düz, 2 sıra ters örün (1x1 fitil deseni). 4 sıra = 1 çizgi bloğu.",
+        "Renk B'ye geçin: 4 sıra aynı desen. İpleri taşıyın, kesmeden devam edin.",
+        "Bileğinizin çevresine -2 cm ulaşana kadar renkleri dönüşümlü tekrarlayın.",
+        "Son sırada ortaya düğme deliği açın: 4. ilmeği örüp ip üstünden geçin, sonraki ilmeği örerek devam.",
+        "Kapama yapın, ip uçlarını saklayın. Başa düğme veya çıtçıt dikin."
+      ]
+    },
+    {
+      "id": "orgu004",
+      "source": "custom",
+      "category": "orgu",
+      "premium": false,
+      "name": "Amigurumi Ayıcık",
+      "description": "Sevimli bir tığ işi amigurumi oyuncak. Çocuklar için güvenli malzeme kullanılır.",
+      "image": null,
+      "prepTime": 20,
+      "cookTime": 240,
+      "servings": "~15 cm boyunda",
+      "tags": ["tığ", "amigurumi", "oyuncak", "hediye"],
+      "ingredients": [
+        "100 gr bej/kahve akrilik ip (vücut)",
+        "50 gr koyu kahve ip (kulaklar, burun)",
+        "3.5 mm tığ",
+        "Güvenlik gözler (12 mm, 2 adet)",
+        "Dolgu pamuk",
+        "Tapestry iğnesi",
+        "Makas"
+      ],
+      "steps": [
+        "Baş: Sihirli halka ile başlayın. 1. tur: 6 sıkı ilmek. Her turda +6 artırım yaparak 6. turda 36 ilmek'e ulaşın.",
+        "7-12. tur: artırımsız düz öreyin (36 ilmek).",
+        "13-18. tur: her turda -6 azaltım. 18. turda 6 ilmek kaldığında dolguyu yerleştirin, güvenlik gözleri takın (11-12. tur arası).",
+        "Vücut: Sihirli halka, 6'dan başlayın, 6. turda 36 ilmek. 7-14. tur düz. Sonra -6 azaltımla kapatın.",
+        "Kollar (2 adet): 6 ilmekle başla, 4. turda 12 ilmek. 8 tur düz. Kapatın.",
+        "Bacaklar (2 adet): Kollarla aynı yöntem, biraz daha uzun (10 tur düz).",
+        "Kulaklar (2 adet): Sihirli halka, 6 ilmek. 2 tur artırım, kapatın.",
+        "Tüm parçaları tapestry iğnesiyle birbirine dikin. Yüzü nakışla işleyin."
+      ]
+    },
+    {
+      "id": "orgu005",
+      "source": "custom",
+      "category": "orgu",
+      "premium": false,
+      "name": "Parmaksız Eldiven",
+      "description": "Kışın klavye ve telefon kullanımı için pratik şiş örgüsü parmaksız eldiven.",
+      "image": null,
+      "prepTime": 15,
+      "cookTime": 180,
+      "servings": "Orta beden",
+      "tags": ["şiş", "orta", "eldiven", "kış"],
+      "ingredients": [
+        "150 gr ince yün ip",
+        "3.5 mm çorap şişi (5'li set) veya tur şişi",
+        "Boncuk veya yardımcı ip (başparmak için)",
+        "Tapestry iğnesi"
+      ],
+      "steps": [
+        "60 ilmek atın, 4 şişe paylaştırın (15+15+15+15). Birleştirip halka yapın.",
+        "2x2 lastik: (2 düz, 2 ters) desen ile 6 cm öreyin (bilek kısmı).",
+        "Avuç: Düz örgü ile 4 cm daha ilerleyin.",
+        "Başparmak açıklığı: 12 ilmeği yardımcı ipe alın, yerine 12 yeni ilmek atın, düz devam edin.",
+        "Avuç devamı: 5 cm daha düz öreyin.",
+        "Parmak kenarı: 2x2 lastik ile 1.5 cm. Kapama (yayık kapama ile).",
+        "Başparmak: Yardımcı ipten 12 ilmeği şişe alın, çevre kenarından 2 ilmek toplayın. 4 cm düz, kapatın.",
+        "Diğer eli aynı şekilde yapın (başparmak yönüne dikkat)."
+      ]
+    },
+    {
+      "id": "orgu006",
+      "source": "custom",
+      "category": "orgu",
+      "premium": false,
+      "name": "Tığ İşi Market Çantası",
+      "description": "Nefes alan, hafif ve dayanıklı tığ işi file çanta. Çevre dostu — yıkanabilir pamuk ip.",
+      "image": null,
+      "prepTime": 15,
+      "cookTime": 200,
+      "servings": "30×35 cm",
+      "tags": ["tığ", "çanta", "pamuk", "günlük"],
+      "ingredients": [
+        "200 gr pamuklu ip (ince, beyaz veya doğal)",
+        "4 mm tığ",
+        "Makas",
+        "Tapestry iğnesi"
+      ],
+      "steps": [
+        "Taban: Zincir 30 ilmek. Her iki tarafa sütun örerek oval taban oluşturun (~15×10 cm).",
+        "Tur örgüsüne geçin. Her turda sütun ilmeklerle kenarlara kadar devam edin.",
+        "File deseni: Her sütunun yerine (zincir 2, sütun atla, 1 sütun) deseniyle öreyin.",
+        "25 cm yüksekliğe ulaşana kadar file deseni tekrarlayın.",
+        "Saplar: 2 adet 60 cm zincir öreyin, her birini çantanın üst kenarına dikin.",
+        "Kenarları sıkı ilmekle çevreleyip sağlamlaştırın."
+      ]
+    }
+  ]
+}
