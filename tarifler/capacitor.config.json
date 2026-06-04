@@ -1,17 +1,10 @@
 {
   "appId": "com.nickdegs.tarifler",
-  "appName": "Yemek & Örgü",
+  "appName": "Yemek Tarifleri",
   "webDir": "www",
   "backgroundColor": "#0d0906",
   "plugins": {
-    "SplashScreen": {
-      "backgroundColor": "#0d0906",
-      "showSpinner": false,
-      "launchAutoHide": true
-    },
-    "StatusBar": {
-      "style": "DARK",
-      "backgroundColor": "#0d0906"
-    }
+    "SplashScreen": {"backgroundColor": "#0d0906","showSpinner": false,"launchAutoHide": true},
+    "StatusBar": {"style": "DARK","backgroundColor": "#0d0906"}
   }
 }
