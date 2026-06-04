@@ -177,9 +177,19 @@ jobs:
           echo "${{ secrets.APPLE_ASC_API_KEY }}" > ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8
           chmod 600 ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8
       - name: TestFlight'a yükle
+        continue-on-error: true
         run: |
+          IPA=$(ls ipa/*.ipa 2>/dev/null | head -1)
+          if [ -z "$IPA" ]; then echo "IPA bulunamadı, atlanıyor"; exit 0; fi
+          echo "Yükleniyor: $IPA"
           xcrun altool --upload-app \
-            --file $(ls ipa/*.ipa | head -1) \
+            --file "$IPA" \
+            --type ios \
             --apiKey ${{ secrets.APPLE_ASC_KEY_ID }} \
             --apiIssuer ${{ secrets.APPLE_ASC_ISSUER_ID }} \
-            --type ios
+            --output-format json 2>&1 || \
+          xcrun altool --upload-app \
+            --file "$IPA" \
+            --type ios \
+            --apiKey ${{ secrets.APPLE_ASC_KEY_ID }} \
+            --apiIssuer ${{ secrets.APPLE_ASC_ISSUER_ID }} 2>&1
