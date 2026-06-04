@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Yemek Tarifleri</title>
+<title>Yemek &amp; Örgü</title>
 <style>
 :root{
   --bg0:#0d0906;--bg1:#161009;--bg2:#1e1510;
-  --ac:#f97316;--ac2:#fbbf24;--ac3:#ef4444;
-  --txt:#f5f0ea;--txt2:#c0a880;--mut:#806048;
+  --ac1:#f97316;--ac2:#a78bfa;--ac3:#fbbf24;
+  --txt:#f5f0ea;--txt2:#c0a880;--mut:#7a5c40;
   --glass:rgba(255,255,255,.07);--glass-bd:rgba(255,255,255,.12);
   --r:20px;--ok:#34d399;
   --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
@@ -32,11 +32,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sy
 #topbar{position:fixed;top:0;left:0;right:0;z-index:30;padding-top:var(--st);
   background:linear-gradient(to bottom,var(--bg0) 75%,transparent)}
 .tb{height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 16px}
-.brand{display:flex;align-items:center;gap:9px}
-.b-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:19px;
-  background:linear-gradient(135deg,var(--ac),var(--ac2))}
-.b-nm{font-size:15px;font-weight:700;letter-spacing:-.2px}
-.tb-r{display:flex;gap:6px}
+.brand{display:flex;align-items:center;gap:9px;min-width:0;flex:1}
+.b-ic{width:34px;height:34px;border-radius:10px;flex-shrink:0;display:grid;place-items:center;font-size:19px;
+  background:linear-gradient(135deg,var(--ac1),var(--ac2))}
+.b-nm{font-size:14px;font-weight:700;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-r{display:flex;gap:6px;flex-shrink:0}
 .ibtn{width:36px;height:36px;border-radius:50%;border:1px solid var(--glass-bd);background:var(--glass);
   color:var(--txt);font-size:15px;cursor:pointer;display:grid;place-items:center;
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
@@ -47,36 +47,32 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sy
   -webkit-backdrop-filter:blur(32px) saturate(200%);border-top:1px solid var(--glass-bd)}
 .tabs{display:flex;height:var(--th)}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:3px;cursor:pointer;opacity:.4;transition:.15s;font-size:10px;font-weight:600;letter-spacing:.2px}
-.tab.sel{opacity:1;color:var(--ac)}
-.tab-ic{font-size:22px;line-height:1}
+  gap:3px;cursor:pointer;opacity:.4;transition:.15s;font-size:10px;font-weight:600}
+.tab.sel{opacity:1;color:var(--ac1)}
+.tab-ic{font-size:21px;line-height:1}
 
 /* ── BG FX ── */
 .bgfx{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
-.bgfx::before,.bgfx::after{content:"";position:absolute;width:60vw;height:60vw;
-  border-radius:50%;filter:blur(90px);opacity:.2}
-.bgfx::before{background:var(--ac);top:-20vw;right:-12vw}
-.bgfx::after{background:#c2410c;bottom:-25vw;left:-18vw}
+.bgfx::before,.bgfx::after{content:"";position:absolute;width:55vw;height:55vw;
+  border-radius:50%;filter:blur(90px);opacity:.18}
+.bgfx::before{background:var(--ac1);top:-18vw;right:-10vw}
+.bgfx::after{background:var(--ac2);bottom:-22vw;left:-15vw}
 
-/* ── HERO BANNER ── */
-.hero{margin:0 16px 16px;border-radius:var(--r);overflow:hidden;cursor:pointer;
-  position:relative;min-height:200px;transition:transform .12s}
-.hero:active{transform:scale(.98)}
-.hero img{width:100%;height:220px;object-fit:cover;display:block}
-.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 50%)}
-.hero-body{position:absolute;bottom:0;left:0;right:0;padding:16px}
-.hero-badge{display:inline-flex;align-items:center;gap:5px;background:var(--ac);
-  color:#0d0906;border-radius:8px;padding:3px 9px;font-size:11px;font-weight:800;margin-bottom:8px}
-.hero-title{font-size:22px;font-weight:900;letter-spacing:-.4px;line-height:1.2}
-.hero-meta{font-size:12px;opacity:.7;margin-top:4px}
-
-/* ── CATEGORY CHIPS ── */
-.chip-row{display:flex;gap:8px;overflow-x:auto;padding:0 16px 14px;scrollbar-width:none}
-.chip-row::-webkit-scrollbar{display:none}
-.chip{flex-shrink:0;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:700;
-  cursor:pointer;border:1px solid var(--glass-bd);background:var(--glass);
-  transition:.15s;white-space:nowrap}
-.chip.sel{background:var(--ac);border-color:var(--ac);color:#0d0906}
+/* ── CATEGORY CARDS ── */
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:8px 16px 16px}
+.cat-card{border-radius:var(--r);overflow:hidden;cursor:pointer;
+  position:relative;min-height:150px;display:flex;flex-direction:column;
+  justify-content:flex-end;padding:16px;transition:transform .12s}
+.cat-card:active{transform:scale(.96)}
+.cat-card::before{content:"";position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 55%);z-index:1}
+.cat-em{position:absolute;top:12px;right:12px;font-size:44px;opacity:.55;z-index:2;
+  filter:drop-shadow(0 3px 8px rgba(0,0,0,.4))}
+.cat-info{position:relative;z-index:2}
+.cat-nm{font-size:17px;font-weight:800;letter-spacing:-.3px;line-height:1.2}
+.cat-ct{font-size:11px;opacity:.65;margin-top:3px}
+.c-yemek{background:linear-gradient(135deg,#7c2d12,#c2410c)}
+.c-orgu{background:linear-gradient(135deg,#3b0764,#7c3aed)}
 
 /* ── SECTION ── */
 .sh{display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px}
@@ -84,48 +80,54 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sy
 .cnt{font-size:12px;color:var(--mut)}
 
 /* ── RECIPE GRID ── */
-.rg{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:0 16px 12px}
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:0 16px 14px}
 .rc{border-radius:16px;overflow:hidden;cursor:pointer;background:var(--glass);
   border:1px solid var(--glass-bd);transition:transform .12s;position:relative}
 .rc:active{transform:scale(.95)}
-.rc .rc-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:var(--bg1)}
-.rc .rc-ph{width:100%;aspect-ratio:4/3;display:grid;place-items:center;font-size:38px;background:var(--bg1)}
+.rc .rci{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:var(--bg1)}
+.rc .rcp{width:100%;aspect-ratio:4/3;display:grid;place-items:center;font-size:36px;background:var(--bg1)}
 .rc-inf{padding:9px 9px 11px}
 .rc-nm{font-size:13px;font-weight:700;line-height:1.3;margin-bottom:3px;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .rc-mt{font-size:11px;color:var(--mut);display:flex;gap:6px;flex-wrap:wrap}
-.fav-dot{position:absolute;top:6px;right:7px;font-size:14px;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.fav-dot{position:absolute;top:6px;right:7px;font-size:13px}
 
-/* ── RECIPE ROWS ── */
+/* ── RECIPE LIST (category page) ── */
 .rl{padding:0 16px;display:flex;flex-direction:column;gap:9px}
 .rr{display:flex;gap:11px;align-items:center;background:var(--glass);border:1px solid var(--glass-bd);
   border-radius:15px;padding:11px;cursor:pointer;transition:transform .12s;overflow:hidden}
 .rr:active{transform:scale(.97)}
-.rr .rr-img{width:68px;height:68px;border-radius:11px;object-fit:cover;flex-shrink:0;background:var(--bg1);display:block}
-.rr .rr-ph{width:68px;height:68px;border-radius:11px;flex-shrink:0;background:var(--bg1);display:grid;place-items:center;font-size:28px}
+.rr img,.rr .rrp{width:68px;height:68px;border-radius:11px;object-fit:cover;flex-shrink:0;background:var(--bg1)}
+.rr img{display:block}
+.rrp{display:grid;place-items:center;font-size:28px}
 .rr-inf{flex:1;min-width:0}
 .rr-nm{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rr-cat{font-size:11px;color:var(--mut);margin-top:2px}
-.rr-tm{font-size:11px;color:var(--mut);margin-top:3px}
+.rr-sub{font-size:11px;color:var(--mut);margin-top:2px}
+.rr-tm{font-size:11px;color:var(--mut);margin-top:3px;display:flex;gap:6px}
 
-/* ── DETAIL (slide) ── */
+/* ── SLIDE PAGES ── */
 .sp{position:fixed;inset:0;z-index:50;background:var(--bg0);overflow-y:auto;
   -webkit-overflow-scrolling:touch;transform:translateX(100%);
   transition:transform .3s cubic-bezier(.2,.9,.2,1)}
 .sp.open{transform:translateX(0)}
+.sp-hdr{position:sticky;top:0;z-index:5;padding:calc(var(--st)+8px) 16px 10px;
+  background:linear-gradient(to bottom,var(--bg0) 80%,transparent)}
+.sp-hdr-row{display:flex;align-items:center;gap:11px;margin-bottom:2px}
 
-.d-hero-img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:var(--bg1)}
-.d-hero-ph{width:100%;aspect-ratio:16/9;display:grid;place-items:center;font-size:80px;background:var(--bg1)}
-.d-over{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;
-  padding:calc(var(--st)+8px) 12px;z-index:5}
+/* ── DETAIL ── */
+.d-hero{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:var(--bg1)}
+.d-hero-ph{width:100%;aspect-ratio:16/9;display:grid;place-items:center;font-size:76px;background:var(--bg1)}
+.d-over{position:absolute;top:0;left:0;right:0;padding:calc(var(--st)+8px) 12px;
+  display:flex;justify-content:space-between;z-index:5}
 .d-ic{width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.52);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   display:grid;place-items:center;font-size:17px;cursor:pointer;
   border:1px solid rgba(255,255,255,.14);transition:transform .12s}
 .d-ic:active{transform:scale(.87)}
 .d-body{padding:14px 16px calc(44px + var(--sb))}
-.d-title{font-size:25px;font-weight:900;letter-spacing:-.5px;margin-bottom:5px}
-.d-desc{color:var(--txt2);font-size:13px;line-height:1.55;margin-bottom:13px}
+.d-title{font-size:25px;font-weight:900;letter-spacing:-.5px;margin-bottom:8px}
+.d-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.dtag{padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;background:var(--glass);border:1px solid var(--glass-bd)}
 .d-meta{display:flex;gap:9px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
 .d-meta::-webkit-scrollbar{display:none}
 .mc{flex-shrink:0;background:var(--glass);border:1px solid var(--glass-bd);border-radius:11px;
@@ -139,37 +141,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sy
 .ing-list li{padding:10px 0;border-bottom:1px solid var(--glass-bd);font-size:14px;
   display:flex;align-items:flex-start;gap:9px;line-height:1.4}
 .ing-list li:last-child{border-bottom:none}
-.ing-list li::before{content:"·";color:var(--ac);font-size:18px;font-weight:900;flex-shrink:0;margin-top:-2px}
+.ing-list li::before{content:"·";color:var(--ac1);font-size:18px;font-weight:900;flex-shrink:0;margin-top:-2px}
 .step-list{list-style:none}
 .si{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--glass-bd)}
 .si:last-child{border-bottom:none}
-.sn{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));
+.sn{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--ac1),var(--ac2));
   display:grid;place-items:center;font-size:12px;font-weight:800;flex-shrink:0;margin-top:3px}
 .st-txt{font-size:13px;line-height:1.6;flex:1;padding-top:4px}
 .yt-btn{display:flex;align-items:center;gap:8px;background:rgba(255,0,0,.14);
   border:1px solid rgba(255,0,0,.22);border-radius:12px;padding:12px 14px;
-  cursor:pointer;margin-top:14px;font-size:14px;font-weight:600;text-decoration:none;color:var(--txt)}
+  cursor:pointer;margin-top:14px;font-size:14px;font-weight:600;color:var(--txt);text-decoration:none}
 
-/* ── SKELETON ── */
-.sk{background:linear-gradient(90deg,var(--bg1) 25%,rgba(255,255,255,.04) 50%,var(--bg1) 75%);
-  background-size:200% 100%;animation:shim 1.4s infinite;border-radius:12px}
-@keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
-
-/* ── SHEET ── */
-.sh-bg{position:fixed;inset:0;background:rgba(0,0,0,.58);backdrop-filter:blur(4px);
-  opacity:0;pointer-events:none;transition:.22s;z-index:60}
-.sh-bg.on{opacity:1;pointer-events:auto}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-width:600px;margin:0 auto;
-  transform:translateY(110%);transition:transform .28s cubic-bezier(.2,.9,.2,1);
-  background:rgba(18,12,8,.96);backdrop-filter:blur(40px);
-  border-top:1px solid var(--glass-bd);border-radius:28px 28px 0 0;
-  padding:10px 14px calc(20px + var(--sb))}
-.sheet.on{transform:translateY(0)}
-.grip{width:38px;height:5px;border-radius:3px;background:rgba(255,255,255,.18);margin:8px auto 14px}
-.lng-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.lng-item{padding:12px;border-radius:14px;background:var(--glass);border:1px solid var(--glass-bd);
-  font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:.15s}
-.lng-item.sel{border-color:var(--ac);background:rgba(249,115,22,.12)}
+/* ── CHIP FILTER (yemek kategorileri) ── */
+.chip-row{display:flex;gap:8px;overflow-x:auto;padding:0 16px 12px;scrollbar-width:none}
+.chip-row::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:7px 13px;border-radius:18px;font-size:12px;font-weight:700;
+  cursor:pointer;border:1px solid var(--glass-bd);background:var(--glass);
+  transition:.15s;white-space:nowrap}
+.chip.sel{background:var(--ac1);border-color:var(--ac1);color:#0d0906}
+.chip.sel-orgu{background:var(--ac2);border-color:var(--ac2);color:#fff}
 
 /* ── SEARCH ── */
 .srch-wrap{padding:0 16px 12px;position:relative;display:flex;align-items:center}
@@ -179,6 +169,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sy
 .srch-in::placeholder{color:var(--mut)}
 .srch-ic{position:absolute;left:28px;font-size:17px;opacity:.45;pointer-events:none}
 .srch-cl{position:absolute;right:24px;font-size:14px;cursor:pointer;opacity:.5;padding:6px}
+
+/* ── SKELETON ── */
+.sk{background:linear-gradient(90deg,var(--bg1) 25%,rgba(255,255,255,.04) 50%,var(--bg1) 75%);
+  background-size:200% 100%;animation:shim 1.4s infinite;border-radius:12px}
+@keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ── SHEET (dil seçimi) ── */
+.sh-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;transition:.22s;z-index:60}
+.sh-bg.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-width:600px;margin:0 auto;
+  transform:translateY(110%);transition:transform .28s cubic-bezier(.2,.9,.2,1);
+  background:rgba(18,12,8,.96);backdrop-filter:blur(40px);
+  border-top:1px solid var(--glass-bd);border-radius:28px 28px 0 0;
+  padding:10px 16px calc(20px + var(--sb))}
+.sheet.on{transform:translateY(0)}
+.grip{width:38px;height:5px;border-radius:3px;background:rgba(255,255,255,.18);margin:8px auto 16px}
+.lng-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lng-item{padding:13px;border-radius:14px;background:var(--glass);border:1px solid var(--glass-bd);
+  font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:9px;transition:.15s}
+.lng-item.sel{border-color:var(--ac1);background:rgba(249,115,22,.12)}
+.lng-item .lng-native{font-size:13px;opacity:.65}
 
 /* ── TOAST ── */
 .toast{position:fixed;bottom:calc(var(--th)+var(--sb)+14px);left:50%;transform:translateX(-50%);
@@ -193,12 +205,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sy
 .emp p{font-size:13px;line-height:1.5}
 
 .spin{display:inline-block;width:18px;height:18px;border:2px solid var(--glass-bd);
-  border-top-color:var(--ac);border-radius:50%;animation:sp .7s linear infinite}
+  border-top-color:var(--ac1);border-radius:50%;animation:sp .7s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 .loading-row{display:flex;align-items:center;justify-content:center;gap:8px;
   padding:24px;color:var(--mut);font-size:13px}
 
-@media(min-width:580px){.rg{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:600px){.rg{grid-template-columns:repeat(3,1fr)}.cat-grid{grid-template-columns:1fr 1fr 1fr}}
 </style>
 </head>
 <body>
@@ -209,19 +221,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sy
     <div class="tb">
       <div class="brand">
         <div class="b-ic">🍳</div>
-        <div class="b-nm" id="appTitle">Yemek Tarifleri</div>
+        <div class="b-nm" id="appTitle"></div>
       </div>
       <div class="tb-r">
-        <button class="ibtn" id="refBtn" onclick="refreshAll()">↻</button>
+        <button class="ibtn" id="refBtn" onclick="refreshAll()" title="">↻</button>
         <button class="ibtn" onclick="openLang()">🌐</button>
       </div>
     </div>
   </div>
 
   <div id="pages">
-    <!-- HOME -->
     <div class="page active" id="pg-home" data-tab="home"><div id="home-cnt"></div></div>
-    <!-- SEARCH -->
     <div class="page" id="pg-search" data-tab="search">
       <div class="srch-wrap">
         <span class="srch-ic">🔍</span>
@@ -230,23 +240,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sy
       </div>
       <div id="srch-res"></div>
     </div>
-    <!-- FAVS -->
     <div class="page" id="pg-favs" data-tab="favs"><div id="favs-cnt"></div></div>
   </div>
 
   <div id="tabbar">
     <div class="tabs">
-      <div class="tab sel" data-tab="home" onclick="swTab('home')"><span class="tab-ic">🏠</span><span data-k="tabHome"></span></div>
-      <div class="tab" data-tab="search" onclick="swTab('search')"><span class="tab-ic">🔍</span><span data-k="tabSearch"></span></div>
-      <div class="tab" data-tab="favs" onclick="swTab('favs')"><span class="tab-ic">❤️</span><span data-k="tabFavs"></span></div>
+      <div class="tab sel" data-tab="home" onclick="swTab('home')"><span class="tab-ic">🏠</span><span id="tHome"></span></div>
+      <div class="tab" data-tab="search" onclick="swTab('search')"><span class="tab-ic">🔍</span><span id="tSearch"></span></div>
+      <div class="tab" data-tab="favs" onclick="swTab('favs')"><span class="tab-ic">❤️</span><span id="tFavs"></span></div>
     </div>
   </div>
 </div>
 
-<!-- Recipe detail (slide) -->
+<!-- Category page -->
+<div class="sp" id="catPage"><div id="cat-cnt"></div></div>
+
+<!-- Detail page -->
 <div class="sp" id="detPage">
   <div id="det-rel" style="position:relative">
-    <div id="det-over" class="d-over" style="position:fixed">
+    <div class="d-over" id="det-over" style="position:fixed">
       <button class="d-ic" onclick="closeSp('detPage')">‹</button>
       <button class="d-ic" id="favBtn" onclick="toggleFav()">🤍</button>
     </div>
@@ -258,7 +270,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sy
 <div class="sh-bg" id="shBg" onclick="closeLang()"></div>
 <div class="sheet" id="langSh">
   <div class="grip"></div>
-  <h3 style="font-size:17px;font-weight:800;margin-bottom:12px" id="langShTitle"></h3>
+  <div style="font-size:17px;font-weight:800;margin-bottom:14px" id="langShTitle"></div>
   <div class="lng-grid" id="lngGrid"></div>
 </div>
 
@@ -267,279 +279,443 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sy
 <script>
 // ══ CONFIG ══
 const TMDB = 'https://www.themealdb.com/api/json/v1/1';
-const CK_LIST = 'tmdb_tr_v2';
-const CK_DET  = 'tmdb_d_';
-const CK_FAV  = 'yemek_favs';
-const CK_LANG = 'yemek_lang';
+const CUSTOM_URL = 'https://raw.githubusercontent.com/NickDegs/realvirtuality-apps/main/tarifler/data.json';
+const CK_LIST  = 'tmdb_tr_v3';
+const CK_DET   = 'tmdb_d_';
+const CK_CUST  = 'app_custom_v3';
+const CK_FAV   = 'app_favs_v3';
+const CK_LANG  = 'app_lang_v3';
 const TTL = 24 * 3600000;
 
-// ══ TRANSLATIONS ══
+// ══ TRANSLATIONS — her dil kendi adıyla ══
 const TR = {
-  tr:{appName:'Yemek Tarifleri',tabHome:'Keşfet',tabSearch:'Ara',tabFavs:'Favoriler',
-    all:'Tümü',srchPh:'Tarif veya malzeme ara…',noRes:'Sonuç bulunamadı',
-    ing:'Malzemeler',steps:'Adımlar',serv:'Porsiyon',
-    favAdd:'Favorilere eklendi',favRm:'Favorilerden çıkarıldı',
-    noFavs:'Favori tarifiniz yok',noFavsHint:'Tarif açıp ❤️ dokunun',
-    noData:'Bağlantı yok',noDataHint:'İnternet bağlantısını kontrol edin',
-    updated:'Güncellendi',loading:'Yükleniyor…',
-    langTitle:'Dil Seçin',watchYt:'YouTube\'da İzle',
-    mins:'dk',featured:'Öne Çıkanlar',recipes:'Tarif'},
-  en:{appName:'Food Recipes',tabHome:'Discover',tabSearch:'Search',tabFavs:'Favorites',
-    all:'All',srchPh:'Search recipes or ingredients…',noRes:'No results',
-    ing:'Ingredients',steps:'Steps',serv:'Servings',
-    favAdd:'Added to favorites',favRm:'Removed',
-    noFavs:'No favorites yet',noFavsHint:'Open a recipe and tap ❤️',
-    noData:'No connection',noDataHint:'Check your internet connection',
-    updated:'Updated',loading:'Loading…',
-    langTitle:'Language',watchYt:'Watch on YouTube',
-    mins:'min',featured:'Featured',recipes:'Recipes'},
-  es:{appName:'Recetas de Comida',tabHome:'Descubrir',tabSearch:'Buscar',tabFavs:'Favoritos',
-    all:'Todo',srchPh:'Buscar recetas…',noRes:'Sin resultados',
-    ing:'Ingredientes',steps:'Pasos',serv:'Porciones',
-    favAdd:'Añadido',favRm:'Eliminado',noFavs:'Sin favoritos',noFavsHint:'Toca ❤️',
-    noData:'Sin conexión',noDataHint:'Verifica tu conexión',updated:'Actualizado',loading:'Cargando…',
-    langTitle:'Idioma',watchYt:'Ver en YouTube',mins:'min',featured:'Destacados',recipes:'Recetas'},
-  zh:{appName:'美食食谱',tabHome:'发现',tabSearch:'搜索',tabFavs:'收藏',
-    all:'全部',srchPh:'搜索食谱…',noRes:'无结果',
-    ing:'食材',steps:'步骤',serv:'份量',
-    favAdd:'已收藏',favRm:'已取消',noFavs:'暂无收藏',noFavsHint:'打开食谱点击❤️',
-    noData:'无连接',noDataHint:'检查网络',updated:'已更新',loading:'加载中…',
-    langTitle:'语言',watchYt:'在YouTube观看',mins:'分钟',featured:'精选',recipes:'食谱'},
-  ru:{appName:'Рецепты Блюд',tabHome:'Обзор',tabSearch:'Поиск',tabFavs:'Избранное',
-    all:'Все',srchPh:'Поиск рецептов…',noRes:'Ничего',
-    ing:'Ингредиенты',steps:'Шаги',serv:'Порций',
-    favAdd:'Добавлено',favRm:'Удалено',noFavs:'Нет избранного',noFavsHint:'Нажмите ❤️',
-    noData:'Нет сети',noDataHint:'Проверьте интернет',updated:'Обновлено',loading:'Загрузка…',
-    langTitle:'Язык',watchYt:'YouTube',mins:'мин',featured:'Рекомендуем',recipes:'Рецептов'},
-  de:{appName:'Kochrezepte',tabHome:'Entdecken',tabSearch:'Suche',tabFavs:'Favoriten',
-    all:'Alle',srchPh:'Rezepte suchen…',noRes:'Keine Ergebnisse',
-    ing:'Zutaten',steps:'Schritte',serv:'Portionen',
-    favAdd:'Hinzugefügt',favRm:'Entfernt',noFavs:'Keine Favoriten',noFavsHint:'❤️ tippen',
-    noData:'Kein Netz',noDataHint:'Verbindung prüfen',updated:'Aktualisiert',loading:'Laden…',
-    langTitle:'Sprache',watchYt:'YouTube',mins:'Min',featured:'Empfohlen',recipes:'Rezepte'},
-  fr:{appName:'Recettes de Cuisine',tabHome:'Découvrir',tabSearch:'Recherche',tabFavs:'Favoris',
-    all:'Tout',srchPh:'Rechercher des recettes…',noRes:'Aucun résultat',
-    ing:'Ingrédients',steps:'Étapes',serv:'Portions',
-    favAdd:'Ajouté',favRm:'Retiré',noFavs:'Pas de favoris',noFavsHint:'Appuyer sur ❤️',
-    noData:'Hors ligne',noDataHint:'Vérifier connexion',updated:'Mis à jour',loading:'Chargement…',
-    langTitle:'Langue',watchYt:'YouTube',mins:'min',featured:'En vedette',recipes:'Recettes'},
-  it:{appName:'Ricette di Cucina',tabHome:'Scopri',tabSearch:'Cerca',tabFavs:'Preferiti',
-    all:'Tutto',srchPh:'Cerca ricette…',noRes:'Nessun risultato',
-    ing:'Ingredienti',steps:'Passaggi',serv:'Porzioni',
-    favAdd:'Aggiunto',favRm:'Rimosso',noFavs:'Nessun preferito',noFavsHint:'Tocca ❤️',
-    noData:'Offline',noDataHint:'Controlla connessione',updated:'Aggiornato',loading:'Caricamento…',
-    langTitle:'Lingua',watchYt:'YouTube',mins:'min',featured:'In evidenza',recipes:'Ricette'},
+  tr:{
+    appName:'Yemek & Örgü',
+    nativeName:'Türkçe',
+    tabHome:'Keşfet', tabSearch:'Ara', tabFavs:'Favoriler',
+    cats:{yemek:'Yemek Tarifleri', orgu:'Örgü'},
+    catDesc:{yemek:'Türk mutfağından lezzetler', orgu:'Şiş, tığ ve amigurumi'},
+    recipes:'tarif', featured:'Öne Çıkanlar', allFrom:'Tümü',
+    srchPh:'Tarif veya malzeme ara…', noRes:'Sonuç bulunamadı',
+    ing:'Malzemeler', steps:'Adımlar', serv:'Ölçü/Beden', time:'Süre',
+    favAdd:'Favorilere eklendi', favRm:'Favorilerden çıkarıldı',
+    noFavs:'Favori tarifiniz yok', noFavsHint:'Tarife dokunup ❤️ seçin',
+    noData:'Bağlantı yok', noDataHint:'İnternet bağlantısını kontrol edin',
+    updated:'Güncellendi', loading:'Yükleniyor…',
+    langTitle:'Dil Seçin', watchYt:"YouTube'da İzle",
+    mins:'dk', prep:'Hazırlık', cook:'Örgü Süresi',
+  },
+  en:{
+    appName:'Recipes & Knitting',
+    nativeName:'English',
+    tabHome:'Discover', tabSearch:'Search', tabFavs:'Favorites',
+    cats:{yemek:'Food Recipes', orgu:'Knitting & Crochet'},
+    catDesc:{yemek:'Traditional Turkish cuisine', orgu:'Knitting, crochet & amigurumi'},
+    recipes:'recipes', featured:'Featured', allFrom:'See all',
+    srchPh:'Search recipes or ingredients…', noRes:'No results',
+    ing:'Ingredients', steps:'Steps', serv:'Size', time:'Time',
+    favAdd:'Added to favorites', favRm:'Removed',
+    noFavs:'No favorites yet', noFavsHint:'Open a recipe and tap ❤️',
+    noData:'No connection', noDataHint:'Check your internet connection',
+    updated:'Updated', loading:'Loading…',
+    langTitle:'Select Language', watchYt:'Watch on YouTube',
+    mins:'min', prep:'Prep', cook:'Knitting Time',
+  },
+  es:{
+    appName:'Recetas & Tejido',
+    nativeName:'Español',
+    tabHome:'Descubrir', tabSearch:'Buscar', tabFavs:'Favoritos',
+    cats:{yemek:'Recetas de Cocina', orgu:'Tejido & Ganchillo'},
+    catDesc:{yemek:'Cocina turca tradicional', orgu:'Tejido, ganchillo y amigurumi'},
+    recipes:'recetas', featured:'Destacados', allFrom:'Ver todo',
+    srchPh:'Buscar recetas…', noRes:'Sin resultados',
+    ing:'Ingredientes', steps:'Pasos', serv:'Talla', time:'Tiempo',
+    favAdd:'Añadido', favRm:'Eliminado',
+    noFavs:'Sin favoritos', noFavsHint:'Toca ❤️ en una receta',
+    noData:'Sin conexión', noDataHint:'Verifica tu conexión',
+    updated:'Actualizado', loading:'Cargando…',
+    langTitle:'Idioma', watchYt:'Ver en YouTube',
+    mins:'min', prep:'Preparación', cook:'Tiempo de tejido',
+  },
+  zh:{
+    appName:'食谱与编织',
+    nativeName:'中文',
+    tabHome:'发现', tabSearch:'搜索', tabFavs:'收藏',
+    cats:{yemek:'美食食谱', orgu:'编织与钩针'},
+    catDesc:{yemek:'传统土耳其美食', orgu:'棒针、钩针与玩偶'},
+    recipes:'个食谱', featured:'精选', allFrom:'查看全部',
+    srchPh:'搜索食谱或食材…', noRes:'无结果',
+    ing:'食材', steps:'步骤', serv:'尺寸', time:'时间',
+    favAdd:'已收藏', favRm:'已取消',
+    noFavs:'暂无收藏', noFavsHint:'打开食谱点击❤️',
+    noData:'无连接', noDataHint:'检查网络',
+    updated:'已更新', loading:'加载中…',
+    langTitle:'选择语言', watchYt:'在YouTube观看',
+    mins:'分钟', prep:'准备', cook:'编织时间',
+  },
+  ru:{
+    appName:'Рецепты и Вязание',
+    nativeName:'Русский',
+    tabHome:'Обзор', tabSearch:'Поиск', tabFavs:'Избранное',
+    cats:{yemek:'Рецепты блюд', orgu:'Вязание'},
+    catDesc:{yemek:'Традиционная турецкая кухня', orgu:'Спицы, крючок и амигуруми'},
+    recipes:'рецептов', featured:'Рекомендуем', allFrom:'Все',
+    srchPh:'Поиск рецептов…', noRes:'Ничего не найдено',
+    ing:'Ингредиенты', steps:'Шаги', serv:'Размер', time:'Время',
+    favAdd:'Добавлено', favRm:'Удалено',
+    noFavs:'Нет избранного', noFavsHint:'Нажмите ❤️ на рецепте',
+    noData:'Нет сети', noDataHint:'Проверьте интернет',
+    updated:'Обновлено', loading:'Загрузка…',
+    langTitle:'Язык', watchYt:'Смотреть на YouTube',
+    mins:'мин', prep:'Подготовка', cook:'Время вязания',
+  },
+  de:{
+    appName:'Rezepte & Stricken',
+    nativeName:'Deutsch',
+    tabHome:'Entdecken', tabSearch:'Suche', tabFavs:'Favoriten',
+    cats:{yemek:'Kochrezepte', orgu:'Stricken & Häkeln'},
+    catDesc:{yemek:'Traditionelle türkische Küche', orgu:'Stricken, Häkeln & Amigurumi'},
+    recipes:'Rezepte', featured:'Empfohlen', allFrom:'Alle',
+    srchPh:'Rezepte suchen…', noRes:'Keine Ergebnisse',
+    ing:'Zutaten', steps:'Schritte', serv:'Größe', time:'Zeit',
+    favAdd:'Hinzugefügt', favRm:'Entfernt',
+    noFavs:'Keine Favoriten', noFavsHint:'❤️ auf Rezept tippen',
+    noData:'Kein Netz', noDataHint:'Verbindung prüfen',
+    updated:'Aktualisiert', loading:'Laden…',
+    langTitle:'Sprache', watchYt:'Auf YouTube ansehen',
+    mins:'Min', prep:'Vorbereitung', cook:'Strickzeit',
+  },
+  fr:{
+    appName:'Recettes & Tricot',
+    nativeName:'Français',
+    tabHome:'Découvrir', tabSearch:'Recherche', tabFavs:'Favoris',
+    cats:{yemek:'Recettes de cuisine', orgu:'Tricot & Crochet'},
+    catDesc:{yemek:'Cuisine turque traditionnelle', orgu:'Tricot, crochet & amigurumi'},
+    recipes:'recettes', featured:'En vedette', allFrom:'Tout voir',
+    srchPh:'Rechercher des recettes…', noRes:'Aucun résultat',
+    ing:'Ingrédients', steps:'Étapes', serv:'Taille', time:'Temps',
+    favAdd:'Ajouté', favRm:'Retiré',
+    noFavs:'Pas de favoris', noFavsHint:'Appuyez sur ❤️',
+    noData:'Hors ligne', noDataHint:'Vérifier connexion',
+    updated:'Mis à jour', loading:'Chargement…',
+    langTitle:'Langue', watchYt:'Voir sur YouTube',
+    mins:'min', prep:'Préparation', cook:'Temps de tricot',
+  },
+  it:{
+    appName:'Ricette & Maglia',
+    nativeName:'Italiano',
+    tabHome:'Scopri', tabSearch:'Cerca', tabFavs:'Preferiti',
+    cats:{yemek:'Ricette di cucina', orgu:'Maglia & Uncinetto'},
+    catDesc:{yemek:'Cucina turca tradizionale', orgu:'Maglia, uncinetto & amigurumi'},
+    recipes:'ricette', featured:'In evidenza', allFrom:'Vedi tutto',
+    srchPh:'Cerca ricette…', noRes:'Nessun risultato',
+    ing:'Ingredienti', steps:'Passaggi', serv:'Taglia', time:'Tempo',
+    favAdd:'Aggiunto', favRm:'Rimosso',
+    noFavs:'Nessun preferito', noFavsHint:'Tocca ❤️',
+    noData:'Offline', noDataHint:'Controlla connessione',
+    updated:'Aggiornato', loading:'Caricamento…',
+    langTitle:'Lingua', watchYt:'Guarda su YouTube',
+    mins:'min', prep:'Preparazione', cook:'Tempo di lavoro',
+  },
 };
 const FLAGS={tr:'🇹🇷',en:'🇬🇧',es:'🇪🇸',zh:'🇨🇳',ru:'🇷🇺',de:'🇩🇪',fr:'🇫🇷',it:'🇮🇹'};
-const LNAMES={tr:'Türkçe',en:'English',es:'Español',zh:'中文',ru:'Русский',de:'Deutsch',fr:'Français',it:'Italiano'};
-
-// TheMealDB Türk mutfağı kategorileri (yemek tiplerine göre)
-const MEAL_CATS = {
-  Lamb:'🐑',Chicken:'🍗',Beef:'🥩',Seafood:'🐟',Vegetarian:'🥗',
-  Pasta:'🍝',Dessert:'🍮',Breakfast:'🍳',Miscellaneous:'🍴',Side:'🥙',Starter:'🥘'
-};
+const MEAL_CATS={Lamb:'🐑',Chicken:'🍗',Beef:'🥩',Seafood:'🐟',Vegetarian:'🥗',
+  Pasta:'🍝',Dessert:'🍮',Breakfast:'🍳',Miscellaneous:'🍴',Side:'🥙',Starter:'🥘'};
 
 // ══ STATE ══
 let LANG = localStorage.getItem(CK_LANG) || (navigator.language||'tr').slice(0,2);
-if(!TR[LANG]) LANG='tr';
-let meals = [];      // TheMealDB Turkish list
+if(!TR[LANG]) LANG = 'tr';
+let tmdbList = [];
+let customRecs = [];
 let favs = JSON.parse(localStorage.getItem(CK_FAV)||'[]');
-let activeFilter = 'all';
+let currentCat = null;
 let currentId = null;
-let currentDet = null;  // full detail object
+let currentSrc = null;
+let currentDet = null;
 let currentTab = 'home';
+let activeFilter = 'all';
 
 const t = k => TR[LANG][k] || k;
 const esc = s => (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function toast(msg,dur=1600){const e=document.getElementById('toast');e.textContent=msg;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),dur);}
+function toast(msg,d=1600){const e=document.getElementById('toast');e.textContent=msg;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),d);}
 
 // ══ CACHE ══
-function cGet(key){try{const d=JSON.parse(localStorage.getItem(key)||'null');if(!d)return null;if(d.ts&&Date.now()-d.ts>TTL)return null;return d.v;}catch{return null;}}
-function cSet(key,v){try{localStorage.setItem(key,JSON.stringify({v,ts:Date.now()}));}catch{}}
+function cGet(k){try{const d=JSON.parse(localStorage.getItem(k)||'null');if(!d)return null;if(d.ts&&Date.now()-d.ts>TTL)return null;return d.v;}catch{return null;}}
+function cSet(k,v){try{localStorage.setItem(k,JSON.stringify({v,ts:Date.now()}));}catch{}}
 
 // ══ DATA ══
-async function loadMeals(force=false){
-  if(!force){const c=cGet(CK_LIST);if(c){meals=c;return;}}
+async function loadAll(force=false){
+  setRefSpin(true);
+  await Promise.allSettled([loadTmdb(force), loadCustom(force)]);
+  setRefSpin(false);
+  renderAll();
+}
+
+async function loadTmdb(force=false){
+  if(!force){const c=cGet(CK_LIST);if(c){tmdbList=c;return;}}
   try{
     const r=await fetch(`${TMDB}/filter.php?a=Turkish`);
     if(!r.ok)throw 0;
-    const d=await r.json();
-    meals=d.meals||[];
-    cSet(CK_LIST,meals);
-  }catch{
-    const c=cGet(CK_LIST);if(c)meals=c;
-  }
+    tmdbList=(await r.json()).meals||[];
+    cSet(CK_LIST,tmdbList);
+  }catch{const c=cGet(CK_LIST);if(c)tmdbList=c;}
 }
 
-async function getDetail(id){
+async function loadCustom(force=false){
+  if(!force){const c=cGet(CK_CUST);if(c){customRecs=c;return;}}
+  try{
+    const r=await fetch(CUSTOM_URL+'?_='+Date.now());
+    if(!r.ok)throw 0;
+    customRecs=(await r.json()).recipes||[];
+    cSet(CK_CUST,customRecs);
+  }catch{const c=cGet(CK_CUST);if(c)customRecs=c;}
+}
+
+async function getTmdbDetail(id){
   const ck=CK_DET+id;
   const c=cGet(ck);if(c)return c;
-  const r=await fetch(`${TMDB}/lookup.php?i=${id}`);
-  const d=await r.json();
+  const d=await(await fetch(`${TMDB}/lookup.php?i=${id}`)).json();
   const m=d.meals?.[0];if(!m)throw 0;
-  cSet(ck,m);
-  return m;
+  cSet(ck,m);return m;
 }
 
 async function searchTmdb(q){
-  // TheMealDB search.php endpoint
-  const r=await fetch(`${TMDB}/search.php?s=${encodeURIComponent(q)}`);
-  const d=await r.json();
-  return d.meals||[];
+  try{const d=await(await fetch(`${TMDB}/search.php?s=${encodeURIComponent(q)}`)).json();return d.meals||[];}
+  catch{return[];}
 }
 
-function setRefSpinner(on){
-  const b=document.getElementById('refBtn');
-  b.style.animation=on?'sp .7s linear infinite':'';
-}
-
-async function refreshAll(){
-  setRefSpinner(true);
-  await loadMeals(true);
-  setRefSpinner(false);
-  renderAll();
-  toast('✓ '+t('updated'));
-}
+function setRefSpin(on){document.getElementById('refBtn').style.animation=on?'sp .7s linear infinite':'';}
+async function refreshAll(){await loadAll(true);toast('✓ '+t('updated'));}
 
 // ══ RENDER HELPERS ══
-function mealThumb(m,cls,small=true){
-  const url=m.strMealThumb?(small?m.strMealThumb+'/small':m.strMealThumb):null;
-  if(url)return `<img class="${cls}" src="${esc(url)}" loading="lazy" onerror="this.style.opacity=0" alt="">`;
-  return `<div class="${cls.replace('-img','')}-ph">🍽</div>`;
+function tmdbThumb(m,cls,small=true){
+  const u=m.strMealThumb?(small?m.strMealThumb+'/small':m.strMealThumb):null;
+  if(u)return `<img class="${cls}" src="${esc(u)}" loading="lazy" onerror="this.style.opacity=0" alt="">`;
+  return `<div class="rcp">🍽</div>`;
 }
-
-function getUniqCats(){
-  const seen=new Set();
-  return meals.map(m=>m.strCategory).filter(c=>c&&!seen.has(c)&&seen.add(c));
+function customThumb(r,cls){
+  const ph={yemek:'🍲',orgu:'🧶'};
+  if(r.image)return `<img class="${cls}" src="${esc(r.image)}" loading="lazy" alt="">`;
+  return `<div class="rcp">${ph[r.category]||'📋'}</div>`;
 }
+function getUniqCats(){const s=new Set();return tmdbList.map(m=>m.strCategory).filter(c=>c&&!s.has(c)&&s.add(c));}
 
 // ══ HOME ══
 function renderHome(){
-  const filtered = activeFilter==='all' ? meals : meals.filter(m=>m.strCategory===activeFilter);
-  const cats = getUniqCats();
-  const heroMeal = meals[Math.floor(Math.random()*Math.min(5,meals.length))||0];
+  const orguCount=customRecs.filter(r=>r.category==='orgu').length;
+  let html='<div style="padding-top:4px">';
 
-  let html='';
-
-  // Hero
-  if(heroMeal){
-    const isFav=favs.includes(heroMeal.idMeal);
-    html+=`<div class="hero" onclick="openRec('${esc(heroMeal.idMeal)}')">
-      <img src="${esc(heroMeal.strMealThumb)}" loading="lazy" alt="" style="width:100%;height:220px;object-fit:cover;display:block;background:var(--bg1)">
-      <div class="hero-overlay"></div>
-      <div class="hero-body">
-        <div class="hero-badge">⭐ ${t('featured')}</div>
-        <div class="hero-title">${esc(heroMeal.strMeal)}</div>
-        <div class="hero-meta">🇹🇷 ${esc(heroMeal.strCategory||'Turkish')}</div>
+  // Category cards
+  html+=`<div class="cat-grid">
+    <div class="cat-card c-yemek" onclick="openCat('yemek')">
+      <div class="cat-em">🍳</div>
+      <div class="cat-info">
+        <div class="cat-nm">${esc(TR[LANG].cats.yemek)}</div>
+        <div class="cat-ct">${tmdbList.length} ${t('recipes')}</div>
       </div>
-    </div>`;
-  }
-
-  // Category filter chips
-  html+=`<div class="chip-row">
-    <div class="chip ${activeFilter==='all'?'sel':''}" onclick="setFilter('all')">${t('all')}</div>
-    ${cats.map(c=>`<div class="chip ${activeFilter===c?'sel':''}" onclick="setFilter('${esc(c)}')">${MEAL_CATS[c]||'🍽'} ${esc(c)}</div>`).join('')}
+    </div>
+    <div class="cat-card c-orgu" onclick="openCat('orgu')">
+      <div class="cat-em">🧶</div>
+      <div class="cat-info">
+        <div class="cat-nm">${esc(TR[LANG].cats.orgu)}</div>
+        <div class="cat-ct">${orguCount} ${t('recipes')}</div>
+      </div>
+    </div>
   </div>`;
 
-  // Recipe count
-  html+=`<div class="sh"><span class="st2">${t('recipes')}</span><span class="cnt">${filtered.length}</span></div>`;
-
-  // Grid
-  if(!filtered.length){
-    if(!meals.length){
-      html+=`<div style="padding:0 16px 8px">
-        ${[0,1,2,3,4,5].map(()=>`<div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px"><div class="sk" style="height:160px"></div><div class="sk" style="height:160px"></div></div>`).join('')}
-      </div>`;
-    } else {
-      html+=`<div class="emp"><div class="big">🍽</div><h3>${t('noRes')}</h3></div>`;
-    }
+  // Featured yemek
+  if(tmdbList.length){
+    const feat=tmdbList.slice(0,6);
+    html+=`<div class="sh">
+      <span class="st2">${t('featured')}</span>
+      <span class="cnt" style="cursor:pointer;color:var(--ac1)" onclick="openCat('yemek')">${t('allFrom')}</span>
+    </div>
+    <div class="rg">${feat.map(m=>yemekCard(m)).join('')}</div>`;
   } else {
-    html+=`<div class="rg">${filtered.map(m=>recCard(m)).join('')}</div>`;
+    html+=`<div style="padding:0 16px 8px">${[1,2].map(()=>`<div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px"><div class="sk" style="height:150px"></div><div class="sk" style="height:150px"></div></div>`).join('')}</div>`;
   }
 
+  // Featured örgü
+  const featOrgu=customRecs.filter(r=>r.category==='orgu').slice(0,4);
+  if(featOrgu.length){
+    html+=`<div class="sh">
+      <span class="st2">${esc(TR[LANG].cats.orgu)}</span>
+      <span class="cnt" style="cursor:pointer;color:var(--ac2)" onclick="openCat('orgu')">${t('allFrom')}</span>
+    </div>
+    <div class="rg">${featOrgu.map(r=>orguCard(r)).join('')}</div>`;
+  }
+
+  html+='</div>';
   document.getElementById('home-cnt').innerHTML=html;
 }
 
-function setFilter(cat){
-  activeFilter=cat;
-  renderHome();
-}
-
-function recCard(m){
-  const isFav=favs.includes(m.idMeal);
-  return `<div class="rc" onclick="openRec('${esc(m.idMeal)}')">
-    ${mealThumb(m,'rc-img',true)}
+function yemekCard(m){
+  const isFav=favs.includes('tmdb_'+m.idMeal);
+  return `<div class="rc" onclick="openRec('tmdb_'+${m.idMeal},'tmdb')">
+    ${tmdbThumb(m,'rci',true)}
     ${isFav?`<div class="fav-dot">❤️</div>`:''}
     <div class="rc-inf">
       <div class="rc-nm">${esc(m.strMeal)}</div>
-      <div class="rc-mt">${m.strCategory?`<span>${esc(m.strCategory)}</span>`:''}
-      </div>
+      <div class="rc-mt">${m.strCategory?esc(m.strCategory):''}</div>
     </div>
   </div>`;
 }
 
-function recRow(m,showCat=true){
-  return `<div class="rr" onclick="openRec('${esc(m.idMeal||m.strMeal)}')">
-    ${mealThumb(m,'rr-img',true)}
+function orguCard(r){
+  const isFav=favs.includes('cust_'+r.id);
+  const ph={yemek:'🍲',orgu:'🧶'};
+  return `<div class="rc" onclick="openRec('cust_${esc(r.id)}','custom')">
+    <div class="rcp">${ph[r.category]||'📋'}</div>
+    ${isFav?`<div class="fav-dot">❤️</div>`:''}
+    <div class="rc-inf">
+      <div class="rc-nm">${esc(r.name)}</div>
+      <div class="rc-mt">${r.cookTime?`⏱ ${r.cookTime}${t('mins')}`:''}</div>
+    </div>
+  </div>`;
+}
+
+// ══ CATEGORY PAGE ══
+function openCat(key){
+  currentCat=key;activeFilter='all';
+  renderCat();
+  document.getElementById('catPage').classList.add('open');
+  history.pushState({p:'cat'},'');
+}
+
+function renderCat(){
+  const key=currentCat;
+  const title=TR[LANG].cats[key]||key;
+  const desc=TR[LANG].catDesc[key]||'';
+  let html=`<div class="sp-hdr">
+    <div class="sp-hdr-row">
+      <button class="ibtn" onclick="closeSp('catPage')">‹</button>
+      <div>
+        <div style="font-size:20px;font-weight:900">${esc(title)}</div>
+        <div style="font-size:12px;color:var(--mut);margin-top:1px">${esc(desc)}</div>
+      </div>
+    </div>
+  </div>`;
+
+  if(key==='yemek'){
+    const cats=getUniqCats();
+    const filtered=activeFilter==='all'?tmdbList:tmdbList.filter(m=>m.strCategory===activeFilter);
+    html+=`<div class="chip-row">
+      <div class="chip ${activeFilter==='all'?'sel':''}" onclick="setFilter('all')">${t('allFrom')}</div>
+      ${cats.map(c=>`<div class="chip ${activeFilter===c?'sel':''}" onclick="setFilter('${esc(c)}')">${MEAL_CATS[c]||'🍽'} ${esc(c)}</div>`).join('')}
+    </div>
+    <div class="sh" style="padding-top:2px"><span class="cnt">${filtered.length} ${t('recipes')}</span></div>
+    <div class="rg">${filtered.map(m=>yemekCard(m)).join('')}</div>`;
+  } else {
+    const recs=customRecs.filter(r=>r.category===key);
+    const cats=[...new Set(recs.map(r=>(r.tags||[])[0]).filter(Boolean))];
+    const filtered=activeFilter==='all'?recs:recs.filter(r=>(r.tags||[]).includes(activeFilter));
+    if(cats.length>1){
+      html+=`<div class="chip-row">
+        <div class="chip ${activeFilter==='all'?'sel-orgu sel':''}" onclick="setFilter('all')">${t('allFrom')}</div>
+        ${cats.map(c=>`<div class="chip ${activeFilter===c?'sel-orgu sel':''}" onclick="setFilter('${esc(c)}')">${esc(c)}</div>`).join('')}
+      </div>`;
+    }
+    html+=`<div class="sh" style="padding-top:2px"><span class="cnt">${filtered.length} ${t('recipes')}</span></div>`;
+    if(!filtered.length){
+      html+=`<div class="emp"><div class="big">🧶</div><h3>${t('noRes')}</h3></div>`;
+    } else {
+      html+=`<div class="rl">${filtered.map(r=>orguRow(r)).join('')}</div><div style="height:20px"></div>`;
+    }
+  }
+  document.getElementById('cat-cnt').innerHTML=html;
+}
+
+function setFilter(f){
+  activeFilter=f;
+  renderCat();
+  document.getElementById('catPage').scrollTop=0;
+}
+
+function orguRow(r){
+  const ph={yemek:'🍲',orgu:'🧶'};
+  return `<div class="rr" onclick="openRec('cust_${esc(r.id)}','custom')">
+    <div class="rrp">${ph[r.category]||'📋'}</div>
     <div class="rr-inf">
-      <div class="rr-nm">${esc(m.strMeal)}</div>
-      ${showCat&&m.strCategory?`<div class="rr-cat">${esc(m.strCategory)}</div>`:''}
+      <div class="rr-nm">${esc(r.name)}</div>
+      <div class="rr-sub">${(r.tags||[]).slice(0,2).map(esc).join(' · ')}</div>
+      ${r.cookTime?`<div class="rr-tm">⏱ ${r.cookTime}${t('mins')}</div>`:''}
     </div>
     <span style="font-size:18px;opacity:.3">›</span>
   </div>`;
 }
 
-// ══ RECIPE DETAIL ══
-function openRec(id){
-  currentId=id;
-  currentDet=null;
-  const detPage=document.getElementById('detPage');
+// ══ DETAIL ══
+function openRec(compositeId, src){
+  currentId=compositeId; currentSrc=src; currentDet=null;
   document.getElementById('det-cnt').innerHTML=`<div style="height:56.25vw;background:var(--bg1)"></div><div class="d-body"><div class="loading-row"><div class="spin"></div><span>${t('loading')}</span></div></div>`;
-  document.getElementById('favBtn').textContent=favs.includes(id)?'❤️':'🤍';
-  detPage.classList.add('open');
+  document.getElementById('favBtn').textContent=favs.includes(compositeId)?'❤️':'🤍';
+  document.getElementById('detPage').classList.add('open');
   history.pushState({p:'det'},'');
-  loadAndRenderDet(id,'ing');
+  loadDet(compositeId, src, 'ing');
 }
 
-async function loadAndRenderDet(id,tab){
+async function loadDet(compositeId, src, tab){
   try{
-    const m=await getDetail(id);
-    currentDet=m;
-    // Sync fav button
-    document.getElementById('favBtn').textContent=favs.includes(m.idMeal)?'❤️':'🤍';
-    renderDetContent(m,tab);
+    if(src==='tmdb'){
+      const id=compositeId.replace('tmdb_','');
+      const m=await getTmdbDetail(id);
+      currentDet={type:'tmdb',data:m};
+    } else {
+      const id=compositeId.replace('cust_','');
+      const r=customRecs.find(x=>String(x.id)===id);
+      if(!r)throw 0;
+      currentDet={type:'custom',data:r};
+    }
+    document.getElementById('favBtn').textContent=favs.includes(compositeId)?'❤️':'🤍';
+    renderDetContent(tab);
   }catch{
     document.getElementById('det-cnt').innerHTML=`<div class="emp"><div class="big">⚠️</div><h3>${t('noData')}</h3><p>${t('noDataHint')}</p></div>`;
   }
 }
 
-function renderDetContent(m,tab='ing'){
-  // Build ingredients
-  const ings=[];
-  for(let i=1;i<=20;i++){
-    const ing=(m[`strIngredient${i}`]||'').trim();
-    const meas=(m[`strMeasure${i}`]||'').trim();
-    if(ing) ings.push(meas?`${meas} ${ing}`:ing);
+function renderDetContent(tab='ing'){
+  if(!currentDet)return;
+  const {type,data:d}=currentDet;
+  let name,thumb,ings=[],steps=[],serv='',prepT='',cookT='',youtube='',tags=[];
+
+  if(type==='tmdb'){
+    name=d.strMeal; thumb=d.strMealThumb;
+    for(let i=1;i<=20;i++){
+      const ing=(d[`strIngredient${i}`]||'').trim();
+      const meas=(d[`strMeasure${i}`]||'').trim();
+      if(ing) ings.push(meas?`${meas} ${ing}`:ing);
+    }
+    steps=(d.strInstructions||'').split(/\r?\n+/).map(s=>s.trim()).filter(s=>s.length>4);
+    tags=[d.strCategory,'🇹🇷 Turkish'].filter(Boolean);
+    youtube=d.strYoutube||'';
+  } else {
+    name=d.name; thumb=d.image||null;
+    ings=d.ingredients||[];
+    steps=d.steps||[];
+    serv=d.servings||'';
+    prepT=d.prepTime?`${d.prepTime}${t('mins')}`:'';
+    cookT=d.cookTime?`${d.cookTime}${t('mins')}`:'';
+    tags=d.tags||[];
   }
-  // Build steps — split by newline, filter blanks
-  const steps=(m.strInstructions||'')
-    .split(/\r?\n+/)
-    .map(s=>s.trim())
-    .filter(s=>s.length>4);
 
   let html=`<div>
-    ${m.strMealThumb?`<img class="d-hero-img" src="${esc(m.strMealThumb)}" loading="lazy" alt="">`:`<div class="d-hero-ph">🍽</div>`}
+    ${thumb?`<img class="d-hero" src="${esc(thumb)}" loading="lazy" alt="">`
+           :`<div class="d-hero-ph">${type==='tmdb'?'🍽':'🧶'}</div>`}
   </div>
   <div class="d-body">
-    <h1 class="d-title">${esc(m.strMeal)}</h1>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:13px">
-      ${m.strCategory?`<span style="background:var(--glass);border:1px solid var(--glass-bd);border-radius:20px;padding:4px 11px;font-size:12px;font-weight:600">${esc(m.strCategory)}</span>`:''}
-      <span style="background:var(--glass);border:1px solid var(--glass-bd);border-radius:20px;padding:4px 11px;font-size:12px;font-weight:600">🇹🇷 Turkish</span>
-    </div>
-    <div class="d-tabs">
-      <div class="dt ${tab==='ing'?'sel':''}" onclick="renderDetContent(currentDet,'ing')">${t('ing')} ${ings.length?`(${ings.length})`:''}</div>
-      <div class="dt ${tab==='steps'?'sel':''}" onclick="renderDetContent(currentDet,'steps')">${t('steps')} ${steps.length?`(${steps.length})`:''}</div>
-    </div>`;
+    <h1 class="d-title">${esc(name)}</h1>
+    ${tags.length?`<div class="d-tags">${tags.map(t2=>`<span class="dtag">${esc(t2)}</span>`).join('')}</div>`:''}`;
+
+  const chips=[];
+  if(prepT)chips.push(`<div class="mc"><span>🔪</span><div><div class="mc-lbl">${t('prep')}</div><div>${prepT}</div></div></div>`);
+  if(cookT)chips.push(`<div class="mc"><span>⏱</span><div><div class="mc-lbl">${t('cook')}</div><div>${cookT}</div></div></div>`);
+  if(serv)chips.push(`<div class="mc"><span>📐</span><div><div class="mc-lbl">${t('serv')}</div><div>${esc(serv)}</div></div></div>`);
+  if(chips.length)html+=`<div class="d-meta">${chips.join('')}</div>`;
+
+  html+=`<div class="d-tabs">
+    <div class="dt ${tab==='ing'?'sel':''}" onclick="renderDetContent('ing')">${t('ing')} ${ings.length?`(${ings.length})`:''}</div>
+    <div class="dt ${tab==='steps'?'sel':''}" onclick="renderDetContent('steps')">${t('steps')} ${steps.length?`(${steps.length})`:''}</div>
+  </div>`;
 
   if(tab==='ing'){
     html+=ings.length
@@ -547,14 +723,11 @@ function renderDetContent(m,tab='ing'){
       :`<div class="emp" style="padding:24px 0"><p>—</p></div>`;
   } else {
     html+=steps.length
-      ?`<ol class="step-list">${steps.map((s,i)=>`<li class="si"><div class="sn">${i+1}</div><div class="st-txt">${esc(s)}</div></li>`).join('')}</ol>`
+      ?`<ol class="step-list">${steps.map((s,i)=>`<li class="si"><div class="sn">${i+1}</div><div class="st-txt">${esc(typeof s==='string'?s:s.text||'')}</div></li>`).join('')}</ol>`
       :`<div class="emp" style="padding:24px 0"><p>—</p></div>`;
   }
 
-  if(m.strYoutube){
-    html+=`<a class="yt-btn" href="${esc(m.strYoutube)}" target="_blank"><span style="font-size:20px">▶️</span>${t('watchYt')}</a>`;
-  }
-
+  if(youtube)html+=`<a class="yt-btn" href="${esc(youtube)}" target="_blank"><span style="font-size:20px">▶️</span>${t('watchYt')}</a>`;
   html+='</div>';
   document.getElementById('det-cnt').innerHTML=html;
 }
@@ -568,56 +741,52 @@ function toggleFav(){
   localStorage.setItem(CK_FAV,JSON.stringify(favs));
   document.getElementById('favBtn').textContent=favs.includes(id)?'❤️':'🤍';
   if(currentTab==='favs')renderFavs();
-  // update grid dot
   renderHome();
 }
 
 // ══ SEARCH ══
 let srchTimer=null;
-let srchResults=[];
 function onSearch(q){
   clearTimeout(srchTimer);
   document.getElementById('srchCl').style.display=q?'':'none';
   srchTimer=setTimeout(()=>doSearch(q),280);
 }
 function clrSearch(){document.getElementById('srchIn').value='';document.getElementById('srchCl').style.display='none';doSearch('');}
-
 async function doSearch(q){
   const el=document.getElementById('srch-res');
   if(!q.trim()){
-    el.innerHTML=`<div class="emp" style="padding-top:40px"><div class="big">🔍</div><h3>${t('srchPh')}</h3></div>`;
-    return;
+    el.innerHTML=`<div class="emp" style="padding-top:40px"><div class="big">🔍</div><h3>${esc(t('srchPh'))}</h3></div>`;return;
   }
-  // Local search first
   const ql=q.toLowerCase();
-  let results=meals.filter(m=>(m.strMeal||'').toLowerCase().includes(ql));
-
-  // If few results, also query TheMealDB search endpoint
-  if(results.length<3){
-    el.innerHTML=`<div class="loading-row"><div class="spin"></div></div>`;
-    try{
-      const api=await searchTmdb(q);
-      // Merge, dedup by idMeal
-      const seen=new Set(results.map(m=>m.idMeal));
-      api.forEach(m=>{if(!seen.has(m.idMeal))results.push(m);});
-    }catch{}
-  }
-
-  if(!results.length){
-    el.innerHTML=`<div class="emp"><div class="big">🤷</div><h3>${t('noRes')}</h3><p>"${esc(q)}"</p></div>`;
-    return;
-  }
-  el.innerHTML=`<div style="padding:0 16px 4px;color:var(--mut);font-size:12px">${results.length} ${t('recipes')}</div><div class="rl">${results.map(m=>recRow(m)).join('')}</div>`;
+  let tmdbR=tmdbList.filter(m=>(m.strMeal||'').toLowerCase().includes(ql));
+  const custR=customRecs.filter(r=>(r.name||'').toLowerCase().includes(ql)||((r.ingredients||[]).some(i=>i.toLowerCase().includes(ql)))||(r.description||'').toLowerCase().includes(ql));
+  if(tmdbR.length<3){el.innerHTML=`<div class="loading-row"><div class="spin"></div></div>`;const api=await searchTmdb(q);const s=new Set(tmdbR.map(m=>m.idMeal));api.forEach(m=>{if(!s.has(m.idMeal))tmdbR.push(m);});}
+  const total=tmdbR.length+custR.length;
+  if(!total){el.innerHTML=`<div class="emp"><div class="big">🤷</div><h3>${t('noRes')}</h3></div>`;return;}
+  el.innerHTML=`<div style="padding:0 16px 8px;font-size:12px;color:var(--mut)">${total} ${t('recipes')}</div>
+  <div class="rl">
+    ${tmdbR.map(m=>`<div class="rr" onclick="openRec('tmdb_${m.idMeal}','tmdb')">
+      ${tmdbThumb(m,'rr img',true)}
+      <div class="rr-inf"><div class="rr-nm">${esc(m.strMeal)}</div><div class="rr-sub">🍳 ${TR[LANG].cats.yemek}</div></div>
+      <span style="font-size:18px;opacity:.3">›</span></div>`).join('')}
+    ${custR.map(r=>`<div class="rr" onclick="openRec('cust_${esc(r.id)}','custom')">
+      <div class="rrp">🧶</div>
+      <div class="rr-inf"><div class="rr-nm">${esc(r.name)}</div><div class="rr-sub">🧶 ${TR[LANG].cats.orgu}</div></div>
+      <span style="font-size:18px;opacity:.3">›</span></div>`).join('')}
+  </div>`;
 }
 
 // ══ FAVS ══
 function renderFavs(){
-  const favMeals=meals.filter(m=>favs.includes(m.idMeal));
-  if(!favMeals.length){
-    document.getElementById('favs-cnt').innerHTML=`<div class="emp"><div class="big">❤️</div><h3>${t('noFavs')}</h3><p>${t('noFavsHint')}</p></div>`;
-    return;
+  const tmdbFavs=tmdbList.filter(m=>favs.includes('tmdb_'+m.idMeal));
+  const custFavs=customRecs.filter(r=>favs.includes('cust_'+r.id));
+  if(!tmdbFavs.length&&!custFavs.length){
+    document.getElementById('favs-cnt').innerHTML=`<div class="emp"><div class="big">❤️</div><h3>${t('noFavs')}</h3><p>${t('noFavsHint')}</p></div>`;return;
   }
-  document.getElementById('favs-cnt').innerHTML=`<div class="rg">${favMeals.map(m=>recCard(m)).join('')}</div>`;
+  document.getElementById('favs-cnt').innerHTML=`<div class="rg">
+    ${tmdbFavs.map(m=>yemekCard(m)).join('')}
+    ${custFavs.map(r=>orguCard(r)).join('')}
+  </div>`;
 }
 
 // ══ NAVIGATION ══
@@ -628,40 +797,51 @@ function swTab(tab){
   if(tab==='search')setTimeout(()=>document.getElementById('srchIn')?.focus(),200);
   if(tab==='favs')renderFavs();
 }
-
-function closeSp(id){
-  document.getElementById(id).classList.remove('open');
-}
-
+function closeSp(id){document.getElementById(id).classList.remove('open');}
 window.addEventListener('popstate',()=>{
   if(document.getElementById('detPage').classList.contains('open'))
     document.getElementById('detPage').classList.remove('open');
+  else if(document.getElementById('catPage').classList.contains('open'))
+    document.getElementById('catPage').classList.remove('open');
 });
 
 // ══ LANGUAGE ══
 function openLang(){
   document.getElementById('langShTitle').textContent=t('langTitle');
-  document.getElementById('lngGrid').innerHTML=Object.keys(LNAMES).map(l=>`<div class="lng-item ${l===LANG?'sel':''}" onclick="setLang('${l}')"><span style="font-size:18px">${FLAGS[l]}</span>${LNAMES[l]}</div>`).join('');
+  document.getElementById('lngGrid').innerHTML=Object.entries(TR).map(([code,data])=>`
+    <div class="lng-item ${code===LANG?'sel':''}" onclick="setLang('${code}')">
+      <span style="font-size:20px">${FLAGS[code]}</span>
+      <div>
+        <div>${data.nativeName}</div>
+        <div class="lng-native">${data.appName}</div>
+      </div>
+    </div>`).join('');
   document.getElementById('shBg').classList.add('on');
   document.getElementById('langSh').classList.add('on');
 }
 function closeLang(){document.getElementById('shBg').classList.remove('on');document.getElementById('langSh').classList.remove('on');}
-function setLang(l){LANG=l;localStorage.setItem(CK_LANG,l);closeLang();renderAll();}
+function setLang(l){
+  LANG=l;localStorage.setItem(CK_LANG,l);
+  closeLang();renderAll();
+}
 
 // ══ RENDER ALL ══
 function renderAll(){
   document.documentElement.lang=LANG;
   document.getElementById('appTitle').textContent=TR[LANG].appName;
-  document.querySelectorAll('[data-k]').forEach(el=>{const k=el.dataset.k;const v=TR[LANG][k];if(v&&typeof v==='string')el.textContent=v;});
+  document.getElementById('tHome').textContent=TR[LANG].tabHome;
+  document.getElementById('tSearch').textContent=TR[LANG].tabSearch;
+  document.getElementById('tFavs').textContent=TR[LANG].tabFavs;
   const si=document.getElementById('srchIn');if(si)si.placeholder=t('srchPh');
   renderHome();
   if(currentTab==='favs')renderFavs();
   if(currentTab==='search')doSearch(document.getElementById('srchIn')?.value||'');
+  if(document.getElementById('catPage').classList.contains('open'))renderCat();
 }
 
 // ══ INIT ══
 renderAll();
-loadMeals().then(renderAll);
+loadAll();
 </script>
 </body>
 </html>
