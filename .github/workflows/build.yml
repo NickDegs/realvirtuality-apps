@@ -44,7 +44,7 @@ jobs:
           retention-days: 30
 
   ios:
-    runs-on: macos-16
+    runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
@@ -53,6 +53,19 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
+      - name: Xcode 26 seç (iOS 26 SDK zorunlu)
+        run: |
+          # Xcode 26 varsa seç, yoksa en yenisini kullan
+          XCODE26=$(ls /Applications/ | grep -E "^Xcode_26" | sort -V | tail -1)
+          if [ -n "$XCODE26" ]; then
+            sudo xcode-select -s "/Applications/$XCODE26/Contents/Developer"
+            echo "Xcode 26 seçildi: $XCODE26"
+          else
+            LATEST=$(ls /Applications/ | grep -E "^Xcode_[0-9]" | sort -V | tail -1)
+            sudo xcode-select -s "/Applications/$LATEST/Contents/Developer"
+            echo "Xcode: $LATEST (26 bulunamadı)"
+          fi
+          xcodebuild -version
       - name: Sertifika + ASC API anahtarını kur
         run: |
           # ASC API key
@@ -161,7 +174,7 @@ jobs:
   publish-ios:
     needs: ios
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
-    runs-on: macos-16
+    runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
