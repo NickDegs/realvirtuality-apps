@@ -70,6 +70,15 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .cat-label{position:absolute;bottom:0;left:0;right:0;padding:8px 10px;
   background:linear-gradient(to top,rgba(13,9,6,.9),transparent);font-size:14px;font-weight:600}
 
+/* CUISINE GRID */
+.cuis-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px 4px}
+.cuis-card{background:var(--bg2);border-radius:var(--r);padding:14px 8px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;
+  transition:transform .15s;border:1px solid var(--bg3)}
+.cuis-card:active{transform:scale(.94)}
+.cuis-flag{font-size:28px;line-height:1}
+.cuis-name{font-size:12px;font-weight:600;text-align:center;line-height:1.3;color:var(--text)}
+
 .hscroll{display:flex;gap:10px;overflow-x:auto;padding:0 16px 4px;
   -webkit-overflow-scrolling:touch;scrollbar-width:none}
 .hscroll::-webkit-scrollbar{display:none}
@@ -79,6 +88,15 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .feat img{width:100%;height:95px;object-fit:cover}
 .feat-name{padding:8px;font-size:12px;font-weight:600;line-height:1.3;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* CUISINE CHIPS (horizontal scroll) */
+.cuis-hscroll{display:flex;gap:8px;overflow-x:auto;padding:0 16px 4px;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none}
+.cuis-hscroll::-webkit-scrollbar{display:none}
+.cuis-chip{flex-shrink:0;background:var(--bg2);border:1px solid var(--bg3);border-radius:20px;
+  padding:8px 14px;font-size:13px;color:var(--text);cursor:pointer;white-space:nowrap;
+  display:flex;align-items:center;gap:6px}
+.cuis-chip:active{background:var(--bg3)}
 
 /* RECIPE GRID */
 .rgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:12px 16px 20px}
@@ -174,6 +192,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
     <button class="bni" id="bn-cat" onclick="showCategories()">
       <span class="bni-icon">🍽️</span><span class="bni-label" id="bl-cat">Kategoriler</span>
     </button>
+    <button class="bni" id="bn-cuis" onclick="showCuisinesTab()">
+      <span class="bni-icon">🌍</span><span class="bni-label" id="bl-cuis">Mutfaklar</span>
+    </button>
     <button class="bni" id="bn-search" onclick="showSearchTab()">
       <span class="bni-icon">🔍</span><span class="bni-label" id="bl-search">Ara</span>
     </button>
@@ -213,13 +234,13 @@ const T={
     tagline:'Binlerce tarif, bir dokunuşta',
     search:'Tarif, malzeme veya mutfak ara…',searchBtn:'Ara',
     byName:'İsme göre',byIngr:'Malzemeye göre',byCuis:'Mutfağa göre',
-    home:'Ana Sayfa',cats:'Kategoriler',searchTab:'Ara',favs:'Favoriler',
+    home:'Ana Sayfa',cats:'Kategoriler',cuis:'Mutfaklar',searchTab:'Ara',favs:'Favoriler',
     lang:'Dil',ingrs:'Malzemeler',howto:'Yapılışı',source:'Kaynak',
     cuisine:'Mutfak',cat:'Kategori',loading:'Yükleniyor…',noRes:'Sonuç bulunamadı',
     addFav:'Favorilere ekle',remFav:'Favorilerden çıkar',
     noFavs:'Favori yok.\n♡ ile tarifleri kaydedin.',
     watchVid:'Videoyu İzle',viewAll:'Tümünü gör',
-    turkCuis:'Türk Mutfağı',featured:'Öne Çıkanlar',
+    turkCuis:'Türk Mutfağı',featured:'Öne Çıkanlar',worldCuis:'Dünya Mutfakları',
     catNames:{Beef:'Et Yemekleri',Breakfast:'Kahvaltı',Chicken:'Tavuk',Dessert:'Tatlılar',
       Goat:'Keçi',Lamb:'Kuzu',Miscellaneous:'Diğer',Pasta:'Makarna',
       Pork:'Domuz',Seafood:'Deniz Ürünleri',Side:'Garnitür',Starter:'Başlangıçlar',
@@ -231,13 +252,13 @@ const T={
     tagline:'Thousands of recipes at your fingertips',
     search:'Search recipes, ingredients or cuisines…',searchBtn:'Search',
     byName:'By name',byIngr:'By ingredient',byCuis:'By cuisine',
-    home:'Home',cats:'Categories',searchTab:'Search',favs:'Favorites',
+    home:'Home',cats:'Categories',cuis:'Cuisines',searchTab:'Search',favs:'Favorites',
     lang:'Language',ingrs:'Ingredients',howto:'Instructions',source:'Source',
     cuisine:'Cuisine',cat:'Category',loading:'Loading…',noRes:'No results found',
     addFav:'Add to favorites',remFav:'Remove from favorites',
     noFavs:'No favorites yet.\nTap ♡ to save recipes.',
     watchVid:'Watch Video',viewAll:'View all',
-    turkCuis:'Turkish Cuisine',featured:'Featured',
+    turkCuis:'Turkish Cuisine',featured:'Featured',worldCuis:'World Cuisines',
     catNames:{Beef:'Beef',Breakfast:'Breakfast',Chicken:'Chicken',Dessert:'Desserts',
       Goat:'Goat',Lamb:'Lamb',Miscellaneous:'Miscellaneous',Pasta:'Pasta',
       Pork:'Pork',Seafood:'Seafood',Side:'Side Dishes',Starter:'Starters',
@@ -249,11 +270,11 @@ const T={
     tagline:'Miles de recetas al alcance de tu mano',
     search:'Buscar recetas, ingredientes o cocinas…',searchBtn:'Buscar',
     byName:'Por nombre',byIngr:'Por ingrediente',byCuis:'Por cocina',
-    home:'Inicio',cats:'Categorías',searchTab:'Buscar',favs:'Favoritos',
+    home:'Inicio',cats:'Categorías',cuis:'Cocinas',searchTab:'Buscar',favs:'Favoritos',
     lang:'Idioma',ingrs:'Ingredientes',howto:'Instrucciones',source:'Fuente',
     cuisine:'Cocina',cat:'Categoría',loading:'Cargando…',noRes:'Sin resultados',
     addFav:'Añadir',remFav:'Quitar',noFavs:'Sin favoritos.\nPulsa ♡ para guardar.',
-    watchVid:'Ver video',viewAll:'Ver todo',turkCuis:'Cocina Turca',featured:'Destacados',
+    watchVid:'Ver video',viewAll:'Ver todo',turkCuis:'Cocina Turca',featured:'Destacados',worldCuis:'Cocinas del Mundo',
     catNames:{Beef:'Ternera',Breakfast:'Desayuno',Chicken:'Pollo',Dessert:'Postres',
       Goat:'Cabra',Lamb:'Cordero',Miscellaneous:'Varios',Pasta:'Pasta',
       Pork:'Cerdo',Seafood:'Mariscos',Side:'Guarniciones',Starter:'Entrantes',
@@ -265,11 +286,11 @@ const T={
     tagline:'数千种食谱，触手可及',
     search:'搜索食谱、食材或菜系…',searchBtn:'搜索',
     byName:'按名称',byIngr:'按食材',byCuis:'按菜系',
-    home:'首页',cats:'分类',searchTab:'搜索',favs:'收藏',
+    home:'首页',cats:'分类',cuis:'菜系',searchTab:'搜索',favs:'收藏',
     lang:'语言',ingrs:'食材',howto:'做法',source:'来源',
     cuisine:'菜系',cat:'分类',loading:'加载中…',noRes:'未找到结果',
     addFav:'收藏',remFav:'取消收藏',noFavs:'暂无收藏。\n点击 ♡ 保存食谱。',
-    watchVid:'观看视频',viewAll:'查看全部',turkCuis:'土耳其菜',featured:'精选',
+    watchVid:'观看视频',viewAll:'查看全部',turkCuis:'土耳其菜',featured:'精选',worldCuis:'世界菜系',
     catNames:{Beef:'牛肉',Breakfast:'早餐',Chicken:'鸡肉',Dessert:'甜点',
       Goat:'山羊肉',Lamb:'羊肉',Miscellaneous:'其他',Pasta:'面食',
       Pork:'猪肉',Seafood:'海鲜',Side:'配菜',Starter:'开胃菜',
@@ -281,11 +302,11 @@ const T={
     tagline:'Тысячи рецептов у вас под рукой',
     search:'Поиск рецептов, ингредиентов, кухонь…',searchBtn:'Найти',
     byName:'По названию',byIngr:'По ингредиенту',byCuis:'По кухне',
-    home:'Главная',cats:'Категории',searchTab:'Поиск',favs:'Избранное',
+    home:'Главная',cats:'Категории',cuis:'Кухни',searchTab:'Поиск',favs:'Избранное',
     lang:'Язык',ingrs:'Ингредиенты',howto:'Приготовление',source:'Источник',
     cuisine:'Кухня',cat:'Категория',loading:'Загрузка…',noRes:'Ничего не найдено',
     addFav:'В избранное',remFav:'Убрать',noFavs:'Нет избранного.\nНажмите ♡.',
-    watchVid:'Смотреть видео',viewAll:'Все',turkCuis:'Турецкая кухня',featured:'Рекомендуем',
+    watchVid:'Смотреть видео',viewAll:'Все',turkCuis:'Турецкая кухня',featured:'Рекомендуем',worldCuis:'Кухни мира',
     catNames:{Beef:'Говядина',Breakfast:'Завтрак',Chicken:'Курица',Dessert:'Десерты',
       Goat:'Козлятина',Lamb:'Баранина',Miscellaneous:'Разное',Pasta:'Паста',
       Pork:'Свинина',Seafood:'Морепродукты',Side:'Гарниры',Starter:'Закуски',
@@ -297,11 +318,11 @@ const T={
     tagline:'Tausende Rezepte auf einen Klick',
     search:'Rezepte, Zutaten oder Küchen suchen…',searchBtn:'Suchen',
     byName:'Nach Name',byIngr:'Nach Zutat',byCuis:'Nach Küche',
-    home:'Startseite',cats:'Kategorien',searchTab:'Suchen',favs:'Favoriten',
+    home:'Startseite',cats:'Kategorien',cuis:'Küchen',searchTab:'Suchen',favs:'Favoriten',
     lang:'Sprache',ingrs:'Zutaten',howto:'Zubereitung',source:'Quelle',
     cuisine:'Küche',cat:'Kategorie',loading:'Laden…',noRes:'Keine Ergebnisse',
     addFav:'Zu Favoriten',remFav:'Entfernen',noFavs:'Keine Favoriten.\nTippe auf ♡.',
-    watchVid:'Video ansehen',viewAll:'Alle anzeigen',turkCuis:'Türkische Küche',featured:'Empfohlen',
+    watchVid:'Video ansehen',viewAll:'Alle anzeigen',turkCuis:'Türkische Küche',featured:'Empfohlen',worldCuis:'Weltküchen',
     catNames:{Beef:'Rind',Breakfast:'Frühstück',Chicken:'Hähnchen',Dessert:'Desserts',
       Goat:'Ziege',Lamb:'Lamm',Miscellaneous:'Sonstiges',Pasta:'Pasta',
       Pork:'Schwein',Seafood:'Meeresfrüchte',Side:'Beilagen',Starter:'Vorspeisen',
@@ -313,11 +334,11 @@ const T={
     tagline:'Des milliers de recettes à portée de main',
     search:'Rechercher recettes, ingrédients, cuisines…',searchBtn:'Chercher',
     byName:'Par nom',byIngr:'Par ingrédient',byCuis:'Par cuisine',
-    home:'Accueil',cats:'Catégories',searchTab:'Rechercher',favs:'Favoris',
+    home:'Accueil',cats:'Catégories',cuis:'Cuisines',searchTab:'Rechercher',favs:'Favoris',
     lang:'Langue',ingrs:'Ingrédients',howto:'Instructions',source:'Source',
     cuisine:'Cuisine',cat:'Catégorie',loading:'Chargement…',noRes:'Aucun résultat',
     addFav:'Ajouter',remFav:'Retirer',noFavs:'Pas de favoris.\nAppuyez sur ♡.',
-    watchVid:'Voir la vidéo',viewAll:'Tout voir',turkCuis:'Cuisine turque',featured:'En vedette',
+    watchVid:'Voir la vidéo',viewAll:'Tout voir',turkCuis:'Cuisine turque',featured:'En vedette',worldCuis:'Cuisines du monde',
     catNames:{Beef:'Bœuf',Breakfast:'Petit-déjeuner',Chicken:'Poulet',Dessert:'Desserts',
       Goat:'Chèvre',Lamb:'Agneau',Miscellaneous:'Divers',Pasta:'Pâtes',
       Pork:'Porc',Seafood:'Fruits de mer',Side:'Accompagnements',Starter:'Entrées',
@@ -329,11 +350,11 @@ const T={
     tagline:'Migliaia di ricette a portata di mano',
     search:'Cerca ricette, ingredienti o cucine…',searchBtn:'Cerca',
     byName:'Per nome',byIngr:'Per ingrediente',byCuis:'Per cucina',
-    home:'Home',cats:'Categorie',searchTab:'Cerca',favs:'Preferiti',
+    home:'Home',cats:'Categorie',cuis:'Cucine',searchTab:'Cerca',favs:'Preferiti',
     lang:'Lingua',ingrs:'Ingredienti',howto:'Istruzioni',source:'Fonte',
     cuisine:'Cucina',cat:'Categoria',loading:'Caricamento…',noRes:'Nessun risultato',
     addFav:'Aggiungi',remFav:'Rimuovi',noFavs:'Nessun preferito.\nPremi ♡.',
-    watchVid:'Guarda il video',viewAll:'Vedi tutto',turkCuis:'Cucina turca',featured:'In evidenza',
+    watchVid:'Guarda il video',viewAll:'Vedi tutto',turkCuis:'Cucina turca',featured:'In evidenza',worldCuis:'Cucine del mondo',
     catNames:{Beef:'Manzo',Breakfast:'Colazione',Chicken:'Pollo',Dessert:'Dolci',
       Goat:'Capra',Lamb:'Agnello',Miscellaneous:'Altro',Pasta:'Pasta',
       Pork:'Maiale',Seafood:'Frutti di mare',Side:'Contorni',Starter:'Antipasti',
@@ -343,10 +364,42 @@ const T={
       'Punch / Party Drink':'Punch',Shot:'Shot',Homemade:'Fatto in casa'}}
 };
 
+// ===== WORLD CUISINES =====
+const CUISINES=[
+  {area:'Turkish', flag:'🇹🇷', names:{tr:'Türk',en:'Turkish',es:'Turca',zh:'土耳其',ru:'Турецкая',de:'Türkisch',fr:'Turque',it:'Turca'}},
+  {area:'American', flag:'🇺🇸', names:{tr:'Amerikan',en:'American',es:'Americana',zh:'美式',ru:'Американская',de:'Amerikanisch',fr:'Américaine',it:'Americana'}},
+  {area:'Italian', flag:'🇮🇹', names:{tr:'İtalyan',en:'Italian',es:'Italiana',zh:'意大利',ru:'Итальянская',de:'Italienisch',fr:'Italienne',it:'Italiana'}},
+  {area:'Mexican', flag:'🇲🇽', names:{tr:'Meksika',en:'Mexican',es:'Mexicana',zh:'墨西哥',ru:'Мексиканская',de:'Mexikanisch',fr:'Mexicaine',it:'Messicana'}},
+  {area:'Chinese', flag:'🇨🇳', names:{tr:'Çin',en:'Chinese',es:'China',zh:'中式',ru:'Китайская',de:'Chinesisch',fr:'Chinoise',it:'Cinese'}},
+  {area:'Indian', flag:'🇮🇳', names:{tr:'Hint',en:'Indian',es:'India',zh:'印度',ru:'Индийская',de:'Indisch',fr:'Indienne',it:'Indiana'}},
+  {area:'Japanese', flag:'🇯🇵', names:{tr:'Japon',en:'Japanese',es:'Japonesa',zh:'日式',ru:'Японская',de:'Japanisch',fr:'Japonaise',it:'Giapponese'}},
+  {area:'French', flag:'🇫🇷', names:{tr:'Fransız',en:'French',es:'Francesa',zh:'法式',ru:'Французская',de:'Französisch',fr:'Française',it:'Francese'}},
+  {area:'Greek', flag:'🇬🇷', names:{tr:'Yunan',en:'Greek',es:'Griega',zh:'希腊',ru:'Греческая',de:'Griechisch',fr:'Grecque',it:'Greca'}},
+  {area:'Spanish', flag:'🇪🇸', names:{tr:'İspanyol',en:'Spanish',es:'Española',zh:'西班牙',ru:'Испанская',de:'Spanisch',fr:'Espagnole',it:'Spagnola'}},
+  {area:'Thai', flag:'🇹🇭', names:{tr:'Tayland',en:'Thai',es:'Tailandesa',zh:'泰式',ru:'Тайская',de:'Thaiisch',fr:'Thaïlandaise',it:'Tailandese'}},
+  {area:'British', flag:'🇬🇧', names:{tr:'İngiliz',en:'British',es:'Británica',zh:'英式',ru:'Британская',de:'Britisch',fr:'Britannique',it:'Britannica'}},
+  {area:'Russian', flag:'🇷🇺', names:{tr:'Rus',en:'Russian',es:'Rusa',zh:'俄式',ru:'Русская',de:'Russisch',fr:'Russe',it:'Russa'}},
+  {area:'Moroccan', flag:'🇲🇦', names:{tr:'Fas',en:'Moroccan',es:'Marroquí',zh:'摩洛哥',ru:'Марокканская',de:'Marokkanisch',fr:'Marocaine',it:'Marocchina'}},
+  {area:'Vietnamese', flag:'🇻🇳', names:{tr:'Vietnam',en:'Vietnamese',es:'Vietnamita',zh:'越南',ru:'Вьетнамская',de:'Vietnamesisch',fr:'Vietnamienne',it:'Vietnamita'}},
+  {area:'Malaysian', flag:'🇲🇾', names:{tr:'Malezya',en:'Malaysian',es:'Malaya',zh:'马来西亚',ru:'Малайзийская',de:'Malaysisch',fr:'Malaisienne',it:'Malaysiana'}},
+  {area:'Canadian', flag:'🇨🇦', names:{tr:'Kanada',en:'Canadian',es:'Canadiense',zh:'加拿大',ru:'Канадская',de:'Kanadisch',fr:'Canadienne',it:'Canadese'}},
+  {area:'Irish', flag:'🇮🇪', names:{tr:'İrlanda',en:'Irish',es:'Irlandesa',zh:'爱尔兰',ru:'Ирландская',de:'Irisch',fr:'Irlandaise',it:'Irlandese'}},
+  {area:'Egyptian', flag:'🇪🇬', names:{tr:'Mısır',en:'Egyptian',es:'Egipcia',zh:'埃及',ru:'Египетская',de:'Ägyptisch',fr:'Égyptienne',it:'Egiziana'}},
+  {area:'Filipino', flag:'🇵🇭', names:{tr:'Filipin',en:'Filipino',es:'Filipina',zh:'菲律宾',ru:'Филиппинская',de:'Philippinisch',fr:'Philippine',it:'Filippina'}},
+  {area:'Polish', flag:'🇵🇱', names:{tr:'Polonya',en:'Polish',es:'Polaca',zh:'波兰',ru:'Польская',de:'Polnisch',fr:'Polonaise',it:'Polacca'}},
+  {area:'Portuguese', flag:'🇵🇹', names:{tr:'Portekiz',en:'Portuguese',es:'Portuguesa',zh:'葡萄牙',ru:'Португальская',de:'Portugiesisch',fr:'Portugaise',it:'Portoghese'}},
+  {area:'Dutch', flag:'🇳🇱', names:{tr:'Hollanda',en:'Dutch',es:'Holandesa',zh:'荷兰',ru:'Нидерландская',de:'Niederländisch',fr:'Néerlandaise',it:'Olandese'}},
+  {area:'Jamaican', flag:'🇯🇲', names:{tr:'Jamaika',en:'Jamaican',es:'Jamaicana',zh:'牙买加',ru:'Ямайская',de:'Jamaikanisch',fr:'Jamaïcaine',it:'Giamaicana'}},
+  {area:'Tunisian', flag:'🇹🇳', names:{tr:'Tunus',en:'Tunisian',es:'Tunecina',zh:'突尼斯',ru:'Тунисская',de:'Tunesisch',fr:'Tunisienne',it:'Tunisina'}},
+  {area:'Ukrainian', flag:'🇺🇦', names:{tr:'Ukrayna',en:'Ukrainian',es:'Ucraniana',zh:'乌克兰',ru:'Украинская',de:'Ukrainisch',fr:'Ukrainienne',it:'Ucraina'}},
+  {area:'Kenyan', flag:'🇰🇪', names:{tr:'Kenya',en:'Kenyan',es:'Keniata',zh:'肯尼亚',ru:'Кенийская',de:'Kenianisch',fr:'Kényane',it:'Keniota'}},
+  {area:'Croatian', flag:'🇭🇷', names:{tr:'Hırvatistan',en:'Croatian',es:'Croata',zh:'克罗地亚',ru:'Хорватская',de:'Kroatisch',fr:'Croate',it:'Croata'}}
+];
+
 // ===== STATE =====
 let lang=localStorage.getItem('lang')||'tr';
 let view='home';
-let activeCat=null; // null=all food+drinks, 'Drinks'=drinks only, else meal cat
+let activeCat=null;
 let searchMode='name';
 let currentRecipe=null;
 let sTimer=null;
@@ -359,6 +412,8 @@ let mealCats=[];
 // ===== HELPERS =====
 const t=k=>(T[lang]||T.tr)[k]||(T.tr)[k]||k;
 const cn=c=>(T[lang]||T.tr).catNames[c]||(T.tr).catNames[c]||c;
+const cuisineName=area=>{const c=CUISINES.find(x=>x.area===area);return c?(c.names[lang]||c.names.en||area):area};
+const cuisineFlag=area=>{const c=CUISINES.find(x=>x.area===area);return c?c.flag:'🌍'};
 const isFav=id=>!!favs[id];
 function saveFav(id,name,thumb,type){
   if(favs[id])delete favs[id];
@@ -395,7 +450,7 @@ const spin=()=>`<div class="spin-wrap"><div class="spinner"></div><span>${t('loa
 const empty=(icon,txt)=>`<div class="empty"><div class="empty-icon">${icon}</div><div class="empty-text">${txt}</div></div>`;
 function rcard(r){
   const fav=isFav(r.id)?'❤️ ':'';
-  const sub=[r.cat&&cn(r.cat),r.area].filter(Boolean).join(' · ');
+  const sub=[r.cat&&cn(r.cat),r.area&&cuisineFlag(r.area)+' '+cuisineName(r.area)].filter(Boolean).join(' · ');
   return`<div class="rcard" onclick="openDetail('${r.rid}','${r.type}')">
     <img src="${r.thumb}/preview" alt="" loading="lazy" onerror="this.src='${r.thumb}'">
     <div class="rcard-body"><div class="rcard-name">${fav}${r.name}</div>
@@ -405,17 +460,32 @@ function rgrid(list){
   if(!list||!list.length)return empty('🔍',t('noRes'));
   return`<div class="rgrid">${list.map(rcard).join('')}</div><div style="height:20px"></div>`;
 }
+function cuisineGrid(){
+  return`<div class="cuis-grid">${CUISINES.map(c=>
+    `<div class="cuis-card" onclick="filterArea('${c.area}')">
+      <div class="cuis-flag">${c.flag}</div>
+      <div class="cuis-name">${c.names[lang]||c.names.en}</div>
+    </div>`).join('')}</div><div style="height:20px"></div>`;
+}
+function cuisineHScroll(){
+  return`<div class="cuis-hscroll">${CUISINES.map(c=>
+    `<div class="cuis-chip" onclick="filterArea('${c.area}')">${c.flag} ${c.names[lang]||c.names.en}</div>`
+  ).join('')}</div>`;
+}
 
 // ===== NAV =====
 function setNav(title,back,tab){
   document.getElementById('nav-title').textContent=title;
   document.getElementById('nav-back').style.display=back?'':'none';
-  ['home','cat','search','fav'].forEach(id=>{
+  ['home','cat','cuis','search','fav'].forEach(id=>{
     const el=document.getElementById('bn-'+id);
     if(el)el.classList.toggle('active',id===tab);
   });
 }
-function navBack(){showHome()}
+function navBack(){
+  if(view==='browse'||view==='cuisine')showHome();
+  else showHome();
+}
 function setSearchWrap(show){
   document.getElementById('search-wrap').style.display=show?'block':'none';
   document.getElementById('chips-wrap').style.display=show?'flex':'none';
@@ -446,7 +516,6 @@ async function chipClick(cat){
   try{
     let results;
     if(cat===null){
-      // Show mix: Turkish + some categories
       const[tr,des,ch]=await Promise.all([getMealsByArea('Turkish'),getMealsByCat('Dessert'),getMealsByCat('Chicken')]);
       const seen=new Set();
       results=[...tr,...des,...ch].filter(r=>{if(seen.has(r.id))return false;seen.add(r.id);return true;});
@@ -482,6 +551,13 @@ async function showHome(){
         <span class="sec-link" onclick="filterArea('Turkish')">${L.viewAll}</span>
       </div>
       <div id="tr-sec">${spin()}</div>
+    </div>
+    <div class="section">
+      <div class="sec-header">
+        <span class="sec-title">🌍 ${L.worldCuis}</span>
+        <span class="sec-link" onclick="showCuisinesTab()">${L.viewAll}</span>
+      </div>
+      ${cuisineHScroll()}
     </div>
     <div class="section">
       <div class="sec-header"><span class="sec-title">${L.cats}</span></div>
@@ -525,13 +601,24 @@ async function showCategories(){
   const content=document.getElementById('content');
   content.innerHTML=spin();
   await renderChips(null);
-  // Load mix
   try{
     const[tr,des,ch]=await Promise.all([getMealsByArea('Turkish'),getMealsByCat('Dessert'),getMealsByCat('Chicken')]);
     const seen=new Set();
     const results=[...tr,...des,...ch].filter(r=>{if(seen.has(r.id))return false;seen.add(r.id);return true;});
     content.innerHTML=rgrid(results);
   }catch(e){content.innerHTML=empty('⚠️',t('noRes'))}
+}
+
+// ===== CUISINES TAB =====
+function showCuisinesTab(){
+  view='cuisines';
+  setNav(t('worldCuis'),false,'cuis');
+  setSearchWrap(false);
+  document.getElementById('content').innerHTML=`
+    <div style="padding:16px 16px 8px">
+      <div class="sec-title">🌍 ${t('worldCuis')}</div>
+    </div>
+    ${cuisineGrid()}`;
 }
 
 // ===== FILTER BY CAT/AREA =====
@@ -566,13 +653,12 @@ async function filterCat(cat){
 async function filterArea(area){
   view='browse';
   activeCat=null;
-  setNav(area==='Turkish'?t('turkCuis'):area,true,'cat');
-  setSearchWrap(true);
-  clearSearchInput();
-  updateModeBtn();
+  const flag=cuisineFlag(area);
+  const name=cuisineName(area);
+  setNav(flag+' '+name,true,'cuis');
+  setSearchWrap(false);
   const content=document.getElementById('content');
   content.innerHTML=spin();
-  await renderChips(null);
   try{
     const results=await getMealsByArea(area);
     content.innerHTML=rgrid(results);
@@ -619,7 +705,6 @@ async function doSearch(q){
       const seen=new Set();
       results=[...byArea,...byName].filter(r=>{if(seen.has(r.id))return false;seen.add(r.id);return true;});
     }else{
-      // name: search both food and drinks
       const[food,drinks]=await Promise.all([searchMeals(q).catch(()=>[]),searchDrinks(q).catch(()=>[])]);
       results=[...food,...drinks];
     }
@@ -675,16 +760,16 @@ async function openDetail(id,type){
     const dfav=document.getElementById('dfav');
     dfav.textContent=isFav(rid)?'❤️':'♡';
     dfav.dataset.rid=rid;dfav.dataset.name=name;dfav.dataset.thumb=thumb;dfav.dataset.type=type;
-    // Ingredients
     const ings=[];
     for(let i=1;i<=20;i++){
       const ing=m['strIngredient'+i],meas=m['strMeasure'+i];
       if(ing&&ing.trim())ings.push({ing:ing.trim(),meas:(meas||'').trim()});
     }
+    const areaDisplay=area?`<span class="dmeta-tag" style="cursor:pointer" onclick="closeDetail();filterArea('${area}')">${cuisineFlag(area)} ${cuisineName(area)}</span>`:'';
     document.getElementById('dbody').innerHTML=`
       <div class="dmeta">
         ${cat?`<span class="dmeta-tag">🏷️ ${cn(cat)}</span>`:''}
-        ${area?`<span class="dmeta-tag">🌍 ${area}</span>`:''}
+        ${areaDisplay}
         ${alc&&alc!=='Unknown'?`<span class="dmeta-tag">🍸 ${alc}</span>`:''}
       </div>
       <div class="dsec">${t('ingrs')}</div>
@@ -707,7 +792,6 @@ function toggleFavD(){
   const{rid,name,thumb,type}=btn.dataset;
   saveFav(rid,name,thumb,type);
   btn.textContent=isFav(rid)?'❤️':'♡';
-  // Also refresh fav view if active
   if(view==='favorites')showFavs();
 }
 
@@ -740,15 +824,16 @@ function setLang(code){
   lang=code;localStorage.setItem('lang',code);
   document.documentElement.lang=code;
   closeSheet('lang');
-  // Update bottom nav labels
   const L=T[lang]||T.tr;
   document.getElementById('bl-home').textContent=L.home;
   document.getElementById('bl-cat').textContent=L.cats;
+  document.getElementById('bl-cuis').textContent=L.cuis;
   document.getElementById('bl-search').textContent=L.searchTab;
   document.getElementById('bl-fav').textContent=L.favs;
   updateModeBtn();
   if(view==='home')showHome();
   else if(view==='favorites')showFavs();
+  else if(view==='cuisines')showCuisinesTab();
   else{renderChips(activeCat);document.getElementById('nav-title').textContent=T[code].appName}
 }
 function selectMode(m){
@@ -763,6 +848,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   const L=T[lang]||T.tr;
   document.getElementById('bl-home').textContent=L.home;
   document.getElementById('bl-cat').textContent=L.cats;
+  document.getElementById('bl-cuis').textContent=L.cuis;
   document.getElementById('bl-search').textContent=L.searchTab;
   document.getElementById('bl-fav').textContent=L.favs;
   showHome();
