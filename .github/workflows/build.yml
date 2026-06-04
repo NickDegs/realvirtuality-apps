@@ -1,12 +1,9 @@
-name: Build & Publish Apps
+name: Build Apps
 on:
   push: { branches: [main] }
   workflow_dispatch:
 
 jobs:
-  # ─────────────────────────────────────────────────────────
-  # ANDROID — imzalı .aab + Google Play Internal Track upload
-  # ─────────────────────────────────────────────────────────
   android:
     runs-on: ubuntu-latest
     strategy:
@@ -15,13 +12,10 @@ jobs:
         app: [kasa, araclar, metin, butce, konum, tarayici, mesaj, haber, tarifler]
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: '17' }
-
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-
       - name: Capacitor hazırla
         working-directory: ${{ matrix.app }}
         run: |
@@ -29,7 +23,6 @@ jobs:
           npx cap add android
           npx @capacitor/assets generate --android || true
           npx cap sync android
-
       - name: İmzalı .aab üret
         working-directory: ${{ matrix.app }}/android
         run: |
@@ -41,25 +34,12 @@ jobs:
             -Pandroid.injected.signing.key.alias='${{ secrets.ANDROID_KEY_ALIAS }}' \
             -Pandroid.injected.signing.key.password='${{ secrets.ANDROID_KEYSTORE_PASSWORD }}'
           rm -f release.keystore
-
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.app }}-aab
           path: ${{ matrix.app }}/android/app/build/outputs/bundle/release/*.aab
           retention-days: 30
 
-      - name: Google Play — Internal Track'e yükle
-        uses: r0adkll/upload-google-play@v1
-        with:
-          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
-          packageName: com.nickdegs.${{ matrix.app }}
-          releaseFiles: ${{ matrix.app }}/android/app/build/outputs/bundle/release/*.aab
-          track: internal
-          status: completed
-
-  # ─────────────────────────────────────────────────────────
-  # iOS — imzalı archive + TestFlight upload
-  # ─────────────────────────────────────────────────────────
   ios:
     runs-on: macos-latest
     strategy:
@@ -68,16 +48,13 @@ jobs:
         app: [kasa, araclar, metin, butce, konum, tarayici, mesaj, haber, tarifler]
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-
       - name: ASC API anahtarını kur
         run: |
           mkdir -p ~/.appstoreconnect/private_keys
           echo "${{ secrets.APPLE_ASC_API_KEY }}" > ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8
           chmod 600 ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8
-
       - name: Capacitor hazırla + Xcode ayarları
         working-directory: ${{ matrix.app }}
         run: |
@@ -88,55 +65,91 @@ jobs:
           PBX=ios/App/App.xcodeproj/project.pbxproj
           sed -i '' -E 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]+;/IPHONEOS_DEPLOYMENT_TARGET = 14.0;/g' "$PBX" || true
           sed -i '' -E 's/TARGETED_DEVICE_FAMILY = "?[12,]+"?;/TARGETED_DEVICE_FAMILY = "1,2";/g' "$PBX" || true
-
       - name: ExportOptions.plist oluştur
         working-directory: ${{ matrix.app }}/ios/App
         run: |
           cat > ExportOptions.plist << PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-              <key>method</key>
-              <string>app-store</string>
-              <key>teamID</key>
-              <string>${{ secrets.APPLE_ASC_TEAM_ID }}</string>
-              <key>signingStyle</key>
-              <string>automatic</string>
-              <key>uploadBitcode</key>
-              <false/>
-              <key>uploadSymbols</key>
-              <true/>
-              <key>compileBitcode</key>
-              <false/>
-          </dict>
-          </plist>
+          <plist version="1.0"><dict>
+              <key>method</key><string>app-store</string>
+              <key>teamID</key><string>${{ secrets.APPLE_ASC_TEAM_ID }}</string>
+              <key>signingStyle</key><string>automatic</string>
+              <key>uploadBitcode</key><false/>
+              <key>uploadSymbols</key><true/>
+          </dict></plist>
           PLIST
-
-      - name: iOS Release Archive
+      - name: iOS Release Archive + IPA
         working-directory: ${{ matrix.app }}/ios/App
         run: |
           pod install
-          xcodebuild             -workspace App.xcworkspace             -scheme App             -configuration Release             -archivePath App.xcarchive             -allowProvisioningUpdates             -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8             -authenticationKeyID ${{ secrets.APPLE_ASC_KEY_ID }}             -authenticationKeyIssuerID ${{ secrets.APPLE_ASC_ISSUER_ID }}             DEVELOPMENT_TEAM=${{ secrets.APPLE_ASC_TEAM_ID }}             CODE_SIGN_STYLE=Automatic             archive
-
-      - name: IPA dışa aktar
-        working-directory: ${{ matrix.app }}/ios/App
-        run: |
-          xcodebuild -exportArchive             -archivePath App.xcarchive             -exportOptionsPlist ExportOptions.plist             -exportPath ./ipa-out             -allowProvisioningUpdates             -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8             -authenticationKeyID ${{ secrets.APPLE_ASC_KEY_ID }}             -authenticationKeyIssuerID ${{ secrets.APPLE_ASC_ISSUER_ID }}
-
-      - name: TestFlight'a yükle
-        working-directory: ${{ matrix.app }}/ios/App
-        run: |
-          xcrun altool --upload-app \
-            --file $(ls ./ipa-out/*.ipa | head -1) \
-            --apiKey ${{ secrets.APPLE_ASC_KEY_ID }} \
-            --apiIssuer ${{ secrets.APPLE_ASC_ISSUER_ID }} \
-            --type ios \
-            --verbose
-
+          xcodebuild \
+            -workspace App.xcworkspace -scheme App \
+            -configuration Release -archivePath App.xcarchive \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8 \
+            -authenticationKeyID ${{ secrets.APPLE_ASC_KEY_ID }} \
+            -authenticationKeyIssuerID ${{ secrets.APPLE_ASC_ISSUER_ID }} \
+            DEVELOPMENT_TEAM=${{ secrets.APPLE_ASC_TEAM_ID }} \
+            CODE_SIGN_STYLE=Automatic archive
+          xcodebuild -exportArchive \
+            -archivePath App.xcarchive -exportOptionsPlist ExportOptions.plist \
+            -exportPath ./ipa-out -allowProvisioningUpdates \
+            -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8 \
+            -authenticationKeyID ${{ secrets.APPLE_ASC_KEY_ID }} \
+            -authenticationKeyIssuerID ${{ secrets.APPLE_ASC_ISSUER_ID }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ matrix.app }}-ipa
           path: ${{ matrix.app }}/ios/App/ipa-out/*.ipa
           retention-days: 30
+
+# ─── PUBLISH (manuel tetikleme, ilk kurulumdan sonra) ──────────────────────
+  publish-android:
+    needs: android
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [kasa, araclar, metin, butce, konum, tarayici, mesaj, haber, tarifler]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.app }}-aab
+          path: aab/
+      - name: Google Play — Internal Track
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.nickdegs.${{ matrix.app }}
+          releaseFiles: aab/*.aab
+          track: internal
+          status: completed
+
+  publish-ios:
+    needs: ios
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [kasa, araclar, metin, butce, konum, tarayici, mesaj, haber, tarifler]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.app }}-ipa
+          path: ipa/
+      - name: ASC API anahtarını kur
+        run: |
+          mkdir -p ~/.appstoreconnect/private_keys
+          echo "${{ secrets.APPLE_ASC_API_KEY }}" > ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8
+          chmod 600 ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8
+      - name: TestFlight'a yükle
+        run: |
+          xcrun altool --upload-app \
+            --file $(ls ipa/*.ipa | head -1) \
+            --apiKey ${{ secrets.APPLE_ASC_KEY_ID }} \
+            --apiIssuer ${{ secrets.APPLE_ASC_ISSUER_ID }} \
+            --type ios
