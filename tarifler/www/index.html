@@ -637,6 +637,11 @@ body[data-theme="light"] .hero-input { color: var(--txt); border-color: rgba(120
 .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 72px 20px; color: var(--sub); text-align: center; gap: 14px; animation: pageIn .38s var(--ease-out) both; }
 .empty-icon { font-size: 52px; filter: drop-shadow(0 4px 14px rgba(255,100,0,.25)) }
 .empty-text { font-size: 14px; line-height: 1.7; max-width: 220px }
+
+/* ── RTL ── */
+[dir=rtl] .sitem,[dir=rtl] .rcard-info{direction:rtl;text-align:right}
+[dir=rtl] #bnav{flex-direction:row-reverse}
+[dir=rtl] .hscroll{direction:rtl}
 </style>
 </head>
 <body>
@@ -834,7 +839,135 @@ const T={
       Vegan:'Vegano',Vegetarian:'Vegetariano',Drinks:'Bevande',
       Cocktail:'Cocktail','Non alcoholic':'Analcolico',Beer:'Birra',
       'Soft Drink / Soda':'Bibite','Coffee / Tea':'Caffè & Tè',
-      'Punch / Party Drink':'Punch',Shot:'Shot',Homemade:'Fatto in casa'}}
+      'Punch / Party Drink':'Punch',Shot:'Shot',Homemade:'Fatto in casa'}},
+  pt:{appName:'Receitas de Culinária',nativeName:'Português',flag:'🇧🇷',
+    tagline:'Milhares de receitas na palma da mão',
+    search:'Pesquisar receitas, ingredientes ou cozinhas…',searchBtn:'Pesquisar',
+    byName:'Por nome',byIngr:'Por ingrediente',byCuis:'Por cozinha',
+    home:'Início',cats:'Categorias',cuis:'Cozinhas',searchTab:'Pesquisar',favs:'Favoritos',
+    lang:'Idioma',ingrs:'Ingredientes',howto:'Preparo',source:'Fonte',
+    cuisine:'Cozinha',cat:'Categoria',loading:'Carregando…',noRes:'Nenhum resultado',
+    addFav:'Favoritar',remFav:'Remover',noFavs:'Sem favoritos.\nToque em ♡ para salvar.',
+    watchVid:'Ver vídeo',viewAll:'Ver tudo',turkCuis:'Cozinha Turca',featured:'Destaques',worldCuis:'Cozinhas do Mundo',
+    catNames:{Beef:'Carne bovina',Breakfast:'Café da manhã',Chicken:'Frango',Dessert:'Sobremesas',
+      Goat:'Cabrito',Lamb:'Cordeiro',Miscellaneous:'Diversos',Pasta:'Massas',
+      Pork:'Porco',Seafood:'Frutos do mar',Side:'Acompanhamentos',Starter:'Entradas',
+      Vegan:'Vegano',Vegetarian:'Vegetariano',Drinks:'Bebidas',
+      Cocktail:'Coquetel','Non alcoholic':'Sem álcool',Beer:'Cerveja',
+      'Soft Drink / Soda':'Refrigerante','Coffee / Tea':'Café & Chá',
+      'Punch / Party Drink':'Ponche',Shot:'Shot',Homemade:'Caseiro'}},
+  ja:{appName:'料理レシピ',nativeName:'日本語',flag:'🇯🇵',
+    tagline:'何千ものレシピをすぐに',
+    search:'レシピ、食材、料理を検索…',searchBtn:'検索',
+    byName:'名前で',byIngr:'食材で',byCuis:'料理で',
+    home:'ホーム',cats:'カテゴリ',cuis:'料理',searchTab:'検索',favs:'お気に入り',
+    lang:'言語',ingrs:'食材',howto:'作り方',source:'出典',
+    cuisine:'料理',cat:'カテゴリ',loading:'読み込み中…',noRes:'結果なし',
+    addFav:'お気に入りに追加',remFav:'削除',noFavs:'お気に入りなし。\n♡でレシピを保存。',
+    watchVid:'動画を見る',viewAll:'すべて見る',turkCuis:'トルコ料理',featured:'おすすめ',worldCuis:'世界の料理',
+    catNames:{Beef:'牛肉',Breakfast:'朝食',Chicken:'鶏肉',Dessert:'デザート',
+      Goat:'ヤギ肉',Lamb:'子羊',Miscellaneous:'その他',Pasta:'パスタ',
+      Pork:'豚肉',Seafood:'シーフード',Side:'付け合わせ',Starter:'前菜',
+      Vegan:'ビーガン',Vegetarian:'ベジタリアン',Drinks:'飲み物',
+      Cocktail:'カクテル','Non alcoholic':'ノンアルコール',Beer:'ビール',
+      'Soft Drink / Soda':'ソフトドリンク','Coffee / Tea':'コーヒー・紅茶',
+      'Punch / Party Drink':'パンチ',Shot:'ショット',Homemade:'自家製'}},
+  ko:{appName:'요리 레시피',nativeName:'한국어',flag:'🇰🇷',
+    tagline:'수천 가지 레시피를 한 번에',
+    search:'레시피, 재료 또는 요리 검색…',searchBtn:'검색',
+    byName:'이름으로',byIngr:'재료로',byCuis:'요리로',
+    home:'홈',cats:'카테고리',cuis:'요리',searchTab:'검색',favs:'즐겨찾기',
+    lang:'언어',ingrs:'재료',howto:'만드는 법',source:'출처',
+    cuisine:'요리',cat:'카테고리',loading:'로딩 중…',noRes:'결과 없음',
+    addFav:'즐겨찾기 추가',remFav:'삭제',noFavs:'즐겨찾기 없음.\n♡로 레시피를 저장하세요.',
+    watchVid:'동영상 보기',viewAll:'전체 보기',turkCuis:'터키 요리',featured:'추천',worldCuis:'세계 요리',
+    catNames:{Beef:'소고기',Breakfast:'아침 식사',Chicken:'닭고기',Dessert:'디저트',
+      Goat:'염소고기',Lamb:'양고기',Miscellaneous:'기타',Pasta:'파스타',
+      Pork:'돼지고기',Seafood:'해산물',Side:'사이드',Starter:'전채',
+      Vegan:'비건',Vegetarian:'채식',Drinks:'음료',
+      Cocktail:'칵테일','Non alcoholic':'무알코올',Beer:'맥주',
+      'Soft Drink / Soda':'탄산음료','Coffee / Tea':'커피 & 차',
+      'Punch / Party Drink':'펀치',Shot:'샷',Homemade:'홈메이드'}},
+  ar:{appName:'وصفات الطبخ',nativeName:'العربية',flag:'🇸🇦',rtl:true,
+    tagline:'آلاف الوصفات بين يديك',
+    search:'ابحث عن وصفات أو مكونات أو مطابخ…',searchBtn:'بحث',
+    byName:'بالاسم',byIngr:'بالمكون',byCuis:'بالمطبخ',
+    home:'الرئيسية',cats:'الفئات',cuis:'المطابخ',searchTab:'بحث',favs:'المفضلة',
+    lang:'اللغة',ingrs:'المكونات',howto:'طريقة التحضير',source:'المصدر',
+    cuisine:'المطبخ',cat:'الفئة',loading:'جارٍ التحميل…',noRes:'لا نتائج',
+    addFav:'أضف للمفضلة',remFav:'إزالة',noFavs:'لا مفضلة بعد.\nاضغط ♡ للحفظ.',
+    watchVid:'شاهد الفيديو',viewAll:'عرض الكل',turkCuis:'المطبخ التركي',featured:'مميز',worldCuis:'مطابخ العالم',
+    catNames:{Beef:'لحم بقري',Breakfast:'فطور',Chicken:'دجاج',Dessert:'حلويات',
+      Goat:'لحم ماعز',Lamb:'لحم ضأن',Miscellaneous:'متنوع',Pasta:'معكرونة',
+      Pork:'لحم خنزير',Seafood:'مأكولات بحرية',Side:'مرافقات',Starter:'مقبلات',
+      Vegan:'نباتي صرف',Vegetarian:'نباتي',Drinks:'مشروبات',
+      Cocktail:'كوكتيل','Non alcoholic':'بدون كحول',Beer:'بيرة',
+      'Soft Drink / Soda':'مشروبات غازية','Coffee / Tea':'قهوة وشاي',
+      'Punch / Party Drink':'بونش',Shot:'شوت',Homemade:'منزلي'}},
+  hi:{appName:'खाना पकाने की रेसिपी',nativeName:'हिन्दी',flag:'🇮🇳',
+    tagline:'हजारों रेसिपी एक टैप पर',
+    search:'रेसिपी, सामग्री या व्यंजन खोजें…',searchBtn:'खोजें',
+    byName:'नाम से',byIngr:'सामग्री से',byCuis:'व्यंजन से',
+    home:'होम',cats:'श्रेणियाँ',cuis:'व्यंजन',searchTab:'खोजें',favs:'पसंदीदा',
+    lang:'भाषा',ingrs:'सामग्री',howto:'बनाने की विधि',source:'स्रोत',
+    cuisine:'व्यंजन',cat:'श्रेणी',loading:'लोड हो रहा है…',noRes:'कोई परिणाम नहीं',
+    addFav:'पसंदीदा में जोड़ें',remFav:'हटाएं',noFavs:'कोई पसंदीदा नहीं।\n♡ से रेसिपी सेव करें।',
+    watchVid:'वीडियो देखें',viewAll:'सब देखें',turkCuis:'तुर्की व्यंजन',featured:'चुनिंदा',worldCuis:'विश्व व्यंजन',
+    catNames:{Beef:'बीफ़',Breakfast:'नाश्ता',Chicken:'चिकन',Dessert:'मिठाई',
+      Goat:'बकरी',Lamb:'मेमना',Miscellaneous:'विविध',Pasta:'पास्ता',
+      Pork:'सूअर',Seafood:'समुद्री भोजन',Side:'साइड डिश',Starter:'स्टार्टर',
+      Vegan:'वीगन',Vegetarian:'शाकाहारी',Drinks:'पेय',
+      Cocktail:'कॉकटेल','Non alcoholic':'गैर-अल्कोहल',Beer:'बियर',
+      'Soft Drink / Soda':'सोडा','Coffee / Tea':'चाय & कॉफ़ी',
+      'Punch / Party Drink':'पंच',Shot:'शॉट',Homemade:'घर का बना'}},
+  nl:{appName:'Kookrecepten',nativeName:'Nederlands',flag:'🇳🇱',
+    tagline:'Duizenden recepten binnen handbereik',
+    search:'Zoek recepten, ingrediënten of keukens…',searchBtn:'Zoeken',
+    byName:'Op naam',byIngr:'Op ingrediënt',byCuis:'Op keuken',
+    home:'Home',cats:'Categorieën',cuis:'Keukens',searchTab:'Zoeken',favs:'Favorieten',
+    lang:'Taal',ingrs:'Ingrediënten',howto:'Bereiding',source:'Bron',
+    cuisine:'Keuken',cat:'Categorie',loading:'Laden…',noRes:'Geen resultaten',
+    addFav:'Toevoegen',remFav:'Verwijderen',noFavs:'Geen favorieten.\nTik op ♡ om op te slaan.',
+    watchVid:'Bekijk video',viewAll:'Alles bekijken',turkCuis:'Turkse keuken',featured:'Uitgelicht',worldCuis:'Wereldkeukens',
+    catNames:{Beef:'Rundvlees',Breakfast:'Ontbijt',Chicken:'Kip',Dessert:'Desserts',
+      Goat:'Geit',Lamb:'Lam',Miscellaneous:'Overig',Pasta:'Pasta',
+      Pork:'Varkensvlees',Seafood:'Zeevruchten',Side:'Bijgerecht',Starter:'Voorgerecht',
+      Vegan:'Veganistisch',Vegetarian:'Vegetarisch',Drinks:'Dranken',
+      Cocktail:'Cocktail','Non alcoholic':'Alcoholvrij',Beer:'Bier',
+      'Soft Drink / Soda':'Frisdrank','Coffee / Tea':'Koffie & Thee',
+      'Punch / Party Drink':'Punch',Shot:'Shot',Homemade:'Huisgemaakt'}},
+  pl:{appName:'Przepisy kulinarne',nativeName:'Polski',flag:'🇵🇱',
+    tagline:'Tysiące przepisów w zasięgu ręki',
+    search:'Szukaj przepisów, składników lub kuchni…',searchBtn:'Szukaj',
+    byName:'Po nazwie',byIngr:'Po składniku',byCuis:'Po kuchni',
+    home:'Strona główna',cats:'Kategorie',cuis:'Kuchnie',searchTab:'Szukaj',favs:'Ulubione',
+    lang:'Język',ingrs:'Składniki',howto:'Przygotowanie',source:'Źródło',
+    cuisine:'Kuchnia',cat:'Kategoria',loading:'Ładowanie…',noRes:'Brak wyników',
+    addFav:'Dodaj do ulubionych',remFav:'Usuń',noFavs:'Brak ulubionych.\nDotknij ♡ aby zapisać.',
+    watchVid:'Obejrzyj film',viewAll:'Zobacz wszystkie',turkCuis:'Kuchnia turecka',featured:'Polecane',worldCuis:'Kuchnie świata',
+    catNames:{Beef:'Wołowina',Breakfast:'Śniadanie',Chicken:'Kurczak',Dessert:'Desery',
+      Goat:'Koza',Lamb:'Jagnięcina',Miscellaneous:'Inne',Pasta:'Makaron',
+      Pork:'Wieprzowina',Seafood:'Owoce morza',Side:'Dodatki',Starter:'Przystawki',
+      Vegan:'Wegańskie',Vegetarian:'Wegetariańskie',Drinks:'Napoje',
+      Cocktail:'Koktajl','Non alcoholic':'Bezalkoholowy',Beer:'Piwo',
+      'Soft Drink / Soda':'Napój gazowany','Coffee / Tea':'Kawa & Herbata',
+      'Punch / Party Drink':'Poncz',Shot:'Shot',Homemade:'Domowe'}},
+  sv:{appName:'Matrecept',nativeName:'Svenska',flag:'🇸🇪',
+    tagline:'Tusentals recept nära till hands',
+    search:'Sök recept, ingredienser eller kök…',searchBtn:'Sök',
+    byName:'Efter namn',byIngr:'Efter ingrediens',byCuis:'Efter kök',
+    home:'Hem',cats:'Kategorier',cuis:'Kök',searchTab:'Sök',favs:'Favoriter',
+    lang:'Språk',ingrs:'Ingredienser',howto:'Tillagning',source:'Källa',
+    cuisine:'Kök',cat:'Kategori',loading:'Laddar…',noRes:'Inga resultat',
+    addFav:'Lägg till favorit',remFav:'Ta bort',noFavs:'Inga favoriter.\nTryck ♡ för att spara.',
+    watchVid:'Titta på video',viewAll:'Visa alla',turkCuis:'Turkiskt kök',featured:'Utvalda',worldCuis:'Världens kök',
+    catNames:{Beef:'Nötkött',Breakfast:'Frukost',Chicken:'Kyckling',Dessert:'Desserter',
+      Goat:'Gett',Lamb:'Lamm',Miscellaneous:'Övrigt',Pasta:'Pasta',
+      Pork:'Fläsk',Seafood:'Skaldjur',Side:'Tillbehör',Starter:'Förrätt',
+      Vegan:'Veganskt',Vegetarian:'Vegetariskt',Drinks:'Drycker',
+      Cocktail:'Cocktail','Non alcoholic':'Alkoholfritt',Beer:'Öl',
+      'Soft Drink / Soda':'Läskedryck','Coffee / Tea':'Kaffe & Te',
+      'Punch / Party Drink':'Punsch',Shot:'Shot',Homemade:'Hemlagat'}}
 };
 
 // ===== WORLD CUISINES =====
@@ -870,7 +1003,14 @@ const CUISINES=[
 ];
 
 // ===== STATE =====
-let lang=localStorage.getItem('lang')||'tr';
+function detectLang(){
+  const saved=localStorage.getItem('lang');
+  if(saved&&T[saved])return saved;
+  const nav=(navigator.language||navigator.userLanguage||'en').toLowerCase();
+  const MAP={'tr':'tr','az':'tr','en':'en','en-us':'en','en-gb':'en','es':'es','es-es':'es','es-mx':'es','es-419':'es','zh':'zh','zh-cn':'zh','zh-tw':'zh','ru':'ru','uk':'ru','de':'de','de-at':'de','fr':'fr','fr-be':'fr','it':'it','pt':'pt','pt-br':'pt','ja':'ja','ko':'ko','ar':'ar','ar-sa':'ar','ar-eg':'ar','hi':'hi','nl':'nl','pl':'pl','sv':'sv'};
+  return MAP[nav]||MAP[nav.split('-')[0]]||'en';
+}
+let lang=detectLang();
 let view='home';
 let activeCat=null;
 let searchMode='name';
@@ -1427,6 +1567,7 @@ function closeSheet(id){
 function setLang(code){
   lang=code;localStorage.setItem('lang',code);
   document.documentElement.lang=code;
+  document.documentElement.dir=((T[code]||{}).rtl)?'rtl':'ltr';
   closeSheet('lang');
   const L=T[lang]||T.tr;
   document.getElementById('bl-home').textContent=L.home;
@@ -1498,6 +1639,7 @@ async function initAdMob(){
 window.addEventListener('DOMContentLoaded',()=>{
   initTheme();
   document.documentElement.lang=lang;
+  document.documentElement.dir=((T[lang]||{}).rtl)?'rtl':'ltr';
   const L=T[lang]||T.tr;
   document.getElementById('bl-home').textContent=L.home;
   document.getElementById('bl-cat').textContent=L.cats;
