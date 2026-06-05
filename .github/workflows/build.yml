@@ -227,7 +227,7 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: com.nickdegs.${{ matrix.app }}
           releaseFiles: aab/*.aab
-          track: production
+          track: internal
           status: completed
 
   publish-ios:
