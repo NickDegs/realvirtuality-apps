@@ -150,24 +150,7 @@ jobs:
         run: |
           CONSENT_FILE="node_modules/@capacitor-community/admob/ios/Sources/AdMobPlugin/Consent/ConsentExecutor.swift"
           if [ -f "$CONSENT_FILE" ]; then
-            cat > "$CONSENT_FILE" << 'SWIFTEOF'
-import Foundation
-import Capacitor
-import GoogleMobileAds
-
-class ConsentExecutor: NSObject {
-    weak var plugin: AdMobPlugin?
-    func requestConsentInfo(_ call: CAPPluginCall, _ debugGeography: Int, _ testDeviceIdentifiers: [String], _ tagForUnderAgeOfConsent: Bool) {
-        call.resolve(["status": "NOT_REQUIRED", "isConsentFormAvailable": false])
-    }
-    func showConsentForm(_ call: CAPPluginCall) {
-        call.resolve(["status": "NOT_REQUIRED"])
-    }
-    func resetConsentInfo(_ call: CAPPluginCall) {
-        call.resolve()
-    }
-}
-SWIFTEOF
+            echo 'aW1wb3J0IEZvdW5kYXRpb24KaW1wb3J0IENhcGFjaXRvcgppbXBvcnQgR29vZ2xlTW9iaWxlQWRzCgpjbGFzcyBDb25zZW50RXhlY3V0b3I6IE5TT2JqZWN0IHsKICAgIHdlYWsgdmFyIHBsdWdpbjogQWRNb2JQbHVnaW4/CiAgICBmdW5jIHJlcXVlc3RDb25zZW50SW5mbyhfIGNhbGw6IENBUFBsdWdpbkNhbGwsIF8gZGVidWdHZW9ncmFwaHk6IEludCwgXyB0ZXN0RGV2aWNlSWRlbnRpZmllcnM6IFtTdHJpbmddLCBfIHRhZ0ZvclVuZGVyQWdlT2ZDb25zZW50OiBCb29sKSB7CiAgICAgICAgY2FsbC5yZXNvbHZlKFsic3RhdHVzIjogIk5PVF9SRVFVSVJFRCIsICJpc0NvbnNlbnRGb3JtQXZhaWxhYmxlIjogZmFsc2VdKQogICAgfQogICAgZnVuYyBzaG93Q29uc2VudEZvcm0oXyBjYWxsOiBDQVBQbHVnaW5DYWxsKSB7CiAgICAgICAgY2FsbC5yZXNvbHZlKFsic3RhdHVzIjogIk5PVF9SRVFVSVJFRCJdKQogICAgfQogICAgZnVuYyByZXNldENvbnNlbnRJbmZvKF8gY2FsbDogQ0FQUGx1Z2luQ2FsbCkgewogICAgICAgIGNhbGwucmVzb2x2ZSgpCiAgICB9Cn0K' | base64 -d > "$CONSENT_FILE"
             echo "ConsentExecutor.swift patched OK"
           else
             echo "ConsentExecutor.swift not found, skipping"
