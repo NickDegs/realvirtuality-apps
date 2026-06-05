@@ -1874,16 +1874,21 @@ function initIAP(){
 
 // ===== ADMOB =====
 async function initAdMob(){
+  // Defer past Capacitor bridge init to avoid native crash on cold start
+  await new Promise(r=>setTimeout(r,600));
   try{
     if(!window.Capacitor||!window.Capacitor.isNativePlatform())return;
     const{AdMob}=window.Capacitor.Plugins;
     if(!AdMob)return;
-    await AdMob.initialize({requestTrackingAuthorization:true,testingDevices:[],initializeForTesting:false});
+    // initializeForTesting:true ensures test mode on all devices
+    await AdMob.initialize({requestTrackingAuthorization:true,initializeForTesting:true});
     // UMP Consent (GDPR/EEA)
-    const ci=await AdMob.requestConsentInfo({});
-    if(ci&&(ci.status==='REQUIRED'||ci.status==='UNKNOWN')){
-      await AdMob.showConsentForm();
-    }
+    try{
+      const ci=await AdMob.requestConsentInfo({});
+      if(ci&&(ci.status==='REQUIRED'||ci.status==='UNKNOWN')){
+        await AdMob.showConsentForm();
+      }
+    }catch(e){}
     if(!isNoAds()){
       await AdMob.showBanner({
         adId:'ca-app-pub-3940256099942544/6300978111',
