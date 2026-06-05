@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Yemek Tarifleri</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
 /* ─── LIQUID GLASS — iOS 26 ──────────────────────────── */
 :root {
@@ -87,7 +90,10 @@ html, body {
   height: 100%; overflow: hidden;
   background: var(--bg-base);
   color: var(--txt);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', sans-serif;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body::before {
@@ -227,7 +233,7 @@ body[data-theme="dark"]::before {
 }
 #nav-back:active { transform: scale(0.82) translateX(-3px) }
 #nav-title {
-  flex: 1; font-size: 18px; font-weight: 700; letter-spacing: -.4px;
+  flex: 1; font-size: 19px; font-weight: 800; letter-spacing: -.5px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 #nav-title.animate { animation: navTitleIn .28s var(--ease-out) both; }
@@ -255,7 +261,7 @@ body[data-theme="dark"]::before {
 #search-input {
   flex: 1; background: var(--gl); border: 1px solid var(--gl-bdr);
   -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
-  border-radius: 14px; color: var(--txt); font-size: 15px;
+  border-radius: 14px; color: var(--txt); font-size: 16px; font-weight: 500;
   padding: 11px 16px; outline: none; -webkit-appearance: none;
   transition: border-color .2s, box-shadow .2s;
 }
@@ -336,15 +342,15 @@ body[data-theme="dark"]::before {
   animation: heroFloat 5s ease-in-out infinite;
   display: inline-block;
 }
-.hero-title { font-size: 23px; font-weight: 800; line-height: 1.2; letter-spacing: -.6px; margin-bottom: 4px }
-.hero-sub { font-size: 13px; color: rgba(255,255,255,0.55); margin-bottom: 18px }
+.hero-title { font-size: 27px; font-weight: 800; line-height: 1.16; letter-spacing: -.8px; margin-bottom: 6px }
+.hero-sub { font-size: 14px; color: rgba(255,255,255,0.58); margin-bottom: 20px; line-height: 1.5; letter-spacing: .15px }
 body[data-theme="light"] .hero-sub { color: rgba(60,30,100,0.62) }
 body[data-theme="light"] .hero-input::placeholder { color: rgba(60,30,100,0.40) }
 body[data-theme="light"] .hero-input { color: var(--txt); border-color: rgba(120,80,200,0.22); background: rgba(255,255,255,0.45) }
 .hero-search { display: flex; gap: 8px }
 .hero-input {
   flex: 1; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.20);
-  border-radius: 16px; color: var(--txt); font-size: 14px;
+  border-radius: 16px; color: var(--txt); font-size: 16px; font-weight: 500;
   padding: 13px 16px; outline: none; -webkit-appearance: none;
   transition: border-color .2s, box-shadow .2s;
 }
@@ -366,7 +372,7 @@ body[data-theme="light"] .hero-input { color: var(--txt); border-color: rgba(120
 /* ─── SECTION ──────────────────────────────────────────── */
 .section { padding: 16px }
 .sec-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px }
-.sec-title { font-size: 17px; font-weight: 700; letter-spacing: -.3px }
+.sec-title { font-size: 18px; font-weight: 800; letter-spacing: -.4px }
 .sec-link {
   font-size: 13px; color: var(--acc); font-weight: 600; cursor: pointer;
   transition: opacity .18s;
@@ -388,8 +394,8 @@ body[data-theme="light"] .hero-input { color: var(--txt); border-color: rgba(120
 .cat-card-icon { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 40px }
 .cat-label {
   position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 12px;
-  background: linear-gradient(to top, rgba(0,0,0,.72), transparent);
-  font-size: 14px; font-weight: 600;
+  background: linear-gradient(to top, rgba(0,0,0,.80), transparent);
+  font-size: 14px; font-weight: 700; letter-spacing: -.1px;
 }
 
 /* Shimmer placeholder for images loading */
@@ -415,7 +421,7 @@ body[data-theme="light"] .hero-input { color: var(--txt); border-color: rgba(120
 .cuis-card:active { transform: scale(.88); box-shadow: 0 6px 22px rgba(0,0,0,0.36); }
 .cuis-flag { font-size: 30px; line-height: 1; transition: transform .3s var(--spring); }
 .cuis-card:active .cuis-flag { transform: scale(1.18) rotate(8deg); }
-.cuis-name { font-size: 11px; font-weight: 600; text-align: center; line-height: 1.3 }
+.cuis-name { font-size: 11.5px; font-weight: 700; text-align: center; line-height: 1.3 }
 
 /* ─── HSCROLL (Featured) ───────────────────────────────── */
 .hscroll { display: flex; gap: 12px; overflow-x: auto; padding: 0 16px 4px; -webkit-overflow-scrolling: touch; scrollbar-width: none }
@@ -433,7 +439,7 @@ body[data-theme="light"] .hero-input { color: var(--txt); border-color: rgba(120
   width: 100%; height: 94px; object-fit: cover; display: block;
   animation: imgReveal .5s var(--ease-out) both;
 }
-.feat-name { padding: 10px 10px 12px; font-size: 12px; font-weight: 600; line-height: 1.35;
+.feat-name { padding: 10px 10px 12px; font-size: 12.5px; font-weight: 700; line-height: 1.4; letter-spacing: -.1px;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden }
 
 /* ─── CUISINE HSCROLL ──────────────────────────────────── */
@@ -473,10 +479,10 @@ body[data-theme="light"] .hero-input { color: var(--txt); border-color: rgba(120
   filter: none;
   opacity: 1;
 }
-.rcard-body { padding: 10px 12px 12px }
-.rcard-name { font-size: 13px; font-weight: 600; line-height: 1.35;
+.rcard-body { padding: 10px 12px 14px }
+.rcard-name { font-size: 14px; font-weight: 700; line-height: 1.4; letter-spacing: -.1px;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden }
-.rcard-meta { font-size: 11px; color: var(--sub); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.rcard-meta { font-size: 11.5px; color: var(--sub); margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: .1px }
 
 /* ─── DETAIL ───────────────────────────────────────────── */
 #detail {
@@ -502,7 +508,7 @@ body[data-theme="light"] .hero-input { color: var(--txt); border-color: rgba(120
   padding: calc(var(--st) + 16px) 16px 14px;
   border-bottom: 1px solid var(--gl-bdr);
 }
-#dtitle { flex: 1; font-size: 16px; font-weight: 700; letter-spacing: -.3px;
+#dtitle { flex: 1; font-size: 17px; font-weight: 800; letter-spacing: -.4px;
   display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden }
 #dfav {
   background: none; border: none; font-size: 24px; cursor: pointer; padding: 4px;
@@ -522,12 +528,12 @@ body[data-theme="light"] .hero-input { color: var(--txt); border-color: rgba(120
 .dmeta-tag {
   background: var(--gl); border: 1px solid var(--gl-bdr);
   -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
-  border-radius: 10px; padding: 5px 12px; font-size: 12px; color: var(--sub);
+  border-radius: 10px; padding: 5px 12px; font-size: 12.5px; font-weight: 500; color: var(--sub);
   transition: transform .18s var(--spring), background .18s;
 }
 .dmeta-tag:active { transform: scale(0.92); background: var(--gl-med); }
-.dsec { font-size: 15px; font-weight: 700; margin-bottom: 10px; color: var(--acc2) }
-.ing-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px }
+.dsec { font-size: 16px; font-weight: 800; margin-bottom: 12px; color: var(--acc2); letter-spacing: -.3px }
+.ing-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 26px }
 .ing-item {
   display: flex; align-items: center; gap: 10px;
   background: var(--gl); border: 1px solid var(--gl-bdr);
@@ -540,9 +546,24 @@ body[data-theme="light"] .hero-input { color: var(--txt); border-color: rgba(120
 .ing-item.checked { background: rgba(255,113,51,0.12); border-color: rgba(255,113,51,0.28); }
 .ing-item:active { transform: scale(0.96); background: var(--gl-med); }
 .ing-item input[type=checkbox] { accent-color: var(--acc); width: 16px; height: 16px; flex-shrink: 0 }
-.ing-name { font-size: 14px; flex: 1 }
-.ing-meas { font-size: 12px; color: var(--sub); flex-shrink: 0 }
-.instr { font-size: 14px; line-height: 1.8; color: rgba(255,255,255,0.80); white-space: pre-line }
+.ing-name { font-size: 15px; font-weight: 500; flex: 1; line-height: 1.3 }
+.ing-meas { font-size: 13px; color: var(--sub); flex-shrink: 0; font-weight: 500 }
+.instr { font-size: 15px; color: rgba(255,255,255,0.83) }
+.instr-step {
+  display: flex; gap: 12px; align-items: flex-start;
+  margin-bottom: 16px; line-height: 1.85; letter-spacing: .1px;
+}
+.instr-step:last-child { margin-bottom: 0 }
+.step-num {
+  flex-shrink: 0; width: 26px; height: 26px;
+  background: linear-gradient(135deg, var(--acc) 0%, #e03800 100%);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: #fff; margin-top: 2px;
+  box-shadow: 0 3px 10px var(--acc-glow);
+}
+body[data-theme="light"] .instr-step { color: rgba(20,10,50,0.82) }
+body[data-theme="light"] .step-num { box-shadow: 0 3px 10px rgba(255,113,51,0.28) }
 .yt-btn {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   background: linear-gradient(135deg, #ff2525 0%, #ff6b35 100%);
@@ -588,7 +609,7 @@ body[data-theme="light"] .hero-input { color: var(--txt); border-color: rgba(120
   transition: transform .25s var(--spring);
 }
 .bni.pop .bni-icon { animation: tabPop .38s var(--spring) both; }
-.bni-label { font-size: 10px; font-weight: 600; letter-spacing: .1px; position: relative;
+.bni-label { font-size: 10.5px; font-weight: 700; letter-spacing: .05px; position: relative;
   transition: color .22s, opacity .22s; }
 .bni:not(.active) .bni-label { opacity: 0.65; }
 
@@ -756,6 +777,64 @@ body[data-theme="light"] .hero-input { color: var(--txt); border-color: rgba(120
 </div>
 
 <script>
+// ===== TYPOGRAPHY HELPERS =====
+function capFirst(s) {
+  if (!s) return s;
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function ensurePunct(s) {
+  if (!s) return s;
+  return /[.!?。！？…]$/.test(s.trim()) ? s.trim() : s.trim() + '.';
+}
+
+function formatInstructions(text) {
+  if (!text) return '';
+  text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
+
+  // Split into steps: numbered (1. 2. STEP 1:), blank-line paragraphs, or sentence breaks
+  let steps = [];
+
+  // Already numbered: "1." "1)" "Step 1:" "STEP 1:"
+  const numberedRe = /^(?:\d+[.):\s]|step\s*\d+[:.\s])/i;
+  const byNumber = text.split(/\n(?=\s*(?:\d+[.):\s]|step\s*\d+[:.\s]))/i)
+    .map(s => s.replace(/^\s*(?:\d+[.):\s]+|step\s*\d+[:.\s]+)/i, '').replace(/\n/g, ' ').trim())
+    .filter(s => s.length > 2);
+
+  if (byNumber.length >= 2 && numberedRe.test(text)) {
+    steps = byNumber;
+  } else {
+    // Split by double newlines first
+    const byPara = text.split(/\n{2,}/).map(p => p.replace(/\n/g, ' ').trim()).filter(p => p.length > 2);
+    if (byPara.length >= 2) {
+      steps = byPara;
+    } else {
+      // Split by single newlines
+      const byLine = text.split(/\n/).map(s => s.trim()).filter(s => s.length > 2);
+      if (byLine.length >= 2) {
+        steps = byLine;
+      } else {
+        // Split long single block by ". " followed by capital letter
+        const parts = [];
+        let cur = '';
+        for (let i = 0; i < text.length; i++) {
+          cur += text[i];
+          if ((text[i] === '.' || text[i] === '!') && i + 2 < text.length && text[i+1] === ' ' && text[i+2] === text[i+2].toUpperCase() && text[i+2].trim()) {
+            parts.push(cur.trim()); cur = '';
+          }
+        }
+        if (cur.trim()) parts.push(cur.trim());
+        steps = parts.length >= 2 ? parts : [text];
+      }
+    }
+  }
+
+  return steps.map((s, i) => {
+    const clean = ensurePunct(capFirst(s));
+    return `<p class="instr-step"><span class="step-num">${i + 1}</span><span>${clean}</span></p>`;
+  }).join('');
+}
+
 // ===== TRANSLATIONS =====
 const T={
   tr:{appName:'Yemek Tarifleri',nativeName:'Türkçe',flag:'🇹🇷',
@@ -1608,7 +1687,7 @@ async function openDetail(id,type){
           ${isPremium()?`<button class="shop-add-btn${inList?' added':''}" data-ing="${x.ing.replace(/"/g,'&quot;')}" data-meas="${(x.meas||'').replace(/"/g,'&quot;')}" onclick="addToShopList(event,this)">${inList?'✓':t('addToList')}</button>`:''}
         </li>`;}).join('')}</ul>
       <div class="dsec">${t('howto')}</div>
-      <div class="instr">${instr.replace(/\r\n/g,'\n').replace(/\r/g,'\n').trim()}</div>
+      <div class="instr">${formatInstructions(instr)}</div>
       ${src?`<div style="margin-top:16px;font-size:12px;color:var(--sub)">${t('source')}: <a href="${src}" target="_blank" style="color:var(--acc)">${src.replace(/^https?:\/\//,'').substring(0,50)}</a></div>`:''}
       ${yt?`<button class="yt-btn" onclick="window.open('${yt}','_blank')">▶ ${t('watchVid')}</button>`:''}
       <div style="height:50px"></div>`;
