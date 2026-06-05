@@ -145,6 +145,33 @@ jobs:
               f.write(content)
           print("Podfile patched OK")
           PYEOF
+      - name: AdMob Consent stub (Xcode 26 uyumluluğu)
+        working-directory: ${{ matrix.app }}
+        run: |
+          CONSENT_FILE="node_modules/@capacitor-community/admob/ios/Sources/AdMobPlugin/Consent/ConsentExecutor.swift"
+          if [ -f "$CONSENT_FILE" ]; then
+            cat > "$CONSENT_FILE" << 'SWIFTEOF'
+import Foundation
+import Capacitor
+import GoogleMobileAds
+
+class ConsentExecutor: NSObject {
+    weak var plugin: AdMobPlugin?
+    func requestConsentInfo(_ call: CAPPluginCall, _ debugGeography: Int, _ testDeviceIdentifiers: [String], _ tagForUnderAgeOfConsent: Bool) {
+        call.resolve(["status": "NOT_REQUIRED", "isConsentFormAvailable": false])
+    }
+    func showConsentForm(_ call: CAPPluginCall) {
+        call.resolve(["status": "NOT_REQUIRED"])
+    }
+    func resetConsentInfo(_ call: CAPPluginCall) {
+        call.resolve()
+    }
+}
+SWIFTEOF
+            echo "ConsentExecutor.swift patched OK"
+          else
+            echo "ConsentExecutor.swift not found, skipping"
+          fi
       - name: ExportOptions.plist oluştur
         working-directory: ${{ matrix.app }}/ios/App
         run: |
