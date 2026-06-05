@@ -4,13 +4,18 @@
   "webDir": "www",
   "backgroundColor": "#0d0906",
   "plugins": {
-    "SplashScreen": {"backgroundColor": "#0d0906","showSpinner": false,"launchAutoHide": true},
-    "StatusBar": {"style": "DARK","backgroundColor": "#0d0906"},
+    "SplashScreen": {
+      "backgroundColor": "#0d0906",
+      "showSpinner": false,
+      "launchAutoHide": true
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#0d0906"
+    },
     "AdMob": {
-      "appId": {
-        "android": "ca-app-pub-3940256099942544~3347511713",
-        "ios": "ca-app-pub-3940256099942544~1458002511"
-      }
+      "appId": "ca-app-pub-3940256099942544~1458002511",
+      "initializeForTesting": true
     }
   }
 }
