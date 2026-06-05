@@ -1472,6 +1472,28 @@ function initTheme(){
   applyTheme(idx>=0?idx:0);
 }
 
+// ===== ADMOB =====
+async function initAdMob(){
+  try{
+    if(!window.Capacitor||!window.Capacitor.isNativePlatform())return;
+    const{AdMob}=window.Capacitor.Plugins;
+    if(!AdMob)return;
+    await AdMob.initialize({requestTrackingAuthorization:true,testingDevices:[],initializeForTesting:false});
+    // UMP Consent (GDPR/EEA)
+    const ci=await AdMob.requestConsentInfo({});
+    if(ci&&(ci.status==='REQUIRED'||ci.status==='UNKNOWN')){
+      await AdMob.showConsentForm();
+    }
+    // Banner alt (test ID — gerçek ID gelince değiştirilir)
+    await AdMob.showBanner({
+      adId:'ca-app-pub-3940256099942544/6300978111',
+      adSize:'BANNER',
+      position:'BOTTOM_CENTER',
+      isTesting:true
+    });
+  }catch(e){console.warn('AdMob init:',e);}
+}
+
 // ===== INIT =====
 window.addEventListener('DOMContentLoaded',()=>{
   initTheme();
@@ -1483,6 +1505,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('bl-search').textContent=L.searchTab;
   document.getElementById('bl-fav').textContent=L.favs;
   showHome();
+  initAdMob();
 });
 </script>
 </body>

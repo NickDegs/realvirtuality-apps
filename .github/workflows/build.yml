@@ -28,6 +28,19 @@ jobs:
           find . -name "variables.gradle" | xargs sed -i 's/compileSdkVersion = 34/compileSdkVersion = 35/g' 2>/dev/null || true
           # Her build'de benzersiz versionCode
           find . -name "build.gradle" -path "*/app/build.gradle" | xargs sed -i "s/versionCode [0-9]*/versionCode ${{ github.run_number }}/g" 2>/dev/null || true
+          # AdMob: AD_ID izni + App ID meta-data (Reklam Kurali)
+          python3 - << 'PYEOF'
+          import re
+          manifest = 'android/app/src/main/AndroidManifest.xml'
+          with open(manifest) as f: c = f.read()
+          if 'AD_ID' not in c:
+              c = c.replace('</manifest>', '    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>\n</manifest>')
+          if 'APPLICATION_ID' not in c:
+              admob = '        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3940256099942544~3347511713"/>'
+              c = re.sub(r'(<application\b[^>]*>)', r'\1\n' + admob, c, count=1)
+          with open(manifest, 'w') as f: f.write(c)
+          print("AndroidManifest AdMob OK")
+          PYEOF
       - name: İmzalı .aab üret
         working-directory: ${{ matrix.app }}/android
         run: |
@@ -97,6 +110,12 @@ jobs:
           # Şifreleme kullanılmıyor — TestFlight compliance zorunlu
           /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool false" ios/App/App/Info.plist 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Set :ITSAppUsesNonExemptEncryption false" ios/App/App/Info.plist || true
+          # AdMob App ID (Reklam Kurali — test ID)
+          /usr/libexec/PlistBuddy -c "Add :GADApplicationIdentifier string ca-app-pub-3940256099942544~1458002511" ios/App/App/Info.plist 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Set :GADApplicationIdentifier ca-app-pub-3940256099942544~1458002511" ios/App/App/Info.plist
+          # ATT — zorunlu (IDFA kullanımı)
+          /usr/libexec/PlistBuddy -c "Add :NSUserTrackingUsageDescription string 'Kişiselleştirilmiş reklam göstermek için kullanılır. İzin vermezseniz reklamlar yine de gösterilebilir ancak kişiselleştirilmez.'" ios/App/App/Info.plist 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Set :NSUserTrackingUsageDescription 'Kişiselleştirilmiş reklam göstermek için kullanılır. İzin vermezseniz reklamlar yine de gösterilebilir ancak kişiselleştirilmez.'" ios/App/App/Info.plist
           PBX=ios/App/App.xcodeproj/project.pbxproj
           sed -i '' -E 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]+;/IPHONEOS_DEPLOYMENT_TARGET = 14.0;/g' "$PBX" || true
           sed -i '' -E 's/TARGETED_DEVICE_FAMILY = "?[12,]+"?;/TARGETED_DEVICE_FAMILY = "1,2";/g' "$PBX" || true
