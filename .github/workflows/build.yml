@@ -114,8 +114,17 @@ jobs:
           /usr/libexec/PlistBuddy -c "Add :GADApplicationIdentifier string ca-app-pub-3940256099942544~1458002511" ios/App/App/Info.plist 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Set :GADApplicationIdentifier ca-app-pub-3940256099942544~1458002511" ios/App/App/Info.plist
           # ATT — zorunlu (IDFA kullanımı)
-          /usr/libexec/PlistBuddy -c "Add :NSUserTrackingUsageDescription string 'Kişiselleştirilmiş reklam göstermek için kullanılır. İzin vermezseniz reklamlar yine de gösterilebilir ancak kişiselleştirilmez.'" ios/App/App/Info.plist 2>/dev/null || \
-          /usr/libexec/PlistBuddy -c "Set :NSUserTrackingUsageDescription 'Kişiselleştirilmiş reklam göstermek için kullanılır. İzin vermezseniz reklamlar yine de gösterilebilir ancak kişiselleştirilmez.'" ios/App/App/Info.plist
+          ATT_MSG="Personalized ads are shown based on your activity. You can change this in Settings."
+          /usr/libexec/PlistBuddy -c "Add :NSUserTrackingUsageDescription string $ATT_MSG" ios/App/App/Info.plist 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Set :NSUserTrackingUsageDescription $ATT_MSG" ios/App/App/Info.plist
+          # Verify GADApplicationIdentifier is set correctly (not as object)
+          GAD_VAL=$(/usr/libexec/PlistBuddy -c "Print :GADApplicationIdentifier" ios/App/App/Info.plist 2>/dev/null || echo "")
+          echo "GADApplicationIdentifier: $GAD_VAL"
+          if [ -z "$GAD_VAL" ] || [ "$GAD_VAL" = "Dict" ] || [ "${#GAD_VAL}" -lt 10 ]; then
+            /usr/libexec/PlistBuddy -c "Add :GADApplicationIdentifier string ca-app-pub-3940256099942544~1458002511" ios/App/App/Info.plist 2>/dev/null || \
+            /usr/libexec/PlistBuddy -c "Set :GADApplicationIdentifier ca-app-pub-3940256099942544~1458002511" ios/App/App/Info.plist
+            echo "GADApplicationIdentifier force-set to test ID"
+          fi
           PBX=ios/App/App.xcodeproj/project.pbxproj
           sed -i '' -E 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]+;/IPHONEOS_DEPLOYMENT_TARGET = 14.0;/g' "$PBX" || true
           sed -i '' -E 's/TARGETED_DEVICE_FAMILY = "?[12,]+"?;/TARGETED_DEVICE_FAMILY = "1,2";/g' "$PBX" || true
