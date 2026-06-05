@@ -1085,6 +1085,44 @@ async function jFetch(url){
   const r=await fetch(url);const d=await r.json();cSet(url,d);return d;
 }
 
+
+// ===== TRANSLATION ENGINE =====
+const XLANG={en:'en',tr:'tr',es:'es',zh:'zh-CN',ru:'ru',de:'de',fr:'fr',it:'it',pt:'pt-BR',ja:'ja',ko:'ko',ar:'ar',hi:'hi',nl:'nl',pl:'pl',sv:'sv'};
+function _xhash(s){let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h)^s.charCodeAt(i);return(h>>>0).toString(36)}
+function _xkey(t,l){return'xl2_'+l+'_'+_xhash(t.substring(0,120))}
+async function xlate(text,toLang){
+  if(!text||!text.trim()||toLang==='en')return text;
+  const key=_xkey(text,toLang);
+  const hit=localStorage.getItem(key);
+  if(hit)return hit;
+  try{
+    const lc=XLANG[toLang]||toLang;
+    const chunks=[];
+    if(text.length>450){
+      const sents=text.match(/[^.!?\n]+[.!?\n]*/g)||[text];
+      let buf='';
+      for(const s of sents){if(buf.length+s.length>420){chunks.push(buf.trim());buf=s;}else buf+=s;}
+      if(buf.trim())chunks.push(buf.trim());
+    }else chunks.push(text);
+    const parts=await Promise.all(chunks.map(async ch=>{
+      const r=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(ch)+'&langpair=en|'+lc);
+      const d=await r.json();
+      return d.responseData?.translatedText||ch;
+    }));
+    const result=parts.join(' ');
+    localStorage.setItem(key,result);
+    return result;
+  }catch(e){return text}
+}
+async function xlateList(texts,toLang){
+  if(toLang==='en')return texts;
+  return Promise.all(texts.map(t=>xlate(t,toLang)));
+}
+async function xlateRecipeNames(meals){
+  if(lang==='en')return meals;
+  const names=await xlateList(meals.map(m=>m.name),lang);
+  return meals.map((m,i)=>({...m,name:names[i]}));
+}
 // ===== API =====
 async function getCats(){
   if(mealCats.length)return mealCats;
@@ -1093,13 +1131,13 @@ async function getCats(){
 }
 const normM=m=>({id:'f_'+m.idMeal,rid:m.idMeal,name:m.strMeal,thumb:m.strMealThumb,cat:m.strCategory||'',area:m.strArea||'',type:'food'});
 const normD=d=>({id:'d_'+d.idDrink,rid:d.idDrink,name:d.strDrink,thumb:d.strDrinkThumb,cat:d.strCategory||'',area:'',type:'drink'});
-async function getMealsByCat(c){const d=await jFetch(MAPI+'filter.php?c='+encodeURIComponent(c));return(d.meals||[]).map(normM)}
-async function getMealsByArea(a){const d=await jFetch(MAPI+'filter.php?a='+encodeURIComponent(a));return(d.meals||[]).map(normM)}
-async function searchMeals(q){const d=await jFetch(MAPI+'search.php?s='+encodeURIComponent(q));return(d.meals||[]).map(normM)}
-async function searchByIngr(q){const d=await jFetch(MAPI+'filter.php?i='+encodeURIComponent(q));return(d.meals||[]).map(normM)}
+async function getMealsByCat(c){const d=await jFetch(MAPI+'filter.php?c='+encodeURIComponent(c));return xlateRecipeNames((d.meals||[]).map(normM))}
+async function getMealsByArea(a){const d=await jFetch(MAPI+'filter.php?a='+encodeURIComponent(a));return xlateRecipeNames((d.meals||[]).map(normM))}
+async function searchMeals(q){const d=await jFetch(MAPI+'search.php?s='+encodeURIComponent(q));return xlateRecipeNames((d.meals||[]).map(normM))}
+async function searchByIngr(q){const d=await jFetch(MAPI+'filter.php?i='+encodeURIComponent(q));return xlateRecipeNames((d.meals||[]).map(normM))}
 async function lookupMeal(id){const d=await jFetch(MAPI+'lookup.php?i='+id);return d.meals?d.meals[0]:null}
-async function getDrinksByCat(c){const d=await jFetch(CAPI+'filter.php?c='+encodeURIComponent(c));return(d.drinks||[]).map(normD)}
-async function searchDrinks(q){const d=await jFetch(CAPI+'search.php?s='+encodeURIComponent(q));return(d.drinks||[]).map(normD)}
+async function getDrinksByCat(c){const d=await jFetch(CAPI+'filter.php?c='+encodeURIComponent(c));return xlateRecipeNames((d.drinks||[]).map(normD))}
+async function searchDrinks(q){const d=await jFetch(CAPI+'search.php?s='+encodeURIComponent(q));return xlateRecipeNames((d.drinks||[]).map(normD))}
 async function lookupDrink(id){const d=await jFetch(CAPI+'lookup.php?i='+id);return d.drinks?d.drinks[0]:null}
 async function getDrinkCats(){const d=await jFetch(CAPI+'list.php?c=list');return d.drinks||[]}
 
@@ -1451,14 +1489,16 @@ async function openDetail(id,type){
     let m;
     if(type==='drink') m=await lookupDrink(id);
     else m=await lookupMeal(id);
-    if(!m){document.getElementById('dbody').innerHTML=empty('⚠️','Yüklenemedi');return}
+    if(!m){document.getElementById('dbody').innerHTML=empty('⚠️',t('noRes'));return}
     currentRecipe={...m,_type:type};
-    const name=m.strMeal||m.strDrink;
+    const _rawName=m.strMeal||m.strDrink;
+    const name=lang!=='en'?(await xlate(_rawName,lang)):_rawName;
     const thumb=m.strMealThumb||m.strDrinkThumb;
     const cat=m.strCategory||'';
     const area=m.strArea||'';
     const alc=m.strAlcoholic||'';
-    const instr=m.strInstructions||'';
+    const _rawInstr=m.strInstructions||'';
+    const instr=lang!=='en'?(await xlate(_rawInstr,lang)):_rawInstr;
     const yt=m.strYoutube||m.strVideo||'';
     const src=m.strSource||'';
     const rid=type==='drink'?'d_'+id:'f_'+id;
@@ -1469,11 +1509,15 @@ async function openDetail(id,type){
     const dfav=document.getElementById('dfav');
     dfav.textContent=isFav(rid)?'❤️':'♡';
     dfav.dataset.rid=rid;dfav.dataset.name=name;dfav.dataset.thumb=thumb;dfav.dataset.type=type;
-    const ings=[];
+    const _rawIngs=[];
     for(let i=1;i<=20;i++){
       const ing=m['strIngredient'+i],meas=m['strMeasure'+i];
-      if(ing&&ing.trim())ings.push({ing:ing.trim(),meas:(meas||'').trim()});
+      if(ing&&ing.trim())_rawIngs.push({ing:ing.trim(),meas:(meas||'').trim()});
     }
+    const ings=lang!=='en'?await(async()=>{
+      const names=await xlateList(_rawIngs.map(x=>x.ing),lang);
+      return _rawIngs.map((x,i)=>({...x,ing:names[i]}));
+    })():_rawIngs;
     const areaDisplay=area?`<span class="dmeta-tag" style="cursor:pointer" onclick="closeDetail();filterArea('${area}')">${cuisineFlag(area)} ${cuisineName(area)}</span>`:'';
     document.getElementById('dbody').innerHTML=`
       <div class="dmeta">
@@ -1501,7 +1545,7 @@ async function openDetail(id,type){
         el.classList.add('visible');
       });
     });
-  }catch(e){document.getElementById('dbody').innerHTML=empty('⚠️','Yüklenemedi')}
+  }catch(e){document.getElementById('dbody').innerHTML=empty('⚠️',t('noRes'))}
 }
 
 function toggleIngr(li){
