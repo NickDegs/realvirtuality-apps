@@ -378,7 +378,7 @@ body[data-theme="light"] .hero-input::placeholder { color: rgba(60,30,100,0.40) 
 body[data-theme="light"] .hero-input { color: var(--txt); border-color: rgba(120,80,200,0.22); background: rgba(255,255,255,0.45) }
 .hero-search { display: flex; gap: 8px }
 .hero-input {
-  flex: 1; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.20);
+  flex: 1; min-width: 0; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.20);
   border-radius: 16px; color: var(--txt); font-size: 16px; font-weight: 500;
   padding: 13px 16px; outline: none; -webkit-appearance: none;
   transition: border-color .2s, box-shadow .2s;
@@ -723,6 +723,30 @@ body[data-theme="light"] .step-num { box-shadow: 0 3px 10px rgba(255,113,51,0.28
 .prem-buy-btn[disabled]{background:rgba(255,255,255,0.12);color:var(--sub);cursor:default}
 .restore-row{padding:14px 20px;text-align:center}
 .restore-link{background:none;border:none;color:var(--sub);font-size:12px;cursor:pointer;text-decoration:underline}
+
+/* ─── RESPONSIVE ───────────────────────────────────────── */
+#content { scrollbar-width: none }
+#content::-webkit-scrollbar { display: none }
+
+@media (max-width: 360px) {
+  .hero { padding: 18px 14px }
+  .hero-title { font-size: 22px }
+  .hero-sub { font-size: 13px; margin-bottom: 16px }
+  .hero-btn { padding: 13px 14px; font-size: 13px }
+  .hero-input { padding: 13px 12px; font-size: 15px }
+  .bnav-item { padding: 8px 6px }
+  .bni-label { font-size: 9px }
+  .section { padding: 12px }
+}
+
+@media (min-width: 600px) {
+  .cat-grid { grid-template-columns: repeat(3, 1fr) }
+  .hscroll .rcard { min-width: 180px }
+  .hero { margin: 20px }
+  .hero-title { font-size: 32px }
+  .section { padding: 20px }
+  .bnav { left: max(40px, var(--sl)); right: max(40px, var(--sr)) }
+}
 </style>
 </head>
 <body>
