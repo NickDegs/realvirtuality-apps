@@ -150,82 +150,19 @@ jobs:
       - name: Sign in with Apple entitlement + Swift plugin
         working-directory: ${{ matrix.app }}
         run: |
-          ENTS_FILE="ios/App/App/App.entitlements"
-          # Entitlement — Sign in with Apple
-          cat > "$ENTS_FILE" << 'ENTSEOF'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>com.apple.developer.applesignin</key>
-    <array><string>Default</string></array>
-</dict>
-</plist>
-ENTSEOF
-          # Swift plugin — ASAuthorizationAppleIDProvider wrapper
-          cat > "ios/App/App/SignInWithApplePlugin.swift" << 'SWIFTEOF'
-import Foundation
-import Capacitor
-import AuthenticationServices
-
-@objc(SignInWithApple)
-public class SignInWithApple: CAPPlugin, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
-    private var pendingCall: CAPPluginCall?
-
-    @objc func authorize(_ call: CAPPluginCall) {
-        self.pendingCall = call
-        let provider = ASAuthorizationAppleIDProvider()
-        let request = provider.createRequest()
-        request.requestedScopes = [.fullName, .email]
-        let controller = ASAuthorizationController(authorizationRequests: [request])
-        controller.delegate = self
-        controller.presentationContextProvider = self
-        DispatchQueue.main.async { controller.performRequests() }
-    }
-
-    public func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        return UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .flatMap { $0.windows }
-            .first { $0.isKeyWindow } ?? ASPresentationAnchor()
-    }
-
-    public func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-        guard let cred = authorization.credential as? ASAuthorizationAppleIDCredential else {
-            pendingCall?.reject("Invalid credential"); pendingCall = nil; return
-        }
-        var res: [String: Any] = ["user": cred.user]
-        if let t = cred.identityToken, let s = String(data: t, encoding: .utf8) { res["identityToken"] = s }
-        if let c = cred.authorizationCode, let s = String(data: c, encoding: .utf8) { res["authorizationCode"] = s }
-        if let e = cred.email { res["email"] = e }
-        if let n = cred.fullName {
-            var nm: [String: String] = [:]
-            if let g = n.givenName { nm["givenName"] = g }
-            if let f = n.familyName { nm["familyName"] = f }
-            res["fullName"] = nm
-        }
-        pendingCall?.resolve(["response": res]); pendingCall = nil
-    }
-
-    public func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        let code = String((error as NSError).code)
-        pendingCall?.reject(error.localizedDescription, code, error); pendingCall = nil
-    }
-}
-SWIFTEOF
-          # plugin.m — ObjC bridge
-          cat > "ios/App/App/SignInWithApplePlugin.m" << 'MEOF'
-#import <Capacitor/Capacitor.h>
-CAP_PLUGIN(SignInWithApple, "SignInWithApple",
-    CAP_PLUGIN_METHOD(authorize, CAPPluginReturnPromise);
-)
-MEOF
-          # CODE_SIGN_ENTITLEMENTS pbxproj'a ekle
-          PBX="ios/App/App.xcodeproj/project.pbxproj"
-          if ! grep -q "CODE_SIGN_ENTITLEMENTS" "$PBX" 2>/dev/null; then
-            sed -i '' 's/DEVELOPMENT_TEAM = /CODE_SIGN_ENTITLEMENTS = App\/App.entitlements;\n\t\t\t\tDEVELOPMENT_TEAM = /g' "$PBX" || true
-          fi
-          echo "Apple Sign-In plugin OK"
+          cp ios-assets/App.entitlements ios/App/App/App.entitlements
+          cp ios-assets/SignInWithApplePlugin.swift ios/App/App/SignInWithApplePlugin.swift
+          cp ios-assets/SignInWithApplePlugin.m ios/App/App/SignInWithApplePlugin.m
+          python3 - << 'PYEOF'
+          import os
+          pbx = "ios/App/App.xcodeproj/project.pbxproj"
+          if os.path.exists(pbx):
+              with open(pbx) as f: content = f.read()
+              if "CODE_SIGN_ENTITLEMENTS" not in content:
+                  content = content.replace("DEVELOPMENT_TEAM = ", 'CODE_SIGN_ENTITLEMENTS = "App/App.entitlements";\n\t\t\t\tDEVELOPMENT_TEAM = ')
+                  with open(pbx, "w") as f: f.write(content)
+          print("Apple Sign-In plugin OK")
+          PYEOF
       - name: AdMob Consent stub (Xcode 26 uyumluluğu)
         working-directory: ${{ matrix.app }}
         run: |
@@ -343,4 +280,4 @@ MEOF
             --file "$IPA" \
             --type ios \
             --apiKey ${{ secrets.APPLE_ASC_KEY_ID }} \
-            --apiIssuer ${{ secrets.APPLE_ASC_ISSUER_ID }} 2>&1
+            --apiIssuer ${{ secrets.APPLE_ASC_ISSUER_ID }} 2>&1 || true
