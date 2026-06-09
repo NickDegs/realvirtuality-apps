@@ -2135,13 +2135,10 @@ async function signInApple() {
     return;
   }
   try {
-    const result = await plugin.authorize({
-      clientId: APPLE_BUNDLE,
-      redirectURI: `${PB_BASE}/apple-callback`,
-      scopes: 'email name'
-    });
+    const result = await plugin.authorize();
     const cred = result.response || result;
-    const userInfo = await _verifyAppleToken(cred.identityToken || cred.authorization?.id_token || '');
+    const identityToken = cred.identityToken || cred.authorization?.id_token || '';
+    const userInfo = await _verifyAppleToken(identityToken);
     if (!userInfo) { console.warn('Apple token doğrulanamadı'); return; }
     const name = [cred.fullName?.givenName, cred.fullName?.familyName].filter(Boolean).join(' ') || userInfo.email;
     await _completeSignIn(userInfo, name, '');
