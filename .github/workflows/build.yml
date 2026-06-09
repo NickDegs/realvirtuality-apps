@@ -19,7 +19,7 @@ jobs:
       - name: Capacitor hazırla
         working-directory: ${{ matrix.app }}
         run: |
-          npm install
+          npm install --legacy-peer-deps
           npx cap add android
           npx @capacitor/assets generate --android || true
           npx cap sync android
@@ -108,7 +108,7 @@ jobs:
       - name: Capacitor hazırla + Xcode ayarları
         working-directory: ${{ matrix.app }}
         run: |
-          npm install
+          npm install --legacy-peer-deps
           npx cap add ios
           npx @capacitor/assets generate --ios || true
           npx cap sync ios
