@@ -2021,129 +2021,204 @@ function clearShopList(){
   shopList=[];saveShopList();renderShopList();
 }
 
-// ===== FIREBASE AUTH =====
-// !! Buraya kendi Firebase projenizin bilgilerini girin !!
-// Firebase Console → Project Settings → Your Apps → Web App → Config
-const FB_CONFIG = {
-  apiKey:            "REPLACE_WITH_YOUR_FIREBASE_API_KEY",
-  authDomain:        "REPLACE_WITH_YOUR_PROJECT_ID.firebaseapp.com",
-  projectId:         "REPLACE_WITH_YOUR_PROJECT_ID",
-  storageBucket:     "REPLACE_WITH_YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "000000000000",
-  appId:             "1:000000000000:web:0000000000000000"
-};
-const FB_ENABLED = !FB_CONFIG.apiKey.startsWith('REPLACE');
+// ===== AUTH — PocketBase backend (realvirtuality.app/tarifler-auth) =====
+const PB_BASE = 'https://realvirtuality.app/tarifler-auth';
+const PB_COLLECTION = 'user_favs';
+const APPLE_BUNDLE = 'com.nickdegs.tarifler';
 
-let fbUser = null;
-let _fbInit = false;
+let authUser = null; // { uid, provider, email, name, photo, pbToken, pbId }
 
-async function _loadScript(src) {
-  return new Promise((res, rej) => {
-    const s = document.createElement('script');
-    s.src = src; s.onload = res; s.onerror = rej;
-    document.head.appendChild(s);
+function _esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── Apple token doğrulama (Apple public keys ile JWT verify) ─────────────
+async function _verifyAppleToken(identityToken) {
+  try {
+    const parts = identityToken.split('.');
+    const payload = JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
+    if (payload.iss !== 'https://appleid.apple.com') return null;
+    if (payload.aud !== APPLE_BUNDLE) return null;
+    if (payload.exp < Date.now() / 1000) return null;
+    return {
+      uid: 'apple_' + payload.sub,
+      provider: 'apple',
+      email: payload.email || '',
+      appleId: payload.sub
+    };
+  } catch(e) { return null; }
+}
+
+// ─── Google token doğrulama (Google tokeninfo endpoint) ──────────────────
+async function _verifyGoogleToken(idToken) {
+  try {
+    const r = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`);
+    const d = await r.json();
+    if (d.error) return null;
+    return {
+      uid: 'google_' + d.sub,
+      provider: 'google',
+      email: d.email || '',
+      name: d.name || '',
+      photo: d.picture || '',
+      googleSub: d.sub
+    };
+  } catch(e) { return null; }
+}
+
+// ─── PocketBase'e kayıt / güncelle ───────────────────────────────────────
+async function _pbUpsertUser(userInfo, displayName, photoUrl) {
+  try {
+    // Mevcut kaydı ara
+    const search = await fetch(
+      `${PB_BASE}/api/collections/${PB_COLLECTION}/records?filter=(uid='${encodeURIComponent(userInfo.uid)}')&perPage=1`,
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+    const sData = await search.json();
+    const existing = sData.items?.[0];
+
+    const body = {
+      uid: userInfo.uid,
+      provider: userInfo.provider,
+      email: userInfo.email || '',
+      display_name: displayName || userInfo.name || userInfo.email || 'Kullanıcı',
+      photo_url: photoUrl || userInfo.photo || '',
+      favs_json: favs
+    };
+
+    let resp;
+    if (existing) {
+      resp = await fetch(
+        `${PB_BASE}/api/collections/${PB_COLLECTION}/records/${existing.id}`,
+        { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) }
+      );
+    } else {
+      resp = await fetch(
+        `${PB_BASE}/api/collections/${PB_COLLECTION}/records`,
+        { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) }
+      );
+    }
+    const record = await resp.json();
+    return { pbId: record.id, cloudFavs: existing?.favs_json || {} };
+  } catch(e) { console.warn('PB upsert:', e); return { pbId: null, cloudFavs: {} }; }
+}
+
+// ─── Cloud favorileri merge et ────────────────────────────────────────────
+function _mergeFavs(cloudFavs) {
+  let changed = false;
+  Object.entries(cloudFavs || {}).forEach(([id, fav]) => {
+    if (!favs[id] || (fav.ts || 0) > (favs[id].ts || 0)) {
+      favs[id] = fav; changed = true;
+    }
   });
+  if (changed) {
+    localStorage.setItem('favs2', JSON.stringify(favs));
+    if (view === 'fav') showFavs();
+  }
 }
 
-async function initFirebase() {
-  if (_fbInit || !FB_ENABLED) return;
-  _fbInit = true;
-  try {
-    const base = 'https://www.gstatic.com/firebasejs/10.12.2';
-    await _loadScript(`${base}/firebase-app-compat.js`);
-    await _loadScript(`${base}/firebase-auth-compat.js`);
-    await _loadScript(`${base}/firebase-firestore-compat.js`);
-    firebase.initializeApp(FB_CONFIG);
-    firebase.auth().onAuthStateChanged(user => {
-      fbUser = user;
-      updateProfileBtn();
-      if (user) syncFavsToCloud();
-    });
-    // OAuth redirect sonuçunu yakala
-    try {
-      const r = await firebase.auth().getRedirectResult();
-      if (r && r.user) { fbUser = r.user; updateProfileBtn(); closeSheet('auth'); }
-    } catch(e) {}
-  } catch(e) { console.warn('Firebase load:', e); }
+// ─── Giriş tamamlama ─────────────────────────────────────────────────────
+async function _completeSignIn(userInfo, displayName, photoUrl) {
+  const { pbId, cloudFavs } = await _pbUpsertUser(userInfo, displayName, photoUrl);
+  authUser = { ...userInfo, name: displayName || userInfo.name || '', photo: photoUrl || userInfo.photo || '', pbId };
+  localStorage.setItem('auth_user', JSON.stringify(authUser));
+  _mergeFavs(cloudFavs);
+  updateProfileBtn();
+  closeSheet('auth');
 }
 
-async function signInGoogle() {
-  await initFirebase();
-  if (!FB_ENABLED) return;
-  try {
-    const p = new firebase.auth.GoogleAuthProvider();
-    if (window.Capacitor?.isNativePlatform()) {
-      await firebase.auth().signInWithRedirect(p);
-    } else {
-      await firebase.auth().signInWithPopup(p);
-      closeSheet('auth');
-    }
-  } catch(e) { console.warn('Google sign-in:', e); }
-}
-
+// ─── Apple Sign-In ────────────────────────────────────────────────────────
 async function signInApple() {
-  await initFirebase();
-  if (!FB_ENABLED) return;
+  const plugin = window.Capacitor?.Plugins?.SignInWithApple;
+  if (!plugin) {
+    alert('Apple ile giriş sadece iOS cihazda desteklenir.');
+    return;
+  }
   try {
-    const p = new firebase.auth.OAuthProvider('apple.com');
-    p.addScope('email'); p.addScope('name');
-    if (window.Capacitor?.isNativePlatform()) {
-      await firebase.auth().signInWithRedirect(p);
-    } else {
-      await firebase.auth().signInWithPopup(p);
-      closeSheet('auth');
-    }
-  } catch(e) { console.warn('Apple sign-in:', e); }
+    const result = await plugin.authorize({
+      clientId: APPLE_BUNDLE,
+      redirectURI: `${PB_BASE}/apple-callback`,
+      scopes: 'email name'
+    });
+    const cred = result.response || result;
+    const userInfo = await _verifyAppleToken(cred.identityToken || cred.authorization?.id_token || '');
+    if (!userInfo) { console.warn('Apple token doğrulanamadı'); return; }
+    const name = [cred.fullName?.givenName, cred.fullName?.familyName].filter(Boolean).join(' ') || userInfo.email;
+    await _completeSignIn(userInfo, name, '');
+  } catch(e) {
+    if (e.code !== '1001') console.warn('Apple sign-in:', e);
+  }
 }
 
+// ─── Google Sign-In ───────────────────────────────────────────────────────
+async function signInGoogle() {
+  const plugin = window.Capacitor?.Plugins?.GoogleAuth;
+  if (!plugin) {
+    alert('Google ile giriş sadece iOS/Android cihazda desteklenir.');
+    return;
+  }
+  try {
+    const result = await plugin.signIn();
+    const userInfo = await _verifyGoogleToken(result.authentication?.idToken || '');
+    if (!userInfo) { console.warn('Google token doğrulanamadı'); return; }
+    await _completeSignIn(
+      userInfo,
+      result.displayName || result.name || '',
+      result.imageUrl || result.photo || ''
+    );
+  } catch(e) {
+    if (e.code !== 12501) console.warn('Google sign-in:', e);
+  }
+}
+
+// ─── Çıkış ───────────────────────────────────────────────────────────────
 async function authSignOut() {
-  if (!FB_ENABLED || !firebase?.auth) return;
-  await firebase.auth().signOut();
-  fbUser = null;
+  authUser = null;
+  localStorage.removeItem('auth_user');
   updateProfileBtn();
   renderAuthSheet();
 }
 
+// ─── Cloud sync ───────────────────────────────────────────────────────────
+async function syncFavsToCloud() {
+  if (!authUser?.pbId) return;
+  try {
+    await fetch(
+      `${PB_BASE}/api/collections/${PB_COLLECTION}/records/${authUser.pbId}`,
+      { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ favs_json: favs }) }
+    );
+  } catch(e) {}
+}
+
+// ─── Auth oturumunu yükle ─────────────────────────────────────────────────
+function initAuth() {
+  try {
+    const saved = localStorage.getItem('auth_user');
+    if (saved) authUser = JSON.parse(saved);
+  } catch(e) {}
+  updateProfileBtn();
+}
+
+// ─── UI ───────────────────────────────────────────────────────────────────
 function updateProfileBtn() {
   const btn = document.getElementById('profile-btn');
   if (!btn) return;
-  btn.textContent = fbUser ? '🟢' : '👤';
-  fbUser ? btn.classList.add('signed-in') : btn.classList.remove('signed-in');
+  btn.textContent = authUser ? '🟢' : '👤';
+  authUser ? btn.classList.add('signed-in') : btn.classList.remove('signed-in');
   renderAuthSheet();
-}
-
-function _esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function renderAuthSheet() {
   const el = document.getElementById('auth-content');
   if (!el) return;
 
-  if (!FB_ENABLED) {
-    el.innerHTML = `<div class="auth-login">
-      <div class="auth-login-title">Giriş Yap</div>
-      <div class="auth-login-sub">Favorilerin tüm cihazlarında senkronize olsun.</div>
-      <button class="auth-btn auth-btn-apple" style="opacity:.4;cursor:default">
-        <svg class="auth-btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>
-        Apple ile Giriş
-      </button>
-      <button class="auth-btn auth-btn-google" style="opacity:.4;cursor:default">
-        <svg class="auth-btn-icon" width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-        Google ile Giriş
-      </button>
-      <div class="auth-setup-note">Firebase yapılandırması gerekiyor.<br>Lütfen geliştiriciye başvurun.</div>
-    </div>`;
-    return;
-  }
-
-  if (fbUser) {
+  if (authUser) {
     el.innerHTML = `<div class="auth-user">
-      ${fbUser.photoURL
-        ? `<img class="auth-avatar" src="${_esc(fbUser.photoURL)}" crossorigin="anonymous">`
+      ${authUser.photo
+        ? `<img class="auth-avatar" src="${_esc(authUser.photo)}" crossorigin="anonymous">`
         : `<div class="auth-avatar-ph">👤</div>`}
-      <div class="auth-uname">${_esc(fbUser.displayName || 'Kullanıcı')}</div>
-      <div class="auth-uemail">${_esc(fbUser.email || '')}</div>
+      <div class="auth-uname">${_esc(authUser.name || authUser.email || 'Kullanıcı')}</div>
+      <div class="auth-uemail">${_esc(authUser.email || '')}</div>
       <div class="auth-sync-note">☁️ Favorilerin buluta kaydediliyor</div>
       <button class="auth-signout" onclick="authSignOut()">Çıkış Yap</button>
     </div>`;
@@ -2161,27 +2236,6 @@ function renderAuthSheet() {
       </button>
     </div>`;
   }
-}
-
-async function syncFavsToCloud() {
-  if (!fbUser || !FB_ENABLED || typeof firebase === 'undefined') return;
-  try {
-    const db = firebase.firestore();
-    const ref = db.collection('users').doc(fbUser.uid);
-    const snap = await ref.get();
-    if (snap.exists) {
-      const cloudFavs = snap.data().favs || {};
-      let changed = false;
-      Object.entries(cloudFavs).forEach(([id, fav]) => {
-        if (!favs[id] || fav.ts > (favs[id].ts || 0)) { favs[id] = fav; changed = true; }
-      });
-      if (changed) {
-        localStorage.setItem('favs2', JSON.stringify(favs));
-        if (view === 'fav') showFavs();
-      }
-    }
-    await ref.set({ favs }, { merge: true });
-  } catch(e) { console.warn('Fav sync:', e); }
 }
 
 function openAuthSheet() {
@@ -2447,7 +2501,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   initAdMob();
   initIAP();
   initiOS26();
-  initFirebase();
+  initAuth();
 });
 </script>
 </body>

@@ -16,6 +16,11 @@
     "AdMob": {
       "appId": "ca-app-pub-3940256099942544~1458002511",
       "initializeForTesting": true
+    },
+    "GoogleAuth": {
+      "scopes": ["profile", "email"],
+      "serverClientId": "REPLACE_WITH_GOOGLE_WEB_CLIENT_ID",
+      "forceCodeForRefreshToken": true
     }
   }
 }
