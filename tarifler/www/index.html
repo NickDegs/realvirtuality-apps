@@ -724,6 +724,32 @@ body[data-theme="light"] .step-num { box-shadow: 0 3px 10px rgba(255,113,51,0.28
 .restore-row{padding:14px 20px;text-align:center}
 .restore-link{background:none;border:none;color:var(--sub);font-size:12px;cursor:pointer;text-decoration:underline}
 
+/* ─── AUTH SHEET ───────────────────────────────────────── */
+#profile-btn.signed-in { color: #4ade80 }
+.auth-login { padding: 20px 20px 8px }
+.auth-login-title { font-size: 22px; font-weight: 800; color: var(--txt); text-align: center; margin-bottom: 6px }
+.auth-login-sub { font-size: 13px; color: var(--sub); text-align: center; margin-bottom: 24px; line-height: 1.5 }
+.auth-btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 16px; border-radius: 22px;
+  border: 1.5px solid var(--gl-bdr); font-size: 15px; font-weight: 700;
+  cursor: pointer; margin-bottom: 12px; font-family: inherit;
+  transition: transform .18s var(--spring), background .18s;
+}
+.auth-btn:active { transform: scale(0.95) }
+.auth-btn-apple { background: #fff; color: #000; border-color: transparent }
+.auth-btn-google { background: var(--gl); color: var(--txt) }
+.auth-btn-icon { flex-shrink: 0 }
+.auth-user { display: flex; flex-direction: column; align-items: center; padding: 24px 20px 12px }
+.auth-avatar { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; margin-bottom: 14px; border: 2px solid var(--gl-bdr) }
+.auth-avatar-ph { width: 72px; height: 72px; border-radius: 50%; background: var(--acc); display: flex; align-items: center; justify-content: center; font-size: 30px; margin-bottom: 14px }
+.auth-uname { font-size: 18px; font-weight: 700; color: var(--txt); margin-bottom: 4px }
+.auth-uemail { font-size: 12px; color: var(--sub); margin-bottom: 6px }
+.auth-sync-note { font-size: 11px; color: var(--sub); margin-bottom: 20px; text-align: center }
+.auth-signout { background: none; border: 1.5px solid var(--gl-bdr); border-radius: 20px; padding: 10px 28px; color: var(--sub); font-size: 13px; cursor: pointer; font-family: inherit; transition: all .18s }
+.auth-signout:active { opacity: 0.6 }
+.auth-setup-note { font-size: 11px; color: var(--sub); text-align: center; padding: 0 20px 16px; line-height: 1.6 }
+
 /* ─── RESPONSIVE ───────────────────────────────────────── */
 #content { scrollbar-width: none }
 #content::-webkit-scrollbar { display: none }
@@ -757,6 +783,7 @@ body[data-theme="light"] .step-num { box-shadow: 0 3px 10px rgba(255,113,51,0.28
     <button class="nav-btn" id="theme-btn" onclick="cycleTheme()" title="Tema">🍎</button>
     <button class="nav-btn" onclick="openSheet('lang')">🌐</button>
     <button class="nav-btn" id="crown-btn" onclick="crownTap()">👑</button>
+    <button class="nav-btn" id="profile-btn" onclick="openAuthSheet()">👤</button>
   </div>
   <div id="search-wrap">
     <div id="search-row">
@@ -817,6 +844,13 @@ body[data-theme="light"] .step-num { box-shadow: 0 3px 10px rgba(255,113,51,0.28
     <div class="sheet-title">👑 Premium</div>
     <div id="prem-product-list"></div>
     <div class="restore-row"><button class="restore-link" id="restore-link" onclick="restorePurchases()">Restore Purchases</button></div>
+  </div>
+</div>
+
+<div id="sheet-auth" class="sheet-bg" onclick="if(event.target===this)closeSheet('auth')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div id="auth-content"></div>
   </div>
 </div>
 
@@ -1277,6 +1311,7 @@ function saveFav(id,name,thumb,type){
   if(favs[id])delete favs[id];
   else favs[id]={id,name,thumb,type,ts:Date.now()};
   localStorage.setItem('favs2',JSON.stringify(favs));
+  syncFavsToCloud();
 }
 function ownedIap(id){return iapOwned[id]===true;}
 function grantIap(id){iapOwned[id]=true;localStorage.setItem('iap_owned',JSON.stringify(iapOwned));}
@@ -1986,6 +2021,174 @@ function clearShopList(){
   shopList=[];saveShopList();renderShopList();
 }
 
+// ===== FIREBASE AUTH =====
+// !! Buraya kendi Firebase projenizin bilgilerini girin !!
+// Firebase Console → Project Settings → Your Apps → Web App → Config
+const FB_CONFIG = {
+  apiKey:            "REPLACE_WITH_YOUR_FIREBASE_API_KEY",
+  authDomain:        "REPLACE_WITH_YOUR_PROJECT_ID.firebaseapp.com",
+  projectId:         "REPLACE_WITH_YOUR_PROJECT_ID",
+  storageBucket:     "REPLACE_WITH_YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "000000000000",
+  appId:             "1:000000000000:web:0000000000000000"
+};
+const FB_ENABLED = !FB_CONFIG.apiKey.startsWith('REPLACE');
+
+let fbUser = null;
+let _fbInit = false;
+
+async function _loadScript(src) {
+  return new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = src; s.onload = res; s.onerror = rej;
+    document.head.appendChild(s);
+  });
+}
+
+async function initFirebase() {
+  if (_fbInit || !FB_ENABLED) return;
+  _fbInit = true;
+  try {
+    const base = 'https://www.gstatic.com/firebasejs/10.12.2';
+    await _loadScript(`${base}/firebase-app-compat.js`);
+    await _loadScript(`${base}/firebase-auth-compat.js`);
+    await _loadScript(`${base}/firebase-firestore-compat.js`);
+    firebase.initializeApp(FB_CONFIG);
+    firebase.auth().onAuthStateChanged(user => {
+      fbUser = user;
+      updateProfileBtn();
+      if (user) syncFavsToCloud();
+    });
+    // OAuth redirect sonuçunu yakala
+    try {
+      const r = await firebase.auth().getRedirectResult();
+      if (r && r.user) { fbUser = r.user; updateProfileBtn(); closeSheet('auth'); }
+    } catch(e) {}
+  } catch(e) { console.warn('Firebase load:', e); }
+}
+
+async function signInGoogle() {
+  await initFirebase();
+  if (!FB_ENABLED) return;
+  try {
+    const p = new firebase.auth.GoogleAuthProvider();
+    if (window.Capacitor?.isNativePlatform()) {
+      await firebase.auth().signInWithRedirect(p);
+    } else {
+      await firebase.auth().signInWithPopup(p);
+      closeSheet('auth');
+    }
+  } catch(e) { console.warn('Google sign-in:', e); }
+}
+
+async function signInApple() {
+  await initFirebase();
+  if (!FB_ENABLED) return;
+  try {
+    const p = new firebase.auth.OAuthProvider('apple.com');
+    p.addScope('email'); p.addScope('name');
+    if (window.Capacitor?.isNativePlatform()) {
+      await firebase.auth().signInWithRedirect(p);
+    } else {
+      await firebase.auth().signInWithPopup(p);
+      closeSheet('auth');
+    }
+  } catch(e) { console.warn('Apple sign-in:', e); }
+}
+
+async function authSignOut() {
+  if (!FB_ENABLED || !firebase?.auth) return;
+  await firebase.auth().signOut();
+  fbUser = null;
+  updateProfileBtn();
+  renderAuthSheet();
+}
+
+function updateProfileBtn() {
+  const btn = document.getElementById('profile-btn');
+  if (!btn) return;
+  btn.textContent = fbUser ? '🟢' : '👤';
+  fbUser ? btn.classList.add('signed-in') : btn.classList.remove('signed-in');
+  renderAuthSheet();
+}
+
+function _esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderAuthSheet() {
+  const el = document.getElementById('auth-content');
+  if (!el) return;
+
+  if (!FB_ENABLED) {
+    el.innerHTML = `<div class="auth-login">
+      <div class="auth-login-title">Giriş Yap</div>
+      <div class="auth-login-sub">Favorilerin tüm cihazlarında senkronize olsun.</div>
+      <button class="auth-btn auth-btn-apple" style="opacity:.4;cursor:default">
+        <svg class="auth-btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>
+        Apple ile Giriş
+      </button>
+      <button class="auth-btn auth-btn-google" style="opacity:.4;cursor:default">
+        <svg class="auth-btn-icon" width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Google ile Giriş
+      </button>
+      <div class="auth-setup-note">Firebase yapılandırması gerekiyor.<br>Lütfen geliştiriciye başvurun.</div>
+    </div>`;
+    return;
+  }
+
+  if (fbUser) {
+    el.innerHTML = `<div class="auth-user">
+      ${fbUser.photoURL
+        ? `<img class="auth-avatar" src="${_esc(fbUser.photoURL)}" crossorigin="anonymous">`
+        : `<div class="auth-avatar-ph">👤</div>`}
+      <div class="auth-uname">${_esc(fbUser.displayName || 'Kullanıcı')}</div>
+      <div class="auth-uemail">${_esc(fbUser.email || '')}</div>
+      <div class="auth-sync-note">☁️ Favorilerin buluta kaydediliyor</div>
+      <button class="auth-signout" onclick="authSignOut()">Çıkış Yap</button>
+    </div>`;
+  } else {
+    el.innerHTML = `<div class="auth-login">
+      <div class="auth-login-title">Giriş Yap</div>
+      <div class="auth-login-sub">Favorilerin tüm cihazlarında senkronize olsun.</div>
+      <button class="auth-btn auth-btn-apple" onclick="signInApple()">
+        <svg class="auth-btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>
+        Apple ile Giriş
+      </button>
+      <button class="auth-btn auth-btn-google" onclick="signInGoogle()">
+        <svg class="auth-btn-icon" width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Google ile Giriş
+      </button>
+    </div>`;
+  }
+}
+
+async function syncFavsToCloud() {
+  if (!fbUser || !FB_ENABLED || typeof firebase === 'undefined') return;
+  try {
+    const db = firebase.firestore();
+    const ref = db.collection('users').doc(fbUser.uid);
+    const snap = await ref.get();
+    if (snap.exists) {
+      const cloudFavs = snap.data().favs || {};
+      let changed = false;
+      Object.entries(cloudFavs).forEach(([id, fav]) => {
+        if (!favs[id] || fav.ts > (favs[id].ts || 0)) { favs[id] = fav; changed = true; }
+      });
+      if (changed) {
+        localStorage.setItem('favs2', JSON.stringify(favs));
+        if (view === 'fav') showFavs();
+      }
+    }
+    await ref.set({ favs }, { merge: true });
+  } catch(e) { console.warn('Fav sync:', e); }
+}
+
+function openAuthSheet() {
+  renderAuthSheet();
+  openSheet('auth');
+}
+
 function initIAP(){
   if(!window.CdvPurchase)return;
   const{store,ProductType,Platform}=window.CdvPurchase;
@@ -2225,7 +2428,7 @@ function initiOS26() {
   initSwipeDismiss();
   initNavScroll();
   initTabSpring();
-  ['sheet-lang', 'sheet-mode', 'sheet-premium'].forEach(initSheetDrag);
+  ['sheet-lang', 'sheet-mode', 'sheet-premium', 'sheet-auth'].forEach(initSheetDrag);
 }
 
 // ===== INIT =====
@@ -2244,6 +2447,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   initAdMob();
   initIAP();
   initiOS26();
+  initFirebase();
 });
 </script>
 </body>
