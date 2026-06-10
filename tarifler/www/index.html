@@ -1542,7 +1542,7 @@ async function showHome(){
     const extras=[{strCategory:'Drinks',strCategoryThumb:'',icon:'🥤'}];
     const all=[...cats,...extras];
     el.innerHTML=all.map(c=>{
-      const img=c.strCategoryThumb?`<img src="${c.strCategoryThumb}" alt="" loading="lazy" onerror="this.style.display='none'">`:'';
+      const img=c.strCategoryThumb?`<img src="${c.strCategoryThumb}" alt="" loading="eager" decoding="async" onerror="this.style.display='none'">`:'';
       const icon=c.icon?`<div class="cat-card-icon">${c.icon}</div>`:'';
       return`<div class="cat-card" onclick="filterCat('${c.strCategory}')">
         ${img}${icon}
@@ -2270,8 +2270,7 @@ async function initAdMob(){
     if(!window.Capacitor||!window.Capacitor.isNativePlatform())return;
     const{AdMob}=window.Capacitor.Plugins;
     if(!AdMob)return;
-    // initializeForTesting:true ensures test mode on all devices
-    await AdMob.initialize({requestTrackingAuthorization:true,initializeForTesting:true});
+    await AdMob.initialize({requestTrackingAuthorization:true,initializeForTesting:false});
     // UMP Consent (GDPR/EEA)
     try{
       const ci=await AdMob.requestConsentInfo({});
@@ -2284,7 +2283,7 @@ async function initAdMob(){
         adId:'ca-app-pub-3940256099942544/6300978111',
         adSize:'BANNER',
         position:'BOTTOM_CENTER',
-        isTesting:true
+        isTesting:false
       });
       window._adBannerShown=true;
     }

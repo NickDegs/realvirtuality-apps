@@ -157,13 +157,73 @@ jobs:
           cp ios-assets/SignInWithApplePlugin.swift ios/App/App/SignInWithApplePlugin.swift
           cp ios-assets/SignInWithApplePlugin.m ios/App/App/SignInWithApplePlugin.m
           python3 - << 'PYEOF'
-          import os
+          import hashlib, re, os
+
+          def make_id(seed):
+              return hashlib.sha1(seed.encode()).hexdigest()[:24].upper()
+
           pbx = "ios/App/App.xcodeproj/project.pbxproj"
-          if os.path.exists(pbx):
-              with open(pbx) as f: content = f.read()
-              if "CODE_SIGN_ENTITLEMENTS" not in content:
-                  content = content.replace("DEVELOPMENT_TEAM = ", 'CODE_SIGN_ENTITLEMENTS = "App/App.entitlements";\n\t\t\t\tDEVELOPMENT_TEAM = ')
-                  with open(pbx, "w") as f: f.write(content)
+          if not os.path.exists(pbx):
+              print("pbxproj not found, skipping")
+              exit(0)
+
+          with open(pbx) as f:
+              content = f.read()
+
+          new_files = [
+              ("SignInWithApplePlugin.swift", "sourcecode.swift"),
+              ("SignInWithApplePlugin.m",     "sourcecode.c.objc"),
+          ]
+
+          changed = False
+          for fname, ftype in new_files:
+              if fname in content:
+                  print(f"  {fname}: already in project")
+                  continue
+              ref_id   = make_id("ref_" + fname)
+              build_id = make_id("build_" + fname)
+              changed  = True
+
+              # 1. PBXFileReference
+              ref_line = (f'\t\t{ref_id} /* {fname} */ = '
+                          f'{{isa = PBXFileReference; lastKnownFileType = {ftype}; '
+                          f'path = {fname}; sourceTree = "<group>"; }};\n')
+              content = content.replace(
+                  '/* End PBXFileReference section */',
+                  ref_line + '\t\t/* End PBXFileReference section */')
+
+              # 2. PBXBuildFile
+              build_line = (f'\t\t{build_id} /* {fname} in Sources */ = '
+                            f'{{isa = PBXBuildFile; fileRef = {ref_id} /* {fname} */; }};\n')
+              content = content.replace(
+                  '/* End PBXBuildFile section */',
+                  build_line + '\t\t/* End PBXBuildFile section */')
+
+              # 3. PBXGroup – insert after AppDelegate.swift
+              content = re.sub(
+                  r'(/\* AppDelegate\.swift \*/,)',
+                  rf'\1\n\t\t\t\t{ref_id} /* {fname} */,',
+                  content, count=1)
+
+              # 4. PBXSourcesBuildPhase – insert after AppDelegate in Sources
+              content = re.sub(
+                  r'(/\* AppDelegate\.swift in Sources \*/,)',
+                  rf'\1\n\t\t\t\t{build_id} /* {fname} in Sources */,',
+                  content, count=1)
+
+              print(f"  Added {fname} to Xcode project")
+
+          # 5. CODE_SIGN_ENTITLEMENTS
+          if "CODE_SIGN_ENTITLEMENTS" not in content:
+              content = content.replace(
+                  "DEVELOPMENT_TEAM = ",
+                  'CODE_SIGN_ENTITLEMENTS = "App/App.entitlements";\n\t\t\t\tDEVELOPMENT_TEAM = ')
+              changed = True
+              print("  Added CODE_SIGN_ENTITLEMENTS")
+
+          if changed:
+              with open(pbx, "w") as f:
+                  f.write(content)
           print("Apple Sign-In plugin OK")
           PYEOF
       - name: AdMob Consent stub (Xcode 26 uyumluluğu)
