@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "442086254689",
+    "project_id": "playstore-71185",
+    "storage_bucket": "playstore-71185.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442086254689:android:2ef7375de7095f45bb2220",
+        "android_client_info": {
+          "package_name": "com.nickdegs.tarifler"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "442086254689-1lnnaikkrm0cflqs8ba868qjpc7njilh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nickdegs.tarifler",
+            "certificate_hash": "2443ae4f825573b6ee4bc1ab6d44ce2fe0a78b07"
+          }
+        },
+        {
+          "client_id": "442086254689-isbdks63cqksfe355g2q2q18eegqdtt4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6SIcIG6ZpzJZag48E60KG9JVYQOosDhs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "442086254689-isbdks63cqksfe355g2q2q18eegqdtt4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "442086254689-rr7dl320im2cg0g43u44r74atfo11tbe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.nickdegs.tarifler"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
