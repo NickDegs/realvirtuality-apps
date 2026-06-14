@@ -24,16 +24,17 @@ jobs:
         run: |
           npm install --legacy-peer-deps
           npx cap add android
+          cp google-services.json android/app/google-services.json 2>/dev/null || true
           npx @capacitor/assets generate --android || true
           npx cap sync android
           # SDK 35 zorunlu (Google Play Agustos 2025+)
           find . -name "variables.gradle" | xargs sed -i 's/targetSdkVersion = 34/targetSdkVersion = 35/g' 2>/dev/null || true
           find . -name "variables.gradle" | xargs sed -i 's/compileSdkVersion = 34/compileSdkVersion = 35/g' 2>/dev/null || true
-          # minSdkVersion 23+ (billing:8.x zorunluluğu)
+          # minSdkVersion 23+
           find . -name "variables.gradle" | xargs sed -i 's/minSdkVersion = 2[012]/minSdkVersion = 23/g' 2>/dev/null || true
           # Her build'de benzersiz versionCode
           find . -name "build.gradle" -path "*/app/build.gradle" | xargs sed -i "s/versionCode [0-9]*/versionCode ${{ github.run_number }}/g" 2>/dev/null || true
-          # AdMob: AD_ID izni + App ID meta-data (Reklam Kurali)
+          # AdMob: AD_ID izni + App ID meta-data
           python3 - << 'PYEOF'
           import re
           manifest = 'android/app/src/main/AndroidManifest.xml'
@@ -73,9 +74,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-      - name: Xcode (en güncel — iOS 26 / iPhone 17 uyumlu)
+      - name: Xcode (en güncel)
         run: |
-          # Önce Xcode 26+ ara (iOS 26 SDK = iPhone 17 Pro desteği)
           BEST=""
           for VER in 26 27 25 16 17; do
             MATCH=$(ls /Applications/ | grep -E "^Xcode_${VER}" | sort -V | tail -1)
@@ -85,17 +85,13 @@ jobs:
             BEST=$(ls /Applications/ | grep -E "^Xcode_[0-9]" | sort -V | tail -1)
           fi
           sudo xcode-select -s "/Applications/$BEST/Contents/Developer"
-          echo "Xcode seçildi: $BEST"
+          echo "Xcode: $BEST"
           xcodebuild -version
-          # Available SDKs
-          xcodebuild -showsdks 2>/dev/null | grep -i iphone | tail -5 || true
       - name: Sertifika + ASC API anahtarını kur
         run: |
-          # ASC API key
           mkdir -p ~/.appstoreconnect/private_keys
           echo "${{ secrets.APPLE_ASC_API_KEY }}" > ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8
           chmod 600 ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8
-          # Distribution sertifikasını geçici keychain'e aktar
           echo "${{ secrets.APPLE_DIST_P12_BASE64 }}" | base64 -d > /tmp/dist.p12
           security create-keychain -p "ci-keychain" ci-build.keychain-db
           security default-keychain -s ci-build.keychain-db
@@ -106,7 +102,6 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -s -k "ci-keychain" ci-build.keychain-db
           security list-keychain -d user -s ci-build.keychain-db login.keychain-db
           rm /tmp/dist.p12
-          # Doğrula
           security find-identity -v -p codesigning ci-build.keychain-db | head -5
       - name: Capacitor hazırla + Xcode ayarları
         working-directory: ${{ matrix.app }}
@@ -114,31 +109,48 @@ jobs:
           npm install --legacy-peer-deps
           npx cap add ios
           npx @capacitor/assets generate --ios || true
+          # GoogleService-Info.plist kopyala
+          mkdir -p ios/App/App
+          cp ios-assets/GoogleService-Info.plist ios/App/App/GoogleService-Info.plist || true
           npx cap sync ios
-          # Şifreleme kullanılmıyor — TestFlight compliance zorunlu
+          # Şifreleme yok
           /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool false" ios/App/App/Info.plist 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Set :ITSAppUsesNonExemptEncryption false" ios/App/App/Info.plist || true
-          # AdMob App ID (Reklam Kurali — test ID)
+          # AdMob App ID
           /usr/libexec/PlistBuddy -c "Add :GADApplicationIdentifier string ca-app-pub-3940256099942544~1458002511" ios/App/App/Info.plist 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Set :GADApplicationIdentifier ca-app-pub-3940256099942544~1458002511" ios/App/App/Info.plist
-          # ATT — zorunlu (IDFA kullanımı)
+          # ATT
           ATT_MSG="Personalized ads are shown based on your activity. You can change this in Settings."
           /usr/libexec/PlistBuddy -c "Add :NSUserTrackingUsageDescription string $ATT_MSG" ios/App/App/Info.plist 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Set :NSUserTrackingUsageDescription $ATT_MSG" ios/App/App/Info.plist
-          # Verify GADApplicationIdentifier is set correctly (not as object)
-          GAD_VAL=$(/usr/libexec/PlistBuddy -c "Print :GADApplicationIdentifier" ios/App/App/Info.plist 2>/dev/null || echo "")
-          echo "GADApplicationIdentifier: $GAD_VAL"
-          if [ -z "$GAD_VAL" ] || [ "$GAD_VAL" = "Dict" ] || [ "${#GAD_VAL}" -lt 10 ]; then
-            /usr/libexec/PlistBuddy -c "Add :GADApplicationIdentifier string ca-app-pub-3940256099942544~1458002511" ios/App/App/Info.plist 2>/dev/null || \
-            /usr/libexec/PlistBuddy -c "Set :GADApplicationIdentifier ca-app-pub-3940256099942544~1458002511" ios/App/App/Info.plist
-            echo "GADApplicationIdentifier force-set to test ID"
-          fi
+          # Google Sign-In REVERSED_CLIENT_ID URL scheme
+          REVERSED="com.googleusercontent.apps.442086254689-rr7dl320im2cg0g43u44r74atfo11tbe"
+          python3 - << PYEOF
+          import subprocess, os
+          plist = "ios/App/App/Info.plist"
+          reversed_id = os.environ.get('REVERSED', 'com.googleusercontent.apps.442086254689-rr7dl320im2cg0g43u44r74atfo11tbe')
+          with open(plist) as f: c = f.read()
+          if reversed_id not in c:
+              scheme_block = f"""
+              <key>CFBundleURLTypes</key>
+              <array>
+                <dict>
+                  <key>CFBundleURLSchemes</key>
+                  <array><string>{reversed_id}</string></array>
+                </dict>
+              </array>"""
+              c = c.replace('</dict>\n</plist>', scheme_block + '\n</dict>\n</plist>')
+              with open(plist, 'w') as f: f.write(c)
+              print("REVERSED_CLIENT_ID URL scheme eklendi")
+          else:
+              print("REVERSED_CLIENT_ID zaten mevcut")
+          PYEOF
+          # Deployment target
           PBX=ios/App/App.xcodeproj/project.pbxproj
           sed -i '' -E 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]+;/IPHONEOS_DEPLOYMENT_TARGET = 16.4;/g' "$PBX" || true
           sed -i '' -E 's/TARGETED_DEVICE_FAMILY = "?[12,]+"?;/TARGETED_DEVICE_FAMILY = "1,2";/g' "$PBX" || true
-          # Mevcut post_install bloğuna Pods imza devre dışı bırakma enjekte et
+          # Pods imza devre dışı
           python3 - << 'PYEOF'
-          import sys
           with open('ios/App/Podfile', 'r') as f:
               content = f.read()
           injection = "\n  installer.pods_project.targets.each do |target|\n    target.build_configurations.each do |config|\n      config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'\n      config.build_settings['CODE_SIGNING_REQUIRED'] = 'NO'\n    end\n  end"
@@ -158,112 +170,72 @@ jobs:
           cp ios-assets/SignInWithApplePlugin.m ios/App/App/SignInWithApplePlugin.m
           python3 - << 'PYEOF'
           import hashlib, re, os
-
           def make_id(seed):
               return hashlib.sha1(seed.encode()).hexdigest()[:24].upper()
-
           pbx = "ios/App/App.xcodeproj/project.pbxproj"
           if not os.path.exists(pbx):
-              print("pbxproj not found, skipping")
-              exit(0)
-
+              print("pbxproj not found, skipping"); exit(0)
           with open(pbx) as f:
               content = f.read()
-
           new_files = [
               ("SignInWithApplePlugin.swift", "sourcecode.swift"),
               ("SignInWithApplePlugin.m",     "sourcecode.c.objc"),
           ]
-
           changed = False
           for fname, ftype in new_files:
               if fname in content:
-                  print(f"  {fname}: already in project")
-                  continue
+                  print(f"  {fname}: already in project"); continue
               ref_id   = make_id("ref_" + fname)
               build_id = make_id("build_" + fname)
               changed  = True
-
-              # 1. PBXFileReference
               ref_line = (f'\t\t{ref_id} /* {fname} */ = '
                           f'{{isa = PBXFileReference; lastKnownFileType = {ftype}; '
                           f'path = {fname}; sourceTree = "<group>"; }};\n')
-              content = content.replace(
-                  '/* End PBXFileReference section */',
+              content = content.replace('/* End PBXFileReference section */',
                   ref_line + '\t\t/* End PBXFileReference section */')
-
-              # 2. PBXBuildFile
               build_line = (f'\t\t{build_id} /* {fname} in Sources */ = '
                             f'{{isa = PBXBuildFile; fileRef = {ref_id} /* {fname} */; }};\n')
-              content = content.replace(
-                  '/* End PBXBuildFile section */',
+              content = content.replace('/* End PBXBuildFile section */',
                   build_line + '\t\t/* End PBXBuildFile section */')
-
-              # 3. PBXGroup – insert after AppDelegate.swift
-              content = re.sub(
-                  r'(/\* AppDelegate\.swift \*/,)',
-                  rf'\1\n\t\t\t\t{ref_id} /* {fname} */,',
-                  content, count=1)
-
-              # 4. PBXSourcesBuildPhase – insert after AppDelegate in Sources
-              content = re.sub(
-                  r'(/\* AppDelegate\.swift in Sources \*/,)',
-                  rf'\1\n\t\t\t\t{build_id} /* {fname} in Sources */,',
-                  content, count=1)
-
+              content = re.sub(r'(/\* AppDelegate\.swift \*/,)',
+                  rf'\1\n\t\t\t\t{ref_id} /* {fname} */,', content, count=1)
+              content = re.sub(r'(/\* AppDelegate\.swift in Sources \*/,)',
+                  rf'\1\n\t\t\t\t{build_id} /* {fname} in Sources */,', content, count=1)
               print(f"  Added {fname} to Xcode project")
-
-          # 5. CODE_SIGN_ENTITLEMENTS
           if "CODE_SIGN_ENTITLEMENTS" not in content:
-              content = content.replace(
-                  "DEVELOPMENT_TEAM = ",
+              content = content.replace("DEVELOPMENT_TEAM = ",
                   'CODE_SIGN_ENTITLEMENTS = "App/App.entitlements";\n\t\t\t\tDEVELOPMENT_TEAM = ')
               changed = True
               print("  Added CODE_SIGN_ENTITLEMENTS")
-
           if changed:
-              with open(pbx, "w") as f:
-                  f.write(content)
+              with open(pbx, "w") as f: f.write(content)
           print("Apple Sign-In plugin OK")
           PYEOF
-      - name: AdMob Consent stub (Xcode 26 uyumluluğu)
+      - name: AdMob Consent stub (Xcode 26)
         working-directory: ${{ matrix.app }}
         run: |
-          CONSENT_FILE="node_modules/@capacitor-community/admob/ios/Sources/AdMobPlugin/Consent/ConsentExecutor.swift"
-          if [ -f "$CONSENT_FILE" ]; then
-            echo 'aW1wb3J0IEZvdW5kYXRpb24KaW1wb3J0IENhcGFjaXRvcgppbXBvcnQgR29vZ2xlTW9iaWxlQWRzCgpjbGFzcyBDb25zZW50RXhlY3V0b3I6IE5TT2JqZWN0IHsKICAgIHdlYWsgdmFyIHBsdWdpbjogQWRNb2JQbHVnaW4/CiAgICBmdW5jIHJlcXVlc3RDb25zZW50SW5mbyhfIGNhbGw6IENBUFBsdWdpbkNhbGwsIF8gZGVidWdHZW9ncmFwaHk6IEludCwgXyB0ZXN0RGV2aWNlSWRlbnRpZmllcnM6IFtTdHJpbmddLCBfIHRhZ0ZvclVuZGVyQWdlT2ZDb25zZW50OiBCb29sKSB7CiAgICAgICAgY2FsbC5yZXNvbHZlKFsic3RhdHVzIjogIk5PVF9SRVFVSVJFRCIsICJpc0NvbnNlbnRGb3JtQXZhaWxhYmxlIjogZmFsc2VdKQogICAgfQogICAgZnVuYyBzaG93Q29uc2VudEZvcm0oXyBjYWxsOiBDQVBQbHVnaW5DYWxsKSB7CiAgICAgICAgY2FsbC5yZXNvbHZlKFsic3RhdHVzIjogIk5PVF9SRVFVSVJFRCJdKQogICAgfQogICAgZnVuYyByZXNldENvbnNlbnRJbmZvKF8gY2FsbDogQ0FQUGx1Z2luQ2FsbCkgewogICAgICAgIGNhbGwucmVzb2x2ZSgpCiAgICB9Cn0K' | base64 -d > "$CONSENT_FILE"
-            echo "ConsentExecutor.swift patched OK"
-          else
-            echo "ConsentExecutor.swift not found, skipping"
-          fi
-      - name: ExportOptions.plist oluştur
-        working-directory: ${{ matrix.app }}/ios/App
-        run: |
-          cat > ExportOptions.plist << PLIST
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0"><dict>
-              <key>method</key><string>app-store</string>
-              <key>teamID</key><string>${{ secrets.APPLE_ASC_TEAM_ID }}</string>
-              <key>signingStyle</key><string>automatic</string>
-              <key>uploadBitcode</key><false/>
-              <key>uploadSymbols</key><true/>
-              <!-- App Thinning: her iPhone/iPad modeli için ayrı slice üretir -->
-              <!-- iPhone 17 Pro, 17, 16 Pro, 16, 15, 14, SE, iPad Pro hepsi ayrı ayrı optimize -->
-              <key>thinning</key><string>&lt;thin-for-all-variants&gt;</string>
-              <key>iCloudContainerEnvironment</key><string>Production</string>
-              <key>stripSwiftSymbols</key><true/>
-          </dict></plist>
-          PLIST
-      - name: iOS Release Archive + IPA
+          F="node_modules/@capacitor-community/admob/ios/Sources/AdMobPlugin/Consent/ConsentExecutor.swift"
+          [ -f "$F" ] && printf 'import Foundation; import Capacitor; import GoogleMobileAds\nclass ConsentExecutor: NSObject {\n    weak var plugin: AdMobPlugin?\n    func requestConsentInfo(_ call: CAPPluginCall, _ a: Int, _ b: [String], _ c: Bool) { call.resolve(["status":"NOT_REQUIRED","isConsentFormAvailable":false]) }\n    func showConsentForm(_ call: CAPPluginCall) { call.resolve(["status":"NOT_REQUIRED"]) }\n    func resetConsentInfo(_ call: CAPPluginCall) { call.resolve() }\n}' > "$F" && echo "ConsentExecutor.swift patched" || echo "ConsentExecutor.swift not found"
+      - name: Build + TestFlight'a yükle
         working-directory: ${{ matrix.app }}/ios/App
         run: |
           pod install
-          # Archive: imzalamayı atla (export adımı imzalayacak)
+          cat > ExportOptions.plist << 'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+              <key>method</key><string>app-store-connect</string>
+              <key>destination</key><string>upload</string>
+              <key>teamID</key><string>SZF4T3P583</string>
+              <key>signingStyle</key><string>automatic</string>
+              <key>uploadSymbols</key><true/>
+              <key>stripSwiftSymbols</key><true/>
+          </dict></plist>
+          PLIST
           xcodebuild \
             -workspace App.xcworkspace -scheme App \
             -destination 'generic/platform=iOS' -configuration Release -archivePath App.xcarchive \
-            DEVELOPMENT_TEAM=${{ secrets.APPLE_ASC_TEAM_ID }} \
+            DEVELOPMENT_TEAM=SZF4T3P583 \
             CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
             ENABLE_BITCODE=NO \
             SWIFT_COMPILATION_MODE=wholemodule \
@@ -272,13 +244,15 @@ jobs:
             STRIP_INSTALLED_PRODUCT=YES \
             ONLY_ACTIVE_ARCH=NO \
             archive
-          # Export: Distribution cert (keychain) + ASC API ile profil oluştur
           xcodebuild -exportArchive \
-            -archivePath App.xcarchive -exportOptionsPlist ExportOptions.plist \
-            -exportPath ./ipa-out -allowProvisioningUpdates \
+            -archivePath App.xcarchive \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath ./ipa-out \
+            -allowProvisioningUpdates \
             -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8 \
             -authenticationKeyID ${{ secrets.APPLE_ASC_KEY_ID }} \
             -authenticationKeyIssuerID ${{ secrets.APPLE_ASC_ISSUER_ID }}
+          echo "TestFlight yükleme tamamlandı (destination: upload)"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -286,7 +260,6 @@ jobs:
           path: ${{ matrix.app }}/ios/App/ipa-out/*.ipa
           retention-days: 30
 
-# ─── PUBLISH (manuel tetikleme, ilk kurulumdan sonra) ──────────────────────
   publish-android:
     needs: android
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
@@ -308,39 +281,3 @@ jobs:
           releaseFiles: aab/*.aab
           tracks: internal
           status: completed
-
-  publish-ios:
-    needs: ios
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
-    runs-on: macos-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        app: [tarifler]
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: ${{ matrix.app }}-ipa
-          path: ipa/
-      - name: ASC API anahtarını kur
-        run: |
-          mkdir -p ~/.appstoreconnect/private_keys
-          echo "${{ secrets.APPLE_ASC_API_KEY }}" > ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8
-          chmod 600 ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8
-      - name: TestFlight'a yükle
-        continue-on-error: true
-        run: |
-          IPA=$(ls ipa/*.ipa 2>/dev/null | head -1)
-          if [ -z "$IPA" ]; then echo "IPA bulunamadı, atlanıyor"; exit 0; fi
-          echo "Yükleniyor: $IPA"
-          xcrun altool --upload-app \
-            --file "$IPA" \
-            --type ios \
-            --apiKey ${{ secrets.APPLE_ASC_KEY_ID }} \
-            --apiIssuer ${{ secrets.APPLE_ASC_ISSUER_ID }} \
-            --output-format json 2>&1 || \
-          xcrun altool --upload-app \
-            --file "$IPA" \
-            --type ios \
-            --apiKey ${{ secrets.APPLE_ASC_KEY_ID }} \
-            --apiIssuer ${{ secrets.APPLE_ASC_ISSUER_ID }} 2>&1 || true
