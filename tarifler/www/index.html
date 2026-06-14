@@ -2055,6 +2055,12 @@ async function _verifyGoogleToken(idToken) {
     const r = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`);
     const d = await r.json();
     if (d.error) return null;
+    const VALID_AUDS = [
+      '442086254689-isbdks63cqksfe355g2q2q18eegqdtt4.apps.googleusercontent.com',
+      '442086254689-rr7dl320im2cg0g43u44r74atfo11tbe.apps.googleusercontent.com'
+    ];
+    if (d.aud && !VALID_AUDS.includes(d.aud)) return null;
+    if (d.iss && d.iss !== 'https://accounts.google.com' && d.iss !== 'accounts.google.com') return null;
     return {
       uid: 'google_' + d.sub,
       provider: 'google',
