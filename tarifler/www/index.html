@@ -1322,7 +1322,14 @@ function cGet(k){try{const d=JSON.parse(localStorage.getItem('c_'+k));if(d&&Date
 function cSet(k,v){try{localStorage.setItem('c_'+k,JSON.stringify({t:Date.now(),v}))}catch(e){}}
 async function jFetch(url){
   const c=cGet(url);if(c)return c;
-  const r=await fetch(url);const d=await r.json();cSet(url,d);return d;
+  try{
+    const r=await fetch(url);const d=await r.json();cSet(url,d);return d;
+  }catch(e){
+    // Ağ/fetch hatası: süresi geçmiş önbelleği dene (çevrimdışı dayanıklılık),
+    // yoksa boş güvenli nesne döndür. Yakalanmamış "Failed to fetch" oluşmaz.
+    try{const s=JSON.parse(localStorage.getItem('c_'+url));if(s&&s.v)return s.v;}catch(_){}
+    return {};
+  }
 }
 
 
