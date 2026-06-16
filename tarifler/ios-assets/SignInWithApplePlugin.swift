@@ -1,6 +1,7 @@
 import Foundation
 import Capacitor
 import AuthenticationServices
+import UIKit
 
 @objc(SignInWithApplePlugin)
 public class SignInWithApplePlugin: CAPPlugin, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
@@ -20,13 +21,32 @@ public class SignInWithApplePlugin: CAPPlugin, ASAuthorizationControllerDelegate
         }
     }
 
+    // iPad dahil tüm cihazlarda geçerli, sahneye bağlı bir pencere döndür.
+    // Kopuk/boş UIWindow() iPad'de sunum hatasına yol açıyordu (Guideline 2.1a).
     public func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        return self.bridge?.viewController?.view.window ?? UIWindow()
+        // 1) Plugin'in kendi view controller'ının penceresi
+        if let w = self.bridge?.viewController?.view.window {
+            return w
+        }
+        // 2) Öne çıkan (foreground) sahnenin key/ilk penceresi
+        let scenes = UIApplication.shared.connectedScenes
+        for case let ws as UIWindowScene in scenes where ws.activationState == .foregroundActive {
+            if let kw = ws.windows.first(where: { $0.isKeyWindow }) ?? ws.windows.first {
+                return kw
+            }
+        }
+        // 3) Herhangi bir sahnedeki ilk pencere
+        for case let ws as UIWindowScene in scenes {
+            if let w = ws.windows.first { return w }
+        }
+        // 4) Son çare
+        return UIWindow()
     }
 
     public func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         guard let credential = authorization.credential as? ASAuthorizationAppleIDCredential else {
             pendingCall?.reject("Invalid credential type")
+            pendingCall = nil
             return
         }
         var result: [String: Any] = [
@@ -57,7 +77,13 @@ public class SignInWithApplePlugin: CAPPlugin, ASAuthorizationControllerDelegate
     }
 
     public func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        pendingCall?.reject(error.localizedDescription)
+        // Kullanıcı iptali (1001) sessiz geçilsin; diğer hatalar koda iletilsin.
+        let code = (error as? ASAuthorizationError)?.code
+        if code == .canceled {
+            pendingCall?.reject("canceled", "1001")
+        } else {
+            pendingCall?.reject(error.localizedDescription)
+        }
         pendingCall = nil
     }
 }
