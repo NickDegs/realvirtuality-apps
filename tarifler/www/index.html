@@ -7,10 +7,13 @@
 <title>Yemek Tarifleri</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
 <style>
 /* ─── LIQUID GLASS — iOS 26 ──────────────────────────── */
 :root {
+  /* ── Editorial · Serif tip sistemi ── */
+  --font-display: 'Fraunces', 'Georgia', 'Times New Roman', serif;
+  --font-body: 'Newsreader', 'Georgia', 'Times New Roman', serif;
   /* ── Red theme (default) — iştah açıcı ── */
   --bg-base:  #1c0608;
   --nav-bg:   rgba(32,8,10,0.72);
@@ -90,7 +93,7 @@ html, body {
   height: 100%; overflow: hidden;
   background: var(--bg-base);
   color: var(--txt);
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -773,6 +776,26 @@ body[data-theme="light"] .step-num { box-shadow: 0 3px 10px rgba(255,113,51,0.28
   .section { padding: 20px }
   .bnav { left: max(40px, var(--sl)); right: max(40px, var(--sr)) }
 }
+
+/* ═══ EDITORIAL · SERIF TİP SİSTEMİ ═════════════════════ */
+.hero-title, .sec-title, .rcard-name, .cuis-name, .feat-name,
+#dtitle, .dsec, #nav-title, #shoplist-title, .sheet-title,
+.brand, .greeting, h1, h2, h3 {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+.hero-title { font-weight: 600; letter-spacing: -.4px; line-height: 1.12 }
+.sec-title  { font-weight: 600; letter-spacing: -.2px }
+.rcard-name { font-weight: 600; letter-spacing: 0; line-height: 1.3 }
+.cuis-name  { font-weight: 600; letter-spacing: 0 }
+.feat-name  { font-weight: 600; letter-spacing: 0; line-height: 1.3 }
+#dtitle     { font-weight: 600; letter-spacing: -.2px }
+.dsec       { font-weight: 600; letter-spacing: 0; font-style: italic }
+#nav-title  { font-weight: 600; letter-spacing: -.2px }
+/* gövde: okunabilir serif, ferah satır */
+body        { letter-spacing: .1px }
+.ing-name, .instr-step { font-family: var(--font-body) }
+.instr-step { line-height: 1.9 }
 </style>
 </head>
 <body>
