@@ -796,6 +796,34 @@ body[data-theme="light"] .step-num { box-shadow: 0 3px 10px rgba(255,113,51,0.28
 body        { letter-spacing: .1px }
 .ing-name, .instr-step { font-family: var(--font-body) }
 .instr-step { line-height: 1.9 }
+
+/* ═══ iOS 26 LIQUID GLASS — KIRILMA / MERCEK KENARI ═════ */
+:root {
+  --lens-edge:
+    inset 0 1px .5px rgba(255,255,255,0.42),
+    inset 0 0 0 .5px rgba(255,255,255,0.12),
+    inset 1.5px 0 1px -1px rgba(255,255,255,0.20),
+    inset -1.5px 0 1px -1px rgba(255,255,255,0.10),
+    inset 0 -14px 22px -18px rgba(255,255,255,0.14);
+}
+body[data-theme="light"] {
+  --lens-edge:
+    inset 0 1px .5px rgba(255,255,255,0.95),
+    inset 0 0 0 .5px rgba(130,90,220,0.12),
+    inset 1.5px 0 1px -1px rgba(255,255,255,0.70),
+    inset 0 -12px 20px -16px rgba(130,90,220,0.10);
+}
+.chip, .cuis-chip, .cat-card, .cuis-card, .feat-card, .rcard,
+.hero, .hero-input, #search-input, .web-auth-input, .dmeta-tag,
+.auth-user, .shop-item, #mode-btn, .nav-btn, .pwa-close {
+  box-shadow: var(--lens-edge);
+}
+.cat-card, .cuis-card, .feat-card, .rcard { border-color: rgba(255,255,255,0.24) }
+body[data-theme="light"] .cat-card, body[data-theme="light"] .cuis-card,
+body[data-theme="light"] .feat-card, body[data-theme="light"] .rcard { border-color: rgba(130,90,220,0.20) }
+.chip:active, .cat-card:active, .cuis-card:active, .feat-card:active, .rcard:active {
+  box-shadow: var(--lens-edge), 0 8px 28px rgba(0,0,0,0.40) !important;
+}
 </style>
 </head>
 <body>
