@@ -2082,9 +2082,10 @@ function clearShopList(){
 // ===== AUTH — PocketBase backend (realvirtuality.app/tarifler-auth) =====
 const PB_BASE = 'https://realvirtuality.app/tarifler-auth';
 const PB_COLLECTION = 'user_favs';
+const SYNC_BASE = 'https://realvirtuality.app/tarifler-sync'; // güvenli doğrulama servisi
 const APPLE_BUNDLE = 'com.nickdegs.tarifler';
 
-let authUser = null; // { uid, provider, email, name, photo, pbToken, pbId }
+let authUser = null; // { uid, provider, email, name, photo, syncSession }
 
 function _esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -2130,41 +2131,18 @@ async function _verifyGoogleToken(idToken) {
   } catch(e) { return null; }
 }
 
-// ─── PocketBase'e kayıt / güncelle ───────────────────────────────────────
-async function _pbUpsertUser(userInfo, displayName, photoUrl) {
+// ─── Bulut kimlik doğrulama (server-side token verify) ───────────────────
+// Sağlayıcı token'ını (Apple/Google idToken veya PB email token) güvenli
+// servise gönderir; servis doğrular, uid türetir, oturum (session) döndürür.
+async function _cloudAuth(provider, token) {
   try {
-    // Mevcut kaydı ara
-    const search = await fetch(
-      `${PB_BASE}/api/collections/${PB_COLLECTION}/records?filter=(uid='${encodeURIComponent(userInfo.uid)}')&perPage=1`,
-      { headers: { 'Content-Type': 'application/json' } }
-    );
-    const sData = await search.json();
-    const existing = sData.items?.[0];
-
-    const body = {
-      uid: userInfo.uid,
-      provider: userInfo.provider,
-      email: userInfo.email || '',
-      display_name: displayName || userInfo.name || userInfo.email || 'Kullanıcı',
-      photo_url: photoUrl || userInfo.photo || '',
-      favs_json: favs
-    };
-
-    let resp;
-    if (existing) {
-      resp = await fetch(
-        `${PB_BASE}/api/collections/${PB_COLLECTION}/records/${existing.id}`,
-        { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) }
-      );
-    } else {
-      resp = await fetch(
-        `${PB_BASE}/api/collections/${PB_COLLECTION}/records`,
-        { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) }
-      );
-    }
-    const record = await resp.json();
-    return { pbId: record.id, cloudFavs: existing?.favs_json || {} };
-  } catch(e) { console.warn('PB upsert:', e); return { pbId: null, cloudFavs: {} }; }
+    const r = await fetch(`${SYNC_BASE}/auth`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider, token })
+    });
+    if (!r.ok) { console.warn('cloudAuth', r.status); return null; }
+    return await r.json(); // { session, uid, favs, profile }
+  } catch(e) { console.warn('cloudAuth:', e); return null; }
 }
 
 // ─── Cloud favorileri merge et ────────────────────────────────────────────
@@ -2182,13 +2160,21 @@ function _mergeFavs(cloudFavs) {
 }
 
 // ─── Giriş tamamlama ─────────────────────────────────────────────────────
-async function _completeSignIn(userInfo, displayName, photoUrl) {
-  const { pbId, cloudFavs } = await _pbUpsertUser(userInfo, displayName, photoUrl);
-  authUser = { ...userInfo, name: displayName || userInfo.name || '', photo: photoUrl || userInfo.photo || '', pbId };
+async function _completeSignIn(provider, token, displayName, photoUrl) {
+  const res = await _cloudAuth(provider, token);
+  if (!res || !res.session) { console.warn(provider + ' bulut girişi başarısız'); return false; }
+  authUser = {
+    uid: res.uid, provider,
+    email: res.profile?.email || '',
+    name: displayName || res.profile?.name || res.profile?.email || '',
+    photo: photoUrl || res.profile?.picture || '',
+    syncSession: res.session
+  };
   localStorage.setItem('auth_user', JSON.stringify(authUser));
-  _mergeFavs(cloudFavs);
+  _mergeFavs(res.favs);
   updateProfileBtn();
   closeSheet('auth');
+  return true;
 }
 
 // ─── Apple Sign-In ────────────────────────────────────────────────────────
@@ -2202,10 +2188,9 @@ async function signInApple() {
     const result = await plugin.authorize();
     const cred = result.response || result;
     const identityToken = cred.identityToken || cred.authorization?.id_token || '';
-    const userInfo = await _verifyAppleToken(identityToken);
-    if (!userInfo) { console.warn('Apple token doğrulanamadı'); return; }
-    const name = [cred.fullName?.givenName, cred.fullName?.familyName].filter(Boolean).join(' ') || userInfo.email;
-    await _completeSignIn(userInfo, name, '');
+    if (!identityToken) { console.warn('Apple identityToken yok'); return; }
+    const name = [cred.fullName?.givenName, cred.fullName?.familyName].filter(Boolean).join(' ') || '';
+    await _completeSignIn('apple', identityToken, name, '');
   } catch(e) {
     if (e.code !== '1001') console.warn('Apple sign-in:', e);
   }
@@ -2220,10 +2205,10 @@ async function signInGoogle() {
   }
   try {
     const result = await plugin.signIn();
-    const userInfo = await _verifyGoogleToken(result.authentication?.idToken || '');
-    if (!userInfo) { console.warn('Google token doğrulanamadı'); return; }
+    const idToken = result.authentication?.idToken || '';
+    if (!idToken) { console.warn('Google idToken yok'); return; }
     await _completeSignIn(
-      userInfo,
+      'google', idToken,
       result.displayName || result.name || '',
       result.imageUrl || result.photo || ''
     );
@@ -2242,12 +2227,12 @@ async function authSignOut() {
 
 // ─── Cloud sync ───────────────────────────────────────────────────────────
 async function syncFavsToCloud() {
-  if (!authUser?.pbId) return;
+  if (!authUser?.syncSession) return;
   try {
-    await fetch(
-      `${PB_BASE}/api/collections/${PB_COLLECTION}/records/${authUser.pbId}`,
-      { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ favs_json: favs }) }
-    );
+    await fetch(`${SYNC_BASE}/set`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ session: authUser.syncSession, favs })
+    });
   } catch(e) {}
 }
 
