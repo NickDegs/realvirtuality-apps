@@ -2160,20 +2160,36 @@ function _mergeFavs(cloudFavs) {
 }
 
 // ─── Giriş tamamlama ─────────────────────────────────────────────────────
+// İmzasız payload çözücü — YALNIZCA lokal kimlik/görüntü için (sub/email).
+// Güvenlik: bulut YAZMA hâlâ sunucu-doğrulamalı session gerektirir.
+function _decodeJwt(t) {
+  try { const p = t.split('.')[1]; return JSON.parse(atob(p.replace(/-/g,'+').replace(/_/g,'/'))); }
+  catch(e) { return {}; }
+}
+
 async function _completeSignIn(provider, token, displayName, photoUrl) {
-  const res = await _cloudAuth(provider, token);
-  if (!res || !res.session) { console.warn(provider + ' bulut girişi başarısız'); return false; }
+  // 1) GİRİŞ her durumda başarılı — yalnızca native sağlayıcıya dayanır, buluta DEĞİL.
+  const p = _decodeJwt(token);
   authUser = {
-    uid: res.uid, provider,
-    email: res.profile?.email || '',
-    name: displayName || res.profile?.name || res.profile?.email || '',
-    photo: photoUrl || res.profile?.picture || '',
-    syncSession: res.session
+    uid: provider + ':' + (p.sub || p.user || ('local_' + Date.now())),
+    provider,
+    email: p.email || '',
+    name: displayName || p.name || p.email || 'Kullanıcı',
+    photo: photoUrl || p.picture || '',
+    syncSession: null
   };
   localStorage.setItem('auth_user', JSON.stringify(authUser));
-  _mergeFavs(res.favs);
   updateProfileBtn();
   closeSheet('auth');
+  // 2) Bulut favori senkronu — arka planda, best-effort. Giriş ASLA buna bağlı değil.
+  _cloudAuth(provider, token).then(res => {
+    if (res && res.session) {
+      authUser.syncSession = res.session;
+      if (!authUser.email && res.profile?.email) authUser.email = res.profile.email;
+      localStorage.setItem('auth_user', JSON.stringify(authUser));
+      _mergeFavs(res.favs);
+    }
+  }).catch(() => {});
   return true;
 }
 
