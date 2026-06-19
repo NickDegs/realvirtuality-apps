@@ -1975,14 +1975,16 @@ function crownTap(){
 }
 
 function renderPremiumSheet(){
+  // Native'de gerçek StoreKit/Play fiyatını göster (ASC'de ne ayarlanırsa o); web fallback yeni ortalama
+  const _storePrice=(id,fb)=>{ try{ const p=window.CdvPurchase?.store?.get?.(id); return p?.pricing?.price || p?.offers?.[0]?.pricingPhases?.[0]?.price || fb; }catch(e){ return fb; } };
   const products=[
     {id:IAP_NOADS,
      name:lang==='tr'?'Reklamsız':'Remove Ads',
-     price:'$1.99',
+     price:_storePrice(IAP_NOADS,'$4.99'),
      desc:lang==='tr'?'Tüm banner reklamları kalıcı olarak kaldırır.':'Permanently removes all banner ads from the app.'},
     {id:IAP_PREMIUM,
      name:'Premium',
-     price:'$4.99',
+     price:_storePrice(IAP_PREMIUM,'$9.99'),
      desc:lang==='tr'?'Alışveriş listesi + reklamsız. Eksiksiz deneyim.':'Shopping list + ad-free. The complete experience.'},
   ];
   document.getElementById('prem-product-list').innerHTML=products.map(p=>`
