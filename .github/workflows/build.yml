@@ -148,7 +148,8 @@ jobs:
           # Deployment target
           PBX=ios/App/App.xcodeproj/project.pbxproj
           sed -i '' -E 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]+;/IPHONEOS_DEPLOYMENT_TARGET = 16.4;/g' "$PBX" || true
-          sed -i '' -E 's/TARGETED_DEVICE_FAMILY = "?[12,]+"?;/TARGETED_DEVICE_FAMILY = "1,2";/g' "$PBX" || true
+          # Sadece iPhone (1) — iPad desteği kapalı, iPad kaynaklı red riski yok
+          sed -i '' -E 's/TARGETED_DEVICE_FAMILY = "?[12,]+"?;/TARGETED_DEVICE_FAMILY = "1";/g' "$PBX" || true
           # Pods imza devre dışı
           python3 - << 'PYEOF'
           with open('ios/App/Podfile', 'r') as f:
