@@ -4,7 +4,15 @@ import AuthenticationServices
 import UIKit
 
 @objc(SignInWithApplePlugin)
-public class SignInWithApplePlugin: CAPPlugin, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+public class SignInWithApplePlugin: CAPPlugin, CAPBridgedPlugin, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+
+    // Capacitor 6 ZORUNLU: bu protokol + alanlar olmadan plugin Plugins'e KAYITLANMAZ
+    // (window.Capacitor.Plugins.SignInWithApple tanımsız kalır → fallback alert → 2.1.0 red)
+    public let identifier = "SignInWithApplePlugin"
+    public let jsName = "SignInWithApple"
+    public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "authorize", returnType: CAPPluginReturnPromise)
+    ]
 
     private var pendingCall: CAPPluginCall?
 
