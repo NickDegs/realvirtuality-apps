@@ -7,6 +7,13 @@ extension Color {
     static let rvCyan = Color(red: 0.133, green: 0.827, blue: 0.933)  // #22d3ee
     static let rvCard = Color(red: 0.078, green: 0.090, blue: 0.149)  // #141726
 }
+// .foregroundStyle(.rvCyan) / .fill(.rvViolet) / .tint(.rvBg) gibi ShapeStyle bağlamlarında kısa kullanım
+extension ShapeStyle where Self == Color {
+    static var rvBg: Color { Color.rvBg }
+    static var rvViolet: Color { Color.rvViolet }
+    static var rvCyan: Color { Color.rvCyan }
+    static var rvCard: Color { Color.rvCard }
+}
 
 // Araç tanımı
 struct Arac: Identifiable {
