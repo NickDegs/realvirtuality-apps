@@ -7,12 +7,14 @@ settings:
   base:
     MARKETING_VERSION: "1.0"
     CURRENT_PROJECT_VERSION: "1"
-    DEVELOPMENT_TEAM: ""   # Apple Developer Team ID (Codemagic/Xcode'da doldurulur)
     PRODUCT_BUNDLE_IDENTIFIER: com.nickdegs.realvirtualityai
+    TARGETED_DEVICE_FAMILY: "1"            # 1 = SADECE iPhone (iPad yok)
+    CODE_SIGN_ENTITLEMENTS: RealVirtualityAI/RealVirtualityAI.entitlements
 targets:
   RealVirtualityAI:
     type: application
     platform: iOS
+    deploymentTarget: "26.0"
     sources: [RealVirtualityAI]
     info:
       path: RealVirtualityAI/Info.plist

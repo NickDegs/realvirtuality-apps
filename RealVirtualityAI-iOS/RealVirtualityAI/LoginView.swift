@@ -1,4 +1,5 @@
 import SwiftUI
+import AuthenticationServices
 
 struct LoginView: View {
     @EnvironmentObject var api: API
@@ -43,6 +44,21 @@ struct LoginView: View {
                         .background(.linearGradient(colors: [.rvViolet, .rvCyan], startPoint: .leading, endPoint: .trailing))
                         .clipShape(.rect(cornerRadius: 14))
                         .opacity(bekle ? 0.6 : 1)
+
+                    if adim == 0 {
+                        HStack { Rectangle().fill(.white.opacity(0.12)).frame(height: 1); Text("veya").font(.caption).foregroundStyle(.secondary); Rectangle().fill(.white.opacity(0.12)).frame(height: 1) }
+                        SignInWithAppleButton(.signIn) { req in
+                            req.requestedScopes = [.email, .fullName]
+                        } onCompletion: { result in
+                            if case .success(let auth) = result,
+                               let cred = auth.credential as? ASAuthorizationAppleIDCredential,
+                               let td = cred.identityToken, let token = String(data: td, encoding: .utf8) {
+                                Task { if let e = await api.appleGiris(idToken: token, email: cred.email) { hata = e } else { dismiss() } }
+                            }
+                        }
+                        .signInWithAppleButtonStyle(.white)
+                        .frame(height: 50).clipShape(.rect(cornerRadius: 14))
+                    }
 
                     if adim == 1 {
                         Button("← E-postayı değiştir") { adim = 0; kod = ""; hata = "" }

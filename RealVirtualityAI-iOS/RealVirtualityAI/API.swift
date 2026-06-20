@@ -68,6 +68,13 @@ final class API: ObservableObject {
         girisli = false; email = nil; await durumYukle()
     }
 
+    // Sign in with Apple
+    func appleGiris(idToken: String, email: String?) async -> String? {
+        let j = (try? await istek("/api/apple-giris", ["identity_token": idToken, "email": email ?? ""])) ?? [:]
+        if j["ok"] as? Bool == true { await durumYukle(); return nil }
+        return j["err"] as? String ?? "Apple ile giriş başarısız"
+    }
+
     // Görsel üretimi
     func gorselUret(_ prompt: String) async -> (UretimSonuc?, String?) {
         yukleniyor = true; defer { yukleniyor = false }
