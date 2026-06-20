@@ -14,10 +14,8 @@ struct ContentView: View {
                 LinearGradient(colors: [.rvBg, Color(red:0.07,green:0.05,blue:0.18), .rvBg],
                                startPoint: .topLeading, endPoint: .bottomTrailing)
                     .ignoresSafeArea()
-                Circle().fill(Color.rvViolet.opacity(0.25)).frame(width: 360).blur(radius: 140)
-                    .offset(x: 120, y: -260)
-                Circle().fill(Color.rvCyan.opacity(0.18)).frame(width: 320).blur(radius: 150)
-                    .offset(x: -140, y: 320)
+                // Mercek yanma (lens flare) — yavaş, ultra yumuşak gezen ışık
+                LensFlare()
 
                 ScrollView {
                     VStack(spacing: 22) {
@@ -25,10 +23,14 @@ struct ContentView: View {
                         kahraman
                         GlassEffectContainer(spacing: 14) {
                             LazyVGrid(columns: kolonlar, spacing: 14) {
-                                ForEach(ARACLAR) { a in
-                                    AracKart(arac: a).onTapGesture {
+                                ForEach(Array(ARACLAR.enumerated()), id: \.element.id) { i, a in
+                                    BasilabilirKart {
                                         if api.girisli || api.freeKalan > 0 { secilen = a } else { girisAcik = true }
+                                    } content: {
+                                        AracKart(arac: a)
                                     }
+                                    .transition(.scale.combined(with: .opacity))
+                                    .animation(.smooth(duration: 0.5).delay(Double(i) * 0.05), value: api.girisli)
                                 }
                             }
                         }
@@ -68,6 +70,7 @@ struct ContentView: View {
             Text("Yapay zekânın tüm gücü").font(.title.bold())
             Text("tek yerde").font(.title.bold())
                 .foregroundStyle(.linearGradient(colors: [.rvViolet, .rvCyan], startPoint: .leading, endPoint: .trailing))
+                .shimmer()
             Text("Görsel, yazı, çeviri, kod ve daha fazlası — saniyeler içinde.")
                 .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
                 .padding(.horizontal, 36).padding(.top, 2)
