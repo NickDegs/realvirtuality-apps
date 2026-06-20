@@ -123,6 +123,10 @@ jobs:
           ATT_MSG="Personalized ads are shown based on your activity. You can change this in Settings."
           /usr/libexec/PlistBuddy -c "Add :NSUserTrackingUsageDescription string $ATT_MSG" ios/App/App/Info.plist 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Set :NSUserTrackingUsageDescription $ATT_MSG" ios/App/App/Info.plist
+          # Google Sign-In: GIDClientID (iOS client id) — YOKSA GoogleAuth.signIn() native CRASH
+          GID="442086254689-rr7dl320im2cg0g43u44r74atfo11tbe.apps.googleusercontent.com"
+          /usr/libexec/PlistBuddy -c "Add :GIDClientID string $GID" ios/App/App/Info.plist 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Set :GIDClientID $GID" ios/App/App/Info.plist
           # Google Sign-In REVERSED_CLIENT_ID URL scheme
           REVERSED="com.googleusercontent.apps.442086254689-rr7dl320im2cg0g43u44r74atfo11tbe"
           python3 - << PYEOF
