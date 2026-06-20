@@ -15,6 +15,9 @@ targets:
     type: application
     platform: iOS
     deploymentTarget: "26.0"
+    settings:
+      base:
+        TARGETED_DEVICE_FAMILY: "1"
     sources: [RealVirtualityAI]
     info:
       path: RealVirtualityAI/Info.plist

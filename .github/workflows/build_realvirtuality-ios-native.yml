@@ -56,9 +56,13 @@ jobs:
           PLIST
           xcodebuild -project RealVirtualityAI.xcodeproj -scheme RealVirtualityAI \
             -destination 'generic/platform=iOS' -configuration Release -archivePath RV.xcarchive \
-            DEVELOPMENT_TEAM=SZF4T3P583 \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8 \
+            -authenticationKeyID ${{ secrets.APPLE_ASC_KEY_ID }} \
+            -authenticationKeyIssuerID ${{ secrets.APPLE_ASC_ISSUER_ID }} \
+            DEVELOPMENT_TEAM=SZF4T3P583 CODE_SIGN_STYLE=Automatic \
             CURRENT_PROJECT_VERSION=${{ github.run_number }} \
-            CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" ONLY_ACTIVE_ARCH=NO \
+            TARGETED_DEVICE_FAMILY=1 ONLY_ACTIVE_ARCH=NO \
             archive
           xcodebuild -exportArchive -archivePath RV.xcarchive \
             -exportOptionsPlist ExportOptions.plist -exportPath ./ipa-out \
