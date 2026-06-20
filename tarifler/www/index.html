@@ -836,7 +836,6 @@ body[data-theme="light"] .feat-card, body[data-theme="light"] .rcard { border-co
     <button class="nav-btn" id="theme-btn" onclick="cycleTheme()" title="Tema">🍎</button>
     <button class="nav-btn" onclick="openSheet('lang')">🌐</button>
     <button class="nav-btn" id="crown-btn" onclick="crownTap()">👑</button>
-    <button class="nav-btn" id="profile-btn" onclick="openAuthSheet()">👤</button>
   </div>
   <div id="search-wrap">
     <div id="search-row">
@@ -900,12 +899,6 @@ body[data-theme="light"] .feat-card, body[data-theme="light"] .rcard { border-co
   </div>
 </div>
 
-<div id="sheet-auth" class="sheet-bg" onclick="if(event.target===this)closeSheet('auth')">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div id="auth-content"></div>
-  </div>
-</div>
 
 <div id="shoplist-ov">
   <div id="shoplist-head">
@@ -2566,7 +2559,7 @@ function initiOS26() {
   initSwipeDismiss();
   initNavScroll();
   initTabSpring();
-  ['sheet-lang', 'sheet-mode', 'sheet-premium', 'sheet-auth'].forEach(initSheetDrag);
+  ['sheet-lang', 'sheet-mode', 'sheet-premium'].forEach(initSheetDrag);
 }
 
 // ===== INIT =====
