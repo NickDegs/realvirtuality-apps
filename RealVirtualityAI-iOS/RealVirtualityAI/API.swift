@@ -68,6 +68,13 @@ final class API: ObservableObject {
         girisli = false; email = nil; await durumYukle()
     }
 
+    // IAP makbuzunu sunucuda doğrula → kredi yüklenir
+    func iapDogrula(jws: String) async -> String? {
+        let j = (try? await istek("/api/iap-dogrula", ["jws": jws])) ?? [:]
+        if j["ok"] as? Bool == true { kredi = j["kredi"] as? Int ?? kredi; await durumYukle(); return nil }
+        return j["err"] as? String ?? "doğrulanamadı"
+    }
+
     // Sign in with Apple
     func appleGiris(idToken: String, email: String?) async -> String? {
         let j = (try? await istek("/api/apple-giris", ["identity_token": idToken, "email": email ?? ""])) ?? [:]

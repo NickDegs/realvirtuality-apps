@@ -3,6 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var api: API
     @State private var girisAcik = false
+    @State private var krediAcik = false
     @State private var secilen: Arac? = nil
 
     let kolonlar = [GridItem(.adaptive(minimum: 158), spacing: 14)]
@@ -41,6 +42,7 @@ struct ContentView: View {
             }
             .navigationBarHidden(true)
             .sheet(isPresented: $girisAcik) { LoginView() }
+            .sheet(isPresented: $krediAcik) { KrediView() }
             .sheet(item: $secilen) { a in ToolView(arac: a) }
         }
     }
@@ -52,10 +54,12 @@ struct ContentView: View {
                 Text("RealVirtuality AI").font(.headline.bold())
             }
             Spacer()
-            // Kredi rozeti — Liquid Glass
-            Text(api.girisli ? "⚡ \(api.kredi)" : "⚡ \(api.freeKalan) ücretsiz")
-                .font(.subheadline.bold()).padding(.horizontal, 14).padding(.vertical, 8)
-                .glassEffect(.regular.tint(.rvCyan.opacity(0.25)), in: .capsule)
+            // Kredi rozeti — basınca Kredi Al (IAP); giriş yoksa önce giriş
+            Button { if api.girisli { krediAcik = true } else { girisAcik = true } } label: {
+                Text(api.girisli ? "⚡ \(api.kredi)" : "⚡ \(api.freeKalan) ücretsiz")
+                    .font(.subheadline.bold()).padding(.horizontal, 14).padding(.vertical, 8)
+                    .glassEffect(.regular.tint(.rvCyan.opacity(0.25)), in: .capsule)
+            }.foregroundStyle(.white)
             // Hesap
             Button { girisAcik = true } label: {
                 Image(systemName: api.girisli ? "person.crop.circle.fill" : "person.crop.circle")
