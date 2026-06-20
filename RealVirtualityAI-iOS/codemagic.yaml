@@ -1,21 +1,41 @@
+# RealVirtuality AI — iOS · Codemagic CI
+# KURULUM (tek seferlik, Codemagic panelinde):
+#  1) Teams → Integrations → App Store Connect → API anahtarını ekle (adı: "NickDegs ASC")
+#  2) Bu repo'yu bağla, bu workflow'u seç, "Start build" → TestFlight'a otomatik yükler
 workflows:
-  ios-realvirtuality:
-    name: RealVirtuality AI iOS
+  ios-release:
+    name: RealVirtuality AI — App Store
     instance_type: mac_mini_m2
+    max_build_duration: 60
+    integrations:
+      app_store_connect: "NickDegs ASC"   # Codemagic'teki ASC API anahtarının adı
     environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.nickdegs.realvirtualityai
       xcode: latest
+      cocoapods: default
       vars:
         BUNDLE_ID: "com.nickdegs.realvirtualityai"
+        APP_STORE_APPLE_ID: ""   # App Store Connect'te uygulama oluşturunca Apple ID (rakam) buraya
+    working_directory: RealVirtualityAI-iOS
     scripts:
       - name: XcodeGen ile proje üret
         script: |
-          brew install xcodegen || true
+          brew install xcodegen
           xcodegen generate
-      - name: Bağımlılık yok — direkt arşivle
+      - name: Otomatik imzalama profillerini al
         script: |
-          xcodebuild -project RealVirtualityAI.xcodeproj -scheme RealVirtualityAI \
-            -configuration Release -sdk iphoneos -archivePath build/RV.xcarchive archive \
-            CODE_SIGN_STYLE=Automatic
+          xcode-project use-profiles
+      - name: Derle ve arşivle (.ipa)
+        script: |
+          xcode-project build-ipa \
+            --project "RealVirtualityAI.xcodeproj" \
+            --scheme "RealVirtualityAI"
     artifacts:
-      - build/*.xcarchive
-    # NOT: App Store yayını için publishing.app_store_connect bloğu + API key eklenir (xcrun altool KULLANMA)
+      - build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        # submit_to_app_store: true   # incelemeye otomatik göndermek istersen aç
