@@ -167,12 +167,12 @@ jobs:
               f.write(content)
           print("Podfile patched OK")
           PYEOF
-      - name: Sign in with Apple entitlement + Swift plugin
+      - name: iCloud KVS entitlement + Swift plugin
         working-directory: ${{ matrix.app }}
         run: |
           cp ios-assets/App.entitlements ios/App/App/App.entitlements
-          cp ios-assets/SignInWithApplePlugin.swift ios/App/App/SignInWithApplePlugin.swift
-          cp ios-assets/SignInWithApplePlugin.m ios/App/App/SignInWithApplePlugin.m
+          cp ios-assets/ICloudKVPlugin.swift ios/App/App/ICloudKVPlugin.swift
+          cp ios-assets/ICloudKVPlugin.m ios/App/App/ICloudKVPlugin.m
           python3 - << 'PYEOF'
           import hashlib, re, os
           def make_id(seed):
@@ -183,8 +183,8 @@ jobs:
           with open(pbx) as f:
               content = f.read()
           new_files = [
-              ("SignInWithApplePlugin.swift", "sourcecode.swift"),
-              ("SignInWithApplePlugin.m",     "sourcecode.c.objc"),
+              ("ICloudKVPlugin.swift", "sourcecode.swift"),
+              ("ICloudKVPlugin.m",     "sourcecode.c.objc"),
           ]
           changed = False
           for fname, ftype in new_files:
@@ -214,7 +214,7 @@ jobs:
               print("  Added CODE_SIGN_ENTITLEMENTS")
           if changed:
               with open(pbx, "w") as f: f.write(content)
-          print("Apple Sign-In plugin OK")
+          print("iCloud KVS plugin OK")
           PYEOF
       - name: AdMob Consent stub (Xcode 26)
         working-directory: ${{ matrix.app }}

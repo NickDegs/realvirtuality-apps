@@ -1357,7 +1357,36 @@ function saveFav(id,name,thumb,type){
   if(favs[id])delete favs[id];
   else favs[id]={id,name,thumb,type,ts:Date.now()};
   localStorage.setItem('favs2',JSON.stringify(favs));
-  syncFavsToCloud();
+  _icloudPush();
+}
+
+// ===== iCloud Sync (GİRİŞSİZ — NSUbiquitousKeyValueStore, Apple ID'ye bağlı) =====
+const ICLOUD_KEY='favs2';
+function icloudEnabled(){ return localStorage.getItem('icloud_sync')!=='0'; } // varsayılan AÇIK
+async function _icloudPush(){
+  if(!icloudEnabled())return;
+  const p=window.Capacitor?.Plugins?.ICloudKV; if(!p)return;
+  try{ await p.set({key:ICLOUD_KEY, value:JSON.stringify(favs)}); }catch(e){}
+}
+async function _icloudPull(){
+  const p=window.Capacitor?.Plugins?.ICloudKV; if(!p)return;
+  try{
+    const r=await p.get({key:ICLOUD_KEY});
+    if(r&&r.value){ _mergeFavs(JSON.parse(r.value)); }
+  }catch(e){}
+}
+async function initICloud(){
+  const p=window.Capacitor?.Plugins?.ICloudKV; if(!p)return;
+  try{
+    p.addListener('icloudChange', ()=>{ if(icloudEnabled()) _icloudPull(); });
+    if(icloudEnabled()){ await _icloudPull(); await _icloudPush(); }
+  }catch(e){}
+}
+function toggleICloud(){
+  const on=icloudEnabled();
+  localStorage.setItem('icloud_sync', on?'0':'1');
+  if(!on){ _icloudPull(); _icloudPush(); }
+  if(typeof renderPremiumSheet==='function') renderPremiumSheet();
 }
 function ownedIap(id){return iapOwned[id]===true;}
 function grantIap(id){iapOwned[id]=true;localStorage.setItem('iap_owned',JSON.stringify(iapOwned));}
@@ -1990,7 +2019,15 @@ function renderPremiumSheet(){
           ${ownedIap(p.id)?(t('owned')||'Owned'):(t('buyNow')||'Buy Now')}
         </button>
       </div>
-    </div>`).join('');
+    </div>`).join('')
+    + (window.Capacitor?.Plugins?.ICloudKV ? `
+    <div class="prem-product" style="cursor:pointer" onclick="toggleICloud()">
+      <div class="prem-product-foot" style="margin-bottom:6px">
+        <span class="prem-product-name" style="font-size:15px">☁️ ${lang==='tr'?'iCloud Senkron':'iCloud Sync'}</span>
+        <span style="font-size:13px;font-weight:800;color:${icloudEnabled()?'var(--acc)':'var(--sub)'}">${icloudEnabled()?(lang==='tr'?'Açık':'On'):(lang==='tr'?'Kapalı':'Off')}</span>
+      </div>
+      <div class="prem-product-desc">${lang==='tr'?'Favorilerin Apple ID\'nle tüm cihazlarda otomatik saklanır. Giriş gerekmez.':'Favorites sync across your devices via your Apple ID. No login needed.'}</div>
+    </div>` : '');
   const rl=document.getElementById('restore-link');
   if(rl)rl.textContent=t('restore')||'Restore Purchases';
 }
@@ -2578,7 +2615,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   initAdMob();
   initIAP();
   initiOS26();
-  initAuth();
+  initICloud();
 });
 </script>
 </body>
