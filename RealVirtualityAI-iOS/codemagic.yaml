@@ -1,0 +1,21 @@
+workflows:
+  ios-realvirtuality:
+    name: RealVirtuality AI iOS
+    instance_type: mac_mini_m2
+    environment:
+      xcode: latest
+      vars:
+        BUNDLE_ID: "com.nickdegs.realvirtualityai"
+    scripts:
+      - name: XcodeGen ile proje üret
+        script: |
+          brew install xcodegen || true
+          xcodegen generate
+      - name: Bağımlılık yok — direkt arşivle
+        script: |
+          xcodebuild -project RealVirtualityAI.xcodeproj -scheme RealVirtualityAI \
+            -configuration Release -sdk iphoneos -archivePath build/RV.xcarchive archive \
+            CODE_SIGN_STYLE=Automatic
+    artifacts:
+      - build/*.xcarchive
+    # NOT: App Store yayını için publishing.app_store_connect bloğu + API key eklenir (xcrun altool KULLANMA)

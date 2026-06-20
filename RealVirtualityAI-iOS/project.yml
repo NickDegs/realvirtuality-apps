@@ -1,0 +1,23 @@
+name: RealVirtualityAI
+options:
+  bundleIdPrefix: com.nickdegs
+  deploymentTarget:
+    iOS: "26.0"
+settings:
+  base:
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""   # Apple Developer Team ID (Codemagic/Xcode'da doldurulur)
+    PRODUCT_BUNDLE_IDENTIFIER: com.nickdegs.realvirtualityai
+targets:
+  RealVirtualityAI:
+    type: application
+    platform: iOS
+    sources: [RealVirtualityAI]
+    info:
+      path: RealVirtualityAI/Info.plist
+      properties:
+        CFBundleDisplayName: RealVirtuality AI
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        ITSAppUsesNonExemptEncryption: false
