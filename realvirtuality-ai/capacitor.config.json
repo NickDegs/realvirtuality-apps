@@ -1,0 +1,11 @@
+{
+  "appId": "com.nickdegs.realvirtualityai",
+  "appName": "RealVirtuality AI",
+  "webDir": "www",
+  "backgroundColor": "#0a0b14",
+  "server": { "url": "https://realvirtuality.app", "cleartext": false },
+  "plugins": {
+    "SplashScreen": { "backgroundColor": "#0a0b14", "showSpinner": true, "spinnerColor": "#7c5cff", "launchAutoHide": true },
+    "StatusBar": { "style": "DARK", "backgroundColor": "#0a0b14" }
+  }
+}
