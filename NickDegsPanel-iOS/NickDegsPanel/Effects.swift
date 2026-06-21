@@ -59,7 +59,7 @@ extension View {
     }
 }
 
-// Basıldığında yumuşak ölçeklenen buton sarmalı
+// Basıldığında yumuşak ölçeklenen + haptik buton sarmalı
 struct BasilabilirKart<Content: View>: View {
     @GestureState private var basili = false
     let aksiyon: () -> Void
@@ -67,11 +67,51 @@ struct BasilabilirKart<Content: View>: View {
     var body: some View {
         content()
             .scaleEffect(basili ? 0.95 : 1)
+            .brightness(basili ? 0.04 : 0)
             .animation(.spring(response: 0.3, dampingFraction: 0.6), value: basili)
+            .onChange(of: basili) { _, yeni in if yeni { Haptik.hafif() } }
             .gesture(
                 DragGesture(minimumDistance: 0)
                     .updating($basili) { _, s, _ in s = true }
-                    .onEnded { _ in aksiyon() }
+                    .onEnded { _ in Haptik.orta(); aksiyon() }
             )
     }
+}
+
+// Haptik geri bildirim
+enum Haptik {
+    static func hafif() { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
+    static func orta()  { UIImpactFeedbackGenerator(style: .medium).impactOccurred() }
+}
+
+// Cam parıltısı (glow) — öne çıkan kartlar için
+struct GlowModifier: ViewModifier {
+    let renk: Color
+    @State private var nabiz = false
+    func body(content: Content) -> some View {
+        content
+            .shadow(color: renk.opacity(nabiz ? 0.45 : 0.2), radius: nabiz ? 22 : 12)
+            .onAppear { withAnimation(.easeInOut(duration: 2.2).repeatForever(autoreverses: true)) { nabiz = true } }
+    }
+}
+
+// Yavaş animasyonlu gradyan arka plan — ultra premium his
+struct AnimatedArka: View {
+    let c1: Color; let c2: Color
+    var body: some View {
+        TimelineView(.animation) { ctx in
+            let t = ctx.date.timeIntervalSinceReferenceDate
+            let x = CGFloat(cos(t * 0.07)) * 0.4
+            let y = CGFloat(sin(t * 0.05)) * 0.4
+            ZStack {
+                LinearGradient(colors: [.rvBg, .rvBg2, .rvBg], startPoint: .topLeading, endPoint: .bottomTrailing)
+                RadialGradient(colors: [c1.opacity(0.18), .clear], center: UnitPoint(x: 0.5 + x, y: 0.25 + y), startRadius: 0, endRadius: 420)
+                RadialGradient(colors: [c2.opacity(0.14), .clear], center: UnitPoint(x: 0.5 - x, y: 0.8 - y), startRadius: 0, endRadius: 420)
+            }
+            .ignoresSafeArea()
+        }
+    }
+}
+extension View {
+    func parlak(_ renk: Color) -> some View { modifier(GlowModifier(renk: renk)) }
 }

@@ -46,8 +46,7 @@ struct SekmeView: View {
         NavigationStack {
             ZStack {
                 // Marka gradyanı arka plan
-                LinearGradient(colors: [.rvBg, .rvBg2, .rvBg], startPoint: .topLeading, endPoint: .bottomTrailing)
-                    .ignoresSafeArea()
+                AnimatedArka(c1: tema.c1, c2: tema.c2)
                 // Mercek yanması (lens flare) — yavaş, ultra yumuşak
                 LensFlare()
                 ScrollView {

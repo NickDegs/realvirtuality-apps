@@ -15,7 +15,7 @@ struct LoginView: View {
 
     var body: some View {
         ZStack {
-            LinearGradient(colors: [.rvBg, .rvBg2, .rvBg], startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea()
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
             LensFlare()
             ScrollView {
                 VStack(spacing: 18) {
