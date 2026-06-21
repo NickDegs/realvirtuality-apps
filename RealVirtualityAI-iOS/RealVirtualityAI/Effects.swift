@@ -61,19 +61,24 @@ extension View {
     }
 }
 
-// Basıldığında yumuşak ölçeklenen buton sarmalı
+// Basıldığında yumuşak ölçeklenen buton sarmalı (ScrollView ile uyumlu — kaydırmayı engellemez)
 struct BasilabilirKart<Content: View>: View {
-    @GestureState private var basili = false
     let aksiyon: () -> Void
     @ViewBuilder var content: () -> Content
     var body: some View {
-        content()
-            .scaleEffect(basili ? 0.95 : 1)
-            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: basili)
-            .gesture(
-                DragGesture(minimumDistance: 0)
-                    .updating($basili) { _, s, _ in s = true }
-                    .onEnded { _ in aksiyon() }
-            )
+        Button(action: { Haptik.orta(); aksiyon() }) { content() }
+            .buttonStyle(BasiliStil())
     }
+}
+struct BasiliStil: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.95 : 1)
+            .brightness(configuration.isPressed ? 0.04 : 0)
+            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: configuration.isPressed)
+    }
+}
+enum Haptik {
+    static func hafif() { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
+    static func orta()  { UIImpactFeedbackGenerator(style: .medium).impactOccurred() }
 }

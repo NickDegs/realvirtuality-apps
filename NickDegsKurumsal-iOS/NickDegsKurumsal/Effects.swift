@@ -63,20 +63,20 @@ extension View {
 
 // Basıldığında yumuşak ölçeklenen + haptik buton sarmalı
 struct BasilabilirKart<Content: View>: View {
-    @GestureState private var basili = false
     let aksiyon: () -> Void
     @ViewBuilder var content: () -> Content
     var body: some View {
-        content()
-            .scaleEffect(basili ? 0.95 : 1)
-            .brightness(basili ? 0.04 : 0)
-            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: basili)
-            .onChange(of: basili) { _, yeni in if yeni { Haptik.hafif() } }
-            .gesture(
-                DragGesture(minimumDistance: 0)
-                    .updating($basili) { _, s, _ in s = true }
-                    .onEnded { _ in Haptik.orta(); aksiyon() }
-            )
+        Button(action: { Haptik.orta(); aksiyon() }) { content() }
+            .buttonStyle(BasiliStil())
+    }
+}
+// ScrollView ile uyumlu: kaydırınca tetiklenmez, sadece gerçek dokunuşta açılır
+struct BasiliStil: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.95 : 1)
+            .brightness(configuration.isPressed ? 0.04 : 0)
+            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: configuration.isPressed)
     }
 }
 
