@@ -2,32 +2,32 @@ import SwiftUI
 
 // MARK: - Mercek yanma (Lens Flare) — yavaşça dönen ışık parlaması
 struct LensFlare: View {
-    @State private var faz = false
     var body: some View {
-        TimelineView(.animation) { ctx in
-            let t = ctx.date.timeIntervalSinceReferenceDate
-            let x = CGFloat(cos(t * 0.18))   // çok yavaş gezinme
-            let y = CGFloat(sin(t * 0.12))
-            ZStack {
-                Circle().fill(.radialGradient(colors: [.rvViolet.opacity(0.45), .clear],
-                              center: .center, startRadius: 0, endRadius: 260))
-                    .frame(width: 520).blur(radius: 90)
-                    .offset(x: x * 150, y: -260 + y * 60)
-                Circle().fill(.radialGradient(colors: [.rvCyan.opacity(0.40), .clear],
-                              center: .center, startRadius: 0, endRadius: 230))
-                    .frame(width: 460).blur(radius: 110)
-                    .offset(x: -x * 130, y: 360 - y * 60)
-                // ince ışık çizgisi (gerçek lens flare hissi)
-                Capsule().fill(.linearGradient(colors: [.clear, .white.opacity(0.10), .clear],
-                              startPoint: .leading, endPoint: .trailing))
-                    .frame(width: 700, height: 3).blur(radius: 2)
-                    .rotationEffect(.degrees(-22))
-                    .offset(x: x * 200, y: y * 120)
+        GeometryReader { geo in
+            TimelineView(.animation) { ctx in
+                let t = ctx.date.timeIntervalSinceReferenceDate
+                let x = CGFloat(cos(t * 0.18))   // çok yavaş gezinme
+                let y = CGFloat(sin(t * 0.12))
+                ZStack {
+                    Circle().fill(.radialGradient(colors: [.rvViolet.opacity(0.45), .clear],
+                                  center: .center, startRadius: 0, endRadius: 260))
+                        .frame(width: 520).blur(radius: 90)
+                        .offset(x: x * 150, y: -260 + y * 60)
+                    Circle().fill(.radialGradient(colors: [.rvCyan.opacity(0.40), .clear],
+                                  center: .center, startRadius: 0, endRadius: 230))
+                        .frame(width: 460).blur(radius: 110)
+                        .offset(x: -x * 130, y: 360 - y * 60)
+                    Capsule().fill(.linearGradient(colors: [.clear, .white.opacity(0.10), .clear],
+                                  startPoint: .leading, endPoint: .trailing))
+                        .frame(width: 700, height: 3).blur(radius: 2)
+                        .rotationEffect(.degrees(-22))
+                        .offset(x: x * 200, y: y * 120)
+                }
+                .frame(width: geo.size.width, height: geo.size.height)
+                .clipped()
             }
-            .allowsHitTesting(false)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .clipped()
+        .allowsHitTesting(false)
         .ignoresSafeArea()
     }
 }
