@@ -26,6 +26,8 @@ struct LensFlare: View {
             }
             .allowsHitTesting(false)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .clipped()
         .ignoresSafeArea()
     }
 }

@@ -64,6 +64,17 @@ jobs:
             -authenticationKeyID ${{ secrets.APPLE_ASC_KEY_ID }} \
             -authenticationKeyIssuerID ${{ secrets.APPLE_ASC_ISSUER_ID }}
           echo "✅ TestFlight'a yüklendi"
+      - name: Build'i beta gruplarına ata (TestFlight'ta görünsün)
+        if: success()
+        env:
+          ASC_KEY_PATH: ${{ github.workspace }}/.asc_key.p8
+          ASC_KEY_ID: ${{ secrets.APPLE_ASC_KEY_ID }}
+          ASC_ISSUER: ${{ secrets.APPLE_ASC_ISSUER_ID }}
+          ASC_APP_ID: "6782595925"
+        run: |
+          echo "${{ secrets.APPLE_ASC_API_KEY }}" > "$ASC_KEY_PATH"
+          python3 scripts/assign_beta.py
+          rm -f "$ASC_KEY_PATH"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
