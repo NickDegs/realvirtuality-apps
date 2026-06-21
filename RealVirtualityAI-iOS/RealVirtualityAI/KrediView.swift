@@ -3,6 +3,7 @@ import StoreKit
 
 struct KrediView: View {
     @EnvironmentObject var api: API
+    @EnvironmentObject var yerel: Yerel
     @StateObject private var store = Store()
     @Environment(\.dismiss) var dismiss
 
@@ -12,11 +13,11 @@ struct KrediView: View {
             ScrollView {
                 VStack(spacing: 14) {
                     HStack {
-                        Text("Kredi Al").font(.title2.bold())
+                        Text(yerel.t("krediBaslik")).font(.title2.bold())
                         Spacer()
                         Button { dismiss() } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.secondary).font(.title2) }
                     }
-                    Text("⚡ \(api.kredi) kredin var").foregroundStyle(.rvCyan).frame(maxWidth: .infinity, alignment: .leading)
+                    Text("⚡ \(api.kredi) " + yerel.t("krediVar")).foregroundStyle(.rvCyan).frame(maxWidth: .infinity, alignment: .leading)
 
                     if store.urunler.isEmpty {
                         ProgressView().padding(.top, 40)
@@ -42,7 +43,7 @@ struct KrediView: View {
                     if !store.mesaj.isEmpty {
                         Text(store.mesaj).font(.subheadline).foregroundStyle(store.mesaj.hasPrefix("✓") ? .green : .orange)
                     }
-                    Text("Ödeme App Store üzerinden güvenli. Krediler hesabına anında yüklenir.")
+                    Text(yerel.t("krediNotu"))
                         .font(.caption2).foregroundStyle(.secondary).multilineTextAlignment(.center).padding(.top, 6)
                 }
                 .padding(20)

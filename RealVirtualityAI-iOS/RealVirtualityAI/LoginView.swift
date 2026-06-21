@@ -3,6 +3,7 @@ import AuthenticationServices
 
 struct LoginView: View {
     @EnvironmentObject var api: API
+    @EnvironmentObject var yerel: Yerel
     @Environment(\.dismiss) var dismiss
     @State private var email = ""
     @State private var kod = ""
@@ -18,27 +19,27 @@ struct LoginView: View {
                     Image(systemName: "person.crop.circle.fill").font(.system(size: 54)).foregroundStyle(.rvViolet)
                     Text(api.email ?? "").font(.headline)
                     Text("⚡ \(api.kredi) kredi").foregroundStyle(.rvCyan)
-                    Button("Çıkış Yap") { Task { await api.cikis(); dismiss() } }
+                    Button(yerel.t("cikisYap")) { Task { await api.cikis(); dismiss() } }
                         .padding().frame(maxWidth: .infinity)
                         .glassEffect(.regular, in: .rect(cornerRadius: 14))
                 } else {
-                    Text("Giriş / Kayıt").font(.title2.bold())
-                    Text(adim == 0 ? "E-postanı gir, sana kod gönderelim." : "E-postana gelen 6 haneli kodu gir.")
+                    Text(yerel.t("girisBaslik")).font(.title2.bold())
+                    Text(adim == 0 ? yerel.t("girisAlt") : yerel.t("kodIpucu"))
                         .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
 
                     if adim == 0 {
-                        TextField("E-posta", text: $email)
+                        TextField(yerel.t("epostaIpucu"), text: $email)
                             .textInputAutocapitalization(.never).keyboardType(.emailAddress)
                             .padding().glassEffect(.regular, in: .rect(cornerRadius: 14))
                     } else {
-                        TextField("6 haneli kod", text: $kod).keyboardType(.numberPad)
+                        TextField(yerel.t("kodIpucu"), text: $kod).keyboardType(.numberPad)
                             .multilineTextAlignment(.center).font(.title3)
                             .padding().glassEffect(.regular, in: .rect(cornerRadius: 14))
                     }
 
                     if !hata.isEmpty { Text(hata).font(.caption).foregroundStyle(.red) }
 
-                    Button(adim == 0 ? "Kod Gönder" : "Doğrula & Giriş") { Task { await ileri() } }
+                    Button(adim == 0 ? yerel.t("kodGonder") : yerel.t("dogrula")) { Task { await ileri() } }
                         .font(.headline.bold()).foregroundStyle(.rvBg)
                         .frame(maxWidth: .infinity).padding()
                         .background(.linearGradient(colors: [.rvViolet, .rvCyan], startPoint: .leading, endPoint: .trailing))
@@ -46,7 +47,7 @@ struct LoginView: View {
                         .opacity(bekle ? 0.6 : 1)
 
                     if adim == 0 {
-                        HStack { Rectangle().fill(.white.opacity(0.12)).frame(height: 1); Text("veya").font(.caption).foregroundStyle(.secondary); Rectangle().fill(.white.opacity(0.12)).frame(height: 1) }
+                        HStack { Rectangle().fill(.white.opacity(0.12)).frame(height: 1); Text("•").font(.caption).foregroundStyle(.secondary); Rectangle().fill(.white.opacity(0.12)).frame(height: 1) }
                         SignInWithAppleButton(.signIn) { req in
                             req.requestedScopes = [.email, .fullName]
                         } onCompletion: { result in
@@ -61,7 +62,7 @@ struct LoginView: View {
                     }
 
                     if adim == 1 {
-                        Button("← E-postayı değiştir") { adim = 0; kod = ""; hata = "" }
+                        Button("←") { adim = 0; kod = ""; hata = "" }
                             .font(.caption).foregroundStyle(.rvCyan)
                     }
                 }

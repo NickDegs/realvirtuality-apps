@@ -3,6 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var api: API
     @EnvironmentObject var tema: Tema
+    @EnvironmentObject var yerel: Yerel
     @Environment(\.horizontalSizeClass) var hsc
     @State private var girisAcik = false
     @State private var krediAcik = false
@@ -18,7 +19,10 @@ struct ContentView: View {
     private var sonuclar: [Arac] {
         let q = arama.trimmingCharacters(in: .whitespaces).lowercased()
         guard !q.isEmpty else { return [] }
-        return ARACLAR.filter { $0.ad.lowercased().contains(q) || $0.aciklama.lowercased().contains(q) }
+        return ARACLAR.filter {
+            yerel.aracMetin($0.id,"ad").lowercased().contains(q) ||
+            yerel.aracMetin($0.id,"aciklama").lowercased().contains(q)
+        }
     }
 
     var body: some View {
@@ -85,10 +89,10 @@ struct ContentView: View {
                     .overlay(Capsule().stroke(Color.rvLine, lineWidth: 1))
                 }
                 Menu {
-                    Button { ayarlarAcik = true } label: { Label("Görünüm & Tema", systemImage: "paintpalette.fill") }
-                    Button { api.girisli ? (krediAcik = true) : (girisAcik = true) } label: { Label("Kredi Al", systemImage: "bolt.fill") }
+                    Button { ayarlarAcik = true } label: { Label(yerel.t("gorunumTema"), systemImage: "paintpalette.fill") }
+                    Button { api.girisli ? (krediAcik = true) : (girisAcik = true) } label: { Label(yerel.t("krediAl"), systemImage: "bolt.fill") }
                     Divider()
-                    Button { girisAcik = true } label: { Label(api.girisli ? (api.email ?? "Hesabım") : "Giriş yap", systemImage: "person.crop.circle") }
+                    Button { girisAcik = true } label: { Label(api.girisli ? (api.email ?? yerel.t("hesabim")) : yerel.t("girisYap"), systemImage: "person.crop.circle") }
                 } label: {
                     Image(systemName: api.girisli ? "person.crop.circle.fill" : "person.crop.circle")
                         .font(.title3).foregroundStyle(.rvText)
@@ -100,13 +104,13 @@ struct ContentView: View {
     // MARK: kahraman / hero
     var kahraman: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Yapay zekânın tüm gücü")
+            Text(yerel.t("heroBaslik1"))
                 .font(.largeTitle.bold()).foregroundStyle(.rvText)
-            Text("tek uygulamada")
+            Text(yerel.t("heroBaslik2"))
                 .font(.largeTitle.bold())
                 .foregroundStyle(tema.grad)
                 .shimmer()
-            Text("Görsel, içerik, ses, kod ve daha fazlası — içerik üreticileri için tek yerde, saniyeler içinde.")
+            Text(yerel.t("heroAlt"))
                 .font(.subheadline).foregroundStyle(.rvMut)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -118,7 +122,7 @@ struct ContentView: View {
     var aramaKutusu: some View {
         HStack(spacing: 8) {
             Image(systemName: "magnifyingglass").foregroundStyle(.rvMut)
-            TextField("Araç ara…", text: $arama)
+            TextField(yerel.t("aramaIpucu"), text: $arama)
                 .foregroundStyle(.rvText).autocorrectionDisabled()
             if !arama.isEmpty {
                 Button { arama = "" } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.rvMut) }
@@ -134,7 +138,7 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Image(systemName: kat.ikon).font(.subheadline).foregroundStyle(tema.c2)
-                Text(kat.rawValue).font(.title3.bold()).foregroundStyle(.rvText)
+                Text(yerel.t(kat.key)).font(.title3.bold()).foregroundStyle(.rvText)
             }
             grid(liste)
         }
@@ -151,7 +155,7 @@ struct ContentView: View {
 
     var altBilgi: some View {
         VStack(spacing: 4) {
-            Text("Bir NickDegs ürünü").font(.caption.bold()).foregroundStyle(tema.c1)
+            Text(yerel.t("nickdegsUrunu")).font(.caption.bold()).foregroundStyle(tema.c1)
             Text("© 2026 RealVirtuality AI").font(.caption2).foregroundStyle(.rvMut)
         }
         .frame(maxWidth: .infinity).padding(.top, 10)
@@ -162,6 +166,7 @@ struct ContentView: View {
 struct AracKart: View {
     let arac: Arac
     @EnvironmentObject var tema: Tema
+    @EnvironmentObject var yerel: Yerel
     var body: some View {
         VStack(alignment: .leading, spacing: 9) {
             ZStack {
@@ -171,9 +176,9 @@ struct AracKart: View {
                 Image(systemName: arac.ikon).font(.system(size: 20, weight: .semibold))
                     .foregroundStyle(tema.grad)
             }
-            Text(arac.ad).font(.subheadline.bold()).foregroundStyle(.rvText)
+            Text(yerel.aracMetin(arac.id,"ad")).font(.subheadline.bold()).foregroundStyle(.rvText)
                 .lineLimit(2).fixedSize(horizontal: false, vertical: true)
-            Text(arac.aciklama).font(.caption2).foregroundStyle(.rvMut)
+            Text(yerel.aracMetin(arac.id,"aciklama")).font(.caption2).foregroundStyle(.rvMut)
                 .lineLimit(2).fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
             HStack(spacing: 3) {
@@ -181,7 +186,7 @@ struct AracKart: View {
                 Text("\(arac.kredi)").font(.caption2.bold()).foregroundStyle(tema.c2)
                 if arac.oneCikan {
                     Spacer(minLength: 0)
-                    Text("POPÜLER").font(.system(size: 8, weight: .heavy))
+                    Text(yerel.t("populer")).font(.system(size: 8, weight: .heavy))
                         .padding(.horizontal, 5).padding(.vertical, 2)
                         .background(tema.c1.opacity(0.18), in: .capsule)
                         .foregroundStyle(tema.c1)

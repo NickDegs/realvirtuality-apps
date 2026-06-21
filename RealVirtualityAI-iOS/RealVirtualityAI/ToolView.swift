@@ -6,6 +6,7 @@ struct ToolView: View {
     let arac: Arac
     @EnvironmentObject var api: API
     @EnvironmentObject var tema: Tema
+    @EnvironmentObject var yerel: Yerel
 
     @State private var girdi = ""
     @State private var hedefDil = "en"
@@ -36,14 +37,14 @@ struct ToolView: View {
             LinearGradient(colors: [.rvBg, .rvBg2, .rvBg], startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea()
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text(arac.slogan).font(.subheadline).foregroundStyle(.rvMut)
+                    Text(yerel.aracMetin(arac.id,"slogan")).font(.subheadline).foregroundStyle(.rvMut)
                         .fixedSize(horizontal: false, vertical: true)
 
                     if gorselGerek { gorselSecici }
                     if metinGerek { metinAlani }
                     if arac.kind == .ceviri { dilSecici }
-                    if arac.kind == .urunfoto { secici("Sahne", sahneler, $sahne) }
-                    if arac.kind == .icerik { secici("Platform", platformlar, $platform) }
+                    if arac.kind == .urunfoto { secici(yerel.t("sahne"), sahneler, $sahne) }
+                    if arac.kind == .icerik { secici(yerel.t("platform"), platformlar, $platform) }
 
                     uretButonu
 
@@ -56,7 +57,7 @@ struct ToolView: View {
                 .padding(20)
             }
         }
-        .navigationTitle(arac.ad)
+        .navigationTitle(yerel.aracMetin(arac.id,"ad"))
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: secilenFoto) { _, yeni in
             Task { if let d = try? await yeni?.loadTransferable(type: Data.self) { gorselData = d } }
@@ -74,8 +75,8 @@ struct ToolView: View {
                 } else {
                     VStack(spacing: 8) {
                         Image(systemName: "photo.badge.plus").font(.system(size: 34)).foregroundStyle(tema.grad)
-                        Text("Görsel seç").font(.subheadline.bold()).foregroundStyle(.rvText)
-                        Text("Galeriden bir görsel yükle").font(.caption).foregroundStyle(.rvMut)
+                        Text(yerel.t("gorselSec")).font(.subheadline.bold()).foregroundStyle(.rvText)
+                        Text(yerel.t("gorselSecAlt")).font(.caption).foregroundStyle(.rvMut)
                     }.padding(.vertical, 30)
                 }
             }
@@ -92,7 +93,7 @@ struct ToolView: View {
 
     var dilSecici: some View {
         HStack {
-            Text("Hedef dil").foregroundStyle(.rvMut)
+            Text(yerel.t("hedefDil")).foregroundStyle(.rvMut)
             Spacer()
             Picker("", selection: $hedefDil) {
                 ForEach(diller.sorted(by: {$0.value < $1.value}), id: \.key) { Text($0.value).tag($0.key) }
@@ -121,7 +122,7 @@ struct ToolView: View {
             HStack(spacing: 8) {
                 if api.yukleniyor { ProgressView().tint(.white) }
                 Image(systemName: api.yukleniyor ? "hourglass" : "wand.and.sparkles")
-                Text(api.yukleniyor ? "Üretiliyor…" : "Üret").font(.headline.bold())
+                Text(api.yukleniyor ? yerel.t("uretiliyor") : yerel.t("uret")).font(.headline.bold())
                 Text("⚡\(arac.kredi)").opacity(0.85)
             }
             .foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 15)
@@ -133,10 +134,10 @@ struct ToolView: View {
 
     var kotaKutu: some View {
         VStack(spacing: 10) {
-            Text("Ücretsiz hakkın bitti").font(.subheadline.bold()).foregroundStyle(.rvText)
-            Text("Devam etmek için kredi al — saniyede yüklenir.").font(.caption).foregroundStyle(.rvMut).multilineTextAlignment(.center)
+            Text(yerel.t("kotaBitti")).font(.subheadline.bold()).foregroundStyle(.rvText)
+            Text(yerel.t("kotaAlt")).font(.caption).foregroundStyle(.rvMut).multilineTextAlignment(.center)
             NavigationLink { KrediView() } label: {
-                Text("Kredi Al").font(.subheadline.bold()).foregroundStyle(.white)
+                Text(yerel.t("krediAl")).font(.subheadline.bold()).foregroundStyle(.white)
                     .frame(maxWidth: .infinity).padding(.vertical, 12)
                     .background(tema.grad, in: .rect(cornerRadius: 13))
             }
@@ -157,7 +158,7 @@ struct ToolView: View {
             if let d = s.gorselData, let ui = UIImage(data: d) {
                 Image(uiImage: ui).resizable().scaledToFit().clipShape(.rect(cornerRadius: 18))
                 ShareLink(item: Image(uiImage: ui), preview: SharePreview("RealVirtuality AI", image: Image(uiImage: ui))) {
-                    paylasEtiket("Paylaş / Kaydet", "square.and.arrow.up")
+                    paylasEtiket(yerel.t("paylasKaydet"), "square.and.arrow.up")
                 }
             }
             if let m = s.metin, !m.isEmpty {
@@ -165,13 +166,13 @@ struct ToolView: View {
                     .padding().frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color.rvCard, in: .rect(cornerRadius: 16))
                     .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.rvLine, lineWidth: 1))
-                ShareLink(item: m) { paylasEtiket("Kopyala / Paylaş", "doc.on.doc") }
+                ShareLink(item: m) { paylasEtiket(yerel.t("kopyalaPaylas"), "doc.on.doc") }
             }
         }
     }
 
     var sesGorunum: some View {
-        Button { sesOynat() } label: { paylasEtiket("Sesi Oynat", "play.circle.fill") }
+        Button { sesOynat() } label: { paylasEtiket(yerel.t("sesiOynat"), "play.circle.fill") }
     }
 
     func paylasEtiket(_ t: String, _ ik: String) -> some View {
@@ -183,12 +184,12 @@ struct ToolView: View {
 
     var ipucu: String {
         switch arac.kind {
-        case .prompt: return "Ne üretmek istersin? (örn: minimal kahve logosu)"
-        case .ceviri: return "Çevrilecek metni yaz"
-        case .gorselArti: return "Ne yapmak istersin? (örn: suluboya stiline çevir)"
-        case .icerik: return "İşletme/konu (örn: el yapımı doğal sabun satan butik)"
-        case .url: return "https://… (ses/video bağlantısı)"
-        default: return "Ne yapmamı istersin?"
+        case .prompt: return yerel.t("ip_prompt")
+        case .ceviri: return yerel.t("ip_ceviri")
+        case .gorselArti: return yerel.t("ip_gorselArti")
+        case .icerik: return yerel.t("ip_icerik")
+        case .url: return yerel.t("ip_url")
+        default: return yerel.t("ip_default")
         }
     }
 

@@ -4,6 +4,7 @@ struct AracDetayView: View {
     let arac: Arac
     @EnvironmentObject var api: API
     @EnvironmentObject var tema: Tema
+    @EnvironmentObject var yerel: Yerel
     @State private var aracAcik = false
     @State private var girisAcik = false
 
@@ -15,7 +16,7 @@ struct AracDetayView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     baslik
                     // Açıklama
-                    Text(arac.detay)
+                    Text(yerel.aracMetin(arac.id,"detay"))
                         .font(.callout).foregroundStyle(.rvText).opacity(0.92)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(16)
@@ -23,7 +24,7 @@ struct AracDetayView: View {
                         .background(Color.rvCard, in: .rect(cornerRadius: 18))
                         .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.rvLine, lineWidth: 1))
 
-                    kutu(baslik: "Özellikler", ikon: "checkmark.seal.fill", oge: arac.ozellikler, isaret: "checkmark")
+                    kutu(baslik: yerel.t("ozellikler"), ikon: "checkmark.seal.fill", oge: yerel.aracDizi(arac.id,"ozellikler"), isaret: "checkmark")
                     kullanimKutu
 
                     Color.clear.frame(height: 70)
@@ -36,7 +37,7 @@ struct AracDetayView: View {
                 kullanButonu
             }
         }
-        .navigationTitle(arac.ad)
+        .navigationTitle(yerel.aracMetin(arac.id,"ad"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -60,9 +61,9 @@ struct AracDetayView: View {
                     .foregroundStyle(tema.grad)
             }
             VStack(alignment: .leading, spacing: 6) {
-                Text(arac.ad).font(.title2.bold()).foregroundStyle(.rvText)
+                Text(yerel.aracMetin(arac.id,"ad")).font(.title2.bold()).foregroundStyle(.rvText)
                     .fixedSize(horizontal: false, vertical: true)
-                Text(arac.slogan).font(.subheadline).foregroundStyle(.rvMut)
+                Text(yerel.aracMetin(arac.id,"slogan")).font(.subheadline).foregroundStyle(.rvMut)
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 0)
@@ -88,9 +89,9 @@ struct AracDetayView: View {
 
     var kullanimKutu: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("Kullanım Alanları", systemImage: "lightbulb.fill").font(.headline).foregroundStyle(.rvText)
+            Label(yerel.t("kullanimAlanlari"), systemImage: "lightbulb.fill").font(.headline).foregroundStyle(.rvText)
             LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
-                ForEach(arac.kullanim, id: \.self) { k in
+                ForEach(yerel.aracDizi(arac.id,"kullanim"), id: \.self) { k in
                     Text(k).font(.caption).foregroundStyle(.rvText).opacity(0.9)
                         .frame(maxWidth: .infinity, minHeight: 38)
                         .padding(.horizontal, 8)
@@ -111,7 +112,7 @@ struct AracDetayView: View {
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: "wand.and.sparkles")
-                Text("Hemen Kullan")
+                Text(yerel.t("hemenKullan"))
                 Text("⚡\(arac.kredi)").opacity(0.85)
             }
             .font(.headline.bold()).foregroundStyle(.white)

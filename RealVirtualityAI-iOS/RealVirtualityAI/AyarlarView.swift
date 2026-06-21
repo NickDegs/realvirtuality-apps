@@ -2,9 +2,12 @@ import SwiftUI
 
 struct AyarlarView: View {
     @EnvironmentObject var tema: Tema
+    @EnvironmentObject var yerel: Yerel
     @Environment(\.dismiss) var dismiss
 
-    let modlar = [("sistem","Sistem","circle.lefthalf.filled"), ("koyu","Koyu","moon.fill"), ("acik","Açık","sun.max.fill")]
+    var modlar: [(String,String,String)] {
+        [("sistem",yerel.t("sistem"),"circle.lefthalf.filled"), ("koyu",yerel.t("koyu"),"moon.fill"), ("acik",yerel.t("acik"),"sun.max.fill")]
+    }
     let kolon = [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)]
 
     var body: some View {
@@ -14,9 +17,10 @@ struct AyarlarView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 22) {
                         onizleme
+                        dilBolumu
                         // Görünüm modu
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Görünüm").font(.headline).foregroundStyle(.rvText)
+                            Text(yerel.t("gorunum")).font(.headline).foregroundStyle(.rvText)
                             HStack(spacing: 10) {
                                 ForEach(modlar, id: \.0) { m in
                                     Button { withAnimation(.snappy) { tema.mod = m.0 } } label: {
@@ -34,15 +38,15 @@ struct AyarlarView: View {
                         }
                         // Renk teması galerisi
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Renk Teması").font(.headline).foregroundStyle(.rvText)
+                            Text(yerel.t("renkTema")).font(.headline).foregroundStyle(.rvText)
                             LazyVGrid(columns: kolon, spacing: 12) {
                                 ForEach(PALETLER.filter { $0.grup == "renk" }) { p in paletKart(p) }
                             }
                         }
                         // Platform temaları
                         VStack(alignment: .leading, spacing: 6) {
-                            Text("Platform Teması").font(.headline).foregroundStyle(.rvText)
-                            Text("İçerik ürettiğin platformun rengini seç").font(.caption).foregroundStyle(.rvMut)
+                            Text(yerel.t("platformTema")).font(.headline).foregroundStyle(.rvText)
+                            Text(yerel.t("platformTemaAlt")).font(.caption).foregroundStyle(.rvMut)
                             LazyVGrid(columns: kolon, spacing: 12) {
                                 ForEach(PALETLER.filter { $0.grup == "platform" }) { p in paletKart(p) }
                             }
@@ -52,15 +56,40 @@ struct AyarlarView: View {
                     .padding(16)
                 }
             }
-            .navigationTitle("Görünüm & Tema")
+            .navigationTitle(yerel.t("gorunumTema"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Bitti") { dismiss() }.bold().foregroundStyle(tema.c1)
+                    Button(yerel.t("bitti")) { dismiss() }.bold().foregroundStyle(tema.c1)
                 }
             }
         }
         .tint(tema.c1)
+    }
+
+    // Dil seçimi (otomatik cihaz dili + manuel)
+    var dilBolumu: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(yerel.t("dil")).font(.headline).foregroundStyle(.rvText)
+            Text(yerel.t("dilAlt")).font(.caption).foregroundStyle(.rvMut)
+            LazyVGrid(columns: kolon, spacing: 10) {
+                dilKart("", yerel.t("dilSistem"))
+                ForEach(Yerel.diller, id: \.self) { d in dilKart(d, Yerel.dilAd[d] ?? d) }
+            }.padding(.top, 6)
+        }
+    }
+    func dilKart(_ kod: String, _ ad: String) -> some View {
+        let secili = yerel.secim == kod
+        return Button { withAnimation(.snappy) { yerel.secim = kod } } label: {
+            HStack(spacing: 8) {
+                Text(ad).font(.subheadline.bold()).foregroundStyle(.rvText).lineLimit(1).minimumScaleFactor(0.7)
+                Spacer(minLength: 0)
+                if secili { Image(systemName: "checkmark.circle.fill").foregroundStyle(tema.c1) }
+            }
+            .padding(.horizontal, 14).padding(.vertical, 12)
+            .background(Color.rvCard, in: .rect(cornerRadius: 14))
+            .overlay(RoundedRectangle(cornerRadius: 14).stroke(secili ? tema.c1 : Color.rvLine, lineWidth: secili ? 2 : 1))
+        }.buttonStyle(.plain)
     }
 
     // Canlı önizleme kartı
