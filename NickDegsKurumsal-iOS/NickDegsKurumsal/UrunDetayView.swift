@@ -5,8 +5,8 @@ struct UrunDetayView: View {
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
     @State private var webAcik = false
+    @State private var bel = false
 
-    // Ürünün web'deki sayfası (sekmeye göre katalog + grup filtresi)
     private var url: URL {
         let yol: String
         switch urun.sekme {
@@ -20,46 +20,48 @@ struct UrunDetayView: View {
     var body: some View {
         ZStack {
             LinearGradient(colors: [.rvBg, .rvBg2, .rvBg], startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea()
+            LensFlare().opacity(0.8)
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     baslik
                     if !urun.pr.isEmpty {
                         Text(urun.pr).font(.title3.bold()).foregroundStyle(tema.c2)
-                            .padding(.horizontal, 14).padding(.vertical, 8)
-                            .background(tema.c2.opacity(0.12), in: .capsule)
+                            .padding(.horizontal, 16).padding(.vertical, 9)
+                            .glassEffect(.regular.tint(tema.c2.opacity(0.18)), in: .capsule)
                     }
                     Text(yerel.u(urun.aciklama))
-                        .font(.callout).foregroundStyle(.rvText).opacity(0.92)
+                        .font(.callout).foregroundStyle(.rvText).opacity(0.95)
                         .fixedSize(horizontal: false, vertical: true)
-                        .padding(16).frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.rvCard, in: .rect(cornerRadius: 18))
-                        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.rvLine, lineWidth: 1))
-                    Color.clear.frame(height: 70)
+                        .padding(18).frame(maxWidth: .infinity, alignment: .leading)
+                        .glassEffect(.regular, in: .rect(cornerRadius: 20))
+                    Color.clear.frame(height: 80)
                 }
-                .padding(.horizontal, 16).padding(.top, 6)
+                .padding(.horizontal, 16).padding(.top, 8)
             }
             VStack { Spacer(); cta }
         }
         .navigationTitle(yerel.u(urun.ad))
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $webAcik) { PanelView(url: url, baslik: yerel.u(urun.ad)) }
+        .onAppear { withAnimation(.smooth(duration: 0.5)) { bel = true } }
     }
 
     var baslik: some View {
         HStack(alignment: .top, spacing: 14) {
             ZStack {
-                RoundedRectangle(cornerRadius: 18)
-                    .fill(LinearGradient(colors: [tema.c1.opacity(0.22), tema.c2.opacity(0.16)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .frame(width: 64, height: 64)
-                Text(urun.ic).font(.system(size: 32))
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(LinearGradient(colors: [tema.c1.opacity(0.28), tema.c2.opacity(0.18)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                    .frame(width: 70, height: 70)
+                Text(urun.ic).font(.system(size: 36))
             }
-            VStack(alignment: .leading, spacing: 4) {
+            .scaleEffect(bel ? 1 : 0.8).opacity(bel ? 1 : 0)
+            VStack(alignment: .leading, spacing: 5) {
                 Text(yerel.u(urun.ad)).font(.title2.bold()).foregroundStyle(.rvText)
                     .fixedSize(horizontal: false, vertical: true)
                 Text(yerel.katAd(urun.g)).font(.caption).foregroundStyle(.rvMut)
             }
             Spacer(minLength: 0)
-        }.padding(.top, 4)
+        }.padding(.top, 6)
     }
 
     var cta: some View {
@@ -69,10 +71,10 @@ struct UrunDetayView: View {
                 Text(yerel.t("incele"))
             }
             .font(.headline.bold()).foregroundStyle(.white)
-            .frame(maxWidth: .infinity).padding(.vertical, 16)
-            .background(tema.grad, in: .rect(cornerRadius: 18))
-            .shadow(color: tema.c1.opacity(0.4), radius: 14, y: 6)
+            .frame(maxWidth: .infinity).padding(.vertical, 17)
+            .background(tema.grad, in: .rect(cornerRadius: 20))
+            .shadow(color: tema.c1.opacity(0.45), radius: 16, y: 7)
         }
-        .padding(.horizontal, 16).padding(.bottom, 8)
+        .padding(.horizontal, 16).padding(.bottom, 10)
     }
 }

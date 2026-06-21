@@ -13,6 +13,7 @@ struct ContentView: View {
                     .tag(s)
             }
         }
+        .animation(.smooth(duration: 0.4), value: secili)
     }
 }
 
@@ -22,10 +23,12 @@ struct SekmeView: View {
     @EnvironmentObject var yerel: Yerel
     @Environment(\.horizontalSizeClass) var hsc
     @State private var ayarlarAcik = false
+    @State private var secilenUrun: Urun? = nil
     @State private var arama = ""
+    @State private var belir = false
 
     private var kolonlar: [GridItem] {
-        Array(repeating: GridItem(.flexible(), spacing: 12), count: hsc == .regular ? 3 : 2)
+        Array(repeating: GridItem(.flexible(), spacing: 14), count: hsc == .regular ? 3 : 2)
     }
     private var urunler: [Urun] {
         let q = arama.trimmingCharacters(in: .whitespaces).lowercased()
@@ -42,20 +45,31 @@ struct SekmeView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                LinearGradient(colors: [.rvBg, .rvBg2, .rvBg], startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea()
-                LensFlare().opacity(0.7)
+                // Marka gradyanı arka plan
+                LinearGradient(colors: [.rvBg, .rvBg2, .rvBg], startPoint: .topLeading, endPoint: .bottomTrailing)
+                    .ignoresSafeArea()
+                // Mercek yanması (lens flare) — yavaş, ultra yumuşak
+                LensFlare()
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 24) {
                         kahraman
                         aramaKutusu
-                        ForEach(kategoriler, id: \.self) { g in
+                        ForEach(Array(kategoriler.enumerated()), id: \.element) { ki, g in
                             let liste = urunler.filter { $0.g == g }
-                            VStack(alignment: .leading, spacing: 12) {
-                                Text(yerel.katAd(g)).font(.title3.bold()).foregroundStyle(.rvText)
-                                LazyVGrid(columns: kolonlar, spacing: 12) {
-                                    ForEach(liste) { u in
-                                        NavigationLink { UrunDetayView(urun: u) } label: { UrunKart(urun: u) }
-                                            .buttonStyle(.plain)
+                            VStack(alignment: .leading, spacing: 14) {
+                                HStack(spacing: 8) {
+                                    Image(systemName: katIkon(g)).font(.subheadline).foregroundStyle(tema.c2)
+                                    Text(yerel.katAd(g)).font(.title3.bold()).foregroundStyle(.rvText)
+                                }
+                                GlassEffectContainer(spacing: 14) {
+                                    LazyVGrid(columns: kolonlar, spacing: 14) {
+                                        ForEach(Array(liste.enumerated()), id: \.element.id) { i, u in
+                                            BasilabilirKart { secilenUrun = u } content: {
+                                                UrunKart(urun: u)
+                                            }
+                                            .transition(.scale.combined(with: .opacity))
+                                            .animation(.smooth(duration: 0.5).delay(Double(min(i,8)) * 0.04), value: belir)
+                                        }
                                     }
                                 }
                             }
@@ -75,22 +89,42 @@ struct SekmeView: View {
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button { ayarlarAcik = true } label: { Image(systemName: "paintpalette").foregroundStyle(.rvText) }
+                    Button { ayarlarAcik = true } label: {
+                        Image(systemName: "paintpalette").font(.title3).padding(7)
+                            .glassEffect(.regular.interactive(), in: .circle)
+                    }.foregroundStyle(.rvText)
                 }
             }
             .sheet(isPresented: $ayarlarAcik) { AyarlarView() }
+            .sheet(item: $secilenUrun) { u in
+                NavigationStack { UrunDetayView(urun: u) }
+            }
         }
         .tint(tema.c1)
+        .onAppear { belir = true }
+    }
+
+    func katIkon(_ g: String) -> String {
+        switch g {
+        case "bireysel": return "person.fill"
+        case "pro": return "briefcase.fill"
+        case "sosyal": return "bubble.left.and.bubble.right.fill"
+        case "isletme": return "storefront.fill"
+        case "akilli": return "cpu.fill"
+        case "kurumsal": return "building.2.fill"
+        case "guvenlik": return "lock.shield.fill"
+        default: return "square.grid.2x2.fill"
+        }
     }
 
     var kahraman: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(yerel.t("hero1")).font(.title.bold()).foregroundStyle(.rvText)
-            Text(yerel.t("hero2")).font(.title.bold()).foregroundStyle(tema.grad).shimmer()
+            Text(yerel.t("hero1")).font(.largeTitle.bold()).foregroundStyle(.rvText)
+            Text(yerel.t("hero2")).font(.largeTitle.bold()).foregroundStyle(tema.grad).shimmer()
             Text(yerel.t("heroAlt")).font(.subheadline).foregroundStyle(.rvMut)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .frame(maxWidth: .infinity, alignment: .leading).padding(.top, 4)
+        .frame(maxWidth: .infinity, alignment: .leading).padding(.top, 6)
     }
 
     var aramaKutusu: some View {
@@ -99,9 +133,8 @@ struct SekmeView: View {
             TextField(yerel.t("ara"), text: $arama).foregroundStyle(.rvText).autocorrectionDisabled()
             if !arama.isEmpty { Button { arama = "" } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.rvMut) } }
         }
-        .padding(.horizontal, 14).padding(.vertical, 11)
-        .background(Color.rvCard, in: .rect(cornerRadius: 14))
-        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.rvLine, lineWidth: 1))
+        .padding(.horizontal, 16).padding(.vertical, 13)
+        .glassEffect(.regular, in: .rect(cornerRadius: 16))
     }
 }
 
@@ -110,18 +143,23 @@ struct UrunKart: View {
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(urun.ic).font(.system(size: 30))
+        VStack(alignment: .leading, spacing: 9) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 13)
+                    .fill(LinearGradient(colors: [tema.c1.opacity(0.25), tema.c2.opacity(0.16)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                    .frame(width: 46, height: 46)
+                Text(urun.ic).font(.system(size: 24))
+            }
             Text(yerel.u(urun.ad)).font(.subheadline.bold()).foregroundStyle(.rvText)
                 .lineLimit(2).fixedSize(horizontal: false, vertical: true)
             Text(yerel.u(urun.aciklama)).font(.caption2).foregroundStyle(.rvMut)
                 .lineLimit(2).fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
-            if !urun.pr.isEmpty { Text(urun.pr).font(.caption.bold()).foregroundStyle(tema.c2) }
+            if !urun.pr.isEmpty {
+                Text(urun.pr).font(.caption.bold()).foregroundStyle(tema.c2)
+            }
         }
-        .padding(13).frame(maxWidth: .infinity, minHeight: 150, alignment: .topLeading)
-        .background(Color.rvCard, in: .rect(cornerRadius: 18))
-        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.rvLine, lineWidth: 1))
-        .shadow(color: .black.opacity(0.06), radius: 8, y: 4)
+        .padding(15).frame(maxWidth: .infinity, minHeight: 158, alignment: .topLeading)
+        .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 22))
     }
 }
