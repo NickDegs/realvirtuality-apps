@@ -60,14 +60,10 @@ struct SekmeView: View {
                                     Image(systemName: katIkon(g)).font(.subheadline).foregroundStyle(tema.c2)
                                     Text(yerel.katAd(g)).font(.title3.bold()).foregroundStyle(.rvText)
                                 }
-                                GlassEffectContainer(spacing: 14) {
-                                    LazyVGrid(columns: kolonlar, spacing: 14) {
-                                        ForEach(Array(liste.enumerated()), id: \.element.id) { i, u in
-                                            BasilabilirKart { secilenUrun = u } content: {
-                                                UrunKart(urun: u)
-                                            }
-                                            .transition(.scale.combined(with: .opacity))
-                                            .animation(.smooth(duration: 0.5).delay(Double(min(i,8)) * 0.04), value: belir)
+                                LazyVGrid(columns: kolonlar, spacing: 14) {
+                                    ForEach(liste) { u in
+                                        BasilabilirKart { secilenUrun = u } content: {
+                                            UrunKart(urun: u)
                                         }
                                     }
                                 }

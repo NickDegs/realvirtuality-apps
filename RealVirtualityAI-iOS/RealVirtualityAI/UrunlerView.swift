@@ -53,11 +53,9 @@ struct UrunlerView: View {
                             let liste = urunler.filter { $0.g == g }
                             VStack(alignment: .leading, spacing: 14) {
                                 Text(yerel.p("kat_" + g)).font(.title3.bold()).foregroundStyle(.rvText)
-                                GlassEffectContainer(spacing: 14) {
-                                    LazyVGrid(columns: kolonlar, spacing: 14) {
-                                        ForEach(liste) { u in
-                                            BasilabilirKart { secilen = u } content: { RVUrunKart(urun: u) }
-                                        }
+                                LazyVGrid(columns: kolonlar, spacing: 14) {
+                                    ForEach(liste) { u in
+                                        BasilabilirKart { secilen = u } content: { RVUrunKart(urun: u) }
                                     }
                                 }
                             }
