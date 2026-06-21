@@ -1,0 +1,121 @@
+import SwiftUI
+
+struct AyarlarView: View {
+    @EnvironmentObject var tema: Tema
+    @Environment(\.dismiss) var dismiss
+
+    let modlar = [("sistem","Sistem","circle.lefthalf.filled"), ("koyu","Koyu","moon.fill"), ("acik","Açık","sun.max.fill")]
+    let kolon = [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)]
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                LinearGradient(colors: [.rvBg, .rvBg2, .rvBg], startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea()
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 22) {
+                        onizleme
+                        // Görünüm modu
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Görünüm").font(.headline).foregroundStyle(.rvText)
+                            HStack(spacing: 10) {
+                                ForEach(modlar, id: \.0) { m in
+                                    Button { withAnimation(.snappy) { tema.mod = m.0 } } label: {
+                                        VStack(spacing: 7) {
+                                            Image(systemName: m.2).font(.title3)
+                                            Text(m.1).font(.caption.bold())
+                                        }
+                                        .frame(maxWidth: .infinity).padding(.vertical, 14)
+                                        .foregroundStyle(tema.mod == m.0 ? .white : Color.rvText)
+                                        .background(tema.mod == m.0 ? AnyShapeStyle(tema.grad) : AnyShapeStyle(Color.rvCard), in: .rect(cornerRadius: 14))
+                                        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.rvLine, lineWidth: tema.mod == m.0 ? 0 : 1))
+                                    }
+                                }
+                            }
+                        }
+                        // Renk teması galerisi
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Renk Teması").font(.headline).foregroundStyle(.rvText)
+                            LazyVGrid(columns: kolon, spacing: 12) {
+                                ForEach(PALETLER.filter { $0.grup == "renk" }) { p in paletKart(p) }
+                            }
+                        }
+                        // Platform temaları
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Platform Teması").font(.headline).foregroundStyle(.rvText)
+                            Text("İçerik ürettiğin platformun rengini seç").font(.caption).foregroundStyle(.rvMut)
+                            LazyVGrid(columns: kolon, spacing: 12) {
+                                ForEach(PALETLER.filter { $0.grup == "platform" }) { p in paletKart(p) }
+                            }
+                            .padding(.top, 6)
+                        }
+                    }
+                    .padding(16)
+                }
+            }
+            .navigationTitle("Görünüm & Tema")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Bitti") { dismiss() }.bold().foregroundStyle(tema.c1)
+                }
+            }
+        }
+        .tint(tema.c1)
+    }
+
+    // Canlı önizleme kartı
+    var onizleme: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 8) {
+                Image(systemName: "sparkles").foregroundStyle(tema.grad)
+                Text("RealVirtuality").font(.headline.bold()).foregroundStyle(.rvText)
+                Spacer()
+                HStack(spacing: 4) {
+                    Image(systemName: "bolt.fill").font(.caption2).foregroundStyle(.yellow)
+                    Text("120").font(.subheadline.bold()).foregroundStyle(.rvText)
+                }.padding(.horizontal, 10).padding(.vertical, 5)
+                 .background(.ultraThinMaterial, in: .capsule)
+            }
+            Text("Yapay zekânın tüm gücü")
+                .font(.title3.bold()).foregroundStyle(tema.grad)
+            HStack(spacing: 10) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(LinearGradient(colors: [tema.c1.opacity(0.22), tema.c2.opacity(0.16)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                        .frame(width: 44, height: 44)
+                    Image(systemName: "camera.aperture").font(.system(size: 20, weight: .semibold)).foregroundStyle(tema.grad)
+                }
+                Text("Örnek araç kartı").font(.subheadline.bold()).foregroundStyle(.rvText)
+                Spacer()
+            }
+            Text("Hemen Kullan")
+                .font(.subheadline.bold()).foregroundStyle(.white)
+                .frame(maxWidth: .infinity).padding(.vertical, 12)
+                .background(tema.grad, in: .rect(cornerRadius: 13))
+        }
+        .padding(16)
+        .background(Color.rvCard, in: .rect(cornerRadius: 20))
+        .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.rvLine, lineWidth: 1))
+    }
+
+    func paletKart(_ p: Palet) -> some View {
+        let secili = tema.paletId == p.id
+        return Button { withAnimation(.snappy) { tema.paletId = p.id } } label: {
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle().fill(p.grad).frame(width: 34, height: 34)
+                        .overlay(Circle().stroke(.white.opacity(0.5), lineWidth: 1))
+                    if let ik = p.ikon { Image(systemName: ik).font(.system(size: 14, weight: .bold)).foregroundStyle(.white) }
+                }
+                Text(p.ad).font(.subheadline.bold()).foregroundStyle(.rvText)
+                    .lineLimit(1).minimumScaleFactor(0.8)
+                Spacer(minLength: 0)
+                if secili { Image(systemName: "checkmark.circle.fill").foregroundStyle(p.c1) }
+            }
+            .padding(12)
+            .background(Color.rvCard, in: .rect(cornerRadius: 14))
+            .overlay(RoundedRectangle(cornerRadius: 14).stroke(secili ? p.c1 : Color.rvLine, lineWidth: secili ? 2 : 1))
+        }
+        .buttonStyle(.plain)
+    }
+}

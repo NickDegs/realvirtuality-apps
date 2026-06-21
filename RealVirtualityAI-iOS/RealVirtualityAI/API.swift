@@ -34,9 +34,10 @@ final class API: ObservableObject {
         return URLSession(configuration: c)
     }()
 
-    private func istek(_ yol: String, _ govde: [String: Any]? = nil, method: String = "POST") async throws -> [String: Any] {
+    private func istek(_ yol: String, _ govde: [String: Any]? = nil, method: String = "POST", timeout: TimeInterval = 60) async throws -> [String: Any] {
         var r = URLRequest(url: URL(string: API.base + yol)!)
         r.httpMethod = method
+        r.timeoutInterval = timeout
         r.setValue("application/json", forHTTPHeaderField: "Content-Type")
         if let g = govde { r.httpBody = try JSONSerialization.data(withJSONObject: g) }
         let (data, _) = try await session.data(for: r)
@@ -103,5 +104,39 @@ final class API: ObservableObject {
             return (UretimSonuc(metin: m, gorselData: nil), nil)
         }
         return (nil, (j["mesaj"] as? String) ?? (j["err"] as? String) ?? "Üretilemedi")
+    }
+
+    // Genel çağrı — görsel ve/veya metin döndüren tüm araçlar için
+    func calistir(_ yol: String, _ govde: [String: Any]) async -> (UretimSonuc?, String?) {
+        yukleniyor = true; defer { yukleniyor = false }
+        let j = (try? await istek(yol, govde, timeout: 260)) ?? [:]
+        if j["ok"] as? Bool == true {
+            if let k = j["kredi"] as? Int { kredi = k }
+            var data: Data? = nil
+            if let s = j["image"] as? String, let c = s.range(of: ","),
+               let d = Data(base64Encoded: String(s[c.upperBound...])) { data = d }
+            let m = j["metin"] as? String
+            return (UretimSonuc(metin: m, gorselData: data), nil)
+        }
+        if (j["err"] as? String) == "kota_doldu" { return (nil, "kota_doldu") }
+        return (nil, (j["mesaj"] as? String) ?? (j["err"] as? String) ?? "Üretilemedi")
+    }
+
+    // Seslendirme — ses (mp3) verisi döndürür
+    func sesUret(_ metin: String) async -> (Data?, String?) {
+        yukleniyor = true; defer { yukleniyor = false }
+        var r = URLRequest(url: URL(string: API.base + "/api/tts")!)
+        r.httpMethod = "POST"; r.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        r.httpBody = try? JSONSerialization.data(withJSONObject: ["text": metin])
+        guard let (data, resp) = try? await session.data(for: r) else { return (nil, "Üretilemedi") }
+        if let h = resp as? HTTPURLResponse, h.statusCode == 200,
+           (h.value(forHTTPHeaderField: "Content-Type") ?? "").contains("audio") {
+            await durumYukle()
+            return (data, nil)
+        }
+        if let j = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+            return (nil, (j["err"] as? String) == "kota_doldu" ? "kota_doldu" : ((j["mesaj"] as? String) ?? "Üretilemedi"))
+        }
+        return (nil, "Üretilemedi")
     }
 }

@@ -2,98 +2,196 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var api: API
+    @EnvironmentObject var tema: Tema
+    @Environment(\.horizontalSizeClass) var hsc
     @State private var girisAcik = false
     @State private var krediAcik = false
-    @State private var secilen: Arac? = nil
+    @State private var ayarlarAcik = false
+    @State private var arama = ""
 
-    let kolonlar = [GridItem(.adaptive(minimum: 158), spacing: 14)]
+    // Responsive sütun sayısı — taşmayı tamamen önler (.flexible eşit böler)
+    private var sutunSayisi: Int { hsc == .regular ? 3 : 2 }
+    private var kolonlar: [GridItem] {
+        Array(repeating: GridItem(.flexible(), spacing: 12), count: sutunSayisi)
+    }
+
+    private var sonuclar: [Arac] {
+        let q = arama.trimmingCharacters(in: .whitespaces).lowercased()
+        guard !q.isEmpty else { return [] }
+        return ARACLAR.filter { $0.ad.lowercased().contains(q) || $0.aciklama.lowercased().contains(q) }
+    }
 
     var body: some View {
         NavigationStack {
             ZStack {
-                // Arka plan — marka gradyanı (Liquid Glass altında parlasın)
-                LinearGradient(colors: [.rvBg, Color(red:0.07,green:0.05,blue:0.18), .rvBg],
-                               startPoint: .topLeading, endPoint: .bottomTrailing)
-                    .ignoresSafeArea()
-                // Mercek yanma (lens flare) — yavaş, ultra yumuşak gezen ışık
-                LensFlare()
-
+                arkaplan
                 ScrollView {
-                    VStack(spacing: 22) {
-                        baslik
+                    VStack(alignment: .leading, spacing: 22) {
                         kahraman
-                        GlassEffectContainer(spacing: 14) {
-                            LazyVGrid(columns: kolonlar, spacing: 14) {
-                                ForEach(Array(ARACLAR.enumerated()), id: \.element.id) { i, a in
-                                    BasilabilirKart {
-                                        if api.girisli || api.freeKalan > 0 { secilen = a } else { girisAcik = true }
-                                    } content: {
-                                        AracKart(arac: a)
-                                    }
-                                    .transition(.scale.combined(with: .opacity))
-                                    .animation(.smooth(duration: 0.5).delay(Double(i) * 0.05), value: api.girisli)
-                                }
+                        aramaKutusu
+
+                        if !arama.isEmpty {
+                            grid(sonuclar)
+                        } else {
+                            ForEach(Kategori.allCases) { kat in
+                                let liste = ARACLAR.filter { $0.kategori == kat }
+                                if !liste.isEmpty { bolum(kat, liste) }
                             }
+                            altBilgi
                         }
-                        .padding(.horizontal, 16)
                     }
-                    .padding(.bottom, 40)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 36)
                 }
+                .scrollIndicators(.hidden)
             }
-            .navigationBarHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar { ust }
             .sheet(isPresented: $girisAcik) { LoginView() }
             .sheet(isPresented: $krediAcik) { KrediView() }
-            .sheet(item: $secilen) { a in ToolView(arac: a) }
+            .sheet(isPresented: $ayarlarAcik) { AyarlarView() }
+        }
+        .tint(tema.c1)
+    }
+
+    // MARK: arka plan
+    var arkaplan: some View {
+        ZStack {
+            LinearGradient(colors: [.rvBg, .rvBg2, .rvBg], startPoint: .topLeading, endPoint: .bottomTrailing)
+                .ignoresSafeArea()
+            LensFlare().opacity(0.9)
         }
     }
 
-    var baslik: some View {
-        HStack {
-            HStack(spacing: 8) {
-                Image(systemName: "sparkles").foregroundStyle(.linearGradient(colors: [.rvViolet, .rvCyan], startPoint: .top, endPoint: .bottom))
-                Text("RealVirtuality AI").font(.headline.bold())
+    // MARK: üst bar (taşmaz)
+    @ToolbarContentBuilder
+    var ust: some ToolbarContent {
+        ToolbarItem(placement: .topBarLeading) {
+            HStack(spacing: 7) {
+                Image(systemName: "sparkles")
+                    .foregroundStyle(tema.grad)
+                Text("RealVirtuality").font(.headline.bold()).foregroundStyle(.rvText)
             }
-            Spacer()
-            // Kredi rozeti — basınca Kredi Al (IAP); giriş yoksa önce giriş
-            Button { if api.girisli { krediAcik = true } else { girisAcik = true } } label: {
-                Text(api.girisli ? "⚡ \(api.kredi)" : "⚡ \(api.freeKalan) ücretsiz")
-                    .font(.subheadline.bold()).padding(.horizontal, 14).padding(.vertical, 8)
-                    .glassEffect(.regular.tint(.rvCyan.opacity(0.25)), in: .capsule)
-            }.foregroundStyle(.white)
-            // Hesap
-            Button { girisAcik = true } label: {
-                Image(systemName: api.girisli ? "person.crop.circle.fill" : "person.crop.circle")
-                    .font(.title3).padding(8).glassEffect(.regular.interactive(), in: .circle)
-            }.foregroundStyle(.white)
         }
-        .padding(.horizontal, 18).padding(.top, 14)
+        ToolbarItem(placement: .topBarTrailing) {
+            HStack(spacing: 8) {
+                Button { api.girisli ? (krediAcik = true) : (girisAcik = true) } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "bolt.fill").font(.caption2).foregroundStyle(.yellow)
+                        Text("\(api.girisli ? api.kredi : api.freeKalan)").font(.subheadline.bold()).foregroundStyle(.rvText)
+                    }
+                    .padding(.horizontal, 11).padding(.vertical, 6)
+                    .background(.ultraThinMaterial, in: .capsule)
+                    .overlay(Capsule().stroke(Color.rvLine, lineWidth: 1))
+                }
+                Menu {
+                    Button { ayarlarAcik = true } label: { Label("Görünüm & Tema", systemImage: "paintpalette.fill") }
+                    Button { api.girisli ? (krediAcik = true) : (girisAcik = true) } label: { Label("Kredi Al", systemImage: "bolt.fill") }
+                    Divider()
+                    Button { girisAcik = true } label: { Label(api.girisli ? (api.email ?? "Hesabım") : "Giriş yap", systemImage: "person.crop.circle") }
+                } label: {
+                    Image(systemName: api.girisli ? "person.crop.circle.fill" : "person.crop.circle")
+                        .font(.title3).foregroundStyle(.rvText)
+                }
+            }
+        }
     }
 
+    // MARK: kahraman / hero
     var kahraman: some View {
-        VStack(spacing: 8) {
-            Text("Yapay zekânın tüm gücü").font(.title.bold())
-            Text("tek yerde").font(.title.bold())
-                .foregroundStyle(.linearGradient(colors: [.rvViolet, .rvCyan], startPoint: .leading, endPoint: .trailing))
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Yapay zekânın tüm gücü")
+                .font(.largeTitle.bold()).foregroundStyle(.rvText)
+            Text("tek uygulamada")
+                .font(.largeTitle.bold())
+                .foregroundStyle(tema.grad)
                 .shimmer()
-            Text("Görsel, yazı, çeviri, kod ve daha fazlası — saniyeler içinde.")
-                .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
-                .padding(.horizontal, 36).padding(.top, 2)
-        }.padding(.top, 6)
+            Text("Görsel, içerik, ses, kod ve daha fazlası — içerik üreticileri için tek yerde, saniyeler içinde.")
+                .font(.subheadline).foregroundStyle(.rvMut)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.top, 6)
+    }
+
+    // MARK: arama
+    var aramaKutusu: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass").foregroundStyle(.rvMut)
+            TextField("Araç ara…", text: $arama)
+                .foregroundStyle(.rvText).autocorrectionDisabled()
+            if !arama.isEmpty {
+                Button { arama = "" } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.rvMut) }
+            }
+        }
+        .padding(.horizontal, 14).padding(.vertical, 11)
+        .background(Color.rvCard, in: .rect(cornerRadius: 14))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.rvLine, lineWidth: 1))
+    }
+
+    // MARK: kategori bölümü
+    func bolum(_ kat: Kategori, _ liste: [Arac]) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                Image(systemName: kat.ikon).font(.subheadline).foregroundStyle(tema.c2)
+                Text(kat.rawValue).font(.title3.bold()).foregroundStyle(.rvText)
+            }
+            grid(liste)
+        }
+    }
+
+    func grid(_ liste: [Arac]) -> some View {
+        LazyVGrid(columns: kolonlar, spacing: 12) {
+            ForEach(liste) { a in
+                NavigationLink { AracDetayView(arac: a) } label: { AracKart(arac: a) }
+                    .buttonStyle(.plain)
+            }
+        }
+    }
+
+    var altBilgi: some View {
+        VStack(spacing: 4) {
+            Text("Bir NickDegs ürünü").font(.caption.bold()).foregroundStyle(tema.c1)
+            Text("© 2026 RealVirtuality AI").font(.caption2).foregroundStyle(.rvMut)
+        }
+        .frame(maxWidth: .infinity).padding(.top, 10)
     }
 }
 
+// MARK: - Araç kartı (eşit boyutlu, taşmaz)
 struct AracKart: View {
     let arac: Arac
+    @EnvironmentObject var tema: Tema
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Image(systemName: arac.ikon).font(.system(size: 26))
-                .foregroundStyle(.linearGradient(colors: [.rvViolet, .rvCyan], startPoint: .top, endPoint: .bottom))
-            Text(arac.ad).font(.headline).foregroundStyle(.white)
-            Text(arac.aciklama).font(.caption).foregroundStyle(.secondary).lineLimit(2)
-            Text("⚡ \(arac.kredi)").font(.caption2.bold()).foregroundStyle(.rvCyan).padding(.top, 2)
+        VStack(alignment: .leading, spacing: 9) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(LinearGradient(colors: [tema.c1.opacity(0.22), tema.c2.opacity(0.16)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                    .frame(width: 44, height: 44)
+                Image(systemName: arac.ikon).font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(tema.grad)
+            }
+            Text(arac.ad).font(.subheadline.bold()).foregroundStyle(.rvText)
+                .lineLimit(2).fixedSize(horizontal: false, vertical: true)
+            Text(arac.aciklama).font(.caption2).foregroundStyle(.rvMut)
+                .lineLimit(2).fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+            HStack(spacing: 3) {
+                Image(systemName: "bolt.fill").font(.system(size: 9)).foregroundStyle(.yellow)
+                Text("\(arac.kredi)").font(.caption2.bold()).foregroundStyle(tema.c2)
+                if arac.oneCikan {
+                    Spacer(minLength: 0)
+                    Text("POPÜLER").font(.system(size: 8, weight: .heavy))
+                        .padding(.horizontal, 5).padding(.vertical, 2)
+                        .background(tema.c1.opacity(0.18), in: .capsule)
+                        .foregroundStyle(tema.c1)
+                }
+            }
         }
-        .frame(maxWidth: .infinity, minHeight: 130, alignment: .topLeading)
-        .padding(16)
-        .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 22))
+        .padding(13)
+        .frame(maxWidth: .infinity, minHeight: 138, alignment: .topLeading)
+        .background(Color.rvCard, in: .rect(cornerRadius: 18))
+        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.rvLine, lineWidth: 1))
+        .shadow(color: .black.opacity(0.06), radius: 8, y: 4)
     }
 }
