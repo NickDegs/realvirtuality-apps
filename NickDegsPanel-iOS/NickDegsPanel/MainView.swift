@@ -1,7 +1,6 @@
 import SwiftUI
-import WebKit
 
-struct HubKart: Decodable, Identifiable {
+struct HubKart: Decodable, Identifiable, Hashable {
     let ic: String; let baslik: String; let alt: String; let s: String
     var id: String { s + baslik }
 }
@@ -60,14 +59,19 @@ struct MainView: View {
     }
 }
 
+// Native ekranı olan bölümler (geri kalan Safari'de açılır — app içinde WebView YOK)
+let NATIVE_BOLUMLER: Set<String> = ["sunucu","iptv","admin","odemeler","uyeler","teslimat",
+    "siparis","stok","randevu","ozet","raporlar","musteriler"]
+
 struct GrupView: View {
     let grup: HubGrup
     let ad: String
     @EnvironmentObject var oturum: Oturum
     @EnvironmentObject var tema: Tema
     @Environment(\.horizontalSizeClass) var hsc
-    @State private var acilan: HubKart? = nil
+    @Environment(\.openURL) var openURL
     @State private var sifreAcik = false
+    @State private var hedef: HubKart? = nil
 
     private var kolonlar: [GridItem] { Array(repeating: GridItem(.flexible(), spacing: 14), count: hsc == .regular ? 3 : 2) }
 
@@ -79,7 +83,7 @@ struct GrupView: View {
                 ScrollView {
                     LazyVGrid(columns: kolonlar, spacing: 14) {
                         ForEach(grup.kartlar) { k in
-                            BasilabilirKart { acilan = k } content: { KartGor(kart: k) }
+                            BasilabilirKart { ac(k) } content: { KartGor(kart: k) }
                         }
                     }
                     .padding(.horizontal, 16).padding(.top, 8).padding(.bottom, 30)
@@ -88,6 +92,7 @@ struct GrupView: View {
             }
             .navigationTitle(grup.ad)
             .navigationBarTitleDisplayMode(.large)
+            .navigationDestination(item: $hedef) { k in HedefNative(kart: k) }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     HStack(spacing: 7) { Image(systemName: "diamond.fill").foregroundStyle(tema.grad); Text("NickDegs").font(.headline.bold()).foregroundStyle(.rvText) }
@@ -100,13 +105,34 @@ struct GrupView: View {
                     } label: { Image(systemName: "person.crop.circle").font(.title3).foregroundStyle(.rvText) }
                 }
             }
-            .sheet(item: $acilan) { k in
-                let h = oturum.host.hasPrefix("http") ? oturum.host : "https://" + oturum.host
-                PanelWeb2(url: URL(string: "\(h)/dash/s?t=\(oturum.token)&s=\(k.s)")!, baslik: k.baslik)
-            }
             .sheet(isPresented: $sifreAcik) { SifreDegistirView() }
         }
         .tint(tema.c1)
+    }
+    func ac(_ k: HubKart) {
+        if NATIVE_BOLUMLER.contains(k.s) { hedef = k }      // native ekran (push)
+        else {                                              // harici/diğer → Safari (WebView değil)
+            let h = oturum.host.hasPrefix("http") ? oturum.host : "https://" + oturum.host
+            if let u = URL(string: "\(h)/dash/s?t=\(oturum.token)&s=\(k.s)") { openURL(u) }
+        }
+    }
+}
+
+// Native bölüm yönlendirici
+struct HedefNative: View {
+    let kart: HubKart
+    var body: some View {
+        switch kart.s {
+        case "sunucu": SunucuNative()
+        case "iptv": IPTVNative()
+        case "admin","odemeler","uyeler","teslimat": AdminNative()
+        case "siparis": IsletmeVeriNative(kind: "orders", baslik: "Siparişler")
+        case "stok": IsletmeVeriNative(kind: "menu", baslik: "Menü / Stok")
+        case "randevu": IsletmeVeriNative(kind: "appts", baslik: "Randevular")
+        case "musteriler": IsletmeVeriNative(kind: "appts", baslik: "Müşteriler")
+        case "ozet","raporlar": IsletmeVeriNative(kind: "stats", baslik: "Raporlar")
+        default: Text("Bu bölüm Safari'de açılır").foregroundStyle(.rvMut)
+        }
     }
 }
 
@@ -130,24 +156,3 @@ struct KartGor: View {
     }
 }
 
-// Sheet içi WebView (kapatma butonlu)
-struct PanelWeb2: View {
-    let url: URL; let baslik: String
-    @EnvironmentObject var tema: Tema
-    @Environment(\.dismiss) var dismiss
-    var body: some View {
-        NavigationStack {
-            BasitWeb(url: url).ignoresSafeArea(edges: .bottom)
-                .navigationTitle(baslik).navigationBarTitleDisplayMode(.inline)
-                .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Kapat") { dismiss() }.foregroundStyle(tema.c1) } }
-        }.tint(tema.c1)
-    }
-}
-
-struct BasitWeb: UIViewRepresentable {
-    let url: URL
-    func makeUIView(context: Context) -> WKWebView {
-        let wv = WKWebView(); wv.allowsBackForwardNavigationGestures = true; wv.load(URLRequest(url: url)); return wv
-    }
-    func updateUIView(_ uiView: WKWebView, context: Context) {}
-}
