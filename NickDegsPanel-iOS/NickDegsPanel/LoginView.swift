@@ -101,7 +101,7 @@ struct LoginView: View {
     func sifreGiris() async {
         hata = ""; bekle = true; defer { bekle = false }
         let j = await istek("/api/panel/login", ["kod": kod, "sifre": sifre])
-        if j["ok"] as? Bool == true, let p = j["panel_url"] as? String { oturum.host = host; oturum.girisYap(panelURL: p) }
+        if j["ok"] as? Bool == true, let tok = j["token"] as? String { oturum.host = host; oturum.girisYap(token: tok) }
         else { hata = (j["mesaj"] as? String) ?? "Giriş başarısız. Bilgileri kontrol et." }
     }
     func smsGonder() async {
@@ -112,7 +112,7 @@ struct LoginView: View {
     func smsDogrula() async {
         hata = ""; bekle = true; defer { bekle = false }
         let j = await istek("/api/panel/sms-dogrula", ["tel": kod, "kod": smsKod])
-        if j["ok"] as? Bool == true, let p = j["panel_url"] as? String { oturum.host = host; oturum.girisYap(panelURL: p) }
+        if j["ok"] as? Bool == true, let tok = j["token"] as? String { oturum.host = host; oturum.girisYap(token: tok) }
         else { hata = (j["mesaj"] as? String) ?? "Kod doğrulanamadı." }
     }
 }

@@ -168,35 +168,37 @@ struct AracKart: View {
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
     var body: some View {
-        VStack(alignment: .leading, spacing: 9) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(LinearGradient(colors: [tema.c1.opacity(0.22), tema.c2.opacity(0.16)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .frame(width: 44, height: 44)
-                Image(systemName: arac.ikon).font(.system(size: 20, weight: .semibold))
-                    .foregroundStyle(tema.grad)
-            }
-            Text(yerel.aracMetin(arac.id,"ad")).font(.subheadline.bold()).foregroundStyle(.rvText)
-                .lineLimit(2).fixedSize(horizontal: false, vertical: true)
-            Text(yerel.aracMetin(arac.id,"aciklama")).font(.caption2).foregroundStyle(.rvMut)
-                .lineLimit(2).fixedSize(horizontal: false, vertical: true)
-            Spacer(minLength: 0)
-            HStack(spacing: 3) {
-                Image(systemName: "bolt.fill").font(.system(size: 9)).foregroundStyle(.yellow)
-                Text("\(arac.kredi)").font(.caption2.bold()).foregroundStyle(tema.c2)
-                if arac.oneCikan {
-                    Spacer(minLength: 0)
-                    Text(yerel.t("populer")).font(.system(size: 8, weight: .heavy))
-                        .padding(.horizontal, 5).padding(.vertical, 2)
-                        .background(tema.c1.opacity(0.18), in: .capsule)
-                        .foregroundStyle(tema.c1)
+        VStack(alignment: .leading, spacing: 0) {
+            AsyncImage(url: URL(string: "https://nickdegs.com/arac-gorsel/\(arac.id).webp")) { phase in
+                if let img = phase.image { img.resizable().scaledToFill() }
+                else {
+                    ZStack {
+                        LinearGradient(colors: [tema.c1.opacity(0.28), tema.c2.opacity(0.16)], startPoint: .topLeading, endPoint: .bottomTrailing)
+                        Image(systemName: arac.ikon).font(.system(size: 30, weight: .semibold)).foregroundStyle(tema.grad)
+                    }
                 }
             }
+            .frame(maxWidth: .infinity).frame(height: 108).clipped()
+            VStack(alignment: .leading, spacing: 5) {
+                Text(yerel.aracMetin(arac.id,"ad")).font(.subheadline.bold()).foregroundStyle(.rvText).lineLimit(1)
+                Text(yerel.aracMetin(arac.id,"aciklama")).font(.caption2).foregroundStyle(.rvMut)
+                    .lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                HStack(spacing: 3) {
+                    Image(systemName: "bolt.fill").font(.system(size: 9)).foregroundStyle(.yellow)
+                    Text("\(arac.kredi)").font(.caption2.bold()).foregroundStyle(tema.c2)
+                    if arac.oneCikan {
+                        Spacer(minLength: 0)
+                        Text(yerel.t("populer")).font(.system(size: 8, weight: .heavy))
+                            .padding(.horizontal, 5).padding(.vertical, 2)
+                            .background(tema.c1.opacity(0.18), in: .capsule).foregroundStyle(tema.c1)
+                    }
+                }.padding(.top, 1)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading).padding(12)
         }
-        .padding(13)
-        .frame(maxWidth: .infinity, minHeight: 138, alignment: .topLeading)
-        .background(Color.rvCard, in: .rect(cornerRadius: 18))
+        .frame(maxWidth: .infinity, alignment: .topLeading)
+        .background(Color.rvCard).clipShape(.rect(cornerRadius: 18))
         .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.rvLine, lineWidth: 1))
-        .shadow(color: .black.opacity(0.06), radius: 8, y: 4)
+        .shadow(color: .black.opacity(0.15), radius: 9, y: 5)
     }
 }

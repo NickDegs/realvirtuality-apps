@@ -29,12 +29,12 @@ extension ShapeStyle where Self == Color {
 // MARK: - Oturum (işletme tenant girişi)
 @MainActor
 final class Oturum: ObservableObject {
-    @AppStorage("panel_url") var panelURL = ""
+    @AppStorage("panel_token") var token = ""
     @AppStorage("panel_host") var host = "https://nickdegs.com"
     @Published var girisli = false
-    init() { girisli = !panelURL.isEmpty }
-    func girisYap(panelURL: String) { self.panelURL = panelURL; girisli = true }
-    func cikis() { panelURL = ""; girisli = false }
+    init() { girisli = !token.isEmpty }
+    func girisYap(token: String) { self.token = token; girisli = true }
+    func cikis() { token = ""; girisli = false }
 }
 
 @main
@@ -44,7 +44,7 @@ struct NickDegsPanelApp: App {
     var body: some Scene {
         WindowGroup {
             Group {
-                if oturum.girisli { PanelView() }
+                if oturum.girisli { MainView() }
                 else { LoginView() }
             }
             .environmentObject(tema)
