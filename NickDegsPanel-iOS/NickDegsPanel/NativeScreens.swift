@@ -291,7 +291,11 @@ struct GuvenlikNative: View {
 struct IsletmeEkleNative: View {
     @EnvironmentObject var oturum: Oturum
     @EnvironmentObject var tema: Tema
-    @State private var ad = "", kod = "", tel = "", sifre = "", slug = ""
+    @State private var ad = ""
+    @State private var kod = ""
+    @State private var tel = ""
+    @State private var sifre = ""
+    @State private var slug = ""
     @State private var sluglar: [String] = []
     @State private var sonuc = ""
     @State private var basari = false
