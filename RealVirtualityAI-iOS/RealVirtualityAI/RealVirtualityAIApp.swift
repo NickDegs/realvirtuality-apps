@@ -108,6 +108,8 @@ struct RootView: View {
                 .tabItem { Label(yerel.p("araclarTab"), systemImage: "sparkles") }
             UrunlerView()
                 .tabItem { Label(yerel.p("urunlerTab"), systemImage: "bag.fill") }
+            KutuphaneView()
+                .tabItem { Label(yerel.p("kutuphaneTab"), systemImage: "books.vertical.fill") }
         }
         .tint(tema.c1)
     }

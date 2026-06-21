@@ -28,7 +28,7 @@ struct UrunlerView: View {
     @State private var arama = ""
     @State private var secilen: RVUrun? = nil
 
-    private var kolonlar: [GridItem] { Array(repeating: GridItem(.flexible(), spacing: 14), count: hsc == .regular ? 3 : 2) }
+    private var kolonlar: [GridItem] { Array(repeating: GridItem(.flexible(), spacing: 18), count: hsc == .regular ? 3 : 2) }
     private var urunler: [RVUrun] {
         let q = arama.trimmingCharacters(in: .whitespaces).lowercased()
         return RVKatalog.urunler.filter { q.isEmpty || yerel.u($0.ad).lowercased().contains(q) || yerel.u($0.aciklama).lowercased().contains(q) }
@@ -43,17 +43,17 @@ struct UrunlerView: View {
                 LinearGradient(colors: [.rvBg, .rvBg2, .rvBg], startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea()
                 LensFlare().opacity(0.7)
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 22) {
-                        VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 34) {
+                        VStack(alignment: .leading, spacing: 8) {
                             Text(yerel.p("urunHero1")).font(.largeTitle.bold()).foregroundStyle(.rvText)
                             Text(yerel.p("urunHero2")).font(.largeTitle.bold()).foregroundStyle(tema.grad).shimmer()
-                        }.padding(.top, 6)
+                        }.padding(.top, 12)
                         aramaKutusu
                         ForEach(kategoriler, id: \.self) { g in
                             let liste = urunler.filter { $0.g == g }
-                            VStack(alignment: .leading, spacing: 14) {
-                                Text(yerel.p("kat_" + g)).font(.title3.bold()).foregroundStyle(.rvText)
-                                LazyVGrid(columns: kolonlar, spacing: 14) {
+                            VStack(alignment: .leading, spacing: 18) {
+                                Text(yerel.p("kat_" + g)).font(.title2.bold()).foregroundStyle(.rvText)
+                                LazyVGrid(columns: kolonlar, spacing: 18) {
                                     ForEach(liste) { u in
                                         BasilabilirKart { secilen = u } content: { RVUrunKart(urun: u) }
                                     }
@@ -61,7 +61,7 @@ struct UrunlerView: View {
                             }
                         }
                     }
-                    .padding(.horizontal, 16).padding(.bottom, 30)
+                    .padding(.horizontal, 20).padding(.top, 8).padding(.bottom, 48)
                 }
                 .scrollIndicators(.hidden)
             }
@@ -98,17 +98,17 @@ struct RVUrunKart: View {
                     }
                 }
             }
-            .frame(maxWidth: .infinity).frame(height: 116).clipped()
-            VStack(alignment: .leading, spacing: 5) {
+            .frame(maxWidth: .infinity).frame(height: 138).clipped()
+            VStack(alignment: .leading, spacing: 7) {
                 Text(yerel.u(urun.ad)).font(.subheadline.bold()).foregroundStyle(.rvText).lineLimit(1)
-                Text(yerel.u(urun.aciklama)).font(.caption2).foregroundStyle(.rvMut).lineLimit(2).fixedSize(horizontal: false, vertical: true)
-                if !urun.pr.isEmpty { Text(urun.pr).font(.caption.bold()).foregroundStyle(tema.c2).padding(.top, 1) }
+                Text(yerel.u(urun.aciklama)).font(.caption).foregroundStyle(.rvMut).lineLimit(2).lineSpacing(2).fixedSize(horizontal: false, vertical: true)
+                if !urun.pr.isEmpty { Text(urun.pr).font(.caption.bold()).foregroundStyle(tema.c2).padding(.top, 3) }
             }
-            .frame(maxWidth: .infinity, alignment: .leading).padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading).padding(16)
         }
         .frame(maxWidth: .infinity, alignment: .topLeading)
-        .background(Color.rvCard).clipShape(.rect(cornerRadius: 20))
-        .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.rvLine, lineWidth: 1))
+        .background(Color.rvCard).clipShape(.rect(cornerRadius: 24))
+        .overlay(RoundedRectangle(cornerRadius: 24).stroke(Color.rvLine, lineWidth: 1))
         .shadow(color: .black.opacity(0.18), radius: 10, y: 5)
     }
 }

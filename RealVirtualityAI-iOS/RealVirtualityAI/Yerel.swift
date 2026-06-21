@@ -55,6 +55,17 @@ final class Yerel: ObservableObject {
         "kat_bireysel": ["tr":"Bireysel","en":"Personal"],
         "kat_pro": ["tr":"Pro / Freelancer","en":"Pro / Freelancer"],
         "kat_sosyal": ["tr":"Sosyal Medya","en":"Social Media"],
+        "kutuphaneTab": ["tr":"Kütüphane","en":"Library","de":"Bibliothek","fr":"Bibliothèque","es":"Biblioteca","ar":"المكتبة","ru":"Библиотека"],
+        "kutuphaneBaslik": ["tr":"Kütüphanem","en":"My Library","de":"Meine Bibliothek","fr":"Ma bibliothèque","es":"Mi biblioteca","ar":"مكتبتي","ru":"Моя библиотека"],
+        "kutuphaneBos": ["tr":"Henüz çıktın yok. Bir araç kullan, üretimlerin burada saklanır.","en":"No outputs yet. Use a tool — your creations are saved here.","de":"Noch keine Ausgaben. Nutze ein Tool — deine Werke werden hier gespeichert.","fr":"Aucune sortie. Utilisez un outil — vos créations sont enregistrées ici.","es":"Sin resultados aún. Usa una herramienta — tus creaciones se guardan aquí.","ar":"لا مخرجات بعد. استخدم أداة — تُحفظ أعمالك هنا.","ru":"Пока нет результатов. Используйте инструмент — работы сохранятся здесь."],
+        "kutuphaneGiris": ["tr":"Çıktıların kalıcı saklanması için giriş yap.","en":"Sign in to keep your outputs saved.","de":"Melde dich an, um deine Ausgaben zu speichern.","fr":"Connectez-vous pour conserver vos sorties.","es":"Inicia sesión para guardar tus resultados.","ar":"سجّل الدخول لحفظ مخرجاتك.","ru":"Войдите, чтобы сохранять результаты."],
+        "tekrarYukle": ["tr":"Tekrar Yükle","en":"Reload","de":"Erneut laden","fr":"Recharger","es":"Recargar","ar":"إعادة تحميل","ru":"Загрузить снова"],
+        "girisSms": ["tr":"SMS ile","en":"With SMS","de":"Mit SMS","fr":"Par SMS","es":"Con SMS","ar":"عبر SMS","ru":"Через SMS"],
+        "girisEposta": ["tr":"E-posta ile","en":"With Email","de":"Mit E-Mail","fr":"Par e-mail","es":"Con correo","ar":"عبر البريد","ru":"Через e-mail"],
+        "telefon": ["tr":"Telefon (ülke kodlu, +90…)","en":"Phone (with country code)","de":"Telefon (mit Ländercode)","fr":"Téléphone (indicatif pays)","es":"Teléfono (código de país)","ar":"الهاتف (رمز الدولة)","ru":"Телефон (код страны)"],
+        "smsKodu": ["tr":"SMS kodu","en":"SMS code","de":"SMS-Code","fr":"Code SMS","es":"Código SMS","ar":"رمز SMS","ru":"SMS-код"],
+        "kodGonder": ["tr":"Kod Gönder","en":"Send Code","de":"Code senden","fr":"Envoyer le code","es":"Enviar código","ar":"إرسال الرمز","ru":"Отправить код"],
+        "dogrulaGiris": ["tr":"Doğrula & Giriş","en":"Verify & Sign In","de":"Bestätigen & Anmelden","fr":"Vérifier & Connexion","es":"Verificar e iniciar","ar":"تحقق ودخول","ru":"Подтвердить и войти"],
     ]
 
     // ── JSON yükleyiciler ──

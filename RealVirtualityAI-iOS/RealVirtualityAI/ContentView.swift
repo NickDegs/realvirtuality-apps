@@ -13,7 +13,7 @@ struct ContentView: View {
     // Responsive sütun sayısı — taşmayı tamamen önler (.flexible eşit böler)
     private var sutunSayisi: Int { hsc == .regular ? 3 : 2 }
     private var kolonlar: [GridItem] {
-        Array(repeating: GridItem(.flexible(), spacing: 12), count: sutunSayisi)
+        Array(repeating: GridItem(.flexible(), spacing: 18), count: sutunSayisi)
     }
 
     private var sonuclar: [Arac] {
@@ -30,7 +30,7 @@ struct ContentView: View {
             ZStack {
                 arkaplan
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 22) {
+                    VStack(alignment: .leading, spacing: 34) {
                         kahraman
                         aramaKutusu
 
@@ -44,8 +44,9 @@ struct ContentView: View {
                             altBilgi
                         }
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 36)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 8)
+                    .padding(.bottom, 48)
                 }
                 .scrollIndicators(.hidden)
             }
@@ -103,7 +104,7 @@ struct ContentView: View {
 
     // MARK: kahraman / hero
     var kahraman: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 10) {
             Text(yerel.t("heroBaslik1"))
                 .font(.largeTitle.bold()).foregroundStyle(.rvText)
             Text(yerel.t("heroBaslik2"))
@@ -111,11 +112,13 @@ struct ContentView: View {
                 .foregroundStyle(tema.grad)
                 .shimmer()
             Text(yerel.t("heroAlt"))
-                .font(.subheadline).foregroundStyle(.rvMut)
+                .font(.body).foregroundStyle(.rvMut)
+                .lineSpacing(3)
                 .fixedSize(horizontal: false, vertical: true)
+                .padding(.top, 2)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.top, 6)
+        .padding(.top, 12)
     }
 
     // MARK: arama
@@ -135,17 +138,17 @@ struct ContentView: View {
 
     // MARK: kategori bölümü
     func bolum(_ kat: Kategori, _ liste: [Arac]) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 8) {
-                Image(systemName: kat.ikon).font(.subheadline).foregroundStyle(tema.c2)
-                Text(yerel.t(kat.key)).font(.title3.bold()).foregroundStyle(.rvText)
+        VStack(alignment: .leading, spacing: 18) {
+            HStack(spacing: 9) {
+                Image(systemName: kat.ikon).font(.title3).foregroundStyle(tema.c2)
+                Text(yerel.t(kat.key)).font(.title2.bold()).foregroundStyle(.rvText)
             }
             grid(liste)
         }
     }
 
     func grid(_ liste: [Arac]) -> some View {
-        LazyVGrid(columns: kolonlar, spacing: 12) {
+        LazyVGrid(columns: kolonlar, spacing: 18) {
             ForEach(liste) { a in
                 NavigationLink { AracDetayView(arac: a) } label: { AracKart(arac: a) }
                     .buttonStyle(.plain)
@@ -178,27 +181,27 @@ struct AracKart: View {
                     }
                 }
             }
-            .frame(maxWidth: .infinity).frame(height: 108).clipped()
-            VStack(alignment: .leading, spacing: 5) {
+            .frame(maxWidth: .infinity).frame(height: 138).clipped()
+            VStack(alignment: .leading, spacing: 7) {
                 Text(yerel.aracMetin(arac.id,"ad")).font(.subheadline.bold()).foregroundStyle(.rvText).lineLimit(1)
-                Text(yerel.aracMetin(arac.id,"aciklama")).font(.caption2).foregroundStyle(.rvMut)
-                    .lineLimit(2).fixedSize(horizontal: false, vertical: true)
-                HStack(spacing: 3) {
-                    Image(systemName: "bolt.fill").font(.system(size: 9)).foregroundStyle(.yellow)
-                    Text("\(arac.kredi)").font(.caption2.bold()).foregroundStyle(tema.c2)
+                Text(yerel.aracMetin(arac.id,"aciklama")).font(.caption).foregroundStyle(.rvMut)
+                    .lineLimit(2).lineSpacing(2).fixedSize(horizontal: false, vertical: true)
+                HStack(spacing: 4) {
+                    Image(systemName: "bolt.fill").font(.system(size: 10)).foregroundStyle(.yellow)
+                    Text("\(arac.kredi)").font(.caption.bold()).foregroundStyle(tema.c2)
                     if arac.oneCikan {
                         Spacer(minLength: 0)
-                        Text(yerel.t("populer")).font(.system(size: 8, weight: .heavy))
-                            .padding(.horizontal, 5).padding(.vertical, 2)
+                        Text(yerel.t("populer")).font(.system(size: 9, weight: .heavy))
+                            .padding(.horizontal, 7).padding(.vertical, 3)
                             .background(tema.c1.opacity(0.18), in: .capsule).foregroundStyle(tema.c1)
                     }
-                }.padding(.top, 1)
+                }.padding(.top, 3)
             }
-            .frame(maxWidth: .infinity, alignment: .leading).padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading).padding(16)
         }
         .frame(maxWidth: .infinity, alignment: .topLeading)
-        .background(Color.rvCard).clipShape(.rect(cornerRadius: 18))
-        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.rvLine, lineWidth: 1))
-        .shadow(color: .black.opacity(0.15), radius: 9, y: 5)
+        .background(Color.rvCard).clipShape(.rect(cornerRadius: 24))
+        .overlay(RoundedRectangle(cornerRadius: 24).stroke(Color.rvLine, lineWidth: 1))
+        .shadow(color: .black.opacity(0.18), radius: 14, y: 7)
     }
 }
