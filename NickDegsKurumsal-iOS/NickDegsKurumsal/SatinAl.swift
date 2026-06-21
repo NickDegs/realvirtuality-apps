@@ -1,0 +1,179 @@
+import SwiftUI
+import StoreKit
+
+// MARK: - StoreKit Mağaza yöneticisi (App Store içi satın alma + sunucu provision)
+@MainActor
+final class Magaza: ObservableObject {
+    static let urunIdleri = [
+        "com.nickdegs.business.isletme.baslangic.yil",
+        "com.nickdegs.business.isletme.pro.yil",
+        "com.nickdegs.business.isletme.kurumsal.yil",
+        "com.nickdegs.business.guvenlik.ay",
+        "com.nickdegs.business.guvenlik.yil",
+        "com.nickdegs.business.hush.ay",
+        "com.nickdegs.business.hush.yil",
+        "com.nickdegs.business.sunucu.ay",
+        "com.nickdegs.business.sunucu.yil",
+    ]
+    @Published var urunler: [Product] = []
+    @Published var yukleniyor = false
+
+    func yukle() async {
+        yukleniyor = true; defer { yukleniyor = false }
+        urunler = ((try? await Product.products(for: Magaza.urunIdleri)) ?? [])
+            .sorted { $0.price < $1.price }
+    }
+    func urun(_ id: String) -> Product? { urunler.first { $0.id == id } }
+
+    // Satın al → doğrulanmış işlemin imzalı JWS'ini döndür
+    func satinAl(_ p: Product) async -> (jws: String?, hata: String?) {
+        do {
+            switch try await p.purchase() {
+            case .success(let v):
+                let jws = v.jwsRepresentation
+                if case .verified(let t) = v { await t.finish() }
+                return (jws, nil)
+            case .userCancelled: return (nil, "iptal")
+            case .pending: return (nil, "Onay bekleniyor")
+            @unknown default: return (nil, "Bilinmeyen durum")
+            }
+        } catch { return (nil, error.localizedDescription) }
+    }
+
+    // Provision: işletme aboneliği alındıysa sunucuda tenant + Dashboard hesabı açtırır
+    func provision(jws: String, ad: String, sektor: String) async -> [String: Any] {
+        var r = URLRequest(url: URL(string: "https://nickdegs.com/api/iap/provision")!)
+        r.httpMethod = "POST"; r.timeoutInterval = 130
+        r.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        r.httpBody = try? JSONSerialization.data(withJSONObject: ["signedTransaction": jws, "ad": ad, "sektor": sektor])
+        guard let (d, _) = try? await URLSession.shared.data(for: r),
+              let j = try? JSONSerialization.jsonObject(with: d) as? [String: Any] else { return ["ok": false, "err": "bağlantı"] }
+        return j
+    }
+}
+
+// MARK: - Satın alma sayfası
+struct SatinAlView: View {
+    let urun: Urun
+    @EnvironmentObject var tema: Tema
+    @EnvironmentObject var yerel: Yerel
+    @StateObject private var magaza = Magaza()
+    @Environment(\.dismiss) var dismiss
+    @State private var isletmeAd = ""
+    @State private var secili: Product? = nil
+    @State private var bekle = false
+    @State private var sonuc: [String: Any]? = nil
+    @State private var hata = ""
+
+    // Bu ürünün sekmesine göre uygun App Store abonelikleri
+    private var planlar: [Product] {
+        let pre = urun.sekme == "guvenlik" ? "com.nickdegs.business.guvenlik"
+                : "com.nickdegs.business.isletme"
+        let p = magaza.urunler.filter { $0.id.hasPrefix(pre) }
+        return p.isEmpty ? magaza.urunler.filter { $0.id.contains("isletme") } : p
+    }
+    private var isletmeMi: Bool { urun.sekme != "guvenlik" }
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                AnimatedArka(c1: tema.c1, c2: tema.c2)
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 18) {
+                        if let s = sonuc, s["ok"] as? Bool == true {
+                            basariKart(s)
+                        } else {
+                            Text(yerel.u(urun.ad)).font(.title2.bold()).foregroundStyle(.rvText)
+                            Text("Aboneliğini App Store üzerinden güvenle başlat. Ödeme sonrası paneline anında erişirsin.")
+                                .font(.subheadline).foregroundStyle(.rvMut)
+
+                            if isletmeMi {
+                                Text("İşletme adı").font(.caption.bold()).foregroundStyle(.rvMut).padding(.top, 4)
+                                TextField("Örn. Köşe Cafe", text: $isletmeAd)
+                                    .padding(14).glassEffect(.regular, in: .rect(cornerRadius: 14)).foregroundStyle(.rvText)
+                            }
+
+                            if magaza.yukleniyor {
+                                ProgressView().tint(tema.c1).frame(maxWidth: .infinity).padding()
+                            } else if planlar.isEmpty {
+                                Text("Planlar yüklenemedi. İnternet bağlantını kontrol et.").font(.caption).foregroundStyle(.orange)
+                            } else {
+                                ForEach(planlar, id: \.id) { p in planKart(p) }
+                            }
+
+                            if !hata.isEmpty { Text(hata).font(.caption).foregroundStyle(.orange) }
+
+                            Button { Task { await satinAl() } } label: {
+                                HStack(spacing: 8) {
+                                    if bekle { ProgressView().tint(.white) }
+                                    Image(systemName: "applelogo"); Text("App Store ile Satın Al")
+                                }
+                                .font(.headline.bold()).foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 16)
+                                .background(tema.grad, in: .rect(cornerRadius: 16))
+                            }.disabled(bekle || secili == nil || (isletmeMi && isletmeAd.trimmingCharacters(in: .whitespaces).isEmpty)).padding(.top, 6)
+
+                            Text("Abonelik otomatik yenilenir, dilediğin an iptal edebilirsin. Ödeme Apple hesabından alınır.")
+                                .font(.caption2).foregroundStyle(.rvMut).padding(.top, 4)
+                        }
+                    }.padding(20)
+                }
+            }
+            .navigationTitle("Satın Al").navigationBarTitleDisplayMode(.inline)
+            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Kapat") { dismiss() }.foregroundStyle(tema.c1) } }
+        }
+        .tint(tema.c1)
+        .task { await magaza.yukle(); secili = planlar.first }
+    }
+
+    func planKart(_ p: Product) -> some View {
+        let sec = secili?.id == p.id
+        return Button { secili = p } label: {
+            HStack {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(p.displayName).font(.subheadline.bold()).foregroundStyle(.rvText)
+                    Text(p.description).font(.caption2).foregroundStyle(.rvMut).lineLimit(1)
+                }
+                Spacer()
+                Text(p.displayPrice).font(.subheadline.bold()).foregroundStyle(tema.c2)
+                Image(systemName: sec ? "checkmark.circle.fill" : "circle").foregroundStyle(sec ? tema.c1 : .rvMut)
+            }
+            .padding(15)
+            .background(Color.rvCard, in: .rect(cornerRadius: 14))
+            .overlay(RoundedRectangle(cornerRadius: 14).stroke(sec ? tema.c1 : Color.rvLine, lineWidth: sec ? 2 : 1))
+        }.buttonStyle(.plain)
+    }
+
+    func basariKart(_ s: [String: Any]) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Image(systemName: "checkmark.seal.fill").font(.system(size: 50)).foregroundStyle(.green)
+            Text("Sistemin hazır! 🎉").font(.title2.bold()).foregroundStyle(.rvText)
+            if let url = s["url"] as? String, !url.isEmpty {
+                satir("Panel", url)
+            }
+            if let kod = s["dashboard_kod"] as? String ?? s["tenant"] as? String { satir("Dashboard kodu", kod) }
+            if let sf = s["sifre"] as? String, !sf.isEmpty { satir("Şifre", sf) }
+            Text("NickDegs Dashboard uygulamasından bu kod ve şifreyle giriş yapabilirsin.")
+                .font(.caption).foregroundStyle(.rvMut).padding(.top, 6)
+            Button("Tamam") { dismiss() }.font(.headline.bold()).foregroundStyle(.white)
+                .frame(maxWidth: .infinity).padding(.vertical, 15).background(tema.grad, in: .rect(cornerRadius: 16)).padding(.top, 8)
+        }
+    }
+    func satir(_ k: String, _ v: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(k).font(.caption2).foregroundStyle(.rvMut)
+            Text(v).font(.subheadline.bold()).foregroundStyle(tema.c1).textSelection(.enabled)
+        }.frame(maxWidth: .infinity, alignment: .leading).padding(12).background(Color.rvCard, in: .rect(cornerRadius: 12))
+    }
+
+    func satinAl() async {
+        guard let p = secili else { return }
+        hata = ""; bekle = true; defer { bekle = false }
+        let (jws, h) = await magaza.satinAl(p)
+        if let h = h { if h != "iptal" { hata = h }; return }
+        guard let jws = jws else { hata = "Satın alma doğrulanamadı"; return }
+        let sektor = urun.g
+        let r = await magaza.provision(jws: jws, ad: isletmeAd, sektor: sektor)
+        if r["ok"] as? Bool == true { sonuc = r }
+        else { hata = (r["err"] as? String) ?? "Kurulum yapılamadı — abonelik aktif, destek ile iletişime geç." }
+    }
+}

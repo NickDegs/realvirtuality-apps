@@ -5,6 +5,7 @@ struct UrunDetayView: View {
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
     @State private var webAcik = false
+    @State private var satinAlAcik = false
     @State private var bel = false
 
     private var url: URL {
@@ -43,6 +44,7 @@ struct UrunDetayView: View {
         .navigationTitle(yerel.u(urun.ad))
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $webAcik) { PanelView(url: url, baslik: yerel.u(urun.ad)) }
+        .sheet(isPresented: $satinAlAcik) { SatinAlView(urun: urun) }
         .onAppear { withAnimation(.smooth(duration: 0.5)) { bel = true } }
     }
 
@@ -64,10 +66,10 @@ struct UrunDetayView: View {
     }
 
     var cta: some View {
-        Button { webAcik = true } label: {
+        Button { satinAlAcik = true } label: {
             HStack(spacing: 8) {
-                Image(systemName: "cart.fill")
-                Text(yerel.t("incele"))
+                Image(systemName: "applelogo")
+                Text("App Store ile Satın Al")
             }
             .font(.headline.bold()).foregroundStyle(.white)
             .frame(maxWidth: .infinity).padding(.vertical, 17)
