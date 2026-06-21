@@ -242,3 +242,94 @@ extension PanelAPI {
     func get_overview() async -> [String:Any] { (await get("/dash/aapi/overview")) ?? [:] }
     func adminListe(_ p: String) async -> [[String:Any]] { await getArr("/dash/aapi/\(p)") }
 }
+
+// MARK: - Native Güvenlik (koruma/ziyaretçi/ban) — WebView yok
+struct GuvenlikNative: View {
+    let tip: String   // koruma / ziyaretci / ban
+    let baslik: String
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    @State private var d: [String:Any] = [:]
+    @State private var yukleniyor = true
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            if yukleniyor { ProgressView().tint(tema.c1).scaleEffect(1.3) }
+            else { ScrollView { VStack(alignment:.leading, spacing: 12) { icerik }.padding(16) }.refreshable { await yukle() } }
+        }
+        .navigationTitle(baslik).navigationBarTitleDisplayMode(.inline)
+        .task { await yukle() }
+    }
+    @ViewBuilder var icerik: some View {
+        if tip == "koruma" {
+            Text("🛡️ Koruma AKTİF").font(.title3.bold()).foregroundStyle(.green)
+            ForEach((d["servisler"] as? [[String:Any]]) ?? [], id: \.self.description) { s in
+                HStack { Circle().fill((s["aktif"] as? Bool ?? false) ? .green : .red).frame(width:10,height:10)
+                    Text(s["ad"] as? String ?? "").foregroundStyle(.rvText); Spacer() }
+                .padding(12).glassEffect(.regular, in: .rect(cornerRadius: 12))
+            }
+            Text("Engellenen IP: \(d["ban"] as? Int ?? 0) · Firewall DROP: \(d["firewall_drop"] as? Int ?? 0)").font(.caption).foregroundStyle(.rvMut)
+        } else if tip == "ban" {
+            Text("\(d["toplam"] as? Int ?? 0)").font(.system(size:44,weight:.bold)).foregroundStyle(tema.c1)
+            Text("toplam engellenen IP").font(.caption).foregroundStyle(.rvMut)
+            Text(d["kararlar"] as? String ?? "—").font(.system(size:11,design:.monospaced)).foregroundStyle(.rvMut)
+                .frame(maxWidth:.infinity,alignment:.leading).padding(12).glassEffect(.regular,in:.rect(cornerRadius:12))
+        } else {
+            ForEach(Array(((d["kayitlar"] as? [[String:Any]]) ?? []).enumerated()), id:\.offset) { _, r in
+                VStack(alignment:.leading,spacing:3){
+                    HStack{ Text(r["ip"] as? String ?? "").font(.caption.bold()).foregroundStyle(.rvText); Spacer(); Text(r["durum"] as? String ?? "").font(.caption2).foregroundStyle(.rvMut) }
+                    Text(r["istek"] as? String ?? "").font(.caption2).foregroundStyle(.rvMut).lineLimit(1)
+                }.padding(11).glassEffect(.regular,in:.rect(cornerRadius:11))
+            }
+        }
+    }
+    func yukle() async { yukleniyor = true; defer { yukleniyor = false }; d = await api.guvenlik(tip) ?? [:] }
+}
+
+// MARK: - Native İşletme Ekle (süper onboarding) — WebView yok
+struct IsletmeEkleNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    @State private var ad = "", kod = "", tel = "", sifre = "", slug = ""
+    @State private var sluglar: [String] = []
+    @State private var sonuc = ""
+    @State private var basari = false
+    @State private var bekle = false
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            ScrollView { VStack(spacing: 12) {
+                Text("Yeni işletme oluştur — kod/şifre üret, müşteriye ver.").font(.subheadline).foregroundStyle(.rvMut).frame(maxWidth:.infinity,alignment:.leading)
+                alan("İşletme adı", $ad); alan("Giriş kodu", $kod)
+                alan("Telefon (+90… opsiyonel)", $tel); alan("Şifre (boş=otomatik)", $sifre)
+                if !sluglar.isEmpty {
+                    Picker("Sektör paneli (opsiyonel)", selection: $slug) {
+                        Text("— bağlama —").tag(""); ForEach(sluglar, id:\.self){ Text($0).tag($0) }
+                    }.pickerStyle(.menu).tint(tema.c1).frame(maxWidth:.infinity,alignment:.leading)
+                     .padding(12).glassEffect(.regular,in:.rect(cornerRadius:14))
+                }
+                Button { Task { await ekle() } } label: {
+                    HStack{ if bekle { ProgressView().tint(.white) }; Text("İşletme Oluştur").bold() }
+                        .foregroundStyle(.white).frame(maxWidth:.infinity).padding(.vertical,15).background(tema.grad,in:.rect(cornerRadius:14))
+                }.disabled(bekle || ad.isEmpty || kod.isEmpty)
+                if !sonuc.isEmpty { Text(sonuc).font(.callout).foregroundStyle(basari ? .green : .orange).frame(maxWidth:.infinity,alignment:.leading).padding(12).glassEffect(.regular,in:.rect(cornerRadius:12)) }
+            }.padding(16) }
+        }
+        .navigationTitle("➕ İşletme Ekle").navigationBarTitleDisplayMode(.inline)
+        .task { sluglar = await api.slugListesi() }
+    }
+    func alan(_ ip: String, _ b: Binding<String>) -> some View {
+        TextField(ip, text: b).autocorrectionDisabled().textInputAutocapitalization(.never)
+            .foregroundStyle(.rvText).padding(14).glassEffect(.regular,in:.rect(cornerRadius:14))
+    }
+    func ekle() async {
+        bekle = true; defer { bekle = false }; sonuc = ""
+        let r = await api.isletmeEkle(ad:ad,kod:kod,tel:tel,sifre:sifre,slug:slug)
+        if r?["ok"] as? Bool == true {
+            basari = true; sonuc = "✓ Oluşturuldu\nKod: \(r?["kod"] ?? "")\nŞifre: \(r?["sifre"] ?? "")" + (slug.isEmpty ? "" : "\nPanel: \(slug)")
+            ad=""; kod=""; tel=""; sifre=""; slug=""
+        } else { basari = false; sonuc = "⚠️ " + ((r?["mesaj"] as? String) ?? "Hata") }
+    }
+}

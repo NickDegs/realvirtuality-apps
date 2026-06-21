@@ -45,4 +45,11 @@ final class PanelAPI {
     func iptvHatAksiyon(_ id: String, _ aksiyon: String) async -> Bool { (await post("/dash/iptv/hat-aksiyon", ["id":id,"aksiyon":aksiyon]))?["ok"] as? Bool ?? false }
     // İşletme
     func bizVeri(_ kind: String) async -> [[String:Any]] { await getArr("/dash/biz/\(kind)") }
+    // Güvenlik
+    func guvenlik(_ tip: String) async -> [String:Any]? { await get("/api/panel/guvenlik", ["tip":tip]) }
+    // İşletme ekle (süper)
+    func slugListesi() async -> [String] { ((await get("/api/panel/slugs"))?["slugs"] as? [String]) ?? [] }
+    func isletmeEkle(ad: String, kod: String, tel: String, sifre: String, slug: String) async -> [String:Any]? {
+        await post("/api/panel/isletme-ekle", ["ad":ad,"kod":kod,"tel":tel,"sifre":sifre,"slug":slug])
+    }
 }

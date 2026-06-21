@@ -61,7 +61,8 @@ struct MainView: View {
 
 // Native ekranı olan bölümler (geri kalan Safari'de açılır — app içinde WebView YOK)
 let NATIVE_BOLUMLER: Set<String> = ["sunucu","iptv","admin","odemeler","uyeler","teslimat",
-    "siparis","stok","randevu","ozet","raporlar","musteriler"]
+    "siparis","stok","randevu","ozet","raporlar","musteriler",
+    "koruma","ziyaretci","ban","erisim","isletme_ekle"]
 
 struct GrupView: View {
     let grup: HubGrup
@@ -131,6 +132,11 @@ struct HedefNative: View {
         case "randevu": IsletmeVeriNative(kind: "appts", baslik: "Randevular")
         case "musteriler": IsletmeVeriNative(kind: "appts", baslik: "Müşteriler")
         case "ozet","raporlar": IsletmeVeriNative(kind: "stats", baslik: "Raporlar")
+        case "koruma": GuvenlikNative(tip: "koruma", baslik: "Koruma Durumu")
+        case "ziyaretci": GuvenlikNative(tip: "ziyaretci", baslik: "Ziyaretçi Logları")
+        case "ban": GuvenlikNative(tip: "ban", baslik: "Engellenen IP")
+        case "erisim": GuvenlikNative(tip: "ziyaretci", baslik: "Erişim Logları")
+        case "isletme_ekle": IsletmeEkleNative()
         default: Text("Bu bölüm Safari'de açılır").foregroundStyle(.rvMut)
         }
     }
