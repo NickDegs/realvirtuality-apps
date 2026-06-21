@@ -88,18 +88,28 @@ struct RVUrunKart: View {
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
     var body: some View {
-        VStack(alignment: .leading, spacing: 9) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 13).fill(LinearGradient(colors: [tema.c1.opacity(0.25), tema.c2.opacity(0.16)], startPoint: .topLeading, endPoint: .bottomTrailing)).frame(width: 46, height: 46)
-                Text(urun.ic).font(.system(size: 24))
+        VStack(alignment: .leading, spacing: 0) {
+            AsyncImage(url: URL(string: "https://nickdegs.com/urun-gorsel/\(urun.id).webp")) { phase in
+                if let img = phase.image { img.resizable().scaledToFill() }
+                else {
+                    ZStack {
+                        LinearGradient(colors: [tema.c1.opacity(0.30), tema.c2.opacity(0.18)], startPoint: .topLeading, endPoint: .bottomTrailing)
+                        Text(urun.ic).font(.system(size: 40))
+                    }
+                }
             }
-            Text(yerel.u(urun.ad)).font(.subheadline.bold()).foregroundStyle(.rvText).lineLimit(2).fixedSize(horizontal: false, vertical: true)
-            Text(yerel.u(urun.aciklama)).font(.caption2).foregroundStyle(.rvMut).lineLimit(2).fixedSize(horizontal: false, vertical: true)
-            Spacer(minLength: 0)
-            if !urun.pr.isEmpty { Text(urun.pr).font(.caption.bold()).foregroundStyle(tema.c2) }
+            .frame(maxWidth: .infinity).frame(height: 116).clipped()
+            VStack(alignment: .leading, spacing: 5) {
+                Text(yerel.u(urun.ad)).font(.subheadline.bold()).foregroundStyle(.rvText).lineLimit(1)
+                Text(yerel.u(urun.aciklama)).font(.caption2).foregroundStyle(.rvMut).lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                if !urun.pr.isEmpty { Text(urun.pr).font(.caption.bold()).foregroundStyle(tema.c2).padding(.top, 1) }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading).padding(12)
         }
-        .padding(15).frame(maxWidth: .infinity, minHeight: 158, alignment: .topLeading)
-        .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 22))
+        .frame(maxWidth: .infinity, alignment: .topLeading)
+        .background(Color.rvCard).clipShape(.rect(cornerRadius: 20))
+        .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.rvLine, lineWidth: 1))
+        .shadow(color: .black.opacity(0.18), radius: 10, y: 5)
     }
 }
 
@@ -119,10 +129,11 @@ struct RVUrunDetay: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     HStack(alignment: .top, spacing: 14) {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 20).fill(LinearGradient(colors: [tema.c1.opacity(0.28), tema.c2.opacity(0.18)], startPoint: .topLeading, endPoint: .bottomTrailing)).frame(width: 70, height: 70)
-                            Text(urun.ic).font(.system(size: 36))
+                        AsyncImage(url: URL(string: "https://nickdegs.com/urun-gorsel/\(urun.id).webp")) { phase in
+                            if let img = phase.image { img.resizable().scaledToFill() }
+                            else { ZStack { LinearGradient(colors: [tema.c1.opacity(0.28), tema.c2.opacity(0.18)], startPoint: .topLeading, endPoint: .bottomTrailing); Text(urun.ic).font(.system(size: 36)) } }
                         }
+                        .frame(width: 80, height: 80).clipShape(.rect(cornerRadius: 20))
                         VStack(alignment: .leading, spacing: 5) {
                             Text(yerel.u(urun.ad)).font(.title2.bold()).foregroundStyle(.rvText).fixedSize(horizontal: false, vertical: true)
                             Text(yerel.p("kat_" + urun.g)).font(.caption).foregroundStyle(.rvMut)

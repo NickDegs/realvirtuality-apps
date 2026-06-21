@@ -48,12 +48,11 @@ struct UrunDetayView: View {
 
     var baslik: some View {
         HStack(alignment: .top, spacing: 14) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(LinearGradient(colors: [tema.c1.opacity(0.28), tema.c2.opacity(0.18)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .frame(width: 70, height: 70)
-                Text(urun.ic).font(.system(size: 36))
+            AsyncImage(url: URL(string: "https://nickdegs.com/urun-gorsel/\(urun.id).webp")) { phase in
+                if let img = phase.image { img.resizable().scaledToFill() }
+                else { ZStack { LinearGradient(colors: [tema.c1.opacity(0.28), tema.c2.opacity(0.18)], startPoint: .topLeading, endPoint: .bottomTrailing); Text(urun.ic).font(.system(size: 36)) } }
             }
+            .frame(width: 80, height: 80).clipShape(.rect(cornerRadius: 20))
             .scaleEffect(bel ? 1 : 0.8).opacity(bel ? 1 : 0)
             VStack(alignment: .leading, spacing: 5) {
                 Text(yerel.u(urun.ad)).font(.title2.bold()).foregroundStyle(.rvText)
