@@ -5,7 +5,10 @@ import os, sys, time, json, urllib.request, urllib.error
 try:
     import jwt
 except ImportError:
-    os.system(sys.executable + " -m pip install -q pyjwt cryptography"); import jwt
+    os.system(sys.executable + " -m pip install -q --break-system-packages pyjwt cryptography 2>/dev/null"
+              " || " + sys.executable + " -m pip install -q --user pyjwt cryptography")
+    import site, importlib; importlib.reload(site)
+    import jwt
 KEY_ID=os.environ["ASC_KEY_ID"]; ISS=os.environ["ASC_ISSUER"]; APP=os.environ["ASC_APP_ID"]
 KEY=open(os.environ["ASC_KEY_PATH"]).read()
 def tok():
