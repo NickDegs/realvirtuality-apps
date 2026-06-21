@@ -16,6 +16,7 @@ private func H(_ hex: Int) -> Color {
 }
 
 let PALETLER: [Palet] = [
+    Palet(id: "nickdegs", ad: "NickDegs", c1: H(0x4A86FF), c2: H(0xFFB43C)),
     // ── Renk temaları ──
     Palet(id: "mor",    ad: "Mor & Camgöbeği", c1: H(0x7C5CFF), c2: H(0x22D3EE)),
     Palet(id: "gun",    ad: "Gün Batımı",       c1: H(0xFF6B6B), c2: H(0xFFB74D)),
@@ -39,7 +40,7 @@ let PALETLER: [Palet] = [
 @MainActor
 final class Tema: ObservableObject {
     @AppStorage("tema_mod") var mod = "sistem" { didSet { objectWillChange.send() } }   // sistem/koyu/acik
-    @AppStorage("tema_palet") var paletId = "mor" { didSet { objectWillChange.send() } }
+    @AppStorage("tema_palet") var paletId = "nickdegs" { didSet { objectWillChange.send() } }
 
     var palet: Palet { PALETLER.first { $0.id == paletId } ?? PALETLER[0] }
     var c1: Color { palet.c1 }
