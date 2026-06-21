@@ -1,17 +1,15 @@
 import SwiftUI
-import AuthenticationServices
 
 struct LoginView: View {
     @EnvironmentObject var api: API
     @EnvironmentObject var yerel: Yerel
     @Environment(\.dismiss) var dismiss
-    @State private var mod = 0            // 0: e-posta, 1: SMS
-    @State private var email = ""
     @State private var tel = ""
     @State private var kod = ""
-    @State private var adim = 0          // 0: kimlik, 1: kod
+    @State private var adim = 0          // 0: telefon, 1: kod
     @State private var hata = ""
     @State private var bekle = false
+    @State private var bilgi = ""
 
     var body: some View {
         ZStack {
@@ -20,65 +18,38 @@ struct LoginView: View {
                 VStack(spacing: 18) {
                     if api.girisli {
                         Image(systemName: "person.crop.circle.fill").font(.system(size: 54)).foregroundStyle(.rvViolet)
-                        Text(api.email ?? api.tel ?? "").font(.headline)
+                        Text(api.tel ?? api.email ?? "").font(.headline).foregroundStyle(.rvText)
                         Text("⚡ \(api.kredi) kredi").foregroundStyle(.rvCyan)
-                        Text("Oturum iCloud ile cihazların arasında senkron.").font(.caption2).foregroundStyle(.secondary)
+                        Text("Oturum iCloud ile cihazların arasında senkron.").font(.caption2).foregroundStyle(.secondary).multilineTextAlignment(.center)
                         Button(yerel.t("cikisYap")) { Task { await api.cikis(); dismiss() } }
                             .padding().frame(maxWidth: .infinity)
-                            .glassEffect(.regular, in: .rect(cornerRadius: 14))
+                            .glassEffect(.regular, in: .rect(cornerRadius: 14)).foregroundStyle(.rvText)
                     } else {
-                        Text(yerel.t("girisBaslik")).font(.title2.bold())
-
-                        if adim == 0 {
-                            Picker("", selection: $mod) {
-                                Text(yerel.p("girisEposta")).tag(0)
-                                Text(yerel.p("girisSms")).tag(1)
-                            }.pickerStyle(.segmented)
-                        }
-
-                        Text(adim == 0 ? (mod == 0 ? yerel.t("girisAlt") : yerel.p("telefon")) : yerel.t("kodIpucu"))
+                        Image(systemName: "sparkles").font(.system(size: 46)).foregroundStyle(.linearGradient(colors: [.rvViolet, .rvCyan], startPoint: .leading, endPoint: .trailing))
+                        Text(yerel.t("girisBaslik")).font(.title2.bold()).foregroundStyle(.rvText)
+                        Text(adim == 0 ? yerel.p("telefon") : yerel.p("smsKodu"))
                             .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
 
                         if adim == 0 {
-                            if mod == 0 {
-                                TextField(yerel.t("epostaIpucu"), text: $email)
-                                    .textInputAutocapitalization(.never).keyboardType(.emailAddress).autocorrectionDisabled()
-                                    .padding().glassEffect(.regular, in: .rect(cornerRadius: 14))
-                            } else {
-                                TextField(yerel.p("telefon"), text: $tel).keyboardType(.phonePad)
-                                    .padding().glassEffect(.regular, in: .rect(cornerRadius: 14))
-                            }
+                            TextField("+90 5xx xxx xx xx", text: $tel).keyboardType(.phonePad)
+                                .padding().glassEffect(.regular, in: .rect(cornerRadius: 14)).foregroundStyle(.rvText)
                         } else {
                             TextField(yerel.p("smsKodu"), text: $kod).keyboardType(.numberPad)
                                 .multilineTextAlignment(.center).font(.title3)
-                                .padding().glassEffect(.regular, in: .rect(cornerRadius: 14))
+                                .padding().glassEffect(.regular, in: .rect(cornerRadius: 14)).foregroundStyle(.rvText)
                         }
 
-                        if !hata.isEmpty { Text(hata).font(.caption).foregroundStyle(.red) }
+                        if !bilgi.isEmpty { Text(bilgi).font(.caption).foregroundStyle(.rvCyan).multilineTextAlignment(.center) }
+                        if !hata.isEmpty { Text(hata).font(.caption).foregroundStyle(.orange).multilineTextAlignment(.center) }
 
-                        Button(adim == 0 ? yerel.p("kodGonder") : yerel.p("dogrulaGiris")) { Task { await ileri() } }
-                            .font(.headline.bold()).foregroundStyle(.rvBg)
-                            .frame(maxWidth: .infinity).padding()
-                            .background(.linearGradient(colors: [.rvViolet, .rvCyan], startPoint: .leading, endPoint: .trailing))
-                            .clipShape(.rect(cornerRadius: 14))
-                            .opacity(bekle ? 0.6 : 1).disabled(bekle)
+                        anaButon(adim == 0 ? yerel.p("kodGonder") : yerel.p("dogrulaGiris")) { Task { await ileri() } }
 
-                        if adim == 0 {
-                            HStack { Rectangle().fill(.white.opacity(0.12)).frame(height: 1); Text("•").font(.caption).foregroundStyle(.secondary); Rectangle().fill(.white.opacity(0.12)).frame(height: 1) }
-                            SignInWithAppleButton(.signIn) { req in
-                                req.requestedScopes = [.email, .fullName]
-                            } onCompletion: { result in
-                                if case .success(let auth) = result,
-                                   let cred = auth.credential as? ASAuthorizationAppleIDCredential,
-                                   let td = cred.identityToken, let token = String(data: td, encoding: .utf8) {
-                                    Task { if let e = await api.appleGiris(idToken: token, email: cred.email) { hata = e } else { dismiss() } }
-                                }
-                            }
-                            .signInWithAppleButtonStyle(.white)
-                            .frame(height: 50).clipShape(.rect(cornerRadius: 14))
-                        } else {
-                            Button("←") { adim = 0; kod = ""; hata = "" }.font(.caption).foregroundStyle(.rvCyan)
+                        if adim == 1 {
+                            Button("← " + yerel.p("telefon")) { adim = 0; kod = ""; hata = ""; bilgi = "" }
+                                .font(.caption).foregroundStyle(.rvCyan)
                         }
+                        Text("Telefon numaranla giriş yaparsın. Kredi ve üretimlerin hesabına bağlı, cihazlar arası senkron.")
+                            .font(.caption2).foregroundStyle(.secondary).multilineTextAlignment(.center).padding(.top, 4)
                     }
                 }
                 .padding(24)
@@ -87,14 +58,42 @@ struct LoginView: View {
         .presentationDetents([.medium, .large])
     }
 
+    func anaButon(_ t: String, _ a: @escaping () -> Void) -> some View {
+        Button(action: a) {
+            HStack(spacing: 8) {
+                if bekle { ProgressView().tint(.rvBg) }
+                Text(t).font(.headline.bold())
+            }
+            .foregroundStyle(.rvBg).frame(maxWidth: .infinity).padding()
+            .background(.linearGradient(colors: [.rvViolet, .rvCyan], startPoint: .leading, endPoint: .trailing))
+            .clipShape(.rect(cornerRadius: 14))
+            .opacity(bekle ? 0.7 : 1)
+        }.disabled(bekle).padding(.top, 2)
+    }
+
     func ileri() async {
-        hata = ""; bekle = true; defer { bekle = false }
+        hata = ""; bilgi = ""; bekle = true; defer { bekle = false }
         if adim == 0 {
-            let e = mod == 0 ? await api.kodGonder(email) : await api.smsGonder(tel)
-            if let e = e { hata = e } else { adim = 1 }
+            // telefon ülke koduna göre dili ayarla
+            if let dil = LoginView.dilBul(tel) { yerel.secim = dil }
+            if let e = await api.smsGonder(tel) { hata = e }
+            else { adim = 1; bilgi = "Kod telefonuna gönderildi." }
         } else {
-            let e = mod == 0 ? await api.kodDogrula(email, kod) : await api.smsDogrula(tel, kod)
-            if let e = e { hata = e } else { dismiss() }
+            if let e = await api.smsDogrula(tel, kod) { hata = e } else { dismiss() }
         }
+    }
+
+    // Telefon ülke kodu → uygulama dili
+    static func dilBul(_ tel: String) -> String? {
+        let d = tel.filter { $0.isNumber }
+        let harita: [(String, String)] = [
+            ("90","tr"),("49","de"),("43","de"),("41","de"),("33","fr"),("32","fr"),
+            ("34","es"),("7","ru"),("380","ru"),
+            ("971","ar"),("966","ar"),("20","ar"),("962","ar"),("965","ar"),("973","ar"),
+            ("974","ar"),("968","ar"),("212","ar"),("213","ar"),("216","ar"),("961","ar"),
+            ("1","en"),("44","en"),("353","en"),("61","en"),("64","en")
+        ].sorted { $0.0.count > $1.0.count }   // uzun kod önce
+        for (kod, dil) in harita where d.hasPrefix(kod) { return dil }
+        return nil
     }
 }
