@@ -114,7 +114,7 @@ struct AyarlarView: View {
                         .frame(width: 44, height: 44)
                     Image(systemName: "building.2.fill").font(.system(size: 20, weight: .semibold)).foregroundStyle(tema.grad)
                 }
-                Text(yerel.t("sekme_kurumsal")).font(.subheadline.bold()).foregroundStyle(.rvText)
+                Text(yerel.t("sekme_isletme")).font(.subheadline.bold()).foregroundStyle(.rvText)
                 Spacer()
             }
             Text(yerel.t("incele"))

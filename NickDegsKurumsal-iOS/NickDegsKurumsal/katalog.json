@@ -1,307 +1,7 @@
 [
 {
-"id": "card",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "📇",
-"ad": {
-"tr": "Dijital Kartvizit",
-"en": "Digital Business Card"
-},
-"aciklama": {
-"tr": "Kişiye özel premium kart + QR + rehbere ekle.",
-"en": "Personal premium card + QR + save to contacts."
-},
-"pr": "₺249"
-},
-{
-"id": "avatar",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "🎨",
-"ad": {
-"tr": "AI Avatar / PFP",
-"en": "AI Avatar / PFP"
-},
-"aciklama": {
-"tr": "Fotoğrafını yükle, profesyonel AI avatar al.",
-"en": "Upload a photo, get a pro AI avatar."
-},
-"pr": "₺299"
-},
-{
-"id": "prompts",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "🤖",
-"ad": {
-"tr": "AI Prompt Paketi",
-"en": "AI Prompt Pack"
-},
-"aciklama": {
-"tr": "50+ hazır prompt + canlı AI içerik üretici.",
-"en": "50+ ready prompts + live AI content generator."
-},
-"pr": "₺199"
-},
-{
-"id": "shortcuts",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "📱",
-"ad": {
-"tr": "iOS Kestirme Paketi",
-"en": "iOS Shortcuts Pack"
-},
-"aciklama": {
-"tr": "Video indirici, otomasyonlar, hızlı araçlar.",
-"en": "Downloader, automations, quick tools."
-},
-"pr": "₺149"
-},
-{
-"id": "notion",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "📊",
-"ad": {
-"tr": "Notion Şablonları",
-"en": "Notion Templates"
-},
-"aciklama": {
-"tr": "Planlayıcı, CRM, bütçe, içerik takvimi.",
-"en": "Planner, CRM, budget, content calendar."
-},
-"pr": "₺199"
-},
-{
-"id": "excel",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "📈",
-"ad": {
-"tr": "Excel / Sheets Şablonları",
-"en": "Excel / Sheets Templates"
-},
-"aciklama": {
-"tr": "Bütçe, fatura, stok, KDV hesap.",
-"en": "Budget, invoice, stock, tax."
-},
-"pr": "₺199"
-},
-{
-"id": "ebook",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "📘",
-"ad": {
-"tr": "E-Kitap / Rehber",
-"en": "E-Book / Guide"
-},
-"aciklama": {
-"tr": "AI ile iş, freelance, dijital para kazanma.",
-"en": "AI for work, freelancing, online income."
-},
-"pr": "₺199"
-},
-{
-"id": "cv",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "📄",
-"ad": {
-"tr": "CV / Özgeçmiş Şablonu",
-"en": "Resume / CV Template"
-},
-"aciklama": {
-"tr": "ATS uyumlu, modern, düzenlenebilir.",
-"en": "ATS-friendly, modern, editable."
-},
-"pr": "₺149"
-},
-{
-"id": "audio",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "🎵",
-"ad": {
-"tr": "Telifsiz Müzik / Ses",
-"en": "Royalty-Free Audio"
-},
-"aciklama": {
-"tr": "İçerik üreticileri için telifsiz ses paketi.",
-"en": "Royalty-free audio pack for creators."
-},
-"pr": "₺149"
-},
-{
-"id": "aiservice",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "⭐",
-"ad": {
-"tr": "Premium AI Servis",
-"en": "Premium AI Service"
-},
-"aciklama": {
-"tr": "AI sohbet + görsel üretim aboneliği.",
-"en": "AI chat + image generation subscription."
-},
-"pr": "₺299"
-},
-{
-"id": "bio",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "🔗",
-"ad": {
-"tr": "Link-in-bio / QR Menü",
-"en": "Link-in-bio / QR Menu"
-},
-"aciklama": {
-"tr": "Tek linkte tüm bağlantıların, dijital menü.",
-"en": "All your links in one, digital menu."
-},
-"pr": "₺199"
-},
-{
-"id": "icons",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "🖼️",
-"ad": {
-"tr": "İkon & Görsel Paketi",
-"en": "Icon & Graphics Pack"
-},
-"aciklama": {
-"tr": "Sosyal medya + sunum için hazır görseller.",
-"en": "Ready graphics for social & presentations."
-},
-"pr": "₺149"
-},
-{
-"id": "landing",
-"sekme": "icerik",
-"g": "pro",
-"ic": "🚀",
-"ad": {
-"tr": "Landing Page Teması",
-"en": "Landing Page Theme"
-},
-"aciklama": {
-"tr": "Mobil uyumlu, dönüşüm odaklı satış sayfası.",
-"en": "Mobile-friendly, conversion-focused page."
-},
-"pr": "₺399"
-},
-{
-"id": "social",
-"sekme": "icerik",
-"g": "pro",
-"ic": "📐",
-"ad": {
-"tr": "Sosyal Medya Tasarım Paketi",
-"en": "Social Media Design Pack"
-},
-"aciklama": {
-"tr": "Post + story + reels şablon seti.",
-"en": "Post + story + reels template set."
-},
-"pr": "₺399"
-},
-{
-"id": "logo",
-"sekme": "icerik",
-"g": "pro",
-"ic": "🎯",
-"ad": {
-"tr": "Logo / Marka Kiti",
-"en": "Logo / Brand Kit"
-},
-"aciklama": {
-"tr": "Logo + renk + font + sosyal kit.",
-"en": "Logo + colors + fonts + social kit."
-},
-"pr": "₺599"
-},
-{
-"id": "video",
-"sekme": "icerik",
-"g": "pro",
-"ic": "🎬",
-"ad": {
-"tr": "Video / Reels Şablonları",
-"en": "Video / Reels Templates"
-},
-"aciklama": {
-"tr": "Kısa video için hazır kurgu şablonları.",
-"en": "Ready edit templates for short video."
-},
-"pr": "₺299"
-},
-{
-"id": "n8n",
-"sekme": "icerik",
-"g": "pro",
-"ic": "⚙️",
-"ad": {
-"tr": "n8n Otomasyon Şablonları",
-"en": "n8n Automation Templates"
-},
-"aciklama": {
-"tr": "Sipariş bildirimi, sosyal otomasyon, sync.",
-"en": "Order alerts, social automation, sync."
-},
-"pr": "₺249"
-},
-{
-"id": "aiimage",
-"sekme": "icerik",
-"g": "pro",
-"ic": "🖌️",
-"ad": {
-"tr": "AI Görsel Üretim Paketi",
-"en": "AI Image Generation Pack"
-},
-"aciklama": {
-"tr": "Markana özel toplu AI görsel üretimi. Hemen canlı dene!",
-"en": "Bulk AI image generation for your brand. Try it live!"
-},
-"pr": "₺349"
-},
-{
-"id": "api",
-"sekme": "icerik",
-"g": "pro",
-"ic": "🔌",
-"ad": {
-"tr": "API Erişim Paketi",
-"en": "API Access Pack"
-},
-"aciklama": {
-"tr": "AI / görsel / dönüştürme API'lerine erişim.",
-"en": "Access to AI / image / convert APIs."
-},
-"pr": "₺399"
-},
-{
-"id": "bundle",
-"sekme": "icerik",
-"g": "pro",
-"ic": "🧩",
-"ad": {
-"tr": "Website Tema Bundle",
-"en": "Website Theme Bundle"
-},
-"aciklama": {
-"tr": "Çoklu hazır site teması paketi.",
-"en": "Multiple ready website themes."
-},
-"pr": "₺699"
-},
-{
 "id": "komisyonsuz",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "isletme",
 "ic": "🍽️",
 "ad": {
@@ -316,7 +16,7 @@
 },
 {
 "id": "website",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "isletme",
 "ic": "🌐",
 "ad": {
@@ -331,7 +31,7 @@
 },
 {
 "id": "ecom",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "isletme",
 "ic": "🛒",
 "ad": {
@@ -346,7 +46,7 @@
 },
 {
 "id": "bot",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "isletme",
 "ic": "💬",
 "ad": {
@@ -361,7 +61,7 @@
 },
 {
 "id": "hosting",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "isletme",
 "ic": "☁️",
 "ad": {
@@ -376,7 +76,7 @@
 },
 {
 "id": "teamcard",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "isletme",
 "ic": "👥",
 "ad": {
@@ -391,7 +91,7 @@
 },
 {
 "id": "integ",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "isletme",
 "ic": "🔗",
 "ad": {
@@ -406,7 +106,7 @@
 },
 {
 "id": "custom",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "💻",
 "ad": {
@@ -421,7 +121,7 @@
 },
 {
 "id": "whitelabel",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "🏷️",
 "ad": {
@@ -436,7 +136,7 @@
 },
 {
 "id": "sysint",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "🔄",
 "ad": {
@@ -451,7 +151,7 @@
 },
 {
 "id": "infra",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "🖥️",
 "ad": {
@@ -466,7 +166,7 @@
 },
 {
 "id": "security",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "🛡️",
 "ad": {
@@ -481,7 +181,7 @@
 },
 {
 "id": "sla",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "📞",
 "ad": {
@@ -495,128 +195,8 @@
 "pr": "₺2.990"
 },
 {
-"id": "smm",
-"sekme": "icerik",
-"g": "sosyal",
-"ic": "📲",
-"ad": {
-"tr": "Sosyal Medya Yönetimi",
-"en": "Social Media Management"
-},
-"aciklama": {
-"tr": "İçerik + paylaşım + etkileşim, aylık tam yönetim.",
-"en": "Content + posting + engagement, full monthly management."
-},
-"pr": "₺2.900"
-},
-{
-"id": "content",
-"sekme": "icerik",
-"g": "sosyal",
-"ic": "🗓️",
-"ad": {
-"tr": "İçerik Üretimi Paketi",
-"en": "Content Production Pack"
-},
-"aciklama": {
-"tr": "Aylık içerik takvimi + hazır post/story/reel.",
-"en": "Monthly content calendar + ready posts/stories/reels."
-},
-"pr": "₺1.900"
-},
-{
-"id": "reels",
-"sekme": "icerik",
-"g": "sosyal",
-"ic": "🎞️",
-"ad": {
-"tr": "Reels / TikTok Düzenleme",
-"en": "Reels / TikTok Editing"
-},
-"aciklama": {
-"tr": "Profesyonel kısa video kurgu + altyazı + efekt.",
-"en": "Pro short-video editing + captions + effects."
-},
-"pr": "₺399"
-},
-{
-"id": "admgr",
-"sekme": "icerik",
-"g": "sosyal",
-"ic": "🎯",
-"ad": {
-"tr": "Reklam Yönetimi",
-"en": "Ad Management"
-},
-"aciklama": {
-"tr": "Meta/TikTok reklam kurulumu + optimizasyon.",
-"en": "Meta/TikTok ad setup + optimization."
-},
-"pr": "₺2.500"
-},
-{
-"id": "growth",
-"sekme": "icerik",
-"g": "sosyal",
-"ic": "📈",
-"ad": {
-"tr": "Büyüme Danışmanlığı",
-"en": "Growth Consulting"
-},
-"aciklama": {
-"tr": "Takipçi + etkileşim stratejisi, aylık rapor.",
-"en": "Follower + engagement strategy, monthly report."
-},
-"pr": "₺1.500"
-},
-{
-"id": "profile",
-"sekme": "icerik",
-"g": "sosyal",
-"ic": "✨",
-"ad": {
-"tr": "Profil Kurulumu & Optimizasyon",
-"en": "Profile Setup & Optimization"
-},
-"aciklama": {
-"tr": "Bio, görsel, vitrin, SEO — profesyonel hesap.",
-"en": "Bio, visuals, highlights, SEO — pro account."
-},
-"pr": "₺990"
-},
-{
-"id": "aicontent",
-"sekme": "icerik",
-"g": "sosyal",
-"ic": "🤖",
-"ad": {
-"tr": "AI İçerik Aboneliği",
-"en": "AI Content Subscription"
-},
-"aciklama": {
-"tr": "Otomatik caption + görsel üretimi, her gün.",
-"en": "Automated caption + image generation, daily."
-},
-"pr": "₺599"
-},
-{
-"id": "ugc",
-"sekme": "icerik",
-"g": "sosyal",
-"ic": "🎥",
-"ad": {
-"tr": "UGC / İçerik Paketi",
-"en": "UGC / Content Pack"
-},
-"aciklama": {
-"tr": "Marka için kullanıcı tarzı tanıtım içerikleri.",
-"en": "User-style promotional content for your brand."
-},
-"pr": "₺990"
-},
-{
 "id": "brand",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "🎨",
 "ad": {
@@ -631,7 +211,7 @@
 },
 {
 "id": "cmail",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "📧",
 "ad": {
@@ -646,7 +226,7 @@
 },
 {
 "id": "seo",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "🔍",
 "ad": {
@@ -661,7 +241,7 @@
 },
 {
 "id": "chatbot",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "💬",
 "ad": {
@@ -676,7 +256,7 @@
 },
 {
 "id": "dashboard",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "📊",
 "ad": {
@@ -691,7 +271,7 @@
 },
 {
 "id": "training",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "🎓",
 "ad": {
@@ -705,173 +285,8 @@
 "pr": "₺4.990"
 },
 {
-"id": "planner",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "🗒️",
-"ad": {
-"tr": "Dijital Planlayıcı",
-"en": "Digital Planner"
-},
-"aciklama": {
-"tr": "GoodNotes/Notability uyumlu yıllık planlayıcı.",
-"en": "Yearly planner for GoodNotes/Notability."
-},
-"pr": "₺149"
-},
-{
-"id": "presets",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "📸",
-"ad": {
-"tr": "Fotoğraf Preset Paketi",
-"en": "Photo Preset Pack"
-},
-"aciklama": {
-"tr": "Lightroom & mobil için profesyonel filtreler.",
-"en": "Pro filters for Lightroom & mobile."
-},
-"pr": "₺199"
-},
-{
-"id": "wallpaper",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "🌅",
-"ad": {
-"tr": "Duvar Kağıdı Paketi",
-"en": "Wallpaper Pack"
-},
-"aciklama": {
-"tr": "Telefon + masaüstü için HD duvar kağıtları.",
-"en": "HD wallpapers for phone + desktop."
-},
-"pr": "₺99"
-},
-{
-"id": "stickers",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "😊",
-"ad": {
-"tr": "Çıkartma / Sticker Paketi",
-"en": "Sticker Pack"
-},
-"aciklama": {
-"tr": "WhatsApp & Telegram için özel sticker seti.",
-"en": "Custom sticker set for WhatsApp & Telegram."
-},
-"pr": "₺99"
-},
-{
-"id": "storybook",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "📖",
-"ad": {
-"tr": "AI Kişisel Masal Kitabı",
-"en": "AI Personalized Storybook"
-},
-"aciklama": {
-"tr": "İsme özel, çocuğa hediye dijital masal kitabı.",
-"en": "Name-personalized digital storybook gift."
-},
-"pr": "₺249"
-},
-{
-"id": "invite",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "💌",
-"ad": {
-"tr": "Dijital Davetiye",
-"en": "Digital Invitation"
-},
-"aciklama": {
-"tr": "Düğün, doğum günü, etkinlik için animasyonlu davetiye.",
-"en": "Animated invite for weddings, birthdays, events."
-},
-"pr": "₺199"
-},
-{
-"id": "pitch",
-"sekme": "icerik",
-"g": "pro",
-"ic": "📑",
-"ad": {
-"tr": "Pitch Deck / Sunum Şablonu",
-"en": "Pitch Deck Template"
-},
-"aciklama": {
-"tr": "Yatırımcı & müşteri sunumu için hazır deck.",
-"en": "Ready deck for investor & client pitches."
-},
-"pr": "₺299"
-},
-{
-"id": "email",
-"sekme": "icerik",
-"g": "pro",
-"ic": "✉️",
-"ad": {
-"tr": "E-posta Pazarlama Şablonları",
-"en": "Email Marketing Templates"
-},
-"aciklama": {
-"tr": "Newsletter + kampanya + otomasyon şablonları.",
-"en": "Newsletter + campaign + automation templates."
-},
-"pr": "₺249"
-},
-{
-"id": "uikit",
-"sekme": "icerik",
-"g": "pro",
-"ic": "🎛️",
-"ad": {
-"tr": "UI Kit / Figma Şablonu",
-"en": "UI Kit / Figma Template"
-},
-"aciklama": {
-"tr": "Web & mobil için hazır tasarım sistemi.",
-"en": "Ready design system for web & mobile."
-},
-"pr": "₺449"
-},
-{
-"id": "invoice",
-"sekme": "icerik",
-"g": "pro",
-"ic": "🧾",
-"ad": {
-"tr": "Fatura & Teklif Şablon Seti",
-"en": "Invoice & Quote Kit"
-},
-"aciklama": {
-"tr": "Profesyonel fatura, teklif, sözleşme şablonları.",
-"en": "Pro invoice, quote, contract templates."
-},
-"pr": "₺199"
-},
-{
-"id": "qrmenu",
-"sekme": "icerik",
-"g": "pro",
-"ic": "📲",
-"ad": {
-"tr": "QR Kod Menü",
-"en": "QR Code Menu"
-},
-"aciklama": {
-"tr": "Kafe/restoran için dijital QR menü sayfası.",
-"en": "Digital QR menu page for cafe/restaurant."
-},
-"pr": "₺299"
-},
-{
 "id": "gbp",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "isletme",
 "ic": "📍",
 "ad": {
@@ -886,7 +301,7 @@
 },
 {
 "id": "booking",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "isletme",
 "ic": "📅",
 "ad": {
@@ -901,7 +316,7 @@
 },
 {
 "id": "menu",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "isletme",
 "ic": "🍽️",
 "ad": {
@@ -915,53 +330,8 @@
 "pr": "₺1.200"
 },
 {
-"id": "mediakit",
-"sekme": "icerik",
-"g": "sosyal",
-"ic": "📋",
-"ad": {
-"tr": "Influencer Medya Kiti",
-"en": "Influencer Media Kit"
-},
-"aciklama": {
-"tr": "Markalara sunum için profesyonel medya kiti.",
-"en": "Pro media kit to pitch to brands."
-},
-"pr": "₺449"
-},
-{
-"id": "thumb",
-"sekme": "icerik",
-"g": "sosyal",
-"ic": "🖼️",
-"ad": {
-"tr": "YouTube Thumbnail Paketi",
-"en": "YouTube Thumbnail Pack"
-},
-"aciklama": {
-"tr": "Tıklanma odaklı küçük resim şablonları.",
-"en": "Click-focused thumbnail templates."
-},
-"pr": "₺299"
-},
-{
-"id": "podcast",
-"sekme": "icerik",
-"g": "sosyal",
-"ic": "🎙️",
-"ad": {
-"tr": "Podcast Düzenleme",
-"en": "Podcast Editing"
-},
-"aciklama": {
-"tr": "Ses temizleme + kurgu + dağıtım hazırlığı.",
-"en": "Audio cleanup + editing + distribution prep."
-},
-"pr": "₺299"
-},
-{
 "id": "mobileapp",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "📱",
 "ad": {
@@ -976,7 +346,7 @@
 },
 {
 "id": "kvkk",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "📜",
 "ad": {
@@ -991,7 +361,7 @@
 },
 {
 "id": "backup",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "💾",
 "ad": {
@@ -1005,203 +375,8 @@
 "pr": "₺1.490"
 },
 {
-"id": "course",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "🎓",
-"ad": {
-"tr": "Online Video Kurs",
-"en": "Online Video Course"
-},
-"aciklama": {
-"tr": "AI, tasarım, freelance üzerine adım adım eğitim.",
-"en": "Step-by-step course on AI, design, freelancing."
-},
-"pr": "₺499"
-},
-{
-"id": "mealplan",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "🥗",
-"ad": {
-"tr": "Beslenme & Diyet Programı",
-"en": "Meal & Diet Plan"
-},
-"aciklama": {
-"tr": "Haftalık öğün planı + alışveriş listesi şablonu.",
-"en": "Weekly meal plan + shopping list template."
-},
-"pr": "₺199"
-},
-{
-"id": "fitness",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "💪",
-"ad": {
-"tr": "Antrenman Programı",
-"en": "Workout Program"
-},
-"aciklama": {
-"tr": "Seviyene göre haftalık antrenman planı.",
-"en": "Weekly workout plan for your level."
-},
-"pr": "₺199"
-},
-{
-"id": "flashcards",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "🃏",
-"ad": {
-"tr": "Dil Öğrenme Kartları",
-"en": "Language Flashcards"
-},
-"aciklama": {
-"tr": "Anki uyumlu kelime + ifade kart setleri.",
-"en": "Anki-compatible vocabulary + phrase decks."
-},
-"pr": "₺149"
-},
-{
-"id": "weddingkit",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "💍",
-"ad": {
-"tr": "Düğün Planlama Paketi",
-"en": "Wedding Planning Kit"
-},
-"aciklama": {
-"tr": "Bütçe, davetli listesi, zaman çizelgesi şablonları.",
-"en": "Budget, guest list, timeline templates."
-},
-"pr": "₺349"
-},
-{
-"id": "partykit",
-"sekme": "bireysel",
-"g": "bireysel",
-"ic": "🎉",
-"ad": {
-"tr": "Etkinlik / Parti Paketi",
-"en": "Event / Party Kit"
-},
-"aciklama": {
-"tr": "Davetiye, afiş, oyun ve dekor şablonları.",
-"en": "Invites, posters, games and decor templates."
-},
-"pr": "₺199"
-},
-{
-"id": "webinar",
-"sekme": "icerik",
-"g": "pro",
-"ic": "🖥️",
-"ad": {
-"tr": "Canlı Atölye / Webinar",
-"en": "Live Workshop / Webinar"
-},
-"aciklama": {
-"tr": "Canlı eğitim + kayıt + materyal erişimi.",
-"en": "Live training + recording + materials access."
-},
-"pr": "₺399"
-},
-{
-"id": "blog",
-"sekme": "icerik",
-"g": "pro",
-"ic": "📝",
-"ad": {
-"tr": "SEO Blog İçerik Paketi",
-"en": "SEO Blog Content Pack"
-},
-"aciklama": {
-"tr": "Anahtar kelime odaklı, hazır blog yazıları.",
-"en": "Keyword-focused, ready-to-publish blog posts."
-},
-"pr": "₺499"
-},
-{
-"id": "funnel",
-"sekme": "icerik",
-"g": "pro",
-"ic": "🔻",
-"ad": {
-"tr": "E-posta Funnel Kurulumu",
-"en": "Email Funnel Setup"
-},
-"aciklama": {
-"tr": "Otomatik karşılama + satış e-posta dizisi.",
-"en": "Automated welcome + sales email sequence."
-},
-"pr": "₺499"
-},
-{
-"id": "voiceover",
-"sekme": "icerik",
-"g": "pro",
-"ic": "🎤",
-"ad": {
-"tr": "Seslendirme / Voice-Over",
-"en": "Voice-Over"
-},
-"aciklama": {
-"tr": "Reklam, video, anons için doğal seslendirme.",
-"en": "Natural voice-over for ads, video, announcements."
-},
-"pr": "₺199"
-},
-{
-"id": "transcribe",
-"sekme": "icerik",
-"g": "pro",
-"ic": "📜",
-"ad": {
-"tr": "Transkripsiyon / Altyazı",
-"en": "Transcription / Subtitles"
-},
-"aciklama": {
-"tr": "Ses-video metne çevirme + çok dilli altyazı.",
-"en": "Audio-video to text + multilingual subtitles."
-},
-"pr": "₺149"
-},
-{
-"id": "translate",
-"sekme": "icerik",
-"g": "pro",
-"ic": "🌐",
-"ad": {
-"tr": "Çeviri / Lokalizasyon",
-"en": "Translation / Localization"
-},
-"aciklama": {
-"tr": "Site, uygulama, belge için profesyonel çeviri.",
-"en": "Pro translation for site, app, documents."
-},
-"pr": "₺99"
-},
-{
-"id": "designsub",
-"sekme": "icerik",
-"g": "pro",
-"ic": "♾️",
-"ad": {
-"tr": "Sınırsız Tasarım Aboneliği",
-"en": "Unlimited Design Subscription"
-},
-"aciklama": {
-"tr": "Aylık sabit ücret, sınırsız tasarım talebi.",
-"en": "Flat monthly fee, unlimited design requests."
-},
-"pr": "₺1.990"
-},
-{
 "id": "productphoto",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "isletme",
 "ic": "📷",
 "ad": {
@@ -1216,7 +391,7 @@
 },
 {
 "id": "marketplace",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "isletme",
 "ic": "🏬",
 "ad": {
@@ -1231,7 +406,7 @@
 },
 {
 "id": "dropship",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "isletme",
 "ic": "📦",
 "ad": {
@@ -1246,7 +421,7 @@
 },
 {
 "id": "maintain",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "isletme",
 "ic": "🔧",
 "ad": {
@@ -1260,53 +435,8 @@
 "pr": "₺990"
 },
 {
-"id": "caption",
-"sekme": "icerik",
-"g": "sosyal",
-"ic": "✍️",
-"ad": {
-"tr": "Caption & Metin Yazımı",
-"en": "Caption & Copywriting"
-},
-"aciklama": {
-"tr": "Etkileşim odaklı gönderi metinleri, aylık paket.",
-"en": "Engagement-focused post copy, monthly pack."
-},
-"pr": "₺399"
-},
-{
-"id": "community",
-"sekme": "icerik",
-"g": "sosyal",
-"ic": "🫂",
-"ad": {
-"tr": "Topluluk Yönetimi",
-"en": "Community Management"
-},
-"aciklama": {
-"tr": "Discord/Telegram topluluk kurulum + moderasyon.",
-"en": "Discord/Telegram community setup + moderation."
-},
-"pr": "₺1.500"
-},
-{
-"id": "stream",
-"sekme": "icerik",
-"g": "sosyal",
-"ic": "📡",
-"ad": {
-"tr": "Canlı Yayın Kurulumu",
-"en": "Live Stream Setup"
-},
-"aciklama": {
-"tr": "OBS sahne, overlay, alert ve yayın paketi.",
-"en": "OBS scenes, overlays, alerts, stream kit."
-},
-"pr": "₺790"
-},
-{
 "id": "crm",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "🗂️",
 "ad": {
@@ -1321,7 +451,7 @@
 },
 {
 "id": "devops",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "⚙️",
 "ad": {
@@ -1336,7 +466,7 @@
 },
 {
 "id": "cloudmig",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "☁️",
 "ad": {
@@ -1351,7 +481,7 @@
 },
 {
 "id": "retainer",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "🤝",
 "ad": {
@@ -1366,7 +496,7 @@
 },
 {
 "id": "hukuk",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "⚖️",
 "ad": {
@@ -1381,7 +511,7 @@
 },
 {
 "id": "qrorder",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🍽️",
 "ad": {
@@ -1396,7 +526,7 @@
 },
 {
 "id": "waiter",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🛎️",
 "ad": {
@@ -1411,7 +541,7 @@
 },
 {
 "id": "kds",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "👨‍🍳",
 "ad": {
@@ -1426,7 +556,7 @@
 },
 {
 "id": "tablepay",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "💳",
 "ad": {
@@ -1441,7 +571,7 @@
 },
 {
 "id": "queue",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🔢",
 "ad": {
@@ -1456,7 +586,7 @@
 },
 {
 "id": "reserve",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "📆",
 "ad": {
@@ -1471,7 +601,7 @@
 },
 {
 "id": "hotelqr",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🏨",
 "ad": {
@@ -1486,7 +616,7 @@
 },
 {
 "id": "loyalty",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🎟️",
 "ad": {
@@ -1501,7 +631,7 @@
 },
 {
 "id": "inventory",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "📦",
 "ad": {
@@ -1516,7 +646,7 @@
 },
 {
 "id": "shift",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🕐",
 "ad": {
@@ -1531,7 +661,7 @@
 },
 {
 "id": "salon",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "💇",
 "ad": {
@@ -1546,7 +676,7 @@
 },
 {
 "id": "clinic",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🩺",
 "ad": {
@@ -1561,7 +691,7 @@
 },
 {
 "id": "gym",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🏋️",
 "ad": {
@@ -1576,7 +706,7 @@
 },
 {
 "id": "eventqr",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🎫",
 "ad": {
@@ -1591,7 +721,7 @@
 },
 {
 "id": "feedback",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "⭐",
 "ad": {
@@ -1606,7 +736,7 @@
 },
 {
 "id": "tipqr",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "💝",
 "ad": {
@@ -1621,7 +751,7 @@
 },
 {
 "id": "kiosk",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🖲️",
 "ad": {
@@ -1636,7 +766,7 @@
 },
 {
 "id": "signage",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "📺",
 "ad": {
@@ -1651,7 +781,7 @@
 },
 {
 "id": "delivery",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🛵",
 "ad": {
@@ -1666,7 +796,7 @@
 },
 {
 "id": "valet",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🚗",
 "ad": {
@@ -1681,7 +811,7 @@
 },
 {
 "id": "parking",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🅿️",
 "ad": {
@@ -1696,7 +826,7 @@
 },
 {
 "id": "intercom",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🔔",
 "ad": {
@@ -1711,7 +841,7 @@
 },
 {
 "id": "building",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🏢",
 "ad": {
@@ -1726,7 +856,7 @@
 },
 {
 "id": "carrental",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🚙",
 "ad": {
@@ -1741,7 +871,7 @@
 },
 {
 "id": "realestate",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🏡",
 "ad": {
@@ -1756,7 +886,7 @@
 },
 {
 "id": "vet",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🐾",
 "ad": {
@@ -1771,7 +901,7 @@
 },
 {
 "id": "school",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🏫",
 "ad": {
@@ -1786,7 +916,7 @@
 },
 {
 "id": "fieldservice",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🧰",
 "ad": {
@@ -1801,7 +931,7 @@
 },
 {
 "id": "helpdesk",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🎧",
 "ad": {
@@ -1816,7 +946,7 @@
 },
 {
 "id": "catalog",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "📒",
 "ad": {
@@ -1831,7 +961,7 @@
 },
 {
 "id": "leadqr",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🧲",
 "ad": {
@@ -1846,7 +976,7 @@
 },
 {
 "id": "warranty",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🧾",
 "ad": {
@@ -1861,7 +991,7 @@
 },
 {
 "id": "subbox",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "📮",
 "ad": {
@@ -1876,7 +1006,7 @@
 },
 {
 "id": "donate",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "❤️",
 "ad": {
@@ -1891,7 +1021,7 @@
 },
 {
 "id": "fleet",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🚚",
 "ad": {
@@ -1906,7 +1036,7 @@
 },
 {
 "id": "nursery",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "akilli",
 "ic": "🧸",
 "ad": {
@@ -1921,7 +1051,7 @@
 },
 {
 "id": "brandedapp",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "📱",
 "ad": {
@@ -1936,7 +1066,7 @@
 },
 {
 "id": "orderapp",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "🛍️",
 "ad": {
@@ -1951,7 +1081,7 @@
 },
 {
 "id": "loyaltyapp",
-"sekme": "kurumsal",
+"sekme": "isletme",
 "g": "kurumsal",
 "ic": "🏅",
 "ad": {
@@ -1966,7 +1096,7 @@
 },
 {
 "id": "guv-temel",
-"sekme": "kurumsal",
+"sekme": "guvenlik",
 "g": "guvenlik",
 "ic": "🟢",
 "ad": {
@@ -1981,7 +1111,7 @@
 },
 {
 "id": "guv-pro",
-"sekme": "kurumsal",
+"sekme": "guvenlik",
 "g": "guvenlik",
 "ic": "🔵",
 "ad": {
@@ -1996,7 +1126,7 @@
 },
 {
 "id": "guv-max",
-"sekme": "kurumsal",
+"sekme": "guvenlik",
 "g": "guvenlik",
 "ic": "🔴",
 "ad": {
@@ -2011,7 +1141,7 @@
 },
 {
 "id": "guv-ssl",
-"sekme": "kurumsal",
+"sekme": "guvenlik",
 "g": "guvenlik",
 "ic": "🔒",
 "ad": {
@@ -2026,7 +1156,7 @@
 },
 {
 "id": "guv-ddos",
-"sekme": "kurumsal",
+"sekme": "guvenlik",
 "g": "guvenlik",
 "ic": "🌊",
 "ad": {
@@ -2041,7 +1171,7 @@
 },
 {
 "id": "guv-waf",
-"sekme": "kurumsal",
+"sekme": "guvenlik",
 "g": "guvenlik",
 "ic": "🧱",
 "ad": {
@@ -2056,7 +1186,7 @@
 },
 {
 "id": "guv-gizle",
-"sekme": "kurumsal",
+"sekme": "guvenlik",
 "g": "guvenlik",
 "ic": "🕵️",
 "ad": {
@@ -2071,7 +1201,7 @@
 },
 {
 "id": "guv-bot",
-"sekme": "kurumsal",
+"sekme": "guvenlik",
 "g": "guvenlik",
 "ic": "🤖",
 "ad": {
@@ -2086,7 +1216,7 @@
 },
 {
 "id": "guv-odeme",
-"sekme": "kurumsal",
+"sekme": "guvenlik",
 "g": "guvenlik",
 "ic": "💳",
 "ad": {
@@ -2101,7 +1231,7 @@
 },
 {
 "id": "guv-2fa",
-"sekme": "kurumsal",
+"sekme": "guvenlik",
 "g": "guvenlik",
 "ic": "🔑",
 "ad": {
@@ -2116,7 +1246,7 @@
 },
 {
 "id": "guv-izleme",
-"sekme": "kurumsal",
+"sekme": "guvenlik",
 "g": "guvenlik",
 "ic": "📡",
 "ad": {
@@ -2131,7 +1261,7 @@
 },
 {
 "id": "guv-audit",
-"sekme": "kurumsal",
+"sekme": "guvenlik",
 "g": "guvenlik",
 "ic": "🔍",
 "ad": {
@@ -2146,7 +1276,7 @@
 },
 {
 "id": "guv-yedek",
-"sekme": "kurumsal",
+"sekme": "guvenlik",
 "g": "guvenlik",
 "ic": "💾",
 "ad": {

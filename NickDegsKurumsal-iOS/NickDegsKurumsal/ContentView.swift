@@ -3,7 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
-    @State private var secili: Sekme = .kurumsal
+    @State private var secili: Sekme = .isletme
 
     var body: some View {
         TabView(selection: $secili) {
