@@ -1,6 +1,10 @@
 name: Build Apps
 on:
-  push: { branches: [main] }
+  push:
+    branches: [main]
+    # Sadece tarifler dosyaları değişince derle — başka oturumların push'larında
+    # boşuna build + Apple günlük yükleme limiti tüketme (2026-06-21)
+    paths: ['tarifler/**', '.github/workflows/build.yml']
   workflow_dispatch:
 
 env:
