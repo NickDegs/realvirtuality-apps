@@ -1,0 +1,28 @@
+name: NickDegsPanel
+options:
+  bundleIdPrefix: com.nickdegs
+  deploymentTarget:
+    iOS: "26.0"
+settings:
+  base:
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    PRODUCT_BUNDLE_IDENTIFIER: com.nickdegs.panel
+    TARGETED_DEVICE_FAMILY: "1"
+targets:
+  NickDegsPanel:
+    type: application
+    platform: iOS
+    deploymentTarget: "26.0"
+    settings:
+      base:
+        TARGETED_DEVICE_FAMILY: "1"
+        PRODUCT_BUNDLE_IDENTIFIER: com.nickdegs.panel
+    sources: [NickDegsPanel]
+    info:
+      path: NickDegsPanel/Info.plist
+      properties:
+        CFBundleDisplayName: NickDegs Panel
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        ITSAppUsesNonExemptEncryption: false
