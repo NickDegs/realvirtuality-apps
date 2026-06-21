@@ -4,7 +4,10 @@ import SwiftUI
 struct SunucuNative: View {
     @EnvironmentObject var oturum: Oturum
     @EnvironmentObject var tema: Tema
-    @State private var ram = "", disk = "", load = "", uptime = ""
+    @State private var ram = ""
+    @State private var disk = ""
+    @State private var load = ""
+    @State private var uptime = ""
     @State private var servisler: [(ad: String, aktif: Bool)] = []
     @State private var yukleniyor = true
     @State private var mesaj = ""
@@ -63,7 +66,8 @@ struct IPTVNative: View {
     @EnvironmentObject var oturum: Oturum
     @EnvironmentObject var tema: Tema
     @State private var sekme = 0
-    @State private var kaynak = "", kanalSayisi = 0
+    @State private var kaynak = ""
+    @State private var kanalSayisi = 0
     @State private var hatlar: [[String:Any]] = []
     @State private var kanallar: [[String:Any]] = []
     @State private var yukleniyor = true
