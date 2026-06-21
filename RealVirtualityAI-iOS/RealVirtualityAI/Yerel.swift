@@ -38,6 +38,25 @@ final class Yerel: ObservableObject {
     func aracMetin(_ id: String, _ alan: String) -> String { (aracTbl(id)[alan] as? String) ?? "" }
     func aracDizi(_ id: String, _ alan: String) -> [String] { (aracTbl(id)[alan] as? [String]) ?? [] }
 
+    // Ürün katalog metni (tr/en sözlük) — fallback en→tr
+    func u(_ d: [String:String]) -> String { d[aktif] ?? d["en"] ?? d["tr"] ?? "" }
+    // Sabit ürün-sekmesi metinleri (ui_i18n.json'da olmayanlar için)
+    func p(_ key: String) -> String {
+        let t = Yerel.urunUI[key] ?? [:]
+        return t[aktif] ?? t["en"] ?? t["tr"] ?? key
+    }
+    static let urunUI: [String:[String:String]] = [
+        "araclarTab": ["tr":"AI Araçları","en":"AI Tools","de":"KI-Tools","fr":"Outils IA","es":"Herramientas IA","ar":"أدوات الذكاء","ru":"AI Инструменты"],
+        "urunlerTab": ["tr":"Ürünler","en":"Products","de":"Produkte","fr":"Produits","es":"Productos","ar":"المنتجات","ru":"Товары"],
+        "urunHero1": ["tr":"Hazır dijital ürünler","en":"Ready digital products"],
+        "urunHero2": ["tr":"& şablonlar","en":"& templates"],
+        "urunAra": ["tr":"Ürün ara…","en":"Search products…"],
+        "urunIncele": ["tr":"İncele & Satın Al","en":"View & Buy"],
+        "kat_bireysel": ["tr":"Bireysel","en":"Personal"],
+        "kat_pro": ["tr":"Pro / Freelancer","en":"Pro / Freelancer"],
+        "kat_sosyal": ["tr":"Sosyal Medya","en":"Social Media"],
+    ]
+
     // ── JSON yükleyiciler ──
     private static func yukleUI() -> [String:[String:String]] {
         guard let u = Bundle.main.url(forResource: "ui_i18n", withExtension: "json"),

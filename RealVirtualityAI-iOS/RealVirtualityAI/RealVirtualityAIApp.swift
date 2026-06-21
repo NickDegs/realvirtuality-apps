@@ -99,6 +99,20 @@ let ARACLAR: [Arac] = [
 ]
 
 // MARK: - App
+struct RootView: View {
+    @EnvironmentObject var tema: Tema
+    @EnvironmentObject var yerel: Yerel
+    var body: some View {
+        TabView {
+            ContentView()
+                .tabItem { Label(yerel.p("araclarTab"), systemImage: "sparkles") }
+            UrunlerView()
+                .tabItem { Label(yerel.p("urunlerTab"), systemImage: "bag.fill") }
+        }
+        .tint(tema.c1)
+    }
+}
+
 @main
 struct RealVirtualityAIApp: App {
     @StateObject private var api = API()
@@ -106,7 +120,7 @@ struct RealVirtualityAIApp: App {
     @StateObject private var yerel = Yerel()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
                 .environmentObject(api)
                 .environmentObject(tema)
                 .environmentObject(yerel)
