@@ -34,9 +34,9 @@ struct LoginView: View {
                         alan("Şifre", $sifre, sym: "lock.fill", gizli: true)
                         anaButon("Giriş Yap") { Task { await sifreGiris() } }
                     } else {
-                        alan("Telefon (5xx...)", $kod, sym: "phone.fill")
+                        alan("+90 5xx... (ülke kodlu telefon)", $kod, sym: "phone.fill", klavye: .phonePad)
                         if smsGonderildi {
-                            alan("SMS kodu", $smsKod, sym: "number")
+                            alan("SMS kodu", $smsKod, sym: "number", klavye: .numberPad)
                             anaButon("Doğrula & Giriş") { Task { await smsDogrula() } }
                             Button("← Numarayı değiştir") { smsGonderildi = false; smsKod = "" }.font(.caption).foregroundStyle(tema.c2)
                         } else {
@@ -65,11 +65,11 @@ struct LoginView: View {
         }
     }
 
-    func alan(_ ipucu: String, _ bag: Binding<String>, sym: String, gizli: Bool = false) -> some View {
+    func alan(_ ipucu: String, _ bag: Binding<String>, sym: String, gizli: Bool = false, klavye: UIKeyboardType = .default) -> some View {
         HStack(spacing: 10) {
             Image(systemName: sym).foregroundStyle(.rvMut).frame(width: 22)
             if gizli { SecureField(ipucu, text: bag).foregroundStyle(.rvText) }
-            else { TextField(ipucu, text: bag).foregroundStyle(.rvText).autocorrectionDisabled().textInputAutocapitalization(.never) }
+            else { TextField(ipucu, text: bag).foregroundStyle(.rvText).autocorrectionDisabled().textInputAutocapitalization(.never).keyboardType(klavye) }
         }
         .padding(.horizontal, 16).padding(.vertical, 15)
         .glassEffect(.regular, in: .rect(cornerRadius: 16))
