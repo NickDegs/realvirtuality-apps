@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths: ["NickDegsPanel-iOS/**", ".github/workflows/build_nickdegs-panel-ios.yml"]
   workflow_dispatch:
+  schedule:
+    - cron: '0 6 1 * *'  # ayda 1 oto-rebuild → TestFlight süresi dolmasın
 jobs:
   ios-native:
     runs-on: macos-latest
