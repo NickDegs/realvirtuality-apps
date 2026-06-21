@@ -2378,14 +2378,19 @@ function initIAP(){
 
 // ===== ADMOB =====
 async function initAdMob(){
-  // Reviewer önerisi (Guideline 2.1): uygulama kullanıcıyı İZLEMİYOR →
-  // ATT izni İSTENMEZ, kişiselleştirilmemiş reklam gösterilir. App Privacy'de
-  // de "izleme yok" beyan edilir. (IDFA/tracking yok = ATT prompt gereksiz.)
-  await new Promise(r=>setTimeout(r,800));
+  // ATT prompt'u app AKTİF değilken (launch/splash) çağrılırsa iOS sessizce yutar →
+  // yeterince bekle ki uygulama foreground-active olsun (Guideline 2.1 fix)
+  await new Promise(r=>setTimeout(r,1500));
   try{
     if(!window.Capacitor||!window.Capacitor.isNativePlatform())return;
     const{AdMob}=window.Capacitor.Plugins;
     if(!AdMob)return;
+    // ATT iznini AÇIKÇA iste — reklam/izleme verisi toplanMADAN önce, app aktifken.
+    // App Privacy'de "tracking" beyanı zaten var → prompt + beyan tutarlı.
+    try{
+      const s=await AdMob.trackingAuthorizationStatus();
+      if(!s || s.status==='notDetermined'){ await AdMob.requestTrackingAuthorization(); }
+    }catch(e){ try{ await AdMob.requestTrackingAuthorization(); }catch(_){} }
     await AdMob.initialize({initializeForTesting:false});
     // UMP Consent (GDPR/EEA)
     try{

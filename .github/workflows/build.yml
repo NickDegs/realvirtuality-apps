@@ -123,10 +123,10 @@ jobs:
           # AdMob App ID
           /usr/libexec/PlistBuddy -c "Add :GADApplicationIdentifier string ca-app-pub-3940256099942544~1458002511" ios/App/App/Info.plist 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Set :GADApplicationIdentifier ca-app-pub-3940256099942544~1458002511" ios/App/App/Info.plist
-          # ATT YOK — reviewer önerisi: uygulama izlemiyor, NSUserTrackingUsageDescription
-          # eklenmez, kişiselleştirilmemiş reklam + App Privacy'de "izleme yok" beyanı.
-          # (Eski ATT/NSUserTracking satırları kaldırıldı — Guideline 2.1 fix)
-          /usr/libexec/PlistBuddy -c "Delete :NSUserTrackingUsageDescription" ios/App/App/Info.plist 2>/dev/null || true
+          # ATT — App Privacy'de tracking beyanı var; uygulama ATT prompt'unu gösterir (Guideline 2.1)
+          ATT_MSG="Your data is used to deliver personalized ads. You can change this in Settings."
+          /usr/libexec/PlistBuddy -c "Add :NSUserTrackingUsageDescription string $ATT_MSG" ios/App/App/Info.plist 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Set :NSUserTrackingUsageDescription $ATT_MSG" ios/App/App/Info.plist
           # Google Sign-In: GIDClientID (iOS client id) — YOKSA GoogleAuth.signIn() native CRASH
           GID="442086254689-rr7dl320im2cg0g43u44r74atfo11tbe.apps.googleusercontent.com"
           /usr/libexec/PlistBuddy -c "Add :GIDClientID string $GID" ios/App/App/Info.plist 2>/dev/null || \
