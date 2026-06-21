@@ -57,7 +57,7 @@ struct WebGorunum: UIViewRepresentable {
         let parent: WebGorunum
         weak var web: WKWebView?
         init(_ p: WebGorunum) { parent = p }
-        func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
             if keyPath == "estimatedProgress", let wv = object as? WKWebView {
                 parent.ilerleme = wv.estimatedProgress
                 parent.yukleniyor = wv.estimatedProgress < 1.0
