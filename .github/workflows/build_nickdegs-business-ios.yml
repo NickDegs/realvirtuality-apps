@@ -1,0 +1,70 @@
+name: Build NickDegs Business (iOS Native)
+on:
+  push:
+    branches: [main]
+    paths: ["NickDegsKurumsal-iOS/**", ".github/workflows/build_nickdegs-business-ios.yml"]
+  workflow_dispatch:
+
+jobs:
+  ios-native:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Xcode seç
+        run: |
+          BEST=$(ls /Applications/ | grep -E "^Xcode_[0-9]" | sort -V | tail -1)
+          sudo xcode-select -s "/Applications/$BEST/Contents/Developer"
+          echo "Xcode: $BEST"; xcodebuild -version
+      - name: XcodeGen kur + proje üret
+        working-directory: NickDegsKurumsal-iOS
+        run: |
+          brew install xcodegen
+          xcodegen generate
+      - name: Sertifika + ASC API anahtarını kur
+        run: |
+          mkdir -p ~/.appstoreconnect/private_keys
+          echo "${{ secrets.APPLE_ASC_API_KEY }}" > ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8
+          chmod 600 ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8
+          echo "${{ secrets.APPLE_DIST_P12_BASE64 }}" | base64 -d > /tmp/dist.p12
+          security create-keychain -p "ci-keychain" ci-build.keychain-db
+          security default-keychain -s ci-build.keychain-db
+          security unlock-keychain -p "ci-keychain" ci-build.keychain-db
+          security import /tmp/dist.p12 -k ci-build.keychain-db -P "${{ secrets.APPLE_P12_PASSWORD }}" -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple: -s -k "ci-keychain" ci-build.keychain-db
+          security list-keychain -d user -s ci-build.keychain-db login.keychain-db
+          rm /tmp/dist.p12
+          security find-identity -v -p codesigning ci-build.keychain-db | head -5
+      - name: Arşivle + TestFlight'a yükle
+        working-directory: NickDegsKurumsal-iOS
+        run: |
+          cat > ExportOptions.plist << 'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>app-store</string>
+            <key>destination</key><string>upload</string>
+            <key>teamID</key><string>SZF4T3P583</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>uploadSymbols</key><true/>
+          </dict></plist>
+          PLIST
+          xcodebuild -project NickDegsBusiness.xcodeproj -scheme NickDegsBusiness \
+            -destination 'generic/platform=iOS' -configuration Release -archivePath ND.xcarchive \
+            DEVELOPMENT_TEAM=SZF4T3P583 \
+            CURRENT_PROJECT_VERSION=${{ github.run_number }} \
+            TARGETED_DEVICE_FAMILY=1 \
+            CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" ONLY_ACTIVE_ARCH=NO \
+            archive
+          xcodebuild -exportArchive -archivePath ND.xcarchive \
+            -exportOptionsPlist ExportOptions.plist -exportPath ./ipa-out \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8 \
+            -authenticationKeyID ${{ secrets.APPLE_ASC_KEY_ID }} \
+            -authenticationKeyIssuerID ${{ secrets.APPLE_ASC_ISSUER_ID }}
+          echo "✅ TestFlight'a yüklendi"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nickdegs-business-ios-ipa
+          path: NickDegsKurumsal-iOS/ipa-out/*.ipa
+          retention-days: 30

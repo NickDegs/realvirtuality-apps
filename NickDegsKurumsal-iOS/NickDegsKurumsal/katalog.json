@@ -1,0 +1,2162 @@
+[
+{
+"id": "card",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "📇",
+"ad": {
+"tr": "Dijital Kartvizit",
+"en": "Digital Business Card"
+},
+"aciklama": {
+"tr": "Kişiye özel premium kart + QR + rehbere ekle.",
+"en": "Personal premium card + QR + save to contacts."
+},
+"pr": "₺249"
+},
+{
+"id": "avatar",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "🎨",
+"ad": {
+"tr": "AI Avatar / PFP",
+"en": "AI Avatar / PFP"
+},
+"aciklama": {
+"tr": "Fotoğrafını yükle, profesyonel AI avatar al.",
+"en": "Upload a photo, get a pro AI avatar."
+},
+"pr": "₺299"
+},
+{
+"id": "prompts",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "🤖",
+"ad": {
+"tr": "AI Prompt Paketi",
+"en": "AI Prompt Pack"
+},
+"aciklama": {
+"tr": "50+ hazır prompt + canlı AI içerik üretici.",
+"en": "50+ ready prompts + live AI content generator."
+},
+"pr": "₺199"
+},
+{
+"id": "shortcuts",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "📱",
+"ad": {
+"tr": "iOS Kestirme Paketi",
+"en": "iOS Shortcuts Pack"
+},
+"aciklama": {
+"tr": "Video indirici, otomasyonlar, hızlı araçlar.",
+"en": "Downloader, automations, quick tools."
+},
+"pr": "₺149"
+},
+{
+"id": "notion",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "📊",
+"ad": {
+"tr": "Notion Şablonları",
+"en": "Notion Templates"
+},
+"aciklama": {
+"tr": "Planlayıcı, CRM, bütçe, içerik takvimi.",
+"en": "Planner, CRM, budget, content calendar."
+},
+"pr": "₺199"
+},
+{
+"id": "excel",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "📈",
+"ad": {
+"tr": "Excel / Sheets Şablonları",
+"en": "Excel / Sheets Templates"
+},
+"aciklama": {
+"tr": "Bütçe, fatura, stok, KDV hesap.",
+"en": "Budget, invoice, stock, tax."
+},
+"pr": "₺199"
+},
+{
+"id": "ebook",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "📘",
+"ad": {
+"tr": "E-Kitap / Rehber",
+"en": "E-Book / Guide"
+},
+"aciklama": {
+"tr": "AI ile iş, freelance, dijital para kazanma.",
+"en": "AI for work, freelancing, online income."
+},
+"pr": "₺199"
+},
+{
+"id": "cv",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "📄",
+"ad": {
+"tr": "CV / Özgeçmiş Şablonu",
+"en": "Resume / CV Template"
+},
+"aciklama": {
+"tr": "ATS uyumlu, modern, düzenlenebilir.",
+"en": "ATS-friendly, modern, editable."
+},
+"pr": "₺149"
+},
+{
+"id": "audio",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "🎵",
+"ad": {
+"tr": "Telifsiz Müzik / Ses",
+"en": "Royalty-Free Audio"
+},
+"aciklama": {
+"tr": "İçerik üreticileri için telifsiz ses paketi.",
+"en": "Royalty-free audio pack for creators."
+},
+"pr": "₺149"
+},
+{
+"id": "aiservice",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "⭐",
+"ad": {
+"tr": "Premium AI Servis",
+"en": "Premium AI Service"
+},
+"aciklama": {
+"tr": "AI sohbet + görsel üretim aboneliği.",
+"en": "AI chat + image generation subscription."
+},
+"pr": "₺299"
+},
+{
+"id": "bio",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "🔗",
+"ad": {
+"tr": "Link-in-bio / QR Menü",
+"en": "Link-in-bio / QR Menu"
+},
+"aciklama": {
+"tr": "Tek linkte tüm bağlantıların, dijital menü.",
+"en": "All your links in one, digital menu."
+},
+"pr": "₺199"
+},
+{
+"id": "icons",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "🖼️",
+"ad": {
+"tr": "İkon & Görsel Paketi",
+"en": "Icon & Graphics Pack"
+},
+"aciklama": {
+"tr": "Sosyal medya + sunum için hazır görseller.",
+"en": "Ready graphics for social & presentations."
+},
+"pr": "₺149"
+},
+{
+"id": "landing",
+"sekme": "icerik",
+"g": "pro",
+"ic": "🚀",
+"ad": {
+"tr": "Landing Page Teması",
+"en": "Landing Page Theme"
+},
+"aciklama": {
+"tr": "Mobil uyumlu, dönüşüm odaklı satış sayfası.",
+"en": "Mobile-friendly, conversion-focused page."
+},
+"pr": "₺399"
+},
+{
+"id": "social",
+"sekme": "icerik",
+"g": "pro",
+"ic": "📐",
+"ad": {
+"tr": "Sosyal Medya Tasarım Paketi",
+"en": "Social Media Design Pack"
+},
+"aciklama": {
+"tr": "Post + story + reels şablon seti.",
+"en": "Post + story + reels template set."
+},
+"pr": "₺399"
+},
+{
+"id": "logo",
+"sekme": "icerik",
+"g": "pro",
+"ic": "🎯",
+"ad": {
+"tr": "Logo / Marka Kiti",
+"en": "Logo / Brand Kit"
+},
+"aciklama": {
+"tr": "Logo + renk + font + sosyal kit.",
+"en": "Logo + colors + fonts + social kit."
+},
+"pr": "₺599"
+},
+{
+"id": "video",
+"sekme": "icerik",
+"g": "pro",
+"ic": "🎬",
+"ad": {
+"tr": "Video / Reels Şablonları",
+"en": "Video / Reels Templates"
+},
+"aciklama": {
+"tr": "Kısa video için hazır kurgu şablonları.",
+"en": "Ready edit templates for short video."
+},
+"pr": "₺299"
+},
+{
+"id": "n8n",
+"sekme": "icerik",
+"g": "pro",
+"ic": "⚙️",
+"ad": {
+"tr": "n8n Otomasyon Şablonları",
+"en": "n8n Automation Templates"
+},
+"aciklama": {
+"tr": "Sipariş bildirimi, sosyal otomasyon, sync.",
+"en": "Order alerts, social automation, sync."
+},
+"pr": "₺249"
+},
+{
+"id": "aiimage",
+"sekme": "icerik",
+"g": "pro",
+"ic": "🖌️",
+"ad": {
+"tr": "AI Görsel Üretim Paketi",
+"en": "AI Image Generation Pack"
+},
+"aciklama": {
+"tr": "Markana özel toplu AI görsel üretimi. Hemen canlı dene!",
+"en": "Bulk AI image generation for your brand. Try it live!"
+},
+"pr": "₺349"
+},
+{
+"id": "api",
+"sekme": "icerik",
+"g": "pro",
+"ic": "🔌",
+"ad": {
+"tr": "API Erişim Paketi",
+"en": "API Access Pack"
+},
+"aciklama": {
+"tr": "AI / görsel / dönüştürme API'lerine erişim.",
+"en": "Access to AI / image / convert APIs."
+},
+"pr": "₺399"
+},
+{
+"id": "bundle",
+"sekme": "icerik",
+"g": "pro",
+"ic": "🧩",
+"ad": {
+"tr": "Website Tema Bundle",
+"en": "Website Theme Bundle"
+},
+"aciklama": {
+"tr": "Çoklu hazır site teması paketi.",
+"en": "Multiple ready website themes."
+},
+"pr": "₺699"
+},
+{
+"id": "komisyonsuz",
+"sekme": "kurumsal",
+"g": "isletme",
+"ic": "🍽️",
+"ad": {
+"tr": "Komisyonsuz Sipariş Sistemi",
+"en": "Commission-Free Ordering"
+},
+"aciklama": {
+"tr": "Aracı platformlara komisyon ödemeden kendi online sipariş sisteminiz: web + QR + WhatsApp, müşteri verisi sizde.",
+"en": "Your own online ordering, no platform commissions: web + QR + WhatsApp."
+},
+"pr": "₺990"
+},
+{
+"id": "website",
+"sekme": "kurumsal",
+"g": "isletme",
+"ic": "🌐",
+"ad": {
+"tr": "Web Sitesi Kurulumu",
+"en": "Website Setup"
+},
+"aciklama": {
+"tr": "Kurumsal/tanıtım sitesi, mobil uyumlu, SEO.",
+"en": "Corporate/landing site, responsive, SEO."
+},
+"pr": "₺2.500"
+},
+{
+"id": "ecom",
+"sekme": "kurumsal",
+"g": "isletme",
+"ic": "🛒",
+"ad": {
+"tr": "E-Ticaret / Katalog",
+"en": "E-Commerce / Catalog"
+},
+"aciklama": {
+"tr": "Ürün kataloğu + ödeme + otomatik teslimat.",
+"en": "Product catalog + payment + auto delivery."
+},
+"pr": "₺3.500"
+},
+{
+"id": "bot",
+"sekme": "kurumsal",
+"g": "isletme",
+"ic": "💬",
+"ad": {
+"tr": "WhatsApp / Telegram Bot",
+"en": "WhatsApp / Telegram Bot"
+},
+"aciklama": {
+"tr": "Sipariş, destek, bildirim botu kurulumu.",
+"en": "Order, support, notification bot setup."
+},
+"pr": "₺1.500"
+},
+{
+"id": "hosting",
+"sekme": "kurumsal",
+"g": "isletme",
+"ic": "☁️",
+"ad": {
+"tr": "Domain + Hosting + SSL",
+"en": "Domain + Hosting + SSL"
+},
+"aciklama": {
+"tr": "Alan adı, barındırma, sertifika paketi.",
+"en": "Domain, hosting, certificate bundle."
+},
+"pr": "₺1490"
+},
+{
+"id": "teamcard",
+"sekme": "kurumsal",
+"g": "isletme",
+"ic": "👥",
+"ad": {
+"tr": "Ekip Dijital Kartvizit",
+"en": "Team Digital Cards"
+},
+"aciklama": {
+"tr": "10 kişiye kadar markalı dijital kartvizit.",
+"en": "Branded digital cards for up to 10 people."
+},
+"pr": "₺1490"
+},
+{
+"id": "integ",
+"sekme": "kurumsal",
+"g": "isletme",
+"ic": "🔗",
+"ad": {
+"tr": "Otomasyon Entegrasyonu",
+"en": "Automation Integration"
+},
+"aciklama": {
+"tr": "Sistemlerini bağla, süreçleri otomatikle.",
+"en": "Connect your systems, automate processes."
+},
+"pr": "₺1.500"
+},
+{
+"id": "custom",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "💻",
+"ad": {
+"tr": "Özel Yazılım / Uygulama",
+"en": "Custom Software / App"
+},
+"aciklama": {
+"tr": "İhtiyacına özel web/mobil uygulama.",
+"en": "Custom web/mobile app development."
+},
+"pr": "₺14.990"
+},
+{
+"id": "whitelabel",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "🏷️",
+"ad": {
+"tr": "White-Label Çözüm",
+"en": "White-Label Solution"
+},
+"aciklama": {
+"tr": "Kendi markanla sunabileceğin hazır platform.",
+"en": "Ready platform to offer under your brand."
+},
+"pr": "₺9.990"
+},
+{
+"id": "sysint",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "🔄",
+"ad": {
+"tr": "Sistem Entegrasyonu",
+"en": "System Integration"
+},
+"aciklama": {
+"tr": "ERP/CRM/ödeme/API entegrasyonları.",
+"en": "ERP/CRM/payment/API integrations."
+},
+"pr": "₺7.990"
+},
+{
+"id": "infra",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "🖥️",
+"ad": {
+"tr": "Sunucu / Altyapı Kurulumu",
+"en": "Server / Infrastructure"
+},
+"aciklama": {
+"tr": "Kendi sunucu altyapın, self-hosted çözümler.",
+"en": "Your own server infra, self-hosted."
+},
+"pr": "₺4.990"
+},
+{
+"id": "security",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "🛡️",
+"ad": {
+"tr": "Güvenlik & İzleme Paketi",
+"en": "Security & Monitoring"
+},
+"aciklama": {
+"tr": "Banka seviyesi güvenlik + 7/24 izleme.",
+"en": "Bank-grade security, 24/7 monitoring."
+},
+"pr": "₺2.990"
+},
+{
+"id": "sla",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "📞",
+"ad": {
+"tr": "SLA'lı 7/24 Destek",
+"en": "24/7 SLA Support"
+},
+"aciklama": {
+"tr": "Garantili yanıt süreli kurumsal destek.",
+"en": "Guaranteed-response enterprise support."
+},
+"pr": "₺2.990"
+},
+{
+"id": "smm",
+"sekme": "icerik",
+"g": "sosyal",
+"ic": "📲",
+"ad": {
+"tr": "Sosyal Medya Yönetimi",
+"en": "Social Media Management"
+},
+"aciklama": {
+"tr": "İçerik + paylaşım + etkileşim, aylık tam yönetim.",
+"en": "Content + posting + engagement, full monthly management."
+},
+"pr": "₺2.900"
+},
+{
+"id": "content",
+"sekme": "icerik",
+"g": "sosyal",
+"ic": "🗓️",
+"ad": {
+"tr": "İçerik Üretimi Paketi",
+"en": "Content Production Pack"
+},
+"aciklama": {
+"tr": "Aylık içerik takvimi + hazır post/story/reel.",
+"en": "Monthly content calendar + ready posts/stories/reels."
+},
+"pr": "₺1.900"
+},
+{
+"id": "reels",
+"sekme": "icerik",
+"g": "sosyal",
+"ic": "🎞️",
+"ad": {
+"tr": "Reels / TikTok Düzenleme",
+"en": "Reels / TikTok Editing"
+},
+"aciklama": {
+"tr": "Profesyonel kısa video kurgu + altyazı + efekt.",
+"en": "Pro short-video editing + captions + effects."
+},
+"pr": "₺399"
+},
+{
+"id": "admgr",
+"sekme": "icerik",
+"g": "sosyal",
+"ic": "🎯",
+"ad": {
+"tr": "Reklam Yönetimi",
+"en": "Ad Management"
+},
+"aciklama": {
+"tr": "Meta/TikTok reklam kurulumu + optimizasyon.",
+"en": "Meta/TikTok ad setup + optimization."
+},
+"pr": "₺2.500"
+},
+{
+"id": "growth",
+"sekme": "icerik",
+"g": "sosyal",
+"ic": "📈",
+"ad": {
+"tr": "Büyüme Danışmanlığı",
+"en": "Growth Consulting"
+},
+"aciklama": {
+"tr": "Takipçi + etkileşim stratejisi, aylık rapor.",
+"en": "Follower + engagement strategy, monthly report."
+},
+"pr": "₺1.500"
+},
+{
+"id": "profile",
+"sekme": "icerik",
+"g": "sosyal",
+"ic": "✨",
+"ad": {
+"tr": "Profil Kurulumu & Optimizasyon",
+"en": "Profile Setup & Optimization"
+},
+"aciklama": {
+"tr": "Bio, görsel, vitrin, SEO — profesyonel hesap.",
+"en": "Bio, visuals, highlights, SEO — pro account."
+},
+"pr": "₺990"
+},
+{
+"id": "aicontent",
+"sekme": "icerik",
+"g": "sosyal",
+"ic": "🤖",
+"ad": {
+"tr": "AI İçerik Aboneliği",
+"en": "AI Content Subscription"
+},
+"aciklama": {
+"tr": "Otomatik caption + görsel üretimi, her gün.",
+"en": "Automated caption + image generation, daily."
+},
+"pr": "₺599"
+},
+{
+"id": "ugc",
+"sekme": "icerik",
+"g": "sosyal",
+"ic": "🎥",
+"ad": {
+"tr": "UGC / İçerik Paketi",
+"en": "UGC / Content Pack"
+},
+"aciklama": {
+"tr": "Marka için kullanıcı tarzı tanıtım içerikleri.",
+"en": "User-style promotional content for your brand."
+},
+"pr": "₺990"
+},
+{
+"id": "brand",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "🎨",
+"ad": {
+"tr": "Kurumsal Marka Kimliği",
+"en": "Corporate Brand Identity"
+},
+"aciklama": {
+"tr": "Logo + kılavuz + kartvizit + sosyal kit.",
+"en": "Logo + guidelines + cards + social kit."
+},
+"pr": "₺3.990"
+},
+{
+"id": "cmail",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "📧",
+"ad": {
+"tr": "Kurumsal E-posta Kurulumu",
+"en": "Business Email Setup"
+},
+"aciklama": {
+"tr": "Alan adına özel e-posta + Workspace.",
+"en": "Domain email + Workspace setup."
+},
+"pr": "₺990"
+},
+{
+"id": "seo",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "🔍",
+"ad": {
+"tr": "SEO & Dijital Pazarlama",
+"en": "SEO & Digital Marketing"
+},
+"aciklama": {
+"tr": "Arama motoru optimizasyonu + içerik.",
+"en": "Search optimization + content strategy."
+},
+"pr": "₺2.990"
+},
+{
+"id": "chatbot",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "💬",
+"ad": {
+"tr": "AI Asistan / Chatbot Kurulumu",
+"en": "AI Assistant / Chatbot Setup"
+},
+"aciklama": {
+"tr": "Sitene/WhatsApp'a özel AI müşteri asistanı.",
+"en": "Custom AI customer assistant for site/WhatsApp."
+},
+"pr": "₺4.990"
+},
+{
+"id": "dashboard",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "📊",
+"ad": {
+"tr": "Veri Panosu (BI Dashboard)",
+"en": "BI Dashboard"
+},
+"aciklama": {
+"tr": "Canlı iş verisi izleme + raporlama.",
+"en": "Live business data monitoring + reporting."
+},
+"pr": "₺3.990"
+},
+{
+"id": "training",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "🎓",
+"ad": {
+"tr": "Kurumsal AI Eğitimi",
+"en": "Corporate AI Training"
+},
+"aciklama": {
+"tr": "Ekibine özel yapay zekâ & otomasyon workshop.",
+"en": "AI & automation workshop for your team."
+},
+"pr": "₺4.990"
+},
+{
+"id": "planner",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "🗒️",
+"ad": {
+"tr": "Dijital Planlayıcı",
+"en": "Digital Planner"
+},
+"aciklama": {
+"tr": "GoodNotes/Notability uyumlu yıllık planlayıcı.",
+"en": "Yearly planner for GoodNotes/Notability."
+},
+"pr": "₺149"
+},
+{
+"id": "presets",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "📸",
+"ad": {
+"tr": "Fotoğraf Preset Paketi",
+"en": "Photo Preset Pack"
+},
+"aciklama": {
+"tr": "Lightroom & mobil için profesyonel filtreler.",
+"en": "Pro filters for Lightroom & mobile."
+},
+"pr": "₺199"
+},
+{
+"id": "wallpaper",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "🌅",
+"ad": {
+"tr": "Duvar Kağıdı Paketi",
+"en": "Wallpaper Pack"
+},
+"aciklama": {
+"tr": "Telefon + masaüstü için HD duvar kağıtları.",
+"en": "HD wallpapers for phone + desktop."
+},
+"pr": "₺99"
+},
+{
+"id": "stickers",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "😊",
+"ad": {
+"tr": "Çıkartma / Sticker Paketi",
+"en": "Sticker Pack"
+},
+"aciklama": {
+"tr": "WhatsApp & Telegram için özel sticker seti.",
+"en": "Custom sticker set for WhatsApp & Telegram."
+},
+"pr": "₺99"
+},
+{
+"id": "storybook",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "📖",
+"ad": {
+"tr": "AI Kişisel Masal Kitabı",
+"en": "AI Personalized Storybook"
+},
+"aciklama": {
+"tr": "İsme özel, çocuğa hediye dijital masal kitabı.",
+"en": "Name-personalized digital storybook gift."
+},
+"pr": "₺249"
+},
+{
+"id": "invite",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "💌",
+"ad": {
+"tr": "Dijital Davetiye",
+"en": "Digital Invitation"
+},
+"aciklama": {
+"tr": "Düğün, doğum günü, etkinlik için animasyonlu davetiye.",
+"en": "Animated invite for weddings, birthdays, events."
+},
+"pr": "₺199"
+},
+{
+"id": "pitch",
+"sekme": "icerik",
+"g": "pro",
+"ic": "📑",
+"ad": {
+"tr": "Pitch Deck / Sunum Şablonu",
+"en": "Pitch Deck Template"
+},
+"aciklama": {
+"tr": "Yatırımcı & müşteri sunumu için hazır deck.",
+"en": "Ready deck for investor & client pitches."
+},
+"pr": "₺299"
+},
+{
+"id": "email",
+"sekme": "icerik",
+"g": "pro",
+"ic": "✉️",
+"ad": {
+"tr": "E-posta Pazarlama Şablonları",
+"en": "Email Marketing Templates"
+},
+"aciklama": {
+"tr": "Newsletter + kampanya + otomasyon şablonları.",
+"en": "Newsletter + campaign + automation templates."
+},
+"pr": "₺249"
+},
+{
+"id": "uikit",
+"sekme": "icerik",
+"g": "pro",
+"ic": "🎛️",
+"ad": {
+"tr": "UI Kit / Figma Şablonu",
+"en": "UI Kit / Figma Template"
+},
+"aciklama": {
+"tr": "Web & mobil için hazır tasarım sistemi.",
+"en": "Ready design system for web & mobile."
+},
+"pr": "₺449"
+},
+{
+"id": "invoice",
+"sekme": "icerik",
+"g": "pro",
+"ic": "🧾",
+"ad": {
+"tr": "Fatura & Teklif Şablon Seti",
+"en": "Invoice & Quote Kit"
+},
+"aciklama": {
+"tr": "Profesyonel fatura, teklif, sözleşme şablonları.",
+"en": "Pro invoice, quote, contract templates."
+},
+"pr": "₺199"
+},
+{
+"id": "qrmenu",
+"sekme": "icerik",
+"g": "pro",
+"ic": "📲",
+"ad": {
+"tr": "QR Kod Menü",
+"en": "QR Code Menu"
+},
+"aciklama": {
+"tr": "Kafe/restoran için dijital QR menü sayfası.",
+"en": "Digital QR menu page for cafe/restaurant."
+},
+"pr": "₺299"
+},
+{
+"id": "gbp",
+"sekme": "kurumsal",
+"g": "isletme",
+"ic": "📍",
+"ad": {
+"tr": "Google İşletme Profili Kurulumu",
+"en": "Google Business Profile Setup"
+},
+"aciklama": {
+"tr": "Haritalarda çık, yorumları yönet, görünür ol.",
+"en": "Appear on Maps, manage reviews, get found."
+},
+"pr": "₺790"
+},
+{
+"id": "booking",
+"sekme": "kurumsal",
+"g": "isletme",
+"ic": "📅",
+"ad": {
+"tr": "Online Randevu Sistemi",
+"en": "Online Booking System"
+},
+"aciklama": {
+"tr": "Müşteri online randevu alsın, otomatik hatırlatma.",
+"en": "Let clients book online, auto reminders."
+},
+"pr": "₺1.500"
+},
+{
+"id": "menu",
+"sekme": "kurumsal",
+"g": "isletme",
+"ic": "🍽️",
+"ad": {
+"tr": "Restoran QR Menü Sistemi",
+"en": "Restaurant QR Menu System"
+},
+"aciklama": {
+"tr": "Çok dilli dijital menü + güncelleme paneli.",
+"en": "Multilingual digital menu + admin panel."
+},
+"pr": "₺1.200"
+},
+{
+"id": "mediakit",
+"sekme": "icerik",
+"g": "sosyal",
+"ic": "📋",
+"ad": {
+"tr": "Influencer Medya Kiti",
+"en": "Influencer Media Kit"
+},
+"aciklama": {
+"tr": "Markalara sunum için profesyonel medya kiti.",
+"en": "Pro media kit to pitch to brands."
+},
+"pr": "₺449"
+},
+{
+"id": "thumb",
+"sekme": "icerik",
+"g": "sosyal",
+"ic": "🖼️",
+"ad": {
+"tr": "YouTube Thumbnail Paketi",
+"en": "YouTube Thumbnail Pack"
+},
+"aciklama": {
+"tr": "Tıklanma odaklı küçük resim şablonları.",
+"en": "Click-focused thumbnail templates."
+},
+"pr": "₺299"
+},
+{
+"id": "podcast",
+"sekme": "icerik",
+"g": "sosyal",
+"ic": "🎙️",
+"ad": {
+"tr": "Podcast Düzenleme",
+"en": "Podcast Editing"
+},
+"aciklama": {
+"tr": "Ses temizleme + kurgu + dağıtım hazırlığı.",
+"en": "Audio cleanup + editing + distribution prep."
+},
+"pr": "₺299"
+},
+{
+"id": "mobileapp",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "📱",
+"ad": {
+"tr": "Mobil Uygulama Geliştirme",
+"en": "Mobile App Development"
+},
+"aciklama": {
+"tr": "App Store & Play yayını dahil özel uygulama.",
+"en": "Custom app incl. App Store & Play release."
+},
+"pr": "₺24.990"
+},
+{
+"id": "kvkk",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "📜",
+"ad": {
+"tr": "KVKK / Gizlilik Uyum Paketi",
+"en": "Data Compliance Pack"
+},
+"aciklama": {
+"tr": "Gizlilik politikası, çerez, aydınlatma metni.",
+"en": "Privacy policy, cookie, disclosure texts."
+},
+"pr": "₺1.990"
+},
+{
+"id": "backup",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "💾",
+"ad": {
+"tr": "Yedekleme & Felaket Kurtarma",
+"en": "Backup & Disaster Recovery"
+},
+"aciklama": {
+"tr": "Otomatik yedek + hızlı geri yükleme altyapısı.",
+"en": "Automated backup + fast restore infrastructure."
+},
+"pr": "₺1.490"
+},
+{
+"id": "course",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "🎓",
+"ad": {
+"tr": "Online Video Kurs",
+"en": "Online Video Course"
+},
+"aciklama": {
+"tr": "AI, tasarım, freelance üzerine adım adım eğitim.",
+"en": "Step-by-step course on AI, design, freelancing."
+},
+"pr": "₺499"
+},
+{
+"id": "mealplan",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "🥗",
+"ad": {
+"tr": "Beslenme & Diyet Programı",
+"en": "Meal & Diet Plan"
+},
+"aciklama": {
+"tr": "Haftalık öğün planı + alışveriş listesi şablonu.",
+"en": "Weekly meal plan + shopping list template."
+},
+"pr": "₺199"
+},
+{
+"id": "fitness",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "💪",
+"ad": {
+"tr": "Antrenman Programı",
+"en": "Workout Program"
+},
+"aciklama": {
+"tr": "Seviyene göre haftalık antrenman planı.",
+"en": "Weekly workout plan for your level."
+},
+"pr": "₺199"
+},
+{
+"id": "flashcards",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "🃏",
+"ad": {
+"tr": "Dil Öğrenme Kartları",
+"en": "Language Flashcards"
+},
+"aciklama": {
+"tr": "Anki uyumlu kelime + ifade kart setleri.",
+"en": "Anki-compatible vocabulary + phrase decks."
+},
+"pr": "₺149"
+},
+{
+"id": "weddingkit",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "💍",
+"ad": {
+"tr": "Düğün Planlama Paketi",
+"en": "Wedding Planning Kit"
+},
+"aciklama": {
+"tr": "Bütçe, davetli listesi, zaman çizelgesi şablonları.",
+"en": "Budget, guest list, timeline templates."
+},
+"pr": "₺349"
+},
+{
+"id": "partykit",
+"sekme": "bireysel",
+"g": "bireysel",
+"ic": "🎉",
+"ad": {
+"tr": "Etkinlik / Parti Paketi",
+"en": "Event / Party Kit"
+},
+"aciklama": {
+"tr": "Davetiye, afiş, oyun ve dekor şablonları.",
+"en": "Invites, posters, games and decor templates."
+},
+"pr": "₺199"
+},
+{
+"id": "webinar",
+"sekme": "icerik",
+"g": "pro",
+"ic": "🖥️",
+"ad": {
+"tr": "Canlı Atölye / Webinar",
+"en": "Live Workshop / Webinar"
+},
+"aciklama": {
+"tr": "Canlı eğitim + kayıt + materyal erişimi.",
+"en": "Live training + recording + materials access."
+},
+"pr": "₺399"
+},
+{
+"id": "blog",
+"sekme": "icerik",
+"g": "pro",
+"ic": "📝",
+"ad": {
+"tr": "SEO Blog İçerik Paketi",
+"en": "SEO Blog Content Pack"
+},
+"aciklama": {
+"tr": "Anahtar kelime odaklı, hazır blog yazıları.",
+"en": "Keyword-focused, ready-to-publish blog posts."
+},
+"pr": "₺499"
+},
+{
+"id": "funnel",
+"sekme": "icerik",
+"g": "pro",
+"ic": "🔻",
+"ad": {
+"tr": "E-posta Funnel Kurulumu",
+"en": "Email Funnel Setup"
+},
+"aciklama": {
+"tr": "Otomatik karşılama + satış e-posta dizisi.",
+"en": "Automated welcome + sales email sequence."
+},
+"pr": "₺499"
+},
+{
+"id": "voiceover",
+"sekme": "icerik",
+"g": "pro",
+"ic": "🎤",
+"ad": {
+"tr": "Seslendirme / Voice-Over",
+"en": "Voice-Over"
+},
+"aciklama": {
+"tr": "Reklam, video, anons için doğal seslendirme.",
+"en": "Natural voice-over for ads, video, announcements."
+},
+"pr": "₺199"
+},
+{
+"id": "transcribe",
+"sekme": "icerik",
+"g": "pro",
+"ic": "📜",
+"ad": {
+"tr": "Transkripsiyon / Altyazı",
+"en": "Transcription / Subtitles"
+},
+"aciklama": {
+"tr": "Ses-video metne çevirme + çok dilli altyazı.",
+"en": "Audio-video to text + multilingual subtitles."
+},
+"pr": "₺149"
+},
+{
+"id": "translate",
+"sekme": "icerik",
+"g": "pro",
+"ic": "🌐",
+"ad": {
+"tr": "Çeviri / Lokalizasyon",
+"en": "Translation / Localization"
+},
+"aciklama": {
+"tr": "Site, uygulama, belge için profesyonel çeviri.",
+"en": "Pro translation for site, app, documents."
+},
+"pr": "₺99"
+},
+{
+"id": "designsub",
+"sekme": "icerik",
+"g": "pro",
+"ic": "♾️",
+"ad": {
+"tr": "Sınırsız Tasarım Aboneliği",
+"en": "Unlimited Design Subscription"
+},
+"aciklama": {
+"tr": "Aylık sabit ücret, sınırsız tasarım talebi.",
+"en": "Flat monthly fee, unlimited design requests."
+},
+"pr": "₺1.990"
+},
+{
+"id": "productphoto",
+"sekme": "kurumsal",
+"g": "isletme",
+"ic": "📷",
+"ad": {
+"tr": "Ürün Fotoğraf Düzenleme",
+"en": "Product Photo Editing"
+},
+"aciklama": {
+"tr": "Arka plan temizleme + pazaryeri uyumlu düzenleme.",
+"en": "Background removal + marketplace-ready editing."
+},
+"pr": "₺299"
+},
+{
+"id": "marketplace",
+"sekme": "kurumsal",
+"g": "isletme",
+"ic": "🏬",
+"ad": {
+"tr": "Pazaryeri Mağaza Açılışı",
+"en": "Marketplace Store Setup"
+},
+"aciklama": {
+"tr": "Trendyol/Hepsiburada/Amazon mağaza + ürün girişi.",
+"en": "Trendyol/Amazon store + product listing setup."
+},
+"pr": "₺1.500"
+},
+{
+"id": "dropship",
+"sekme": "kurumsal",
+"g": "isletme",
+"ic": "📦",
+"ad": {
+"tr": "Dropshipping Mağaza Kurulumu",
+"en": "Dropshipping Store Setup"
+},
+"aciklama": {
+"tr": "Tedarikçi entegre, hazır satış mağazası.",
+"en": "Supplier-integrated, ready-to-sell store."
+},
+"pr": "₺2.500"
+},
+{
+"id": "maintain",
+"sekme": "kurumsal",
+"g": "isletme",
+"ic": "🔧",
+"ad": {
+"tr": "Site Bakım & Güncelleme",
+"en": "Site Maintenance & Updates"
+},
+"aciklama": {
+"tr": "Aylık güncelleme, yedek, güvenlik, destek.",
+"en": "Monthly updates, backup, security, support."
+},
+"pr": "₺990"
+},
+{
+"id": "caption",
+"sekme": "icerik",
+"g": "sosyal",
+"ic": "✍️",
+"ad": {
+"tr": "Caption & Metin Yazımı",
+"en": "Caption & Copywriting"
+},
+"aciklama": {
+"tr": "Etkileşim odaklı gönderi metinleri, aylık paket.",
+"en": "Engagement-focused post copy, monthly pack."
+},
+"pr": "₺399"
+},
+{
+"id": "community",
+"sekme": "icerik",
+"g": "sosyal",
+"ic": "🫂",
+"ad": {
+"tr": "Topluluk Yönetimi",
+"en": "Community Management"
+},
+"aciklama": {
+"tr": "Discord/Telegram topluluk kurulum + moderasyon.",
+"en": "Discord/Telegram community setup + moderation."
+},
+"pr": "₺1.500"
+},
+{
+"id": "stream",
+"sekme": "icerik",
+"g": "sosyal",
+"ic": "📡",
+"ad": {
+"tr": "Canlı Yayın Kurulumu",
+"en": "Live Stream Setup"
+},
+"aciklama": {
+"tr": "OBS sahne, overlay, alert ve yayın paketi.",
+"en": "OBS scenes, overlays, alerts, stream kit."
+},
+"pr": "₺790"
+},
+{
+"id": "crm",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "🗂️",
+"ad": {
+"tr": "CRM / ERP Kurulumu",
+"en": "CRM / ERP Setup"
+},
+"aciklama": {
+"tr": "Müşteri & süreç yönetim sistemi + eğitim.",
+"en": "Customer & process management setup + training."
+},
+"pr": "₺5.990"
+},
+{
+"id": "devops",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "⚙️",
+"ad": {
+"tr": "DevOps / CI-CD Kurulumu",
+"en": "DevOps / CI-CD Setup"
+},
+"aciklama": {
+"tr": "Otomatik derleme, test, dağıtım hattı.",
+"en": "Automated build, test, deployment pipeline."
+},
+"pr": "₺4.990"
+},
+{
+"id": "cloudmig",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "☁️",
+"ad": {
+"tr": "Bulut Göçü (Cloud Migration)",
+"en": "Cloud Migration"
+},
+"aciklama": {
+"tr": "Sistemlerini buluta taşı, ölçeklenebilir altyapı.",
+"en": "Migrate to cloud, scalable infrastructure."
+},
+"pr": "₺7.990"
+},
+{
+"id": "retainer",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "🤝",
+"ad": {
+"tr": "Aylık Teknik Danışmanlık",
+"en": "Monthly Tech Retainer"
+},
+"aciklama": {
+"tr": "Sürekli geliştirme + bakım + öncelikli destek.",
+"en": "Ongoing development + maintenance + priority support."
+},
+"pr": "₺4.990"
+},
+{
+"id": "hukuk",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "⚖️",
+"ad": {
+"tr": "Avukat / Hukuk Bürosu Sistemi",
+"en": "Law Firm Management System"
+},
+"aciklama": {
+"tr": "Dava, süre takibi, duruşma takvimi, şifreli belge kasası — banka seviyesi güvenlik, KVKK uyumlu.",
+"en": "Cases, deadline tracking, hearings, encrypted document vault — bank-level security."
+},
+"pr": ""
+},
+{
+"id": "qrorder",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🍽️",
+"ad": {
+"tr": "QR Masa Sipariş Sistemi",
+"en": "QR Table Ordering System"
+},
+"aciklama": {
+"tr": "Müşteri masadaki QR'ı okutur, siparişi seçer; sipariş anında mutfağa/kasaya düşer ve masaya getirilir. Garson çağırmaya, kalkmaya gerek yok.",
+"en": "Guest scans the table QR, picks items; the order drops straight to the kitchen/POS and is brought to the table. No calling a waiter, no getting up."
+},
+"pr": "₺1.900"
+},
+{
+"id": "waiter",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🛎️",
+"ad": {
+"tr": "Garson Çağırma & Masa Bildirim",
+"en": "Waiter Call & Table Alerts"
+},
+"aciklama": {
+"tr": "Masadan tek dokunuşla garson/hesap çağır; bildirim personele anında ulaşır.",
+"en": "One tap from the table calls a waiter/bill; staff is alerted instantly."
+},
+"pr": "₺990"
+},
+{
+"id": "kds",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "👨‍🍳",
+"ad": {
+"tr": "Mutfak Ekran Sistemi (KDS)",
+"en": "Kitchen Display System"
+},
+"aciklama": {
+"tr": "Siparişler mutfak ekranında sıralanır, hazırlık süreleri takip edilir.",
+"en": "Orders queue on the kitchen screen, prep times tracked."
+},
+"pr": "₺1.500"
+},
+{
+"id": "tablepay",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "💳",
+"ad": {
+"tr": "Masadan Hesap & Ödeme",
+"en": "Pay at Table"
+},
+"aciklama": {
+"tr": "Müşteri QR ile hesabı görür, masadan kalkmadan kartla öder.",
+"en": "Guest sees the bill via QR and pays by card without leaving the table."
+},
+"pr": "₺1.500"
+},
+{
+"id": "queue",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🔢",
+"ad": {
+"tr": "Sıra / Numaratör Sistemi",
+"en": "Queue / Ticket System"
+},
+"aciklama": {
+"tr": "Klinik, banka, mağaza için dijital sıra alma + ekran çağrı.",
+"en": "Digital ticketing + screen call for clinics, banks, stores."
+},
+"pr": "₺1.200"
+},
+{
+"id": "reserve",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "📆",
+"ad": {
+"tr": "Rezervasyon & Masa Yönetimi",
+"en": "Reservation & Table Management"
+},
+"aciklama": {
+"tr": "Online masa rezervasyonu + salon yerleşim planı + doluluk.",
+"en": "Online table booking + floor plan + occupancy."
+},
+"pr": "₺1.500"
+},
+{
+"id": "hotelqr",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🏨",
+"ad": {
+"tr": "Otel Dijital Resepsiyon & Oda Servisi",
+"en": "Hotel Digital Concierge"
+},
+"aciklama": {
+"tr": "Odadan QR ile servis iste, check-in/out, rehber ve harita.",
+"en": "Request service via in-room QR, check-in/out, guide and map."
+},
+"pr": "₺2.500"
+},
+{
+"id": "loyalty",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🎟️",
+"ad": {
+"tr": "Sadakat & Puan Kart Sistemi",
+"en": "Loyalty & Points System"
+},
+"aciklama": {
+"tr": "Dijital puan, kampanya, tekrar alışveriş için müşteri sadakati.",
+"en": "Digital points, campaigns, repeat-purchase loyalty."
+},
+"pr": "₺1.200"
+},
+{
+"id": "inventory",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "📦",
+"ad": {
+"tr": "Stok & Depo Takip Sistemi",
+"en": "Stock & Warehouse Tracking"
+},
+"aciklama": {
+"tr": "Barkodlu stok girişi-çıkışı, kritik seviye uyarısı.",
+"en": "Barcode stock in/out, low-level alerts."
+},
+"pr": "₺1.900"
+},
+{
+"id": "shift",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🕐",
+"ad": {
+"tr": "Personel & Vardiya Takip",
+"en": "Staff & Shift Tracking"
+},
+"aciklama": {
+"tr": "QR ile giriş-çıkış, vardiya planı, mesai raporu.",
+"en": "QR clock in/out, shift planning, hours reports."
+},
+"pr": "₺1.200"
+},
+{
+"id": "salon",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "💇",
+"ad": {
+"tr": "Kuaför / Güzellik Randevu Sistemi",
+"en": "Salon / Beauty Booking"
+},
+"aciklama": {
+"tr": "Online randevu, personel takvimi, otomatik hatırlatma.",
+"en": "Online booking, staff calendar, auto reminders."
+},
+"pr": "₺1.500"
+},
+{
+"id": "clinic",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🩺",
+"ad": {
+"tr": "Klinik / Diş Hasta Takip",
+"en": "Clinic / Patient Management"
+},
+"aciklama": {
+"tr": "Hasta kaydı, randevu, tedavi geçmişi ve hatırlatma.",
+"en": "Patient records, appointments, history and reminders."
+},
+"pr": "₺2.500"
+},
+{
+"id": "gym",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🏋️",
+"ad": {
+"tr": "Spor Salonu Üyelik & Giriş",
+"en": "Gym Membership & Access"
+},
+"aciklama": {
+"tr": "QR üyelik kartı, giriş kontrolü, aidat takibi.",
+"en": "QR membership, access control, dues tracking."
+},
+"pr": "₺1.900"
+},
+{
+"id": "eventqr",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🎫",
+"ad": {
+"tr": "Etkinlik Bilet & QR Giriş",
+"en": "Event Ticketing & QR Check-in"
+},
+"aciklama": {
+"tr": "Online bilet satışı + kapıda QR okutarak hızlı giriş.",
+"en": "Online ticket sales + fast QR check-in at the door."
+},
+"pr": "₺990"
+},
+{
+"id": "feedback",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "⭐",
+"ad": {
+"tr": "QR Anket & Geri Bildirim",
+"en": "QR Survey & Feedback"
+},
+"aciklama": {
+"tr": "Masada/üründe QR ile anlık memnuniyet ve yorum toplama.",
+"en": "Collect instant satisfaction and reviews via QR at the table/product."
+},
+"pr": "₺990"
+},
+{
+"id": "tipqr",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "💝",
+"ad": {
+"tr": "Dijital Bahşiş (QR Tip)",
+"en": "Digital Tipping (QR)"
+},
+"aciklama": {
+"tr": "Personele QR ile kartlı bahşiş; nakit derdi yok.",
+"en": "Card tips to staff via QR; no cash needed."
+},
+"pr": "₺590"
+},
+{
+"id": "kiosk",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🖲️",
+"ad": {
+"tr": "Self-Servis Sipariş Kiosk",
+"en": "Self-Service Ordering Kiosk"
+},
+"aciklama": {
+"tr": "Dokunmatik ekrandan sipariş + ödeme, kuyruğu azaltır.",
+"en": "Touchscreen order + pay, cuts the queue."
+},
+"pr": "₺3.500"
+},
+{
+"id": "signage",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "📺",
+"ad": {
+"tr": "Dijital Tabela / Menü Ekranı",
+"en": "Digital Signage / Menu Board"
+},
+"aciklama": {
+"tr": "Ekranlarda uzaktan güncellenen menü, kampanya, duyuru.",
+"en": "Remotely updated menu, promos, announcements on screens."
+},
+"pr": "₺1.500"
+},
+{
+"id": "delivery",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🛵",
+"ad": {
+"tr": "Paket Servis & Kurye Takip",
+"en": "Delivery & Courier Tracking"
+},
+"aciklama": {
+"tr": "Sipariş durumu, kurye atama, müşteriye canlı takip linki.",
+"en": "Order status, courier assignment, live tracking link for customers."
+},
+"pr": "₺1.900"
+},
+{
+"id": "valet",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🚗",
+"ad": {
+"tr": "Vale / Otopark Çağırma Sistemi",
+"en": "Valet / Parking Call System"
+},
+"aciklama": {
+"tr": "QR ile aracı çağır, vale bildirimi, bekleme süresini kısalt.",
+"en": "Call your car via QR, valet alert, shorter wait."
+},
+"pr": "₺1.200"
+},
+{
+"id": "parking",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🅿️",
+"ad": {
+"tr": "Otopark Doluluk & Plaka Okuma",
+"en": "Parking Occupancy & Plate Reading"
+},
+"aciklama": {
+"tr": "Boş yer takibi, plaka tanıma ile giriş-çıkış ve ücret.",
+"en": "Free-spot tracking, plate-recognition entry/exit and fees."
+},
+"pr": "₺2.500"
+},
+{
+"id": "intercom",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🔔",
+"ad": {
+"tr": "Akıllı Zil & Kapı İnterkom",
+"en": "Smart Doorbell & Intercom"
+},
+"aciklama": {
+"tr": "Telefondan kapı görüntüsü, uzaktan kapı açma.",
+"en": "See the door from your phone, open remotely."
+},
+"pr": "₺1.500"
+},
+{
+"id": "building",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🏢",
+"ad": {
+"tr": "Apartman / Site Yönetim Sistemi",
+"en": "Building / HOA Management"
+},
+"aciklama": {
+"tr": "Aidat takibi, duyuru, arıza bildirimi, karar defteri.",
+"en": "Dues tracking, announcements, fault reports, decision log."
+},
+"pr": "₺1.900"
+},
+{
+"id": "carrental",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🚙",
+"ad": {
+"tr": "Araç Kiralama Yönetimi",
+"en": "Car Rental Management"
+},
+"aciklama": {
+"tr": "Müsaitlik, sözleşme, teslim-iade ve hasar takibi.",
+"en": "Availability, contracts, handover-return and damage tracking."
+},
+"pr": "₺2.500"
+},
+{
+"id": "realestate",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🏡",
+"ad": {
+"tr": "Emlak İlan & Portföy Yönetimi",
+"en": "Real Estate Listings & CRM"
+},
+"aciklama": {
+"tr": "Portföy, ilan yayını, müşteri eşleştirme ve randevu.",
+"en": "Portfolio, listing publish, client matching and viewings."
+},
+"pr": "₺2.500"
+},
+{
+"id": "vet",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🐾",
+"ad": {
+"tr": "Veteriner / Pet Klinik Takip",
+"en": "Vet / Pet Clinic Management"
+},
+"aciklama": {
+"tr": "Hasta kartı, aşı takvimi, randevu ve hatırlatma.",
+"en": "Patient records, vaccine schedule, appointments and reminders."
+},
+"pr": "₺1.900"
+},
+{
+"id": "school",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🏫",
+"ad": {
+"tr": "Okul / Kurs & Veli Bilgilendirme",
+"en": "School / Course & Parent Portal"
+},
+"aciklama": {
+"tr": "Yoklama, not, ödev, servis ve veli bildirimleri.",
+"en": "Attendance, grades, homework, bus and parent alerts."
+},
+"pr": "₺2.500"
+},
+{
+"id": "fieldservice",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🧰",
+"ad": {
+"tr": "Servis / Arıza Takip",
+"en": "Field Service / Ticketing"
+},
+"aciklama": {
+"tr": "Arıza kaydı, teknisyen atama, durum ve süre takibi.",
+"en": "Fault logging, technician dispatch, status and SLA tracking."
+},
+"pr": "₺1.900"
+},
+{
+"id": "helpdesk",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🎧",
+"ad": {
+"tr": "Destek Talebi / Çağrı Yönetimi",
+"en": "Helpdesk / Support Tickets"
+},
+"aciklama": {
+"tr": "Müşteri destek talepleri, öncelik, atama ve raporlama.",
+"en": "Customer tickets, priority, assignment and reporting."
+},
+"pr": "₺1.500"
+},
+{
+"id": "catalog",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "📒",
+"ad": {
+"tr": "Dijital B2B Kartela / Katalog",
+"en": "Digital B2B Catalog"
+},
+"aciklama": {
+"tr": "Bayilere özel fiyatlı, sipariş alabilen dijital katalog.",
+"en": "Dealer-priced digital catalog that takes orders."
+},
+"pr": "₺1.500"
+},
+{
+"id": "leadqr",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🧲",
+"ad": {
+"tr": "Fuar / Stand QR Lead Toplama",
+"en": "Expo / Booth QR Lead Capture"
+},
+"aciklama": {
+"tr": "Ziyaretçi QR ile bilgi bırakır, anlık CRM'e düşer.",
+"en": "Visitors leave info via QR, instantly into your CRM."
+},
+"pr": "₺990"
+},
+{
+"id": "warranty",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🧾",
+"ad": {
+"tr": "Garanti & Servis Kayıt",
+"en": "Warranty & Service Registration"
+},
+"aciklama": {
+"tr": "Ürün garanti kaydı, servis geçmişi, hatırlatma.",
+"en": "Product warranty registration, service history, reminders."
+},
+"pr": "₺990"
+},
+{
+"id": "subbox",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "📮",
+"ad": {
+"tr": "Abonelik Kutusu Yönetimi",
+"en": "Subscription Box Management"
+},
+"aciklama": {
+"tr": "Aylık abonelik, otomatik yenileme, sevkiyat takibi.",
+"en": "Monthly subscriptions, auto-renewal, shipment tracking."
+},
+"pr": "₺1.900"
+},
+{
+"id": "donate",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "❤️",
+"ad": {
+"tr": "Bağış & Kampanya Sayfası",
+"en": "Donation & Fundraising Page"
+},
+"aciklama": {
+"tr": "Dernek/STK için bağış toplama, hedef ve şeffaf rapor.",
+"en": "Fundraising for NGOs, goals and transparent reporting."
+},
+"pr": "₺1.200"
+},
+{
+"id": "fleet",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🚚",
+"ad": {
+"tr": "Filo / Araç Takip",
+"en": "Fleet / Vehicle Tracking"
+},
+"aciklama": {
+"tr": "Araç konumu, yakıt, bakım ve sürücü performansı.",
+"en": "Vehicle location, fuel, maintenance and driver performance."
+},
+"pr": "₺2.500"
+},
+{
+"id": "nursery",
+"sekme": "kurumsal",
+"g": "akilli",
+"ic": "🧸",
+"ad": {
+"tr": "Kreş / Anaokulu Veli Uygulaması",
+"en": "Nursery / Daycare Parent App"
+},
+"aciklama": {
+"tr": "Günlük rapor, fotoğraf, menü, yoklama ve duyuru.",
+"en": "Daily reports, photos, menu, attendance and notices."
+},
+"pr": "₺1.900"
+},
+{
+"id": "brandedapp",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "📱",
+"ad": {
+"tr": "Markalı Mobil Uygulama",
+"en": "Branded Mobile App"
+},
+"aciklama": {
+"tr": "iOS + Android, kendi markanla App Store & Play.",
+"en": "iOS + Android, your brand, App Store & Play release."
+},
+"pr": "₺29.990"
+},
+{
+"id": "orderapp",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "🛍️",
+"ad": {
+"tr": "Sipariş / Mağaza Mobil Uygulaması",
+"en": "Order / Store Mobile App"
+},
+"aciklama": {
+"tr": "Ürün, sepet, ödeme, bildirimli satış uygulaması.",
+"en": "Your own selling app with catalog, cart, payment and push."
+},
+"pr": "₺19.990"
+},
+{
+"id": "loyaltyapp",
+"sekme": "kurumsal",
+"g": "kurumsal",
+"ic": "🏅",
+"ad": {
+"tr": "Sadakat Mobil Uygulaması",
+"en": "Loyalty Mobile App"
+},
+"aciklama": {
+"tr": "Puan, kupon, push kampanya ile müşteri sadakati.",
+"en": "Points, coupons, push campaigns to bring customers back."
+},
+"pr": "₺14.990"
+},
+{
+"id": "guv-temel",
+"sekme": "kurumsal",
+"g": "guvenlik",
+"ic": "🟢",
+"ad": {
+"tr": "Temel Koruma",
+"en": "Basic Protection"
+},
+"aciklama": {
+"tr": "Sitenizi temel saldırılara karşı koruyun.",
+"en": "For 'just protect me': SSL/HTTPS, DDoS protection, basic firewall, bot blocking. Simple and safe."
+},
+"pr": "₺990"
+},
+{
+"id": "guv-pro",
+"sekme": "kurumsal",
+"g": "guvenlik",
+"ic": "🔵",
+"ad": {
+"tr": "Profesyonel Koruma",
+"en": "Professional Protection"
+},
+"aciklama": {
+"tr": "En çok tercih edilen kapsamlı koruma.",
+"en": "Most popular: Basic + origin IP hiding (tunnel), full WAF, payment-page script shield, rate limiting, device lock, 24/7 monitoring."
+},
+"pr": "₺2.490"
+},
+{
+"id": "guv-max",
+"sekme": "kurumsal",
+"g": "guvenlik",
+"ic": "🔴",
+"ad": {
+"tr": "Maksimum · Banka Seviyesi",
+"en": "Maximum · Bank-Grade"
+},
+"aciklama": {
+"tr": "Banka seviyesi, en üst düzey koruma.",
+"en": "For the paranoid: Pro + Zero Trust, mTLS, 2FA, aggressive attack/scan blocking (kernel ban), full audit log, instant alerts, custom rules."
+},
+"pr": "₺4.990"
+},
+{
+"id": "guv-ssl",
+"sekme": "kurumsal",
+"g": "guvenlik",
+"ic": "🔒",
+"ad": {
+"tr": "SSL & Şifreleme Kurulumu",
+"en": "SSL & Encryption Setup"
+},
+"aciklama": {
+"tr": "TLS 1.3 + güçlü şifreleme, HTTPS zorunlu.",
+"en": "TLS 1.3 + strong encryption + forced HTTPS. Green padlock, secure connection."
+},
+"pr": "₺490"
+},
+{
+"id": "guv-ddos",
+"sekme": "kurumsal",
+"g": "guvenlik",
+"ic": "🌊",
+"ad": {
+"tr": "DDoS Koruması",
+"en": "DDoS Protection"
+},
+"aciklama": {
+"tr": "Saldırı seli sitenizi çökertemez.",
+"en": "Attack floods can't take you down — global automatic DDoS defense."
+},
+"pr": "₺1.490"
+},
+{
+"id": "guv-waf",
+"sekme": "kurumsal",
+"g": "guvenlik",
+"ic": "🧱",
+"ad": {
+"tr": "Web Uygulama Güvenlik Duvarı (WAF)",
+"en": "Web App Firewall (WAF)"
+},
+"aciklama": {
+"tr": "SQL injection, XSS ve exploit'leri durdurur.",
+"en": "Blocks SQL injection, XSS and exploits at the edge before they reach your server."
+},
+"pr": "₺1.990"
+},
+{
+"id": "guv-gizle",
+"sekme": "kurumsal",
+"g": "guvenlik",
+"ic": "🕵️",
+"ad": {
+"tr": "Sunucu / IP Gizleme",
+"en": "Origin / IP Hiding"
+},
+"aciklama": {
+"tr": "Sunucunuz internette görünmez olur.",
+"en": "Your server is invisible online — no open ports, direct attacks impossible (tunnel)."
+},
+"pr": "₺990"
+},
+{
+"id": "guv-bot",
+"sekme": "kurumsal",
+"g": "guvenlik",
+"ic": "🤖",
+"ad": {
+"tr": "Bot & Scraper Engelleme",
+"en": "Bot & Scraper Blocking"
+},
+"aciklama": {
+"tr": "Kötü botları ve içerik çalanları engeller.",
+"en": "Bad bots, scrapers and automated attacks blocked; real customers stay free."
+},
+"pr": "₺990"
+},
+{
+"id": "guv-odeme",
+"sekme": "kurumsal",
+"g": "guvenlik",
+"ic": "💳",
+"ad": {
+"tr": "Ödeme & Kart Güvenliği",
+"en": "Payment & Card Security"
+},
+"aciklama": {
+"tr": "Ödeme sayfası izlenir, kart bilgisi korunur.",
+"en": "Payment-page scripts monitored; card-stealing code caught instantly."
+},
+"pr": "₺1.490"
+},
+{
+"id": "guv-2fa",
+"sekme": "kurumsal",
+"g": "guvenlik",
+"ic": "🔑",
+"ad": {
+"tr": "2FA / Çok Faktörlü Giriş",
+"en": "2FA / Multi-Factor Login"
+},
+"aciklama": {
+"tr": "Yönetici girişine çift doğrulama + cihaz kilidi.",
+"en": "Device lock + 2FA on admin login; account safe even if password leaks."
+},
+"pr": "₺790"
+},
+{
+"id": "guv-izleme",
+"sekme": "kurumsal",
+"g": "guvenlik",
+"ic": "📡",
+"ad": {
+"tr": "7/24 İzleme & Anlık Alarm",
+"en": "24/7 Monitoring & Alerts"
+},
+"aciklama": {
+"tr": "Saldırı, anormallik, kesinti anında tespit.",
+"en": "Attacks, anomalies and downtime detected instantly; you're alerted right away."
+},
+"pr": "₺1.990"
+},
+{
+"id": "guv-audit",
+"sekme": "kurumsal",
+"g": "guvenlik",
+"ic": "🔍",
+"ad": {
+"tr": "Güvenlik Denetimi & Sızma Testi",
+"en": "Security Audit & Pentest"
+},
+"aciklama": {
+"tr": "Sisteminiz baştan sona taranır, açıklar bulunur.",
+"en": "Full system scan, vulnerabilities found and fixed — report included."
+},
+"pr": "₺3.990"
+},
+{
+"id": "guv-yedek",
+"sekme": "kurumsal",
+"g": "guvenlik",
+"ic": "💾",
+"ad": {
+"tr": "Yedekleme & Felaket Kurtarma",
+"en": "Backup & Disaster Recovery"
+},
+"aciklama": {
+"tr": "Otomatik yedek + hızlı geri yükleme.",
+"en": "Automatic backups + fast restore. Your data is safe even in worst case."
+},
+"pr": "₺990"
+}
+]
