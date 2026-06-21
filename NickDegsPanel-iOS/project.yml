@@ -7,7 +7,7 @@ settings:
   base:
     MARKETING_VERSION: "1.0"
     CURRENT_PROJECT_VERSION: "1"
-    PRODUCT_BUNDLE_IDENTIFIER: com.nickdegs.panel
+    PRODUCT_BUNDLE_IDENTIFIER: com.nickdegs.dashboard
     TARGETED_DEVICE_FAMILY: "1"
 targets:
   NickDegsPanel:
@@ -17,12 +17,12 @@ targets:
     settings:
       base:
         TARGETED_DEVICE_FAMILY: "1"
-        PRODUCT_BUNDLE_IDENTIFIER: com.nickdegs.panel
+        PRODUCT_BUNDLE_IDENTIFIER: com.nickdegs.dashboard
     sources: [NickDegsPanel]
     info:
       path: NickDegsPanel/Info.plist
       properties:
-        CFBundleDisplayName: NickDegs Panel
+        CFBundleDisplayName: NickDegs Dashboard
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         ITSAppUsesNonExemptEncryption: false

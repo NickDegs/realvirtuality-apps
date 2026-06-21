@@ -21,7 +21,7 @@ struct LoginView: View {
                 VStack(spacing: 18) {
                     Spacer(minLength: 60)
                     Image(systemName: "diamond.fill").font(.system(size: 54)).foregroundStyle(tema.grad).shimmer()
-                    Text("NickDegs Panel").font(.largeTitle.bold()).foregroundStyle(.rvText)
+                    Text("NickDegs Dashboard").font(.largeTitle.bold()).foregroundStyle(.rvText)
                     Text("İşletme yönetim paneline giriş").font(.subheadline).foregroundStyle(.rvMut)
 
                     // Mod seçici
