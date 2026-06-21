@@ -67,6 +67,7 @@ struct GrupView: View {
     @EnvironmentObject var tema: Tema
     @Environment(\.horizontalSizeClass) var hsc
     @State private var acilan: HubKart? = nil
+    @State private var sifreAcik = false
 
     private var kolonlar: [GridItem] { Array(repeating: GridItem(.flexible(), spacing: 14), count: hsc == .regular ? 3 : 2) }
 
@@ -94,6 +95,7 @@ struct GrupView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Text(ad)
+                        Button { sifreAcik = true } label: { Label("Şifre Değiştir", systemImage: "lock.rotation") }
                         Button("Çıkış Yap", role: .destructive) { oturum.cikis() }
                     } label: { Image(systemName: "person.crop.circle").font(.title3).foregroundStyle(.rvText) }
                 }
@@ -102,6 +104,7 @@ struct GrupView: View {
                 let h = oturum.host.hasPrefix("http") ? oturum.host : "https://" + oturum.host
                 PanelWeb2(url: URL(string: "\(h)/dash/s?t=\(oturum.token)&s=\(k.s)")!, baslik: k.baslik)
             }
+            .sheet(isPresented: $sifreAcik) { SifreDegistirView() }
         }
         .tint(tema.c1)
     }
