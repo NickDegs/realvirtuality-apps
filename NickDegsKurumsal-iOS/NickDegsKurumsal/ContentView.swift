@@ -115,7 +115,7 @@ struct SekmeView: View {
     var kahraman: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(yerel.t("hero1")).font(.largeTitle.bold()).foregroundStyle(.rvText)
-            Text(yerel.t("hero2")).font(.largeTitle.bold()).foregroundStyle(tema.grad).shimmer()
+            Text(yerel.t("hero2")).font(.largeTitle.bold()).foregroundStyle(tema.grad).fixedSize(horizontal: false, vertical: true)
             Text(yerel.t("heroAlt")).font(.subheadline).foregroundStyle(.rvMut)
                 .fixedSize(horizontal: false, vertical: true)
         }

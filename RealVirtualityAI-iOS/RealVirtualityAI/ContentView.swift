@@ -110,7 +110,7 @@ struct ContentView: View {
             Text(yerel.t("heroBaslik2"))
                 .font(.largeTitle.bold())
                 .foregroundStyle(tema.grad)
-                .shimmer()
+                .fixedSize(horizontal: false, vertical: true)
             Text(yerel.t("heroAlt"))
                 .font(.body).foregroundStyle(.rvMut)
                 .lineSpacing(3)
