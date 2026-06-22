@@ -337,3 +337,58 @@ struct IsletmeEkleNative: View {
         } else { basari = false; sonuc = "⚠️ " + ((r?["mesaj"] as? String) ?? "Hata") }
     }
 }
+
+// MARK: - Native Personel (işletme → çalışan ekle/yönet) — WebView yok
+struct PersonelNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    @State private var liste: [[String:Any]] = []
+    @State private var ad = ""
+    @State private var kod = ""
+    @State private var tel = ""
+    @State private var sonuc = ""
+    @State private var basari = false
+    @State private var bekle = false
+    @State private var yukleniyor = true
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            ScrollView { VStack(alignment: .leading, spacing: 14) {
+                Text("Çalışan ekle — sınırlı panele (sipariş/randevu al) girer. Yönetim sende kalır.").font(.subheadline).foregroundStyle(.rvMut)
+                alan("Çalışan adı", $ad); alan("Giriş kodu (örn: ahmet)", $kod); alan("Telefon (opsiyonel)", $tel)
+                Button { Task { await ekle() } } label: {
+                    HStack { if bekle { ProgressView().tint(.white) }; Text("Çalışan Ekle").bold() }
+                        .foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 14).background(tema.grad, in: .rect(cornerRadius: 14))
+                }.disabled(bekle || ad.isEmpty || kod.isEmpty)
+                if !sonuc.isEmpty { Text(sonuc).font(.callout).foregroundStyle(basari ? .green : .orange).padding(12).frame(maxWidth:.infinity,alignment:.leading).glassEffect(.regular,in:.rect(cornerRadius:12)) }
+                if !liste.isEmpty {
+                    Text("Çalışanlar (\(liste.count))").font(.headline.bold()).foregroundStyle(.rvText).padding(.top, 8)
+                    ForEach(Array(liste.enumerated()), id: \.offset) { _, p in
+                        HStack {
+                            VStack(alignment:.leading,spacing:2){ Text(p["ad"] as? String ?? "").foregroundStyle(.rvText); Text(p["kod"] as? String ?? "").font(.caption2).foregroundStyle(.rvMut) }
+                            Spacer()
+                            Button(role:.destructive){ Task { await api.personelSil(p["kod"] as? String ?? ""); await yukle() } } label: { Image(systemName:"trash").foregroundStyle(.red) }
+                        }.padding(13).glassEffect(.regular, in: .rect(cornerRadius: 12))
+                    }
+                }
+            }.padding(16) }
+            if yukleniyor { ProgressView().tint(tema.c1).scaleEffect(1.2) }
+        }
+        .navigationTitle("👥 Personel").navigationBarTitleDisplayMode(.inline)
+        .task { await yukle() }
+    }
+    func alan(_ ip: String, _ b: Binding<String>) -> some View {
+        TextField(ip, text: b).autocorrectionDisabled().textInputAutocapitalization(.never)
+            .foregroundStyle(.rvText).padding(13).glassEffect(.regular, in: .rect(cornerRadius: 13))
+    }
+    func yukle() async { yukleniyor = true; defer { yukleniyor = false }; liste = await api.personelListe() }
+    func ekle() async {
+        bekle = true; defer { bekle = false }; sonuc = ""
+        let r = await api.personelEkle(ad: ad, kod: kod, tel: tel, sifre: "")
+        if r?["ok"] as? Bool == true {
+            basari = true; sonuc = "✓ Eklendi — Kod: \(r?["kod"] ?? "") · Şifre: \(r?["sifre"] ?? "")"
+            ad=""; kod=""; tel=""; await yukle()
+        } else { basari = false; sonuc = "⚠️ " + ((r?["mesaj"] as? String) ?? "Hata") }
+    }
+}

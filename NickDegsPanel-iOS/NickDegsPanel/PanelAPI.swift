@@ -52,4 +52,10 @@ final class PanelAPI {
     func isletmeEkle(ad: String, kod: String, tel: String, sifre: String, slug: String) async -> [String:Any]? {
         await post("/api/panel/isletme-ekle", ["ad":ad,"kod":kod,"tel":tel,"sifre":sifre,"slug":slug])
     }
+    // Personel (işletme → çalışan)
+    func personelListe() async -> [[String:Any]] { ((await get("/api/panel/personel-liste"))?["personel"] as? [[String:Any]]) ?? [] }
+    func personelEkle(ad: String, kod: String, tel: String, sifre: String) async -> [String:Any]? {
+        await post("/api/panel/personel-ekle", ["ad":ad,"kod":kod,"tel":tel,"sifre":sifre])
+    }
+    func personelSil(_ kod: String) async { _ = await post("/api/panel/personel-sil", ["kod":kod]) }
 }
