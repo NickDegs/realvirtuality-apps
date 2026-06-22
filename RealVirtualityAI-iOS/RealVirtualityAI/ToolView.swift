@@ -12,6 +12,8 @@ struct ToolView: View {
     @State private var hedefDil = "en"
     @State private var sahne = "beyaz"
     @State private var platform = "instagram"
+    @State private var kalite = "kaliteli"
+    @State private var oran = "kare"
     @State private var secilenFoto: PhotosPickerItem?
     @State private var gorselData: Data?
     @State private var sonuc: UretimSonuc? = nil
@@ -23,6 +25,10 @@ struct ToolView: View {
     let diller = ["tr":"Türkçe","en":"English","de":"Deutsch","fr":"Français","es":"Español","ar":"العربية","ru":"Русский"]
     let sahneler = [("beyaz","Beyaz stüdyo"),("mermer","Mermer (lüks)"),("ahsap","Ahşap masa"),("yaprak","Doğal yaprak"),("gradyan","Renkli gradyan"),("mutfak","Mutfak tezgâhı"),("siyah","Siyah (dramatik)"),("pastel","Pastel minimal")]
     let platformlar = [("instagram","Instagram"),("facebook","Facebook"),("tiktok","TikTok"),("linkedin","LinkedIn"),("x","X (Twitter)")]
+    let kaliteler = [("kaliteli","💎 Kaliteli (çok kredi)"),("dandik","⚡ Hızlı / Ekonomik (az kredi)")]
+    let oranlar = [("kare","⬛ Kare 1:1"),("dikey","📱 Dikey 9:16"),("yatay","🖥️ Yatay 16:9")]
+    let kaliteAraclar = ["gorsel","logo","urunfoto","icerik","donustur"]
+    let oranAraclar = ["gorsel","logo","icerik"]
 
     private var gorselGerek: Bool { arac.kind == .gorselYukle || arac.kind == .gorselArti || arac.kind == .urunfoto }
     private var metinGerek: Bool { arac.kind == .prompt || arac.kind == .metin || arac.kind == .ceviri || arac.kind == .gorselArti || arac.kind == .icerik || arac.kind == .url }
@@ -45,6 +51,8 @@ struct ToolView: View {
                     if arac.kind == .ceviri { dilSecici }
                     if arac.kind == .urunfoto { secici(yerel.t("sahne"), sahneler, $sahne) }
                     if arac.kind == .icerik { secici(yerel.t("platform"), platformlar, $platform) }
+                    if kaliteAraclar.contains(arac.id) { secici("Kalite", kaliteler, $kalite) }
+                    if oranAraclar.contains(arac.id) { secici("En / boy", oranlar, $oran) }
 
                     uretButonu
 
@@ -216,6 +224,8 @@ struct ToolView: View {
         case .icerik: body["prompt"] = girdi; body["platform"] = platform
         case .ses: body["text"] = girdi
         }
+        if kaliteAraclar.contains(arac.id) { body["kalite"] = kalite }
+        if oranAraclar.contains(arac.id) { body["oran"] = oran }
         let (s, e) = await api.calistir("/api/\(arac.id)", body)
         if let e = e { e == "kota_doldu" ? (kotaUyari = true) : (hata = e) } else { sonuc = s }
     }
