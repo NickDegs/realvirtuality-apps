@@ -99,4 +99,13 @@ final class PanelAPI {
     func grant(email: String, days: Int, plan: String) async -> [String:Any]? {
         await post("/dash/aapi/grant", ["email":email,"days":days,"plan":plan])
     }
+    func uyeUzat(id: String, days: Int) async -> [String:Any]? {
+        await post("/dash/aapi/extend", ["id":id,"days":days])
+    }
+    func uyeErisimKaldir(user: String) async -> [String:Any]? {
+        await post("/dash/aapi/ent-action", ["action":"revoke_all","user":user])
+    }
+    // ── Admin Hub zamanlı duyuru ──
+    func hubZamanla(_ body: [String:Any]) async -> [String:Any]? { await post("/api/panel/hub-schedule", body) }
+    func hubZamanliListe() async -> [[String:Any]] { ((await get("/api/panel/hub-schedule"))?["kayitlar"] as? [[String:Any]]) ?? [] }
 }

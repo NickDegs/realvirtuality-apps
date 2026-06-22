@@ -331,6 +331,8 @@ struct AdminNative: View {
     @State private var ozet: [(String,String)] = []
     @State private var liste: [[String:Any]] = []
     @State private var yukleniyor = true
+    @State private var seciliUye: [String:Any]? = nil
+    @State private var islemMesaj = ""
     private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
     let sekmeler: [(String,String)] = [("overview","📊 Genel"),("members","👥 Üye"),("payments","💳 Ödeme"),("ips","🛡️ IP"),("containers","🐳 Container"),("teslimat","📦 Teslimat")]
 
@@ -355,14 +357,37 @@ struct AdminNative: View {
                         }.padding(16)
                     } else {
                         LazyVStack(spacing:8){ ForEach(Array(liste.prefix(200).enumerated()),id:\.offset){ _,it in
-                            Text(_satirMetin(it)).font(.caption).foregroundStyle(.rvText).frame(maxWidth:.infinity,alignment:.leading).padding(12).glassEffect(.regular,in:.rect(cornerRadius:12))
+                            if sekme=="members", it["id"] != nil {
+                                Button { seciliUye = it } label: {
+                                    HStack { Text(_satirMetin(it)).font(.caption).foregroundStyle(.rvText).frame(maxWidth:.infinity,alignment:.leading)
+                                        Image(systemName:"slider.horizontal.3").font(.caption2).foregroundStyle(tema.c1) }
+                                    .padding(12).glassEffect(.regular,in:.rect(cornerRadius:12))
+                                }
+                            } else {
+                                Text(_satirMetin(it)).font(.caption).foregroundStyle(.rvText).frame(maxWidth:.infinity,alignment:.leading).padding(12).glassEffect(.regular,in:.rect(cornerRadius:12))
+                            }
                         }}.padding(16)
                     }
                 }.refreshable { await yukle() } }
+                if !islemMesaj.isEmpty { Text(islemMesaj).font(.caption).foregroundStyle(.green).padding(8) }
             }
         }
         .navigationTitle("Admin Panel").navigationBarTitleDisplayMode(.inline)
+        .confirmationDialog("Üye işlemi", isPresented: Binding(get:{seciliUye != nil}, set:{ if !$0 { seciliUye=nil } }), presenting: seciliUye) { u in
+            Button("30 gün uzat") { Task { await uyeIslem(u, 30) } }
+            Button("90 gün uzat") { Task { await uyeIslem(u, 90) } }
+            Button("365 gün uzat") { Task { await uyeIslem(u, 365) } }
+            Button("Erişimi kaldır", role:.destructive) { Task { await uyeIslem(u, 0) } }
+            Button("Vazgeç", role:.cancel) {}
+        } message: { u in Text("\(u["email"] ?? u["name"] ?? "")") }
         .task { await yukle() }
+    }
+    func uyeIslem(_ u:[String:Any], _ uzat:Int) async {
+        let id = "\(u["id"] ?? "")"; let email = "\(u["email"] ?? "")"
+        islemMesaj = "⏳ İşleniyor…"
+        if uzat > 0 { _ = await api.uyeUzat(id:id, days:uzat); islemMesaj = "✅ \(email): \(uzat) gün uzatıldı" }
+        else { _ = await api.uyeErisimKaldir(user:email); islemMesaj = "✅ \(email): erişim kaldırıldı" }
+        seciliUye = nil; await yukle()
     }
     func _satirMetin(_ it: [String:Any]) -> String {
         let keys = ["name","email","tg_user","ip","plan","ad","tutar","amount","durum","status","when","reason"]
