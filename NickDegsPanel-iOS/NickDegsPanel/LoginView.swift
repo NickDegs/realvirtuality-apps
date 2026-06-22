@@ -5,6 +5,8 @@ struct LoginView: View {
     @EnvironmentObject var oturum: Oturum
     @State private var mod = 0            // 0: şifre, 1: SMS
     @State private var kod = ""           // işletme kodu / telefon
+    @State private var ulke = ULKE_VARSAYILAN
+    @State private var tel = ""           // SMS modunda yerel numara
     @State private var sifre = ""
     @State private var smsKod = ""
     @State private var smsGonderildi = false
@@ -34,7 +36,14 @@ struct LoginView: View {
                         alan("Şifre", $sifre, sym: "lock.fill", gizli: true)
                         anaButon("Giriş Yap") { Task { await sifreGiris() } }
                     } else {
-                        alan("+90 5xx... (ülke kodlu telefon)", $kod, sym: "phone.fill", klavye: .phonePad)
+                        HStack(spacing: 10) {
+                            UlkeKodSecici(secili: $ulke)
+                            Divider().frame(height: 22).overlay(Color.rvMut.opacity(0.4))
+                            TextField("5xx xxx xx xx", text: $tel)
+                                .foregroundStyle(.rvText).keyboardType(.phonePad).autocorrectionDisabled()
+                        }
+                        .padding(.horizontal, 16).padding(.vertical, 15)
+                        .glassEffect(.regular, in: .rect(cornerRadius: 16))
                         if smsGonderildi {
                             alan("SMS kodu", $smsKod, sym: "number", klavye: .numberPad)
                             anaButon("Doğrula & Giriş") { Task { await smsDogrula() } }
@@ -106,12 +115,12 @@ struct LoginView: View {
     }
     func smsGonder() async {
         hata = ""; bekle = true; defer { bekle = false }
-        let j = await istek("/api/panel/sms", ["tel": kod])
+        let j = await istek("/api/panel/sms", ["tel": tamNumara(ulke.kod, tel)])
         if j["ok"] as? Bool == true { smsGonderildi = true } else { hata = (j["mesaj"] as? String) ?? "SMS gönderilemedi." }
     }
     func smsDogrula() async {
         hata = ""; bekle = true; defer { bekle = false }
-        let j = await istek("/api/panel/sms-dogrula", ["tel": kod, "kod": smsKod])
+        let j = await istek("/api/panel/sms-dogrula", ["tel": tamNumara(ulke.kod, tel), "kod": smsKod])
         if j["ok"] as? Bool == true, let tok = j["token"] as? String { oturum.host = host; oturum.girisYap(token: tok) }
         else { hata = (j["mesaj"] as? String) ?? "Kod doğrulanamadı." }
     }

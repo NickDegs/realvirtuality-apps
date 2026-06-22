@@ -5,6 +5,7 @@ struct LoginView: View {
     @EnvironmentObject var yerel: Yerel
     @Environment(\.dismiss) var dismiss
     @State private var tel = ""
+    @State private var ulke = ULKE_VARSAYILAN
     @State private var kod = ""
     @State private var adim = 0          // 0: telefon, 1: kod
     @State private var hata = ""
@@ -31,8 +32,13 @@ struct LoginView: View {
                             .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
 
                         if adim == 0 {
-                            TextField("+90 5xx xxx xx xx", text: $tel).keyboardType(.phonePad)
-                                .padding().glassEffect(.regular, in: .rect(cornerRadius: 14)).foregroundStyle(.rvText)
+                            HStack(spacing: 10) {
+                                UlkeKodSecici(secili: $ulke)
+                                Divider().frame(height: 22)
+                                TextField("5xx xxx xx xx", text: $tel).keyboardType(.phonePad)
+                                    .foregroundStyle(.rvText).autocorrectionDisabled()
+                            }
+                            .padding().glassEffect(.regular, in: .rect(cornerRadius: 14))
                         } else {
                             TextField(yerel.p("smsKodu"), text: $kod).keyboardType(.numberPad)
                                 .multilineTextAlignment(.center).font(.title3)
@@ -73,13 +79,14 @@ struct LoginView: View {
 
     func ileri() async {
         hata = ""; bilgi = ""; bekle = true; defer { bekle = false }
+        let tam = tamNumara(ulke.kod, tel)   // +905xx...
         if adim == 0 {
-            // telefon ülke koduna göre dili ayarla
-            if let dil = LoginView.dilBul(tel) { yerel.secim = dil }
-            if let e = await api.smsGonder(tel) { hata = e }
+            // seçilen ülke koduna göre uygulama dilini ayarla
+            if let dil = LoginView.dilBul(tam) { yerel.secim = dil }
+            if let e = await api.smsGonder(tam) { hata = e }
             else { adim = 1; bilgi = "Kod telefonuna gönderildi." }
         } else {
-            if let e = await api.smsDogrula(tel, kod) { hata = e } else { dismiss() }
+            if let e = await api.smsDogrula(tam, kod) { hata = e } else { dismiss() }
         }
     }
 
