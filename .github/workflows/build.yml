@@ -117,6 +117,10 @@ jobs:
           mkdir -p ios/App/App
           cp ios-assets/GoogleService-Info.plist ios/App/App/GoogleService-Info.plist || true
           npx cap sync ios
+          # Cihaz adı = App Store adı ("Tarif Abi") — Guideline 2.3.8 eşleşme (mismatch red'i fix)
+          /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName Tarif Abi" ios/App/App/Info.plist 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Add :CFBundleDisplayName string Tarif Abi" ios/App/App/Info.plist || true
+          /usr/libexec/PlistBuddy -c "Set :CFBundleName Tarif Abi" ios/App/App/Info.plist 2>/dev/null || true
           # Şifreleme yok
           /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool false" ios/App/App/Info.plist 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Set :ITSAppUsesNonExemptEncryption false" ios/App/App/Info.plist || true

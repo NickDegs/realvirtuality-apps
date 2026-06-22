@@ -726,6 +726,8 @@ body[data-theme="light"] .step-num { box-shadow: 0 3px 10px rgba(255,113,51,0.28
 .prem-buy-btn[disabled]{background:rgba(255,255,255,0.12);color:var(--sub);cursor:default}
 .restore-row{padding:14px 20px;text-align:center}
 .restore-link{background:none;border:none;color:var(--sub);font-size:12px;cursor:pointer;text-decoration:underline}
+.restore-btn-main{display:block;width:100%;background:rgba(255,255,255,0.10);border:1.5px solid var(--acc);border-radius:16px;padding:13px 18px;color:var(--acc);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .18s}
+.restore-btn-main:active{opacity:.6}
 
 /* ─── AUTH SHEET ───────────────────────────────────────── */
 #profile-btn.signed-in { color: #4ade80 }
@@ -896,9 +898,7 @@ body[data-theme="light"] .feat-card, body[data-theme="light"] .rcard { border-co
     <div class="sheet-title">👑 Premium</div>
     <div id="prem-product-list"></div>
     <div class="restore-row">
-      <button class="restore-link" id="redeem-link" onclick="redeemCode()">🎁 Hediye Kodu Gir</button>
-      <span style="color:var(--sub);font-size:12px"> · </span>
-      <button class="restore-link" id="restore-link" onclick="restorePurchases()">Restore Purchases</button>
+      <button class="restore-btn-main" id="restore-link" onclick="restorePurchases()">🔄 Satın Alımları Geri Yükle</button>
     </div>
   </div>
 </div>
@@ -2029,7 +2029,7 @@ function renderPremiumSheet(){
       <div class="prem-product-desc">${lang==='tr'?'Favorilerin Apple ID\'nle tüm cihazlarda otomatik saklanır. Giriş gerekmez.':'Favorites sync across your devices via your Apple ID. No login needed.'}</div>
     </div>` : '');
   const rl=document.getElementById('restore-link');
-  if(rl)rl.textContent=t('restore')||'Restore Purchases';
+  if(rl)rl.textContent=lang==='tr'?'🔄 Satın Alımları Geri Yükle':'🔄 Restore Purchases';
 }
 
 async function buyIAP(productId,btn){
@@ -2073,12 +2073,14 @@ async function redeemCode(){
 
 async function restorePurchases(){
   const rl=document.getElementById('restore-link');
+  const label=lang==='tr'?'🔄 Satın Alımları Geri Yükle':'🔄 Restore Purchases';
   if(rl)rl.textContent='…';
   if(window.CdvPurchase?.store){
     try{await window.CdvPurchase.store.restorePurchases();}catch(e){}
   }
-  if(rl)rl.textContent=t('restore')||'Restore Purchases';
+  if(rl)rl.textContent=label;
   renderPremiumSheet();
+  alert(lang==='tr'?'Satın alımların geri yüklendi (varsa).':'Your purchases have been restored (if any).');
 }
 
 function updateCrownBtn(){
