@@ -43,6 +43,12 @@ final class PanelAPI {
     func iptvKanallar() async -> [[String:Any]] { await getArr("/dash/iptv/kanallar") }
     func iptvKanalAksiyon(_ id: String, _ aksiyon: String) async -> Bool { (await post("/dash/iptv/kanal-aksiyon", ["id":id,"aksiyon":aksiyon]))?["ok"] as? Bool ?? false }
     func iptvHatAksiyon(_ id: String, _ aksiyon: String) async -> Bool { (await post("/dash/iptv/hat-aksiyon", ["id":id,"aksiyon":aksiyon]))?["ok"] as? Bool ?? false }
+    func iptvKullanicilar() async -> [[String:Any]] { await getArr("/dash/iptv/kullanicilar") }
+    func iptvDavetler() async -> [[String:Any]] { ((await get("/dash/iptv/davetler"))?["users"] as? [[String:Any]]) ?? [] }
+    func iptvDavet(_ body: [String:Any]) async -> [String:Any]? { await post("/dash/iptv/davet", body) }
+    func iptvDavetIptal(_ kullanici: String) async -> Bool { (await post("/dash/iptv/davet-iptal", ["kullanici":kullanici]))?["ok"] as? Bool ?? false }
+    func iptvDavetUzat(_ kullanici: String, _ gun: Int) async -> Bool { (await post("/dash/iptv/davet-uzat", ["kullanici":kullanici,"gun":gun]))?["ok"] as? Bool ?? false }
+    func iptvKaynakGuncelle(_ adresler: [String]) async -> Bool { (await post("/dash/iptv/kaynak-guncelle", ["adresler":adresler]))?["ok"] as? Bool ?? false }
     // İşletme
     func bizVeri(_ kind: String) async -> [[String:Any]] { await getArr("/dash/biz/\(kind)") }
     // Güvenlik

@@ -68,29 +68,55 @@ struct IPTVNative: View {
     @State private var sekme = 0
     @State private var kaynak = ""
     @State private var kanalSayisi = 0
+    @State private var filmSayisi = 0
+    @State private var diziSayisi = 0
     @State private var hatlar: [[String:Any]] = []
     @State private var kanallar: [[String:Any]] = []
+    @State private var kullanicilar: [[String:Any]] = []
+    @State private var davetler: [[String:Any]] = []
     @State private var yukleniyor = true
     @State private var hata = ""
+    // davet oluşturma
+    @State private var davetAcik = false
+    @State private var dName = ""
+    @State private var dGun = 30
+    @State private var dProvider = "tvtork"
+    @State private var dVod = true
+    @State private var dKilit = true
+    @State private var sonDavet: [String:Any]? = nil
+    @State private var davetGonderiliyor = false
+    // kaynak güncelle
+    @State private var kaynakAcik = false
+    @State private var kaynakMetin = ""
     private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
 
     var body: some View {
         ZStack {
             AnimatedArka(c1: tema.c1, c2: tema.c2)
             VStack(spacing: 0) {
-                Picker("", selection: $sekme) { Text("Hatlar").tag(0); Text("Kanallar (\(kanalSayisi))").tag(1) }
-                    .pickerStyle(.segmented).padding(16)
+                Picker("", selection: $sekme) {
+                    Text("Hatlar").tag(0); Text("Kanallar").tag(1)
+                    Text("Erişim (\(kullanicilar.count))").tag(2); Text("Davet (\(davetler.count))").tag(3)
+                }.pickerStyle(.segmented).padding(16)
                 if !hata.isEmpty {
                     VStack(spacing: 12) { Image(systemName: "tv.slash").font(.system(size: 44)).foregroundStyle(tema.c2); Text(hata).foregroundStyle(.rvMut).multilineTextAlignment(.center) }.padding(30)
                 } else {
                     ScrollView {
-                        if sekme == 0 { hatGorunum } else { kanalGorunum }
+                        switch sekme {
+                        case 0: hatGorunum
+                        case 1: kanalGorunum
+                        case 2: erisimGorunum
+                        default: davetGorunum
+                        }
                     }.scrollIndicators(.hidden).refreshable { await yukle() }
                 }
             }
             if yukleniyor { ProgressView().tint(tema.c1).scaleEffect(1.3) }
         }
         .navigationTitle("📺 IPTV").navigationBarTitleDisplayMode(.inline)
+        .toolbar { ToolbarItem(placement: .topBarTrailing) { Button { kaynakAcik = true } label: { Image(systemName: "link.badge.plus") } } }
+        .sheet(isPresented: $davetAcik) { davetSheet }
+        .sheet(isPresented: $kaynakAcik) { kaynakSheet }
         .task { await yukle() }
     }
     var hatGorunum: some View {
@@ -125,6 +151,118 @@ struct IPTVNative: View {
             }
         }.padding(16)
     }
+    // Erişimi olanlar (salt-okunur)
+    var erisimGorunum: some View {
+        VStack(spacing: 9) {
+            if kullanicilar.isEmpty { Text("Erişimi olan kullanıcı yok").foregroundStyle(.rvMut).padding(.top, 30) }
+            ForEach(Array(kullanicilar.enumerated()), id: \.offset) { _, u in
+                VStack(alignment: .leading, spacing: 5) {
+                    HStack {
+                        Circle().fill((u["durum"] as? String == "aktif") ? .green : .orange).frame(width:10,height:10)
+                        Text(u["isim"] as? String ?? (u["kullanici"] as? String ?? "-")).font(.subheadline.bold()).foregroundStyle(.rvText)
+                        Spacer()
+                        if (u["cihaz_kilidi"] as? Bool) ?? false { Image(systemName: "lock.fill").font(.caption2).foregroundStyle(tema.c2) }
+                    }
+                    Text("\(u["saglayici"] as? String ?? "-") · kanal: \(u["kanal_kapsami"] as? String ?? "-") · VOD: \(u["vod"] as? String ?? "-")").font(.caption).foregroundStyle(.rvMut)
+                    Text("kullanıcı: \(u["kullanici"] as? String ?? "-") · bitiş: \(u["bitis"] as? String ?? "-")").font(.caption2).foregroundStyle(.rvMut)
+                }.frame(maxWidth: .infinity, alignment: .leading).padding(13).glassEffect(.regular, in: .rect(cornerRadius: 14))
+            }
+        }.padding(16)
+    }
+    // Davetler + native davet oluştur/iptal/uzat
+    var davetGorunum: some View {
+        VStack(spacing: 10) {
+            Button { sonDavet = nil; davetAcik = true } label: {
+                HStack { Image(systemName: "plus.circle.fill"); Text("Yeni Davet Oluştur").bold() }
+                    .frame(maxWidth: .infinity).padding(13).foregroundStyle(.white).background(tema.grad, in: .rect(cornerRadius: 14))
+            }
+            if davetler.isEmpty { Text("Henüz davet yok").foregroundStyle(.rvMut).padding(.top, 16) }
+            ForEach(Array(davetler.enumerated()), id: \.offset) { _, d in
+                let user = (d["username"] as? String) ?? (d["kullanici"] as? String) ?? ""
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack {
+                        Text(d["name"] as? String ?? user).font(.subheadline.bold()).foregroundStyle(.rvText)
+                        Spacer(); Text(d["status"] as? String ?? "").font(.caption2.bold()).foregroundStyle(.rvMut)
+                    }
+                    Text("bitiş: \(d["expires"] as? String ?? "-") · kanal: \(intStr(d["channels"]))").font(.caption2).foregroundStyle(.rvMut)
+                    if let l = d["invite_link"] as? String { Text(l).font(.caption2).foregroundStyle(tema.c1).lineLimit(1).textSelection(.enabled) }
+                    HStack(spacing: 8) {
+                        kbtn("+30 gün", .green) { Task { _ = await api.iptvDavetUzat(user, 30); await yukle() } }
+                        kbtn("İptal", .red) { Task { _ = await api.iptvDavetIptal(user); await yukle() } }
+                    }
+                }.frame(maxWidth: .infinity, alignment: .leading).padding(13).glassEffect(.regular, in: .rect(cornerRadius: 14))
+            }
+        }.padding(16)
+    }
+    func intStr(_ v: Any?) -> String { if let i = v as? Int { return "\(i)" }; return "\(v ?? "-")" }
+    // davet oluşturma sheet
+    var davetSheet: some View {
+        NavigationStack {
+            ZStack {
+                AnimatedArka(c1: tema.c1, c2: tema.c2)
+                ScrollView {
+                    VStack(spacing: 14) {
+                        if let s = sonDavet {
+                            VStack(alignment: .leading, spacing: 7) {
+                                Text("✅ Davet oluşturuldu").font(.headline).foregroundStyle(.rvText)
+                                Text("Kullanıcı: \(s["username"] as? String ?? "-")").foregroundStyle(.rvText).textSelection(.enabled)
+                                Text("Şifre: \(s["password"] as? String ?? "-")").foregroundStyle(.rvText).textSelection(.enabled)
+                                Text("Link: \(s["link"] as? String ?? "-")").font(.caption).foregroundStyle(tema.c1).textSelection(.enabled)
+                                Text("Bitiş: \(s["expires"] as? String ?? "-") · kanal: \(intStr(s["channels"]))").font(.caption).foregroundStyle(.rvMut)
+                            }.frame(maxWidth: .infinity, alignment: .leading).padding(14).glassEffect(.regular, in: .rect(cornerRadius: 16))
+                        } else {
+                            alan("İsim", $dName)
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Sağlayıcı").font(.caption).foregroundStyle(.rvMut)
+                                Picker("", selection: $dProvider) { Text("tvtork").tag("tvtork"); Text("Otomatik").tag("") }.pickerStyle(.segmented)
+                            }
+                            Stepper("Süre: \(dGun) gün", value: $dGun, in: 1...3650, step: 30)
+                                .foregroundStyle(.rvText).padding(12).glassEffect(.regular, in: .rect(cornerRadius: 12))
+                            Toggle("Tüm film + dizi (VOD)", isOn: $dVod).foregroundStyle(.rvText).padding(12).glassEffect(.regular, in: .rect(cornerRadius: 12))
+                            Toggle("Cihaz kilidi", isOn: $dKilit).foregroundStyle(.rvText).padding(12).glassEffect(.regular, in: .rect(cornerRadius: 12))
+                            Button { Task { await davetOlustur() } } label: {
+                                HStack { if davetGonderiliyor { ProgressView().tint(.white) }; Text(davetGonderiliyor ? "Oluşturuluyor…" : "Oluştur").bold() }
+                                    .frame(maxWidth: .infinity).padding(14).foregroundStyle(.white).background(tema.grad, in: .rect(cornerRadius: 14))
+                            }.disabled(dName.isEmpty || davetGonderiliyor)
+                        }
+                    }.padding(18)
+                }
+            }
+            .navigationTitle("Yeni Davet").navigationBarTitleDisplayMode(.inline)
+            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Kapat") { davetAcik = false } } }
+        }
+    }
+    func alan(_ p: String, _ b: Binding<String>) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(p).font(.caption).foregroundStyle(.rvMut)
+            TextField(p, text: b).foregroundStyle(.rvText).autocorrectionDisabled().padding(12).glassEffect(.regular, in: .rect(cornerRadius: 12))
+        }
+    }
+    func davetOlustur() async {
+        davetGonderiliyor = true; defer { davetGonderiliyor = false }
+        let body: [String:Any] = ["name": dName, "contact": "", "channel": "none", "days": dGun,
+                                  "provider": dProvider, "vod": dVod ? 1 : 0, "lock_device": dKilit ? 1 : 0]
+        if let r = await api.iptvDavet(body), (r["ok"] as? Bool) ?? false { sonDavet = r; await yukle() }
+    }
+    // kaynak güncelle sheet
+    var kaynakSheet: some View {
+        NavigationStack {
+            ZStack {
+                AnimatedArka(c1: tema.c1, c2: tema.c2)
+                VStack(spacing: 14) {
+                    Text("Kaynak adreslerini gir (her satır bir adres). Domain ölünce media bununla günceller.").font(.caption).foregroundStyle(.rvMut)
+                    TextEditor(text: $kaynakMetin).frame(height: 140).scrollContentBackground(.hidden).foregroundStyle(.rvText).padding(8).glassEffect(.regular, in: .rect(cornerRadius: 12))
+                    Button { Task {
+                        let adr = kaynakMetin.split(whereSeparator: \.isNewline).map { String($0).trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
+                        if !adr.isEmpty { _ = await api.iptvKaynakGuncelle(adr); kaynakAcik = false; await yukle() }
+                    } } label: { Text("Güncelle").bold().frame(maxWidth: .infinity).padding(14).foregroundStyle(.white).background(tema.grad, in: .rect(cornerRadius: 14)) }
+                    Spacer()
+                }.padding(18)
+            }
+            .navigationTitle("🔗 Kaynak Güncelle").navigationBarTitleDisplayMode(.inline)
+            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Kapat") { kaynakAcik = false } } }
+        }
+    }
     func kbtn(_ t: String, _ c: Color, _ a: @escaping () -> Void) -> some View {
         Button(t, action: a).font(.caption.bold()).foregroundStyle(c)
             .padding(.horizontal,11).padding(.vertical,6).glassEffect(.regular, in: .capsule)
@@ -135,8 +273,11 @@ struct IPTVNative: View {
         if let e = d["error"] as? String { hata = (d["mesaj"] as? String) ?? e; return }
         hata = ""
         kaynak = "\(d["kaynak"] ?? "")"; kanalSayisi = d["kanal_sayisi"] as? Int ?? 0
+        filmSayisi = d["film_sayisi"] as? Int ?? 0; diziSayisi = d["dizi_sayisi"] as? Int ?? 0
         hatlar = d["hatlar"] as? [[String:Any]] ?? []
         kanallar = await api.iptvKanallar()
+        kullanicilar = await api.iptvKullanicilar()
+        davetler = await api.iptvDavetler()
     }
 }
 
