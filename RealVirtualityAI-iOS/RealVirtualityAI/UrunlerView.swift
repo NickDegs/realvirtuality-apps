@@ -1,5 +1,4 @@
 import SwiftUI
-import WebKit
 
 // MARK: - Ürün modeli (urunler.json — bireysel + içerik üretici)
 struct RVUrun: Identifiable, Decodable {
@@ -117,7 +116,7 @@ struct RVUrunDetay: View {
     let urun: RVUrun
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
-    @State private var webAcik = false
+    @Environment(\.openURL) var openURL
     private var url: URL {
         let yol = urun.sekme == "bireysel" ? "urunler" : "dijital"
         return URL(string: "https://nickdegs.com/\(yol)?grup=\(urun.g)#\(urun.id)")!
@@ -148,34 +147,13 @@ struct RVUrunDetay: View {
                 }.padding(.horizontal, 16).padding(.top, 8)
             }
             VStack { Spacer()
-                Button { webAcik = true } label: {
-                    HStack(spacing: 8) { Image(systemName: "cart.fill"); Text(yerel.p("urunIncele")) }
+                Button { openURL(url) } label: {
+                    HStack(spacing: 8) { Image(systemName: "safari.fill"); Text(yerel.p("urunIncele")) }
                         .font(.headline.bold()).foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 17)
                         .background(tema.grad, in: .rect(cornerRadius: 20)).shadow(color: tema.c1.opacity(0.45), radius: 16, y: 7)
                 }.padding(.horizontal, 16).padding(.bottom, 10)
             }
         }
         .navigationTitle(yerel.u(urun.ad)).navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $webAcik) { RVPanel(url: url, baslik: yerel.u(urun.ad)) }
     }
-}
-
-struct RVPanel: View {
-    let url: URL; let baslik: String
-    @EnvironmentObject var tema: Tema
-    @Environment(\.dismiss) var dismiss
-    var body: some View {
-        NavigationStack {
-            RVWeb(url: url).ignoresSafeArea(edges: .bottom)
-                .navigationTitle(baslik).navigationBarTitleDisplayMode(.inline)
-                .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("✕") { dismiss() }.foregroundStyle(tema.c1) } }
-        }.tint(tema.c1)
-    }
-}
-struct RVWeb: UIViewRepresentable {
-    let url: URL
-    func makeUIView(context: Context) -> WKWebView {
-        let wv = WKWebView(); wv.allowsBackForwardNavigationGestures = true; wv.load(URLRequest(url: url)); return wv
-    }
-    func updateUIView(_ uiView: WKWebView, context: Context) {}
 }

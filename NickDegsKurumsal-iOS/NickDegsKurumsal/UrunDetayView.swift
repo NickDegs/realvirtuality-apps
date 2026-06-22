@@ -4,19 +4,8 @@ struct UrunDetayView: View {
     let urun: Urun
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
-    @State private var webAcik = false
     @State private var satinAlAcik = false
     @State private var bel = false
-
-    private var url: URL {
-        let yol: String
-        switch urun.sekme {
-        case "bireysel": yol = "urunler"
-        case "icerik":   yol = "dijital"
-        default:          yol = "kurumsal"
-        }
-        return URL(string: "https://nickdegs.com/\(yol)?grup=\(urun.g)#\(urun.id)")!
-    }
 
     var body: some View {
         ZStack {
@@ -43,7 +32,6 @@ struct UrunDetayView: View {
         }
         .navigationTitle(yerel.u(urun.ad))
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $webAcik) { PanelView(url: url, baslik: yerel.u(urun.ad)) }
         .sheet(isPresented: $satinAlAcik) { SatinAlView(urun: urun) }
         .onAppear { withAnimation(.smooth(duration: 0.5)) { bel = true } }
     }
