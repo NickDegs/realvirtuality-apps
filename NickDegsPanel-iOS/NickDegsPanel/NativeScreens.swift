@@ -534,6 +534,74 @@ struct PersonelNative: View {
     }
 }
 
+// MARK: - Native CANLI ÖZET (KPI dashboard) — gelir/üye/servis/güvenlik/medya tek ekran
+struct OzetNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    @State private var ov: [String:Any] = [:]
+    @State private var guv: [String:Any] = [:]
+    @State private var iptv: [String:Any] = [:]
+    @State private var yukleniyor = true
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+    var izgara: [GridItem] { [GridItem(.flexible(),spacing:12),GridItem(.flexible(),spacing:12)] }
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            if yukleniyor { ProgressView().tint(tema.c1).scaleEffect(1.3) }
+            else { ScrollView { VStack(alignment:.leading,spacing:14) {
+                bolum("💰 Satış & Üye")
+                LazyVGrid(columns:izgara,spacing:12){
+                    kpi("Aktif üye","\(ov["active_members"] ?? "-")","person.fill.checkmark",.green)
+                    kpi("Toplam üye","\(ov["total_members"] ?? "-")","person.3.fill",tema.c1)
+                    kpi("Ödeme","\(ov["total_payments"] ?? "-")","creditcard.fill",.blue)
+                    kpi("Servis","\(ov["services"] ?? "-")","square.stack.3d.up.fill",.purple)
+                }
+                bolum("🛡 Güvenlik")
+                LazyVGrid(columns:izgara,spacing:12){
+                    kpi("Engellenen IP","\(guv["ban"] ?? 0)","hand.raised.fill",.red)
+                    kpi("Firewall DROP","\(guv["firewall_drop"] ?? 0)","shield.lefthalf.filled",.orange)
+                }
+                bolum("🖥 Sunucu (Ana)")
+                LazyVGrid(columns:izgara,spacing:12){
+                    kpi("RAM","\(ov["ram"] ?? "-")","memorychip.fill",tema.c2)
+                    kpi("Disk","\(ov["disk"] ?? "-")","internaldrive.fill",tema.c1)
+                    kpi("Yük","\(ov["load"] ?? "-")","gauge.medium",.yellow)
+                    kpi("Container","\(ov["containers"] ?? "-")","shippingbox.fill",.cyan)
+                }
+                bolum("🖥 Sunucu (ND2 / Medya)")
+                LazyVGrid(columns:izgara,spacing:12){
+                    kpi("RAM","\(ov["nd2_ram"] ?? "-")","memorychip",.teal)
+                    kpi("Yük","\(ov["nd2_load"] ?? "-")","gauge.medium",.yellow)
+                    kpi("Container","\(ov["nd2_containers"] ?? "-")","shippingbox",.cyan)
+                }
+                bolum("🎬 Medya / IPTV")
+                LazyVGrid(columns:izgara,spacing:12){
+                    kpi("IPTV hat","\(iptv["hatlar"] ?? iptv["lines"] ?? "-")","tv.fill",.pink)
+                    kpi("Kanal","\(iptv["kanallar"] ?? iptv["channels"] ?? "-")","play.tv.fill",.indigo)
+                }
+                Text("⏱ Uptime: \(ov["uptime"] as? String ?? "-")").font(.caption2).foregroundStyle(.rvMut).padding(.top,4)
+            }.padding(16) }.refreshable { await yukle() } }
+        }
+        .navigationTitle("📊 Canlı Özet").navigationBarTitleDisplayMode(.inline)
+        .task { await yukle() }
+    }
+    func bolum(_ t:String)->some View { Text(t).font(.headline.bold()).foregroundStyle(.rvText).padding(.top,4) }
+    func kpi(_ ad:String,_ d:String,_ ic:String,_ c:Color)->some View {
+        VStack(alignment:.leading,spacing:6){
+            Image(systemName:ic).foregroundStyle(c).font(.title3)
+            Text(d).font(.title3.bold()).foregroundStyle(.rvText).lineLimit(1).minimumScaleFactor(0.6)
+            Text(ad).font(.caption2).foregroundStyle(.rvMut)
+        }.frame(maxWidth:.infinity,alignment:.leading).padding(14).glassEffect(.regular,in:.rect(cornerRadius:16))
+    }
+    func yukle() async {
+        yukleniyor = true; defer { yukleniyor = false }
+        async let a = api.get_overview()
+        async let b = api.guvenlik("koruma")
+        async let c = api.iptvDurum()
+        ov = await a; guv = (await b) ?? [:]; iptv = (await c) ?? [:]
+    }
+}
+
 // MARK: - Native Medya (Emby+Plex film/dizi/canlı + indirme/istek/sistem) — WebView yok
 struct MedyaNative: View {
     @EnvironmentObject var oturum: Oturum

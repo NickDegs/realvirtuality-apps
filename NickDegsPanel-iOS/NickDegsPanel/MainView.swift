@@ -63,7 +63,7 @@ struct MainView: View {
 let NATIVE_BOLUMLER: Set<String> = ["sunucu","iptv","admin","odemeler","uyeler","teslimat",
     "siparis","stok","randevu","ozet","raporlar","musteriler",
     "koruma","ziyaretci","ban","erisim","isletme_ekle","personel",
-    "ulke","asn","ipyonet","adminhub","hediye","demo","medya"]
+    "ulke","asn","ipyonet","adminhub","hediye","demo","medya","kpi"]
 
 struct GrupView: View {
     let grup: HubGrup
@@ -125,6 +125,7 @@ struct HedefNative: View {
     let kart: HubKart
     var body: some View {
         switch kart.s {
+        case "kpi": OzetNative()
         case "sunucu": SunucuNative()
         case "iptv": IPTVNative()
         case "admin","odemeler","uyeler","teslimat": AdminNative()
