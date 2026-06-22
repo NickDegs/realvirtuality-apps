@@ -72,6 +72,10 @@ struct IPTVNative: View {
     @State private var diziSayisi = 0
     @State private var hatlar: [[String:Any]] = []
     @State private var kanallar: [[String:Any]] = []
+    @State private var kanalAra = ""
+    @State private var topluMod = false
+    @State private var seciliKanallar: Set<String> = []
+    @State private var topluBekle = false
     @State private var kullanicilar: [[String:Any]] = []
     @State private var davetler: [[String:Any]] = []
     @State private var yukleniyor = true
@@ -139,17 +143,54 @@ struct IPTVNative: View {
             }
         }.padding(16)
     }
+    var kanalSuzulmus: [[String:Any]] {
+        kanalAra.isEmpty ? kanallar : kanallar.filter { (($0["ad"] as? String) ?? "").localizedCaseInsensitiveContains(kanalAra) }
+    }
     var kanalGorunum: some View {
-        LazyVStack(spacing: 8) {
-            ForEach(Array(kanallar.prefix(300).enumerated()), id: \.offset) { _, k in
+        VStack(spacing: 8) {
+            TextField("Kanal ara…", text:$kanalAra).foregroundStyle(.rvText).padding(11).glassEffect(.regular,in:.rect(cornerRadius:12))
+            HStack {
+                Toggle("Toplu seçim", isOn:$topluMod.animation()).tint(tema.c1).foregroundStyle(.rvText).fixedSize()
+                Spacer()
+                if topluMod {
+                    Button(seciliKanallar.count == kanalSuzulmus.count ? "Temizle":"Tümünü seç") {
+                        let ids = kanalSuzulmus.compactMap { $0["id"] as? String }
+                        if seciliKanallar.count == ids.count { seciliKanallar = [] } else { seciliKanallar = Set(ids) }
+                    }.font(.caption.bold()).foregroundStyle(tema.c1)
+                }
+            }
+            if topluMod && !seciliKanallar.isEmpty {
+                HStack(spacing:8){
+                    if topluBekle { ProgressView().tint(tema.c1) }
+                    Text("Seçili: \(seciliKanallar.count)").font(.caption).foregroundStyle(.rvMut)
+                    Spacer()
+                    kbtn("Kısıtla", .red) { Task { await toplu("kisitla") } }
+                    kbtn("Aç", .green) { Task { await toplu("ac") } }
+                }.padding(10).glassEffect(.regular,in:.rect(cornerRadius:12))
+            }
+            ForEach(Array(kanalSuzulmus.prefix(400).enumerated()), id: \.offset) { _, k in
+                let id = k["id"] as? String ?? ""
                 HStack {
+                    if topluMod {
+                        Image(systemName: seciliKanallar.contains(id) ? "checkmark.circle.fill":"circle")
+                            .foregroundStyle(seciliKanallar.contains(id) ? tema.c1 : .rvMut)
+                    }
                     Text(k["ad"] as? String ?? "-").font(.subheadline).foregroundStyle(.rvText).lineLimit(1)
                     Spacer()
-                    let kis = (k["kisitli"] as? Bool) ?? false
-                    kbtn(kis ? "Aç" : "Kısıtla", tema.c2) { Task { _ = await api.iptvKanalAksiyon(k["id"] as? String ?? "", kis ? "ac":"kisitla"); await yukle() } }
+                    if !topluMod {
+                        let kis = (k["kisitli"] as? Bool) ?? false
+                        kbtn(kis ? "Aç" : "Kısıtla", tema.c2) { Task { _ = await api.iptvKanalAksiyon(id, kis ? "ac":"kisitla"); await yukle() } }
+                    }
                 }.padding(12).glassEffect(.regular, in: .rect(cornerRadius: 12))
+                .contentShape(Rectangle())
+                .onTapGesture { if topluMod { if seciliKanallar.contains(id) { seciliKanallar.remove(id) } else { seciliKanallar.insert(id) } } }
             }
         }.padding(16)
+    }
+    func toplu(_ aksiyon: String) async {
+        topluBekle = true; defer { topluBekle = false }
+        for id in seciliKanallar { _ = await api.iptvKanalAksiyon(id, aksiyon) }
+        seciliKanallar = []; await yukle()
     }
     // Erişimi olanlar (salt-okunur)
     var erisimGorunum: some View {
