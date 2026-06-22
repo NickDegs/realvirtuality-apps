@@ -534,6 +534,50 @@ struct PersonelNative: View {
     }
 }
 
+// MARK: - Native Abonelik / Erişim (müşteriye erişim ver / uzat) — WebView yok
+struct AbonelikNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    @State private var email = ""
+    @State private var plan = "premium"
+    @State private var gun = 30
+    @State private var sonuc = ""
+    @State private var basari = false
+    @State private var bekle = false
+    private let planlar = ["premium","pro","basic","business"]
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            ScrollView { VStack(spacing:12){
+                Text("Müşteriye erişim ver veya süre uzat (e-posta + plan + gün).").font(.caption).foregroundStyle(.rvMut).frame(maxWidth:.infinity,alignment:.leading)
+                TextField("E-posta", text:$email).autocorrectionDisabled().textInputAutocapitalization(.never).keyboardType(.emailAddress)
+                    .foregroundStyle(.rvText).padding(14).glassEffect(.regular,in:.rect(cornerRadius:14))
+                Picker("Plan", selection:$plan){ ForEach(planlar,id:\.self){ Text($0.capitalized).tag($0) } }
+                    .pickerStyle(.menu).tint(tema.c1).frame(maxWidth:.infinity,alignment:.leading).padding(12).glassEffect(.regular,in:.rect(cornerRadius:14))
+                Stepper("Süre: \(gun) gün", value:$gun, in:1...3650, step:30).foregroundStyle(.rvText).padding(12).glassEffect(.regular,in:.rect(cornerRadius:14))
+                HStack(spacing:8){ ForEach([30,90,180,365],id:\.self){ g in
+                    Button("\(g)g"){ gun=g }.font(.caption.bold()).foregroundStyle(gun==g ? .white : tema.c1)
+                        .frame(maxWidth:.infinity).padding(.vertical,9).background(gun==g ? AnyShapeStyle(tema.grad):AnyShapeStyle(.clear),in:.capsule).overlay(Capsule().stroke(tema.c1.opacity(0.4)))
+                }}
+                Button { Task { await ver() } } label: {
+                    HStack{ if bekle { ProgressView().tint(.white) }; Text("✅ Erişim Ver / Uzat").bold() }.foregroundStyle(.white).frame(maxWidth:.infinity).padding(.vertical,15).background(tema.grad,in:.rect(cornerRadius:14))
+                }.disabled(bekle || !email.contains("@"))
+                if !sonuc.isEmpty { Text(sonuc).font(.callout).foregroundStyle(basari ? .green : .orange).frame(maxWidth:.infinity,alignment:.leading).padding(12).glassEffect(.regular,in:.rect(cornerRadius:12)) }
+            }.padding(16) }
+        }
+        .navigationTitle("🎫 Abonelik / Erişim").navigationBarTitleDisplayMode(.inline)
+    }
+    func ver() async {
+        bekle = true; defer { bekle = false }; sonuc = ""
+        let r = await api.grant(email: email.trimmingCharacters(in:.whitespaces), days: gun, plan: plan)
+        if r?["ok"] as? Bool == true || r?["success"] as? Bool == true || r?["granted"] != nil {
+            basari = true; sonuc = "✅ \(email) → \(plan) · \(gun) gün erişim verildi"
+            email = ""
+        } else { basari = false; sonuc = "⚠️ " + ((r?["mesaj"] as? String) ?? (r?["error"] as? String) ?? "Hata / kayıt bulunamadı") }
+    }
+}
+
 // MARK: - Native CANLI ÖZET (KPI dashboard) — gelir/üye/servis/güvenlik/medya tek ekran
 struct OzetNative: View {
     @EnvironmentObject var oturum: Oturum

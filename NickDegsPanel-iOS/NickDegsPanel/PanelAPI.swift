@@ -95,4 +95,8 @@ final class PanelAPI {
     func indirmeler() async -> [[String:Any]] { ((await get("/dash/iptv/indirmeler"))?["indirmeler"] as? [[String:Any]]) ?? [] }
     func istekler() async -> [[String:Any]] { ((await get("/dash/iptv/istekler"))?["istekler"] as? [[String:Any]]) ?? [] }
     func sistemOzet() async -> [String:Any] { (await get("/dash/iptv/sistem-ozet")) ?? [:] }
+    // ── Abonelik / erişim (admin) ──
+    func grant(email: String, days: Int, plan: String) async -> [String:Any]? {
+        await post("/dash/aapi/grant", ["email":email,"days":days,"plan":plan])
+    }
 }
