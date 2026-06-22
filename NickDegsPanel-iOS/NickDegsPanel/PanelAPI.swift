@@ -64,4 +64,22 @@ final class PanelAPI {
         await post("/api/panel/personel-ekle", ["ad":ad,"kod":kod,"tel":tel,"sifre":sifre])
     }
     func personelSil(_ kod: String) async { _ = await post("/api/panel/personel-sil", ["kod":kod]) }
+
+    // ── Ülke erişimi ──
+    func ulkeListe() async -> [[String:Any]] { ((await get("/api/panel/ulke-liste"))?["ulkeler"] as? [[String:Any]]) ?? [] }
+    func ulkeToggle(_ cc: String, _ ac: Bool) async -> Bool { (await post("/api/panel/ulke-toggle", ["cc":cc,"ac":ac]))?["ok"] as? Bool ?? false }
+    // ── Operatör / ASN ──
+    func asnListe() async -> [[String:Any]] { ((await get("/api/panel/asn-liste"))?["operatorler"] as? [[String:Any]]) ?? [] }
+    func asnToggle(_ asn: String, _ act: String) async -> Bool { (await post("/api/panel/asn-toggle", ["asn":asn,"act":act]))?["ok"] as? Bool ?? false }
+    // ── IP yönetimi ──
+    func ipAksiyon(_ ip: String, _ action: String) async -> [String:Any]? { await post("/api/panel/ip-aksiyon", ["ip":ip,"action":action]) }
+    // ── Admin Hub ──
+    func hubApps() async -> [[String:Any]] { ((await get("/api/panel/hub-apps"))?["apps"] as? [[String:Any]]) ?? [] }
+    func hubAction(_ body: [String:Any]) async -> [String:Any]? { await post("/api/panel/hub-action", body) }
+    // ── Hediye kod ──
+    func hediyePaketler() async -> [[String:Any]] { ((await get("/dash/hediye/hediye-paketler"))?["paketler"] as? [[String:Any]]) ?? [] }
+    func hediyeKodUret(_ paket: String, _ adet: Int, _ kime: String) async -> [String:Any]? { await post("/dash/hediye/kod-uret", ["paket":paket,"adet":adet,"kime":kime]) }
+    // ── Demo üret ──
+    func demoUret(_ body: [String:Any]) async -> [String:Any]? { await post("/api/panel/demo-uret", body) }
+    func demoListe() async -> [[String:Any]] { ((await get("/api/panel/demo-liste"))?["kayitlar"] as? [[String:Any]]) ?? [] }
 }

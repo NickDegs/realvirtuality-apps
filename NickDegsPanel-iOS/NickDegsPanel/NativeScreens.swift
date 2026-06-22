@@ -533,3 +533,325 @@ struct PersonelNative: View {
         } else { basari = false; sonuc = "⚠️ " + ((r?["mesaj"] as? String) ?? "Hata") }
     }
 }
+
+// MARK: - Native Medya / TV (Emby + IPTV — tv.nickdegs.com) — WebView yok
+struct MedyaNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    @State private var durum: [String:Any] = [:]
+    @State private var kanallar: [[String:Any]] = []
+    @State private var ara = ""
+    @State private var yukleniyor = true
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+    private var suzulmus: [[String:Any]] {
+        ara.isEmpty ? kanallar : kanallar.filter { (($0["ad"] as? String ?? $0["name"] as? String ?? "")).localizedCaseInsensitiveContains(ara) }
+    }
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            if yukleniyor { ProgressView().tint(tema.c1).scaleEffect(1.2) }
+            else { ScrollView { VStack(spacing: 10) {
+                HStack(spacing:10){
+                    ozetKart("Hat", "\(durum["hatlar"] ?? durum["lines"] ?? "-")")
+                    ozetKart("Kanal", "\(durum["kanallar"] ?? durum["channels"] ?? kanallar.count)")
+                    ozetKart("Kullanıcı", "\(durum["kullanicilar"] ?? durum["users"] ?? "-")")
+                }
+                TextField("Kanal/içerik ara…", text: $ara).foregroundStyle(.rvText).padding(12).glassEffect(.regular,in:.rect(cornerRadius:13))
+                ForEach(Array(suzulmus.prefix(300).enumerated()), id:\.offset) { _, k in
+                    HStack {
+                        Text(k["ad"] as? String ?? k["name"] as? String ?? "").foregroundStyle(.rvText).lineLimit(1)
+                        Spacer()
+                        Text(k["kategori"] as? String ?? k["category"] as? String ?? "").font(.caption2).foregroundStyle(.rvMut)
+                    }.padding(11).glassEffect(.regular,in:.rect(cornerRadius:11))
+                }
+            }.padding(16) }.refreshable { await yukle() } }
+        }
+        .navigationTitle("🎬 Medya / TV").navigationBarTitleDisplayMode(.inline)
+        .task { await yukle() }
+    }
+    func ozetKart(_ t: String, _ v: String) -> some View {
+        VStack(spacing:3){ Text(v).font(.title3.bold()).foregroundStyle(.rvText); Text(t).font(.caption2).foregroundStyle(.rvMut) }
+            .frame(maxWidth:.infinity).padding(12).glassEffect(.regular,in:.rect(cornerRadius:13))
+    }
+    func yukle() async {
+        yukleniyor = true; defer { yukleniyor = false }
+        durum = await api.iptvDurum() ?? [:]
+        kanallar = await api.iptvKanallar()
+    }
+}
+
+// MARK: - Native Ülke Erişimi (aç/kapat — topluluk ban muafiyeti) — WebView yok
+struct UlkeNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    @State private var liste: [[String:Any]] = []
+    @State private var yukleniyor = true
+    @State private var islenen = ""
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            if yukleniyor { ProgressView().tint(tema.c1).scaleEffect(1.2) }
+            else { ScrollView { VStack(spacing: 8) {
+                Text("Açık ülkeler topluluk banından muaf tutulur. Sadece müşterin olan ülkeleri aç.").font(.caption).foregroundStyle(.rvMut).frame(maxWidth:.infinity,alignment:.leading).padding(.bottom,4)
+                ForEach(Array(liste.enumerated()), id:\.offset) { i, u in
+                    HStack {
+                        VStack(alignment:.leading,spacing:2){
+                            Text(u["ad"] as? String ?? "").foregroundStyle(.rvText)
+                            Text("risk: \(u["risk"] as? String ?? "-")").font(.caption2).foregroundStyle(.rvMut)
+                        }
+                        Spacer()
+                        if islenen == (u["cc"] as? String ?? "") { ProgressView().tint(tema.c1) }
+                        Toggle("", isOn: Binding(
+                            get: { u["aktif"] as? Bool ?? false },
+                            set: { yeni in Task { await degis(i, u["cc"] as? String ?? "", yeni) } }
+                        )).labelsHidden().tint(.green)
+                    }.padding(13).glassEffect(.regular, in: .rect(cornerRadius: 12))
+                }
+            }.padding(16) }.refreshable { await yukle() } }
+        }
+        .navigationTitle("🌍 Ülke Erişimi").navigationBarTitleDisplayMode(.inline)
+        .task { await yukle() }
+    }
+    func yukle() async { yukleniyor = true; defer { yukleniyor = false }; liste = await api.ulkeListe() }
+    func degis(_ i: Int, _ cc: String, _ ac: Bool) async {
+        islenen = cc; defer { islenen = "" }
+        if await api.ulkeToggle(cc, ac), i < liste.count { liste[i]["aktif"] = ac }
+    }
+}
+
+// MARK: - Native Operatör/ASN (sabit/mobil hat marka marka aç/engelle) — WebView yok
+struct AsnNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    @State private var liste: [[String:Any]] = []
+    @State private var yukleniyor = true
+    @State private var islenen = ""
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            if yukleniyor { ProgressView().tint(tema.c1).scaleEffect(1.2) }
+            else { ScrollView { VStack(spacing: 8) {
+                Text("Operatör/marka bazlı: Aç = whitelist (banlanmaz), Engelle = tüm IP bloğu ban, Kapat = nötr.").font(.caption).foregroundStyle(.rvMut).frame(maxWidth:.infinity,alignment:.leading).padding(.bottom,4)
+                ForEach(Array(liste.enumerated()), id:\.offset) { i, o in
+                    VStack(alignment:.leading,spacing:8){
+                        HStack{ Text("\(o["ulke"] as? String ?? "") \(o["ad"] as? String ?? "")").foregroundStyle(.rvText)
+                            Spacer(); Text(o["tip"] as? String ?? "").font(.caption2).foregroundStyle(.rvMut) }
+                        let asn = String(describing: o["asn"] ?? "")
+                        let dur = o["durum"] as? String ?? "off"
+                        HStack(spacing:6){
+                            asnBtn("Aç","allow",asn,dur,i,.green)
+                            asnBtn("Engelle","block",asn,dur,i,.red)
+                            asnBtn("Kapat","off",asn,dur,i,.gray)
+                            if islenen == asn { ProgressView().tint(tema.c1) }
+                        }
+                    }.padding(13).glassEffect(.regular, in: .rect(cornerRadius: 12))
+                }
+            }.padding(16) }.refreshable { await yukle() } }
+        }
+        .navigationTitle("📡 Operatör / Marka").navigationBarTitleDisplayMode(.inline)
+        .task { await yukle() }
+    }
+    func asnBtn(_ t: String, _ act: String, _ asn: String, _ dur: String, _ i: Int, _ c: Color) -> some View {
+        Button { Task { await degis(i, asn, act) } } label: {
+            Text(t).font(.caption2.bold()).foregroundStyle(dur==act ? .white : c)
+                .padding(.horizontal,12).padding(.vertical,7)
+                .background(dur==act ? AnyShapeStyle(c) : AnyShapeStyle(.clear), in:.capsule)
+                .overlay(Capsule().stroke(c.opacity(0.5)))
+        }
+    }
+    func yukle() async { yukleniyor = true; defer { yukleniyor = false }; liste = await api.asnListe() }
+    func degis(_ i: Int, _ asn: String, _ act: String) async {
+        islenen = asn; defer { islenen = "" }
+        if await api.asnToggle(asn, act), i < liste.count { liste[i]["durum"] = act }
+    }
+}
+
+// MARK: - Native IP Yönetimi (tekil IP ban/whitelist/aç) — WebView yok
+struct IPYonetNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    @State private var ip = ""
+    @State private var sonuc = ""
+    @State private var basari = false
+    @State private var bekle = false
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            ScrollView { VStack(spacing: 14) {
+                Text("Tekil IP işlemleri. 🔴 Kernel ban · 🟢 Whitelist (asla banlanmaz) · 🔵 Tüm banlardan çıkar.").font(.caption).foregroundStyle(.rvMut).frame(maxWidth:.infinity,alignment:.leading)
+                TextField("IP adresi (203.0.113.5 / 2a01:…)", text: $ip).autocorrectionDisabled().textInputAutocapitalization(.never)
+                    .foregroundStyle(.rvText).padding(14).glassEffect(.regular,in:.rect(cornerRadius:14))
+                HStack(spacing: 8) {
+                    ipBtn("🔴 Banla","ban",.red); ipBtn("🟢 Whitelist","whitelist",.green); ipBtn("🔵 Aç","unban",.blue)
+                }
+                if bekle { ProgressView().tint(tema.c1) }
+                if !sonuc.isEmpty { Text(sonuc).font(.callout).foregroundStyle(basari ? .green : .orange).frame(maxWidth:.infinity,alignment:.leading).padding(12).glassEffect(.regular,in:.rect(cornerRadius:12)) }
+            }.padding(16) }
+        }
+        .navigationTitle("🚫 IP Yönetimi").navigationBarTitleDisplayMode(.inline)
+    }
+    func ipBtn(_ t: String, _ act: String, _ c: Color) -> some View {
+        Button { Task { await uygula(act) } } label: {
+            Text(t).font(.caption.bold()).foregroundStyle(c).frame(maxWidth:.infinity).padding(.vertical,12)
+                .overlay(RoundedRectangle(cornerRadius:12).stroke(c.opacity(0.6)))
+        }.disabled(bekle || ip.trimmingCharacters(in:.whitespaces).isEmpty)
+    }
+    func uygula(_ act: String) async {
+        bekle = true; defer { bekle = false }; sonuc = ""
+        let r = await api.ipAksiyon(ip.trimmingCharacters(in:.whitespaces), act)
+        if r?["ok"] as? Bool == true {
+            basari = true
+            let ad = ["ban":"kernel ban","whitelist":"whitelist (asla banlanmaz)","unban":"tüm banlardan çıkarıldı"][act] ?? act
+            sonuc = "✅ \(r?["ip"] ?? ip) → \(ad)"
+        } else { basari = false; sonuc = "⚠️ " + ((r?["err"] as? String) ?? "Hata") }
+    }
+}
+
+// MARK: - Native Admin Hub (tüm app'lere push/duyuru/kod) — WebView yok
+struct AdminHubNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    @State private var apps: [[String:Any]] = []
+    @State private var secili = ""
+    @State private var islem = "broadcast"
+    @State private var baslik = ""
+    @State private var govde = ""
+    @State private var link = ""
+    @State private var adet = 5
+    @State private var sonuc = ""
+    @State private var basari = false
+    @State private var bekle = false
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            ScrollView { VStack(spacing: 12) {
+                Picker("Uygulama", selection: $secili) {
+                    Text("— uygulama seç —").tag("")
+                    ForEach(Array(apps.enumerated()), id:\.offset){ _, a in Text(a["ad"] as? String ?? "").tag(a["id"] as? String ?? "") }
+                }.pickerStyle(.menu).tint(tema.c1).frame(maxWidth:.infinity,alignment:.leading).padding(12).glassEffect(.regular,in:.rect(cornerRadius:14))
+                Picker("İşlem", selection: $islem) {
+                    Text("📣 Push").tag("broadcast"); Text("📌 Duyuru").tag("announce"); Text("🎁 Kod").tag("gencodes")
+                }.pickerStyle(.segmented)
+                if islem != "gencodes" {
+                    alan("Başlık", $baslik); alan("Mesaj", $govde)
+                    if islem == "announce" { alan("Link (opsiyonel)", $link) }
+                } else {
+                    Stepper("Kaç kod: \(adet)", value: $adet, in: 1...100).foregroundStyle(.rvText).padding(12).glassEffect(.regular,in:.rect(cornerRadius:14))
+                }
+                Button { Task { await gonder() } } label: {
+                    HStack{ if bekle { ProgressView().tint(.white) }; Text("Gönder").bold() }.foregroundStyle(.white).frame(maxWidth:.infinity).padding(.vertical,14).background(tema.grad,in:.rect(cornerRadius:14))
+                }.disabled(bekle || secili.isEmpty)
+                if !sonuc.isEmpty { Text(sonuc).font(.callout).foregroundStyle(basari ? .green : .orange).frame(maxWidth:.infinity,alignment:.leading).textSelection(.enabled).padding(12).glassEffect(.regular,in:.rect(cornerRadius:12)) }
+            }.padding(16) }
+        }
+        .navigationTitle("🎛️ Admin Hub").navigationBarTitleDisplayMode(.inline)
+        .task { apps = await api.hubApps() }
+    }
+    func alan(_ ip: String, _ b: Binding<String>) -> some View {
+        TextField(ip, text: b).foregroundStyle(.rvText).padding(13).glassEffect(.regular,in:.rect(cornerRadius:13))
+    }
+    func gonder() async {
+        bekle = true; defer { bekle = false }; sonuc = ""
+        var body: [String:Any] = ["app":secili,"action":islem]
+        if islem == "gencodes" { body["count"] = adet }
+        else { body["title"] = baslik; body["body"] = govde; if islem == "announce" { body["url"] = link; body["active"] = true } }
+        let r = await api.hubAction(body)
+        if r?["ok"] as? Bool == true || r?["codes"] != nil {
+            basari = true
+            if let c = r?["codes"] as? [String] { sonuc = "✅ Kodlar:\n" + c.joined(separator: "\n") }
+            else { sonuc = "✅ Gönderildi (\(r?["sent"] ?? "ok"))" }
+            baslik=""; govde=""; link=""
+        } else { basari = false; sonuc = "⚠️ " + ((r?["err"] as? String) ?? "Hata") }
+    }
+}
+
+// MARK: - Native Hediye Kod (RealVirtuality kredi) — WebView yok
+struct HediyeNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    @State private var paketler: [[String:Any]] = []
+    @State private var secili = ""
+    @State private var adet = 1
+    @State private var kime = ""
+    @State private var sonuc = ""
+    @State private var basari = false
+    @State private var bekle = false
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            ScrollView { VStack(spacing: 12) {
+                Text("RealVirtuality kredi hediye kodu üret — müşteriye/arkadaşa ver.").font(.caption).foregroundStyle(.rvMut).frame(maxWidth:.infinity,alignment:.leading)
+                Picker("Paket", selection: $secili) {
+                    Text("— paket seç —").tag("")
+                    ForEach(Array(paketler.enumerated()), id:\.offset){ _, p in Text(p["ad"] as? String ?? "").tag(p["id"] as? String ?? "") }
+                }.pickerStyle(.menu).tint(tema.c1).frame(maxWidth:.infinity,alignment:.leading).padding(12).glassEffect(.regular,in:.rect(cornerRadius:14))
+                Stepper("Adet: \(adet)", value: $adet, in: 1...100).foregroundStyle(.rvText).padding(12).glassEffect(.regular,in:.rect(cornerRadius:14))
+                TextField("Kime (opsiyonel not)", text: $kime).foregroundStyle(.rvText).padding(13).glassEffect(.regular,in:.rect(cornerRadius:13))
+                Button { Task { await uret() } } label: {
+                    HStack{ if bekle { ProgressView().tint(.white) }; Text("Kod Üret").bold() }.foregroundStyle(.white).frame(maxWidth:.infinity).padding(.vertical,14).background(tema.grad,in:.rect(cornerRadius:14))
+                }.disabled(bekle || secili.isEmpty)
+                if !sonuc.isEmpty { Text(sonuc).font(.callout).foregroundStyle(basari ? .green : .orange).frame(maxWidth:.infinity,alignment:.leading).textSelection(.enabled).padding(12).glassEffect(.regular,in:.rect(cornerRadius:12)) }
+            }.padding(16) }
+        }
+        .navigationTitle("🎁 Hediye Kod").navigationBarTitleDisplayMode(.inline)
+        .task { paketler = await api.hediyePaketler() }
+    }
+    func uret() async {
+        bekle = true; defer { bekle = false }; sonuc = ""
+        let r = await api.hediyeKodUret(secili, adet, kime)
+        if let c = (r?["kodlar"] as? [String]) ?? (r?["codes"] as? [String]) {
+            basari = true; sonuc = "✅ Üretilen kodlar:\n" + c.joined(separator: "\n")
+        } else { basari = false; sonuc = "⚠️ " + ((r?["mesaj"] as? String) ?? (r?["err"] as? String) ?? "Hata") }
+    }
+}
+
+// MARK: - Native Demo Üret (işletme demosu → SMS+mail oto) — WebView yok
+struct DemoNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    @State private var ad = ""
+    @State private var sektor = "restoran"
+    @State private var tel = ""
+    @State private var email = ""
+    @State private var sonuc = ""
+    @State private var basari = false
+    @State private var bekle = false
+    private let sektorler: [(String,String)] = [("restoran","Restoran / Kafe"),("randevu","Kuaför / Klinik"),("hukuk","Hukuk Bürosu"),("kurumsal","Kurumsal"),("genel","Genel")]
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            ScrollView { VStack(spacing: 12) {
+                Text("İşletme demosu oluştur → demo linki + giriş bilgisi SMS ve e-posta ile otomatik gider.").font(.caption).foregroundStyle(.rvMut).frame(maxWidth:.infinity,alignment:.leading)
+                alan("İşletme adı", $ad)
+                Picker("Sektör", selection: $sektor) { ForEach(sektorler, id:\.0){ Text($0.1).tag($0.0) } }
+                    .pickerStyle(.menu).tint(tema.c1).frame(maxWidth:.infinity,alignment:.leading).padding(12).glassEffect(.regular,in:.rect(cornerRadius:14))
+                alan("Telefon (905…)", $tel); alan("E-posta", $email)
+                Button { Task { await uret() } } label: {
+                    HStack{ if bekle { ProgressView().tint(.white) }; Text("🚀 Demo Oluştur & Gönder").bold() }.foregroundStyle(.white).frame(maxWidth:.infinity).padding(.vertical,14).background(tema.grad,in:.rect(cornerRadius:14))
+                }.disabled(bekle || ad.isEmpty || (tel.isEmpty && email.isEmpty))
+                if !sonuc.isEmpty { Text(sonuc).font(.callout).foregroundStyle(basari ? .green : .orange).frame(maxWidth:.infinity,alignment:.leading).textSelection(.enabled).padding(12).glassEffect(.regular,in:.rect(cornerRadius:12)) }
+            }.padding(16) }
+        }
+        .navigationTitle("🎯 Demo Üret").navigationBarTitleDisplayMode(.inline)
+    }
+    func alan(_ ip: String, _ b: Binding<String>) -> some View {
+        TextField(ip, text: b).autocorrectionDisabled().textInputAutocapitalization(.never)
+            .foregroundStyle(.rvText).padding(13).glassEffect(.regular,in:.rect(cornerRadius:13))
+    }
+    func uret() async {
+        bekle = true; defer { bekle = false }; sonuc = ""
+        let r = await api.demoUret(["ad":ad,"sektor":sektor,"tel":tel,"email":email])
+        if r?["ok"] as? Bool == true {
+            basari = true
+            let sms = r?["sms"] as? Bool; let ml = r?["mail"] as? Bool
+            sonuc = "✅ Demo hazır\n\(r?["sektor"] ?? "")\nLink: \(r?["demo"] ?? "")\nKod: \(r?["kod"] ?? "")  Şifre: \(r?["sifre"] ?? "")\n📱 SMS: \(sms==true ? "gönderildi" : (sms==false ? "✗" : "—"))  📧 Mail: \(ml==true ? "gönderildi" : (ml==false ? "✗" : "—"))"
+            ad=""; tel=""; email=""
+        } else { basari = false; sonuc = "⚠️ " + ((r?["mesaj"] as? String) ?? "Hata") }
+    }
+}
