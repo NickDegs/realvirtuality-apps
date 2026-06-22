@@ -47,7 +47,7 @@ jobs:
           PLIST
           xcodebuild -project NickDegsPanel.xcodeproj -scheme NickDegsPanel \
             -destination 'generic/platform=iOS' -configuration Release -archivePath ND.xcarchive \
-            DEVELOPMENT_TEAM=SZF4T3P583 CURRENT_PROJECT_VERSION=${{ github.run_number }} \
+            DEVELOPMENT_TEAM=SZF4T3P583 CURRENT_PROJECT_VERSION=$(date +%s) \
             TARGETED_DEVICE_FAMILY=1 CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" ONLY_ACTIVE_ARCH=NO archive
           xcodebuild -exportArchive -archivePath ND.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./ipa-out \
             -allowProvisioningUpdates \
