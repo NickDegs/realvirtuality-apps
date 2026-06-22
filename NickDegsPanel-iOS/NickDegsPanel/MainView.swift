@@ -1,4 +1,16 @@
 import SwiftUI
+import SafariServices
+
+// App-içi tarayıcı — harici paneller Safari'ye ATMADAN app içinde açılır (swipe ile kapanır)
+struct IdURL: Identifiable { let id = UUID(); let url: URL }
+struct SafariView: UIViewControllerRepresentable {
+    let url: URL
+    func makeUIViewController(context: Context) -> SFSafariViewController {
+        let c = SFSafariViewController.Configuration(); c.barCollapsingEnabled = true
+        let vc = SFSafariViewController(url: url, configuration: c); vc.dismissButtonStyle = .close; return vc
+    }
+    func updateUIViewController(_ vc: SFSafariViewController, context: Context) {}
+}
 
 struct HubKart: Decodable, Identifiable, Hashable {
     let ic: String; let baslik: String; let alt: String; let s: String
@@ -74,6 +86,7 @@ struct GrupView: View {
     @Environment(\.openURL) var openURL
     @State private var sifreAcik = false
     @State private var hedef: HubKart? = nil
+    @State private var safari: IdURL? = nil
 
     private var kolonlar: [GridItem] { Array(repeating: GridItem(.flexible(), spacing: 14), count: hsc == .regular ? 3 : 2) }
 
@@ -108,14 +121,15 @@ struct GrupView: View {
                 }
             }
             .sheet(isPresented: $sifreAcik) { SifreDegistirView() }
+            .sheet(item: $safari) { SafariView(url: $0.url).ignoresSafeArea() }
         }
         .tint(tema.c1)
     }
     func ac(_ k: HubKart) {
         if NATIVE_BOLUMLER.contains(k.s) { hedef = k }      // native ekran (push)
-        else {                                              // harici/diğer → Safari (WebView değil)
+        else {                                              // harici panel → app-içi tarayıcı (Safari'ye atmaz)
             let h = oturum.host.hasPrefix("http") ? oturum.host : "https://" + oturum.host
-            if let u = URL(string: "\(h)/dash/s?t=\(oturum.token)&s=\(k.s)") { openURL(u) }
+            if let u = URL(string: "\(h)/dash/s?t=\(oturum.token)&s=\(k.s)") { safari = IdURL(url: u) }
         }
     }
 }

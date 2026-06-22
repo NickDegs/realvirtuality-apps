@@ -23,7 +23,12 @@ final class PanelAPI {
     func getArr(_ yol: String, _ q: [String:String] = [:]) async -> [[String:Any]] {
         guard let (d,_) = try? await URLSession.shared.data(from: url(yol,q)) else { return [] }
         if let a = try? JSONSerialization.jsonObject(with: d) as? [[String:Any]] { return a }
-        if let o = try? JSONSerialization.jsonObject(with: d) as? [String:Any] { return (o["items"] as? [[String:Any]]) ?? [] }
+        if let o = try? JSONSerialization.jsonObject(with: d) as? [String:Any] {
+            // farklı backend anahtarlarını dene (items/recent/data/list/kayitlar/...)
+            for k in ["items","recent","data","list","kayitlar","results","rows","kanallar","kullanicilar","uyeler","odemeler","containers","ips"] {
+                if let arr = o[k] as? [[String:Any]] { return arr }
+            }
+        }
         return []
     }
     private func post(_ yol: String, _ body: [String:Any]) async -> [String:Any]? {
