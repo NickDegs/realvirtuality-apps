@@ -534,49 +534,140 @@ struct PersonelNative: View {
     }
 }
 
-// MARK: - Native Medya / TV (Emby + IPTV — tv.nickdegs.com) — WebView yok
+// MARK: - Native Medya (Emby+Plex film/dizi/canlı + indirme/istek/sistem) — WebView yok
 struct MedyaNative: View {
     @EnvironmentObject var oturum: Oturum
     @EnvironmentObject var tema: Tema
-    @State private var durum: [String:Any] = [:]
-    @State private var kanallar: [[String:Any]] = []
+    @State private var sekme = "embyfilm"
+    @State private var embyOzet: [String:Any] = [:]
+    @State private var plexOzet: [String:Any] = [:]
+    @State private var plexKut: [[String:Any]] = []
+    @State private var seciliPlex = ""
+    @State private var icerik: [[String:Any]] = []
+    @State private var indir: [[String:Any]] = []
+    @State private var istek: [[String:Any]] = []
+    @State private var sistem: [String:Any] = [:]
     @State private var ara = ""
     @State private var yukleniyor = true
     private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
-    private var suzulmus: [[String:Any]] {
-        ara.isEmpty ? kanallar : kanallar.filter { (($0["ad"] as? String ?? $0["name"] as? String ?? "")).localizedCaseInsensitiveContains(ara) }
-    }
+    let sekmeler: [(String,String)] = [("embyfilm","🎬 Film"),("embydizi","📺 Dizi"),("canli","📡 Canlı"),("plex","🟠 Plex"),("indir","⬇️ İndirme"),("istek","📨 İstek"),("sistem","🖥️ Sistem")]
+    var izgara: [GridItem] { [GridItem(.adaptive(minimum: 100), spacing: 10)] }
+
     var body: some View {
         ZStack {
             AnimatedArka(c1: tema.c1, c2: tema.c2)
-            if yukleniyor { ProgressView().tint(tema.c1).scaleEffect(1.2) }
-            else { ScrollView { VStack(spacing: 10) {
-                HStack(spacing:10){
-                    ozetKart("Hat", "\(durum["hatlar"] ?? durum["lines"] ?? "-")")
-                    ozetKart("Kanal", "\(durum["kanallar"] ?? durum["channels"] ?? kanallar.count)")
-                    ozetKart("Kullanıcı", "\(durum["kullanicilar"] ?? durum["users"] ?? "-")")
+            VStack(spacing: 0) {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) { ForEach(sekmeler, id:\.0){ s in
+                        Text(s.1).font(.caption.bold()).padding(.horizontal,13).padding(.vertical,8)
+                            .background(sekme==s.0 ? AnyShapeStyle(tema.grad):AnyShapeStyle(.clear), in:.capsule)
+                            .foregroundStyle(sekme==s.0 ? .white : .rvMut)
+                            .overlay(Capsule().stroke(.white.opacity(sekme==s.0 ?0:0.15)))
+                            .onTapGesture { sekme=s.0; ara=""; Task { await yukle() } }
+                    }}.padding(.horizontal,16).padding(.vertical,10)
                 }
-                TextField("Kanal/içerik ara…", text: $ara).foregroundStyle(.rvText).padding(12).glassEffect(.regular,in:.rect(cornerRadius:13))
-                ForEach(Array(suzulmus.prefix(300).enumerated()), id:\.offset) { _, k in
-                    HStack {
-                        Text(k["ad"] as? String ?? k["name"] as? String ?? "").foregroundStyle(.rvText).lineLimit(1)
-                        Spacer()
-                        Text(k["kategori"] as? String ?? k["category"] as? String ?? "").font(.caption2).foregroundStyle(.rvMut)
-                    }.padding(11).glassEffect(.regular,in:.rect(cornerRadius:11))
+                ozetSerit
+                if ["embyfilm","embydizi","canli","plex"].contains(sekme) {
+                    TextField("Ara…", text: $ara).foregroundStyle(.rvText).padding(10).glassEffect(.regular,in:.rect(cornerRadius:12))
+                        .padding(.horizontal,16).submitLabel(.search).onSubmit { Task { await yukle() } }
+                    if sekme=="plex" && !plexKut.isEmpty {
+                        ScrollView(.horizontal,showsIndicators:false){ HStack(spacing:7){ ForEach(Array(plexKut.enumerated()),id:\.offset){_,k in
+                            let key = String(describing: k["kutuphane"] ?? "")
+                            Text(k["ad"] as? String ?? "").font(.caption2).padding(.horizontal,10).padding(.vertical,6)
+                                .background(seciliPlex==key ? AnyShapeStyle(tema.c1):AnyShapeStyle(.clear),in:.capsule)
+                                .foregroundStyle(seciliPlex==key ? .white : .rvMut).overlay(Capsule().stroke(.white.opacity(0.15)))
+                                .onTapGesture { seciliPlex=key; Task { await yukle() } }
+                        }}.padding(.horizontal,16).padding(.top,6) }
+                    }
                 }
-            }.padding(16) }.refreshable { await yukle() } }
+                if yukleniyor { Spacer(); ProgressView().tint(tema.c1).scaleEffect(1.2); Spacer() }
+                else { icerikGor }
+            }
         }
-        .navigationTitle("🎬 Medya / TV").navigationBarTitleDisplayMode(.inline)
-        .task { await yukle() }
+        .navigationTitle("🎬 Medya").navigationBarTitleDisplayMode(.inline)
+        .task { await ilkYukle() }
     }
-    func ozetKart(_ t: String, _ v: String) -> some View {
-        VStack(spacing:3){ Text(v).font(.title3.bold()).foregroundStyle(.rvText); Text(t).font(.caption2).foregroundStyle(.rvMut) }
-            .frame(maxWidth:.infinity).padding(12).glassEffect(.regular,in:.rect(cornerRadius:13))
+
+    @ViewBuilder var ozetSerit: some View {
+        if sekme != "sistem" {
+            ScrollView(.horizontal,showsIndicators:false){ HStack(spacing:8){
+                kart("Emby film","\(embyOzet["toplam_film"] ?? "-")"); kart("Emby dizi","\(embyOzet["toplam_dizi"] ?? "-")")
+                kart("Plex film","\(plexOzet["toplam_film"] ?? "-")"); kart("Plex dizi","\(plexOzet["toplam_dizi"] ?? "-")")
+            }.padding(.horizontal,16).padding(.top,4) }
+        }
+    }
+    @ViewBuilder var icerikGor: some View {
+        ScrollView {
+            if sekme=="indir" {
+                VStack(spacing:8){ ForEach(Array(indir.enumerated()),id:\.offset){_,d in
+                    VStack(alignment:.leading,spacing:4){
+                        HStack{ Text(d["baslik"] as? String ?? "").foregroundStyle(.rvText).lineLimit(1); Spacer(); Text(d["kaynak"] as? String ?? "").font(.caption2).foregroundStyle(.rvMut) }
+                        HStack{ ProgressView(value: min(1,( (d["yuzde"] as? Double) ?? Double(d["yuzde"] as? Int ?? 0))/100)).tint(tema.c1)
+                            Text("\(d["yuzde"] ?? 0)%").font(.caption2).foregroundStyle(.rvMut) }
+                        Text("\(d["durum"] as? String ?? "") \(d["kalan"] as? String ?? "")").font(.caption2).foregroundStyle(.rvMut)
+                    }.padding(11).glassEffect(.regular,in:.rect(cornerRadius:12))
+                }; if indir.isEmpty { bos("Aktif indirme yok") } }.padding(16)
+            } else if sekme=="istek" {
+                VStack(spacing:8){ ForEach(Array(istek.enumerated()),id:\.offset){_,r in
+                    HStack{ VStack(alignment:.leading,spacing:2){ Text(r["baslik"] as? String ?? r["tmdb"].map{"\($0)"} ?? "İstek #\(r["id"] ?? "")").foregroundStyle(.rvText).lineLimit(1)
+                        Text("\(r["tip"] as? String ?? "") · \(r["isteyen"] as? String ?? "")").font(.caption2).foregroundStyle(.rvMut) }
+                        Spacer(); Text(r["durum"] as? String ?? "").font(.caption2.bold()).foregroundStyle(tema.c1) }
+                    .padding(11).glassEffect(.regular,in:.rect(cornerRadius:12))
+                }; if istek.isEmpty { bos("İstek yok") } }.padding(16)
+            } else if sekme=="sistem" {
+                VStack(spacing:10){
+                    HStack(spacing:8){ kart("Container","\(sistem["container_calisan"] ?? "-")/\(sistem["container_toplam"] ?? "-")"); kart("Disk","\(sistem["disk_kullanim"] ?? "-")") }
+                    ForEach(Array(((sistem["containerlar"] as? [[String:Any]]) ?? []).enumerated()),id:\.offset){_,c in
+                        HStack{ Circle().fill((c["durum"] as? String ?? "").contains("running") || (c["calisan"] as? Bool ?? false) ? .green : .red).frame(width:9,height:9)
+                            Text(c["ad"] as? String ?? c["name"] as? String ?? "").font(.caption).foregroundStyle(.rvText).lineLimit(1); Spacer()
+                            Text(c["durum"] as? String ?? "").font(.caption2).foregroundStyle(.rvMut) }
+                        .padding(10).glassEffect(.regular,in:.rect(cornerRadius:11))
+                    }
+                }.padding(16)
+            } else {
+                LazyVGrid(columns: izgara, spacing: 10){ ForEach(Array(icerik.enumerated()),id:\.offset){_,it in
+                    VStack(alignment:.leading,spacing:4){
+                        ZStack{ RoundedRectangle(cornerRadius:8).fill(.white.opacity(0.06))
+                            if let u = posterURL(it) { AsyncImage(url:u){ img in img.resizable().scaledToFill() } placeholder: { ProgressView().tint(tema.c1) } }
+                            else { Image(systemName:"film").foregroundStyle(.rvMut) }
+                        }.frame(height:150).clipShape(.rect(cornerRadius:8))
+                        Text(it["ad"] as? String ?? "").font(.caption2).foregroundStyle(.rvText).lineLimit(1)
+                        Text("\(it["yil"] ?? "")").font(.system(size:9)).foregroundStyle(.rvMut)
+                    }
+                }; }.padding(16)
+                if icerik.isEmpty { bos("İçerik yok") }
+            }
+        }.refreshable { await yukle() }
+    }
+    func kart(_ t:String,_ v:String)->some View { VStack(spacing:2){ Text(v).font(.subheadline.bold()).foregroundStyle(.rvText); Text(t).font(.system(size:9)).foregroundStyle(.rvMut) }.padding(.horizontal,12).padding(.vertical,8).glassEffect(.regular,in:.rect(cornerRadius:11)) }
+    func bos(_ t:String)->some View { Text(t).font(.caption).foregroundStyle(.rvMut).frame(maxWidth:.infinity).padding(.top,30) }
+
+    func posterURL(_ it:[String:Any]) -> URL? {
+        guard var p = (it["poster"] as? String), !p.isEmpty else { return nil }
+        if p.hasPrefix("http") { return URL(string: p) }                 // Emby public
+        if p.hasPrefix("/iptv/") { p = "/dash" + p }                     // Plex → proxy
+        let h = oturum.host.hasPrefix("http") ? oturum.host : "https://" + oturum.host
+        let sep = p.contains("?") ? "&" : "?"
+        return URL(string: h + p + "\(sep)t=\(oturum.token)&_t=\(oturum.token)")
+    }
+    func ilkYukle() async {
+        embyOzet = await api.embyOzet(); plexOzet = await api.plexOzet()
+        plexKut = ((plexOzet["kutuphaneler"] as? [[String:Any]]) ?? []).filter { !((($0["ad"] as? String) ?? "").uppercased().contains("XXX")) }
+        if seciliPlex.isEmpty, let ilk = plexKut.first { seciliPlex = String(describing: ilk["kutuphane"] ?? "") }
+        await yukle()
     }
     func yukle() async {
         yukleniyor = true; defer { yukleniyor = false }
-        durum = await api.iptvDurum() ?? [:]
-        kanallar = await api.iptvKanallar()
+        switch sekme {
+        case "embyfilm": icerik = await api.embyIcerik("film", ara, 0)
+        case "embydizi": icerik = await api.embyIcerik("dizi", ara, 0)
+        case "canli":    icerik = await api.embyIcerik("canli", ara, 0)
+        case "plex":     icerik = await api.plexIcerik(seciliPlex, ara, 0)
+        case "indir":    indir = await api.indirmeler()
+        case "istek":    istek = await api.istekler()
+        case "sistem":   sistem = await api.sistemOzet()
+        default: break
+        }
     }
 }
 

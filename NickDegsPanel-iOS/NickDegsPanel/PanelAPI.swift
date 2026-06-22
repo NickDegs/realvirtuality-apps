@@ -82,4 +82,17 @@ final class PanelAPI {
     // ── Demo üret ──
     func demoUret(_ body: [String:Any]) async -> [String:Any]? { await post("/api/panel/demo-uret", body) }
     func demoListe() async -> [[String:Any]] { ((await get("/api/panel/demo-liste"))?["kayitlar"] as? [[String:Any]]) ?? [] }
+
+    // ── Medya: Emby / Plex / indirme / istek / sistem (tv.nickdegs.com) ──
+    func embyOzet() async -> [String:Any] { (await get("/dash/iptv/emby-ozet")) ?? [:] }
+    func embyIcerik(_ tip: String, _ ara: String, _ offset: Int) async -> [[String:Any]] {
+        ((await get("/dash/iptv/emby-icerik", ["tip":tip,"ara":ara,"offset":"\(offset)","limit":"60"]))?["items"] as? [[String:Any]]) ?? []
+    }
+    func plexOzet() async -> [String:Any] { (await get("/dash/iptv/plex-ozet")) ?? [:] }
+    func plexIcerik(_ kutuphane: String, _ ara: String, _ offset: Int) async -> [[String:Any]] {
+        ((await get("/dash/iptv/plex-icerik", ["kutuphane":kutuphane,"ara":ara,"offset":"\(offset)","limit":"60"]))?["items"] as? [[String:Any]]) ?? []
+    }
+    func indirmeler() async -> [[String:Any]] { ((await get("/dash/iptv/indirmeler"))?["indirmeler"] as? [[String:Any]]) ?? [] }
+    func istekler() async -> [[String:Any]] { ((await get("/dash/iptv/istekler"))?["istekler"] as? [[String:Any]]) ?? [] }
+    func sistemOzet() async -> [String:Any] { (await get("/dash/iptv/sistem-ozet")) ?? [:] }
 }
