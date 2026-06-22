@@ -15,9 +15,14 @@ jobs:
         run: |
           BEST=$(ls /Applications/ | grep -E "^Xcode_[0-9]" | sort -V | tail -1)
           sudo xcode-select -s "/Applications/$BEST/Contents/Developer"; xcodebuild -version
-      - name: XcodeGen
+      - name: XcodeGen + benzersiz build no
         working-directory: NickDegsPanel-iOS
-        run: brew install xcodegen && xcodegen generate
+        run: |
+          brew install xcodegen && xcodegen generate
+          BN=$(date +%s)
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BN" NickDegsPanel/Info.plist 2>/dev/null \
+            || /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string $BN" NickDegsPanel/Info.plist
+          echo "CFBundleVersion (literal) → $BN"
       - name: Sertifika + ASC anahtarı
         run: |
           mkdir -p ~/.appstoreconnect/private_keys
