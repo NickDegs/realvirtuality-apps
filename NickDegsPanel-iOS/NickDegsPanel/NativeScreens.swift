@@ -952,6 +952,8 @@ struct AdminHubNative: View {
     @State private var sonuc = ""
     @State private var basari = false
     @State private var bekle = false
+    @State private var zamanla = false
+    @State private var tarih = Date().addingTimeInterval(3600)
     private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
     var body: some View {
         ZStack {
@@ -970,8 +972,14 @@ struct AdminHubNative: View {
                 } else {
                     Stepper("Kaç kod: \(adet)", value: $adet, in: 1...100).foregroundStyle(.rvText).padding(12).glassEffect(.regular,in:.rect(cornerRadius:14))
                 }
+                if islem != "gencodes" {
+                    Toggle("⏰ Zamanla (ileri tarihe planla)", isOn:$zamanla).tint(tema.c1).foregroundStyle(.rvText).padding(.horizontal,4)
+                    if zamanla {
+                        DatePicker("Gönderim zamanı", selection:$tarih, in:Date()...).datePickerStyle(.compact).foregroundStyle(.rvText).padding(12).glassEffect(.regular,in:.rect(cornerRadius:14))
+                    }
+                }
                 Button { Task { await gonder() } } label: {
-                    HStack{ if bekle { ProgressView().tint(.white) }; Text("Gönder").bold() }.foregroundStyle(.white).frame(maxWidth:.infinity).padding(.vertical,14).background(tema.grad,in:.rect(cornerRadius:14))
+                    HStack{ if bekle { ProgressView().tint(.white) }; Text(zamanla && islem != "gencodes" ? "Zamanla" : "Gönder").bold() }.foregroundStyle(.white).frame(maxWidth:.infinity).padding(.vertical,14).background(tema.grad,in:.rect(cornerRadius:14))
                 }.disabled(bekle || secili.isEmpty)
                 if !sonuc.isEmpty { Text(sonuc).font(.callout).foregroundStyle(basari ? .green : .orange).frame(maxWidth:.infinity,alignment:.leading).textSelection(.enabled).padding(12).glassEffect(.regular,in:.rect(cornerRadius:12)) }
             }.padding(16) }
@@ -987,6 +995,15 @@ struct AdminHubNative: View {
         var body: [String:Any] = ["app":secili,"action":islem]
         if islem == "gencodes" { body["count"] = adet }
         else { body["title"] = baslik; body["body"] = govde; if islem == "announce" { body["url"] = link; body["active"] = true } }
+        if zamanla && islem != "gencodes" {
+            body["when_ts"] = tarih.timeIntervalSince1970
+            let r = await api.hubZamanla(body)
+            if r?["ok"] as? Bool == true {
+                basari = true; let df = DateFormatter(); df.dateFormat = "dd.MM HH:mm"
+                sonuc = "✅ Zamanlandı: " + df.string(from: tarih); baslik=""; govde=""; link=""
+            } else { basari = false; sonuc = "⚠️ " + ((r?["err"] as? String) ?? "Hata") }
+            return
+        }
         let r = await api.hubAction(body)
         if r?["ok"] as? Bool == true || r?["codes"] != nil {
             basari = true
