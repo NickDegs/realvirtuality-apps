@@ -895,7 +895,11 @@ body[data-theme="light"] .feat-card, body[data-theme="light"] .rcard { border-co
     <div class="sheet-handle"></div>
     <div class="sheet-title">👑 Premium</div>
     <div id="prem-product-list"></div>
-    <div class="restore-row"><button class="restore-link" id="restore-link" onclick="restorePurchases()">Restore Purchases</button></div>
+    <div class="restore-row">
+      <button class="restore-link" id="redeem-link" onclick="redeemCode()">🎁 Hediye Kodu Gir</button>
+      <span style="color:var(--sub);font-size:12px"> · </span>
+      <button class="restore-link" id="restore-link" onclick="restorePurchases()">Restore Purchases</button>
+    </div>
   </div>
 </div>
 
@@ -2046,6 +2050,25 @@ async function buyIAP(productId,btn){
     btn.disabled=false;
     renderPremiumSheet();
   }
+}
+
+// Hediye/promo kodu kullan (girişsiz) → premium/reklamsız aç
+async function redeemCode(){
+  const code=prompt(lang==='tr'?'Hediye kodunu gir:':'Enter your gift code:');
+  if(!code||!code.trim())return;
+  try{
+    const r=await fetch(`${SYNC_BASE}/redeem`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code.trim()})});
+    const d=await r.json();
+    if(d&&d.ok){
+      grantIap(d.grant==='noads'?IAP_NOADS:IAP_PREMIUM);
+      updateCrownBtn();
+      if(typeof renderPremiumSheet==='function')renderPremiumSheet();
+      if(isNoAds()){const{AdMob}=window.Capacitor?.Plugins||{};if(AdMob)AdMob.hideBanner().catch(()=>{});}
+      alert(lang==='tr'?'🎉 Kod kullanıldı, açıldı!':'🎉 Code redeemed, unlocked!');
+    }else{
+      alert(lang==='tr'?(d.error==='kullanilmis'?'Bu kod zaten kullanılmış.':'Geçersiz kod.'):(d.error==='kullanilmis'?'Code already used.':'Invalid code.'));
+    }
+  }catch(e){alert(lang==='tr'?'Bağlantı hatası.':'Connection error.');}
 }
 
 async function restorePurchases(){
