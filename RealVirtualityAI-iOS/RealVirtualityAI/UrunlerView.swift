@@ -1,14 +1,4 @@
 import SwiftUI
-import SafariServices
-
-struct UrunSafariView: UIViewControllerRepresentable {
-    let url: URL
-    func makeUIViewController(context: Context) -> SFSafariViewController {
-        let c = SFSafariViewController.Configuration(); c.barCollapsingEnabled = true
-        let vc = SFSafariViewController(url: url, configuration: c); vc.dismissButtonStyle = .close; return vc
-    }
-    func updateUIViewController(_ vc: SFSafariViewController, context: Context) {}
-}
 
 // MARK: - Ürün modeli (urunler.json — bireysel + içerik üretici)
 struct RVUrun: Identifiable, Decodable {
@@ -118,29 +108,38 @@ struct RVUrunKart: View {
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .background(Color.rvCard).clipShape(.rect(cornerRadius: 24))
         .overlay(RoundedRectangle(cornerRadius: 24).stroke(Color.rvLine, lineWidth: 1))
-        .shadow(color: .black.opacity(0.18), radius: 10, y: 5)
+        .shadow(color: .black.opacity(0.18), radius: 14, y: 7)
     }
 }
 
+// MARK: - Ürün Detay + Native Sipariş Akışı (Safari/WebView YOK)
 struct RVUrunDetay: View {
     let urun: RVUrun
+    @EnvironmentObject var api: API
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
-    @State private var satinAlAcik = false
-    private var katalogURL: URL {
-        let yol = urun.sekme == "bireysel" ? "urunler" : "dijital"
-        return URL(string: "https://nickdegs.com/\(yol)?grup=\(urun.g)#\(urun.id)")!
-    }
+    @Environment(\.dismiss) var dismiss
+
+    @State private var siparisYukleniyor = false
+    @State private var siparisOk: String? = nil   // başarı mesajı
+    @State private var siparisHata = ""
+    @State private var girisAcik = false
+    @State private var onayla = false
+
     var body: some View {
         ZStack {
             LinearGradient(colors: [.rvBg, .rvBg2, .rvBg], startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea()
             LensFlare().opacity(0.8)
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
+                    // Ürün başlık
                     HStack(alignment: .top, spacing: 14) {
                         AsyncImage(url: URL(string: "https://nickdegs.com/urun-gorsel/\(urun.id).webp")) { phase in
                             if let img = phase.image { img.resizable().scaledToFill() }
-                            else { ZStack { LinearGradient(colors: [tema.c1.opacity(0.28), tema.c2.opacity(0.18)], startPoint: .topLeading, endPoint: .bottomTrailing); Text(urun.ic).font(.system(size: 36)) } }
+                            else { ZStack {
+                                LinearGradient(colors: [tema.c1.opacity(0.28), tema.c2.opacity(0.18)], startPoint: .topLeading, endPoint: .bottomTrailing)
+                                Text(urun.ic).font(.system(size: 36))
+                            }}
                         }
                         .frame(width: 80, height: 80).clipShape(.rect(cornerRadius: 20))
                         VStack(alignment: .leading, spacing: 5) {
@@ -149,25 +148,90 @@ struct RVUrunDetay: View {
                         }
                         Spacer(minLength: 0)
                     }.padding(.top, 6)
+
+                    // Fiyat
                     if !urun.pr.isEmpty {
-                        Text(urun.pr).font(.title3.bold()).foregroundStyle(tema.c2).padding(.horizontal, 16).padding(.vertical, 9).glassEffect(.regular.tint(tema.c2.opacity(0.18)), in: .capsule)
+                        Text(urun.pr).font(.title3.bold()).foregroundStyle(tema.c2)
+                            .padding(.horizontal, 16).padding(.vertical, 9)
+                            .glassEffect(.regular.tint(tema.c2.opacity(0.18)), in: .capsule)
                     }
-                    Text(yerel.u(urun.aciklama)).font(.callout).foregroundStyle(.rvText).opacity(0.95).fixedSize(horizontal: false, vertical: true).padding(18).frame(maxWidth: .infinity, alignment: .leading).glassEffect(.regular, in: .rect(cornerRadius: 20))
+
+                    // Açıklama
+                    Text(yerel.u(urun.aciklama)).font(.callout).foregroundStyle(.rvText).opacity(0.95)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(18).frame(maxWidth: .infinity, alignment: .leading)
+                        .glassEffect(.regular, in: .rect(cornerRadius: 20))
+
+                    // Sipariş durumu
+                    if let ok = siparisOk {
+                        VStack(spacing: 10) {
+                            Image(systemName: "checkmark.circle.fill").font(.system(size: 40)).foregroundStyle(.green)
+                            Text(ok).font(.subheadline).foregroundStyle(.rvText).multilineTextAlignment(.center)
+                        }
+                        .frame(maxWidth: .infinity).padding(20)
+                        .glassEffect(.regular.tint(Color.green.opacity(0.18)), in: .rect(cornerRadius: 20))
+                    } else if !siparisHata.isEmpty {
+                        Text(siparisHata).font(.subheadline).foregroundStyle(.orange)
+                            .padding(14).frame(maxWidth: .infinity, alignment: .leading)
+                            .glassEffect(.regular, in: .rect(cornerRadius: 16))
+                    }
+
                     Color.clear.frame(height: 80)
-                }.padding(.horizontal, 16).padding(.top, 8)
+                }
+                .padding(.horizontal, 16).padding(.top, 8)
             }
-            VStack { Spacer()
-                Button { satinAlAcik = true } label: {
-                    HStack(spacing: 8) { Image(systemName: "cart.fill"); Text(yerel.p("urunIncele")) }
-                        .font(.headline.bold()).foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 17)
-                        .background(tema.grad, in: .rect(cornerRadius: 20)).shadow(color: tema.c1.opacity(0.45), radius: 16, y: 7)
-                }.padding(.horizontal, 16).padding(.bottom, 10)
+
+            // Sabit alt CTA
+            VStack {
+                Spacer()
+                Group {
+                    if siparisOk != nil {
+                        Button("Kapat") { dismiss() }
+                            .font(.headline.bold()).foregroundStyle(.white)
+                            .frame(maxWidth: .infinity).padding(.vertical, 17)
+                            .background(Color.gray.opacity(0.4), in: .rect(cornerRadius: 20))
+                    } else {
+                        Button { tapSiparisVer() } label: {
+                            HStack(spacing: 8) {
+                                if siparisYukleniyor { ProgressView().tint(.white) }
+                                Image(systemName: "cart.badge.plus")
+                                Text("Sipariş Ver — \(urun.pr)")
+                            }
+                            .font(.headline.bold()).foregroundStyle(.white)
+                            .frame(maxWidth: .infinity).padding(.vertical, 17)
+                            .background(siparisYukleniyor ? AnyShapeStyle(Color.gray.opacity(0.4)) : AnyShapeStyle(tema.grad),
+                                        in: .rect(cornerRadius: 20))
+                            .shadow(color: tema.c1.opacity(0.45), radius: 16, y: 7)
+                        }
+                        .disabled(siparisYukleniyor)
+                    }
+                }
+                .padding(.horizontal, 16).padding(.bottom, 10)
             }
         }
-        .navigationTitle(yerel.u(urun.ad)).navigationBarTitleDisplayMode(.inline)
-        // Ürün sayfası uygulama içinde açılır — Safari'ye çıkılmaz
-        .sheet(isPresented: $satinAlAcik) {
-            UrunSafariView(url: katalogURL).ignoresSafeArea()
+        .navigationTitle(yerel.u(urun.ad))
+        .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $girisAcik) {
+            LoginView().environmentObject(api).environmentObject(tema).environmentObject(yerel)
         }
+        .alert("Siparişi Onayla", isPresented: $onayla) {
+            Button("Sipariş Ver") { Task { await siparisTamamla() } }
+            Button("Vazgeç", role: .cancel) {}
+        } message: {
+            Text("\(yerel.u(urun.ad)) — \(urun.pr)\n\nSipariş onaylandıktan sonra SMS ile ödeme linki gönderilir.")
+        }
+    }
+
+    func tapSiparisVer() {
+        siparisHata = ""
+        if !api.girisli { girisAcik = true; return }
+        onayla = true
+    }
+
+    func siparisTamamla() async {
+        siparisYukleniyor = true; defer { siparisYukleniyor = false }
+        let (_, mesaj, hata) = await api.urunSiparis(urun.id)
+        if let h = hata { siparisHata = h }
+        else { siparisOk = mesaj }
     }
 }

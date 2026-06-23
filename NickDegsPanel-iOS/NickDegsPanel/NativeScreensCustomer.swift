@@ -87,8 +87,17 @@ struct SitemNative: View {
     @State private var siteURL = ""
     @State private var ad = ""
     @State private var yukl = true
-    @Environment(\.openURL) var openURL
+    @State private var kopyalandi = false
     private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+
+    private func qrImage(_ text: String) -> UIImage? {
+        let filter = CIFilter.qrCodeGenerator()
+        filter.correctionLevel = "M"
+        filter.message = Data(text.utf8)
+        guard let ci = filter.outputImage else { return nil }
+        let scaled = ci.transformed(by: CGAffineTransform(scaleX: 10, y: 10))
+        return UIImage(ciImage: scaled)
+    }
 
     var body: some View {
         ScrollView {
@@ -96,45 +105,39 @@ struct SitemNative: View {
                 if yukl {
                     ProgressView().padding(60)
                 } else {
-                    VStack(spacing: 10) {
-                        Image(systemName: "globe").font(.system(size: 48)).foregroundStyle(.blue)
-                        Text(ad.isEmpty ? "İşletme Sayfanız" : ad).font(.title2.bold())
-                    }
-                    .padding(.top, 8)
+                    Image(systemName: "globe").font(.system(size: 48)).foregroundStyle(.blue).padding(.top, 8)
+                    Text(ad.isEmpty ? "İşletme Sayfanız" : ad).font(.title2.bold())
 
                     if siteURL.isEmpty {
                         Text("Henüz işletme sayfanız bağlanmamış.\nYönetici ile iletişime geçin.")
-                            .font(.subheadline).foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center).padding()
+                            .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center).padding()
                     } else {
-                        VStack(spacing: 14) {
-                            Text(siteURL).font(.caption).foregroundStyle(.secondary)
-                                .multilineTextAlignment(.center).padding(.horizontal)
-
-                            HStack(spacing: 14) {
-                                Button {
-                                    UIPasteboard.general.string = siteURL
-                                } label: {
-                                    Label("Kopyala", systemImage: "doc.on.doc")
-                                }
-                                .buttonStyle(.bordered)
-
-                                if let u = URL(string: siteURL) {
-                                    Link(destination: u) {
-                                        Label("Sayfayı Aç", systemImage: "arrow.up.right.square")
-                                    }
-                                    .buttonStyle(.borderedProminent)
-                                }
+                        VStack(spacing: 16) {
+                            // Native QR Kod
+                            if let img = qrImage(siteURL) {
+                                Image(uiImage: img).interpolation(.none).resizable()
+                                    .scaledToFit().frame(width: 200, height: 200)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .padding(8).background(Color.white, in: .rect(cornerRadius: 16))
                             }
 
-                            Text("Sayfanızı müşterilerinizle paylaşın.\nURL'i kopyalayın veya QR Kod ekranından QR üretin.")
-                                .font(.caption2).foregroundStyle(.tertiary)
-                                .multilineTextAlignment(.center).padding(.horizontal)
+                            Text(siteURL).font(.caption).foregroundStyle(.secondary)
+                                .multilineTextAlignment(.center).textSelection(.enabled).padding(.horizontal)
+
+                            Button {
+                                UIPasteboard.general.string = siteURL
+                                kopyalandi = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) { kopyalandi = false }
+                            } label: {
+                                Label(kopyalandi ? "Kopyalandı!" : "URL'yi Kopyala", systemImage: kopyalandi ? "checkmark" : "doc.on.doc")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.borderedProminent).padding(.horizontal)
+
+                            Text("QR kodu ekrana gösterin veya URL'yi paylaşın.\nMüşterileriniz doğrudan sitenize ulaşır.")
+                                .font(.caption2).foregroundStyle(.tertiary).multilineTextAlignment(.center).padding(.horizontal)
                         }
-                        .padding()
-                        .background(Color.secondary.opacity(0.07))
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                        .padding(.horizontal)
+                        .padding().background(Color.secondary.opacity(0.07), in: .rect(cornerRadius: 16)).padding(.horizontal)
                     }
                 }
             }
@@ -310,9 +313,10 @@ struct KanitNative: View {
 struct DestekNative: View {
     @EnvironmentObject var oturum: Oturum
     @State private var hushURL = ""
+    @State private var matrixKullanici = ""
     @State private var aktif = false
     @State private var yukl = true
-    @Environment(\.openURL) var openURL
+    @State private var kopyalandi = false
     private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
 
     var body: some View {
@@ -320,7 +324,7 @@ struct DestekNative: View {
             VStack(spacing: 20) {
                 Image(systemName: "bubble.left.and.lock.fill").font(.system(size: 52)).foregroundStyle(.purple).padding(.top, 8)
                 Text("Şifreli Destek").font(.title2.bold())
-                Text("Hush — uçtan uca şifreli mesajlaşma altyapısı üzerinde çalışır.\nMesajlar sunucuda saklanmaz, kayıt tutulmaz.")
+                Text("Hush — uçtan uca şifreli mesajlaşma altyapısı üzerinde çalışır.")
                     .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center).padding(.horizontal)
 
                 if yukl {
@@ -330,23 +334,38 @@ struct DestekNative: View {
                         Image(systemName: "lock.slash").foregroundStyle(.orange).font(.title)
                         Text("Destek sohbeti bu hesapta aktif değil.\nYöneticinizden etkinleştirmesini isteyin.")
                             .font(.caption).foregroundStyle(.secondary).multilineTextAlignment(.center)
-                    }
-                    .padding()
+                    }.padding()
                 } else {
                     VStack(spacing: 14) {
-                        HStack {
-                            Image(systemName: aktif ? "checkmark.circle.fill" : "clock.circle").foregroundStyle(aktif ? .green : .orange)
-                            Text(aktif ? "Aktif Abonelik" : "Abonelik kontrolü yapılamadı").font(.subheadline)
+                        HStack(spacing: 10) {
+                            Image(systemName: aktif ? "checkmark.circle.fill" : "clock.circle")
+                                .foregroundStyle(aktif ? .green : .orange)
+                            Text(aktif ? "Hush aktif" : "Abonelik doğrulanamadı").font(.subheadline)
                         }
-                        if let u = URL(string: hushURL) {
-                            Link(destination: u) {
-                                Label("Sohbeti Başlat", systemImage: "arrow.up.right.square")
-                                    .frame(maxWidth: .infinity)
+                        .frame(maxWidth: .infinity).padding(12)
+                        .background(Color.secondary.opacity(0.07), in: .rect(cornerRadius: 12))
+
+                        if !matrixKullanici.isEmpty {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Matrix / Element Kullanıcı Adı").font(.caption2).foregroundStyle(.secondary)
+                                Text(matrixKullanici).font(.subheadline.monospaced()).foregroundStyle(.primary).textSelection(.enabled)
                             }
-                            .buttonStyle(.borderedProminent).padding(.horizontal)
+                            .frame(maxWidth: .infinity, alignment: .leading).padding(12)
+                            .background(Color.secondary.opacity(0.07), in: .rect(cornerRadius: 12))
                         }
-                        Text(hushURL).font(.caption2).foregroundStyle(.tertiary)
-                            .onTapGesture { UIPasteboard.general.string = hushURL }
+
+                        Button {
+                            UIPasteboard.general.string = hushURL
+                            kopyalandi = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { kopyalandi = false }
+                        } label: {
+                            Label(kopyalandi ? "Kopyalandı!" : "Destek Bağlantısını Kopyala", systemImage: kopyalandi ? "checkmark" : "doc.on.doc")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent).padding(.horizontal)
+
+                        Text("Kopyaladığınız linki Element uygulamasında veya web tarayıcınızda açın.")
+                            .font(.caption2).foregroundStyle(.tertiary).multilineTextAlignment(.center).padding(.horizontal)
                     }
                 }
             }
@@ -358,6 +377,7 @@ struct DestekNative: View {
             let veri = await api.satinAldiklarim()
             if let hush = veri["hush"] as? [String:Any] {
                 hushURL = hush["hush_url"] as? String ?? ""
+                matrixKullanici = hush["uid"] as? String ?? ""
                 aktif = hush["aktif"] as? Bool ?? false
             }
             yukl = false
@@ -399,48 +419,43 @@ struct BaglanNative: View {
     }
 }
 
-// MARK: - Kişisel Hizmetler (süper admin)
+// MARK: - Kişisel Hizmetler (süper admin) — tümü native ekrana yönlendirir
 struct KisiselNative: View {
-    @Environment(\.openURL) var openURL
-
-    private let hizmetler: [(ikon: String, ad: String, aciklama: String, url: String)] = [
-        ("person.crop.circle.fill", "Kişisel Panel", "kasam.nickdegs.com — kendi servisleriniz", "https://kasam.nickdegs.com"),
-        ("location.fill", "Traccar Konum", "Canlı araç/kişi takibi", "https://traccar.nickdegs.com"),
-        ("film.stack.fill", "Medya Sunucusu", "Emby · Plex · IPTV arşiv", "https://media.nickdegs.com"),
-        ("waveform", "Seslendir (Piper)", "Ücretsiz Türkçe TTS servisi", "https://nickdegs.com/seslendir"),
-        ("photo.fill.on.rectangle.fill", "AI Görsel (FLUX)", "Yazıdan görsel üretimi", "https://realvirtuality.app"),
-        ("doc.text.magnifyingglass", "Hukuk Bürosu", "Dava takibi · şifreli belge kasası", "https://nickdegs.com/hukuk"),
-        ("bubble.left.and.bubble.right.fill", "Chat Logları", "Hush sohbet kayıtları", "https://nickdegs.com/hush/chat"),
-        ("sparkles", "AI Stüdyo", "RealVirtuality yönetim paneli", "https://realvirtuality.app/yonet?token=0f469b1395332561075187fe"),
-    ]
-
     var body: some View {
         ScrollView {
             VStack(spacing: 10) {
-                ForEach(hizmetler, id: \.ad) { h in
-                    if let u = URL(string: h.url) {
-                        Link(destination: u) {
-                            HStack(spacing: 14) {
-                                Image(systemName: h.ikon).font(.title2).foregroundStyle(.purple).frame(width: 40)
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(h.ad).font(.subheadline.bold()).foregroundStyle(.primary)
-                                    Text(h.aciklama).font(.caption).foregroundStyle(.secondary)
-                                }
-                                Spacer()
-                                Image(systemName: "arrow.up.right").foregroundStyle(.secondary).font(.footnote)
-                            }
-                            .padding(14)
-                            .background(Color.secondary.opacity(0.07))
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                        }
-                        .padding(.horizontal)
-                    }
-                }
+                kisiselSatir("person.crop.circle.fill", "Kişisel Panel", "Satın aldıklarım · abonelik durumu") { SatinAldiklarimNative() }
+                kisiselSatir("film.stack.fill", "Medya", "Emby · Plex · IPTV yönetim") { MedyaNative() }
+                kisiselSatir("waveform", "Seslendir (Piper)", "Türkçe TTS — metni sese çevir") { SeslendirNative() }
+                kisiselSatir("photo.fill.on.rectangle.fill", "AI Görsel (FLUX)", "Yazıdan görsel üret") { GorselNative() }
+                kisiselSatir("doc.text.magnifyingglass", "Hukuk Bürosu", "Dava takibi · şifreli belge kasası") { HukukNative() }
+                kisiselSatir("bubble.left.and.bubble.right.fill", "Chat Logları", "Hush şifreli sohbet kayıtları") { ChatNative() }
+                kisiselSatir("sparkles", "AI Stüdyo", "RealVirtuality yönetim / istatistik") { AistudioNative() }
+                kisiselSatir("location.fill", "Traccar Konum", "Canlı araç/kişi takibi") { TraccarNative() }
             }
             .padding(.vertical, 16)
         }
         .navigationTitle("Kişisel")
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    func kisiselSatir<D: View>(_ ikon: String, _ ad: String, _ aciklama: String, @ViewBuilder hedef: () -> D) -> some View {
+        NavigationLink(destination: hedef()) {
+            HStack(spacing: 14) {
+                Image(systemName: ikon).font(.title2).foregroundStyle(.purple).frame(width: 40)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(ad).font(.subheadline.bold()).foregroundStyle(.primary)
+                    Text(aciklama).font(.caption).foregroundStyle(.secondary)
+                }
+                Spacer()
+                Image(systemName: "chevron.right").foregroundStyle(.secondary).font(.footnote)
+            }
+            .padding(14)
+            .background(Color.secondary.opacity(0.07))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .padding(.horizontal)
     }
 }
 

@@ -195,6 +195,15 @@ final class API: ObservableObject {
         return (nil, (j["mesaj"] as? String) ?? (j["err"] as? String) ?? "Üretilemedi")
     }
 
+    // Katalog ürün siparişi — native akış, SMS ile ödeme linki gönderilir
+    func urunSiparis(_ urunId: String) async -> (siparisId: String?, mesaj: String?, hata: String?) {
+        let j = (try? await istek("/api/urun-siparis", ["urun_id": urunId])) ?? [:]
+        if j["ok"] as? Bool == true {
+            return (j["siparis_id"] as? String, j["mesaj"] as? String ?? "Sipariş alındı.", nil)
+        }
+        return (nil, nil, j["err"] as? String ?? "Sipariş oluşturulamadı")
+    }
+
     // Seslendirme — ses (mp3) verisi döndürür
     func sesUret(_ metin: String) async -> (Data?, String?) {
         yukleniyor = true; defer { yukleniyor = false }

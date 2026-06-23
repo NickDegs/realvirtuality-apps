@@ -424,23 +424,15 @@ struct AistudioNative: View {
     }
 }
 
-// MARK: - Traccar Konum (placeholder — credentials bekleniyor)
+// MARK: - Traccar Konum (yakında — native harita)
 struct TraccarNative: View {
-    @Environment(\.openURL) var openURL
-
     var body: some View {
         VStack(spacing: 16) {
             Spacer()
             Image(systemName: "location.fill").font(.system(size: 52)).foregroundStyle(.blue)
             Text("Traccar Konum").font(.title2.bold())
-            Text("Canlı araç/kişi konumu ND2 sunucusunda çalışıyor.\nTraccar kimlik bilgileri yapılandırılınca burada native harita görünecek.")
+            Text("Canlı araç/kişi konumu ND2 sunucusunda çalışıyor.\nNative harita entegrasyonu yakında.")
                 .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center).padding(.horizontal)
-            if let u = URL(string: "https://gps.nickdegs.duckdns.org") {
-                Link(destination: u) {
-                    Label("Web Arayüzü", systemImage: "arrow.up.right.square")
-                }
-                .buttonStyle(.borderedProminent)
-            }
             Spacer()
         }
         .navigationTitle("Traccar")

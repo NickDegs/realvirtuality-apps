@@ -132,11 +132,7 @@ struct GrupView: View {
         .tint(tema.c1)
     }
     func ac(_ k: HubKart) {
-        if NATIVE_BOLUMLER.contains(k.s) { hedef = k }      // native ekran (push)
-        else {                                              // harici panel → app-içi tarayıcı (Safari'ye atmaz)
-            let h = oturum.host.hasPrefix("http") ? oturum.host : "https://" + oturum.host
-            if let u = URL(string: "\(h)/dash/s?t=\(oturum.token)&s=\(k.s)") { safari = IdURL(url: u) }
-        }
+        hedef = k   // tüm kartlar native — bilinmeyenler HedefNative.default → "Yakında"
     }
 }
 
