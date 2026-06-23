@@ -43,6 +43,14 @@ struct SekmeView: View {
     }
 
     var body: some View {
+        if sekme == .hesabim {
+            HesabimView()
+        } else {
+            katalogEkrani
+        }
+    }
+
+    var katalogEkrani: some View {
         NavigationStack {
             ZStack {
                 // Marka gradyanı arka plan

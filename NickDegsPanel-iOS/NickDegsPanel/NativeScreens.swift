@@ -1942,3 +1942,157 @@ struct KoorOzetTab: View {
         n >= 1_000 ? String(format: "%.1fK", Double(n)/1_000) : "\(n)"
     }
 }
+
+// MARK: - Satın Aldıklarım (işletme sahibi — panel + güvenlik + hush)
+
+struct SatinAldiklarimNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @State private var veri: [String:Any] = [:]
+    @State private var yukl = true
+    @State private var hata = ""
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+
+    var body: some View {
+        ScrollView {
+            if yukl { ProgressView("Yükleniyor…").padding(40) }
+            else if !hata.isEmpty {
+                VStack(spacing: 10) {
+                    Image(systemName: "exclamationmark.triangle").font(.largeTitle).foregroundStyle(.orange)
+                    Text(hata).font(.caption).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                }.padding(30)
+            } else {
+                VStack(spacing: 14) {
+                    Text("Satın aldığın hizmetlerin bağlantı bilgileri aşağıda. Ekran görüntüsü al veya kopyala.")
+                        .font(.caption).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                        .padding(.horizontal).padding(.top, 4)
+
+                    // İşletme Paneli
+                    if let isl = veri["isletme"] as? [String:Any], !isl.isEmpty {
+                        PaketKarti(
+                            ikon: "storefront.fill", baslik: "İşletme Paneli",
+                            renk: .blue, aktif: isl["aktif"] as? Bool ?? false,
+                            bitis: isl["bitis"] as? Int ?? 0
+                        ) {
+                            BilgiSatiri(etiket: "Panel Adresi", deger: isl["panel_url"] as? String ?? "")
+                            BilgiSatiri(etiket: "Kullanıcı Adı", deger: isl["kadi"] as? String ?? "")
+                            BilgiSatiri(etiket: "Şifre", deger: isl["sifre"] as? String ?? "", gizle: true)
+                            BilgiSatiri(etiket: "Dashboard Kodu", deger: isl["dashboard_kod"] as? String ?? "")
+                            BilgiSatiri(etiket: "Not", deger: "NickDegs Dashboard uygulamasına bu kodla ve SMS ile giriş yapabilirsin.")
+                        }
+                    } else {
+                        BosPaket(ikon: "storefront", baslik: "İşletme Paneli", mesaj: "Henüz işletme paneli satın alınmadı")
+                    }
+
+                    // Güvenlik Paketi
+                    if let guv = veri["guvenlik"] as? [String:Any], !guv.isEmpty {
+                        PaketKarti(
+                            ikon: "lock.shield.fill", baslik: "Güvenlik Paketi",
+                            renk: .green, aktif: guv["aktif"] as? Bool ?? false,
+                            bitis: guv["bitis"] as? Int ?? 0
+                        ) {
+                            BilgiSatiri(etiket: "Korunan Adres", deger: guv["guvenlik_url"] as? String ?? "")
+                            BilgiSatiri(etiket: "Koruma", deger: "Cloudflare WAF + DDoS koruması aktif")
+                        }
+                    } else {
+                        BosPaket(ikon: "lock.shield", baslik: "Güvenlik Paketi", mesaj: "Güvenlik paketi eklenmedi")
+                    }
+
+                    // Hush Chat
+                    if let hsh = veri["hush"] as? [String:Any], !hsh.isEmpty {
+                        PaketKarti(
+                            ikon: "bubble.left.and.bubble.right.fill", baslik: "Hush Chat",
+                            renk: .purple, aktif: hsh["aktif"] as? Bool ?? false,
+                            bitis: hsh["bitis"] as? Int ?? 0
+                        ) {
+                            BilgiSatiri(etiket: "Sohbet Adresi", deger: hsh["hush_url"] as? String ?? "")
+                            BilgiSatiri(etiket: "Kullanıcı ID", deger: hsh["hush_uid"] as? String ?? "")
+                            BilgiSatiri(etiket: "Şifre", deger: hsh["sifre"] as? String ?? "", gizle: true)
+                            BilgiSatiri(etiket: "Not", deger: "Hush uygulamasına bu bilgilerle giriş yap")
+                        }
+                    } else {
+                        BosPaket(ikon: "bubble.left.and.bubble.right", baslik: "Hush Chat", mesaj: "Hush chat paketi eklenmedi")
+                    }
+                }.padding(.vertical, 8)
+            }
+        }
+        .navigationTitle("Satın Aldıklarım")
+        .navigationBarTitleDisplayMode(.large)
+        .task { await yukle() }
+        .refreshable { await yukle() }
+    }
+    func yukle() async {
+        yukl = true; hata = ""
+        let d = await api.satinAldiklarim()
+        if d["ok"] as? Bool == false { hata = d["mesaj"] as? String ?? "Veri alınamadı" }
+        else { veri = d }
+        yukl = false
+    }
+}
+
+struct PaketKarti<C: View>: View {
+    let ikon: String; let baslik: String; let renk: Color
+    let aktif: Bool; let bitis: Int
+    @ViewBuilder let icerik: () -> C
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 10) {
+                Image(systemName: ikon).font(.system(size: 20)).foregroundStyle(renk)
+                Text(baslik).font(.subheadline.bold())
+                Spacer()
+                Label(aktif ? "Aktif" : "Süresi doldu", systemImage: aktif ? "checkmark.circle.fill" : "xmark.circle.fill")
+                    .font(.caption2.bold()).foregroundStyle(aktif ? .green : .red)
+            }
+            if bitis > 0 {
+                Text("Bitiş: \(Date(timeIntervalSince1970: TimeInterval(bitis)), style: .date)")
+                    .font(.caption2).foregroundStyle(.secondary)
+            }
+            Divider()
+            icerik()
+        }.padding(14).background(.ultraThinMaterial, in: .rect(cornerRadius: 16)).padding(.horizontal)
+    }
+}
+
+struct BilgiSatiri: View {
+    let etiket: String; let deger: String; var gizle: Bool = false
+    @State private var goster = false
+    var body: some View {
+        if deger.isEmpty { EmptyView() } else {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(etiket).font(.caption2).foregroundStyle(.secondary)
+                HStack(spacing: 8) {
+                    if gizle && !goster {
+                        Text(String(repeating: "•", count: min(deger.count, 12))).font(.subheadline.bold()).foregroundStyle(.primary)
+                        Button { goster = true } label: {
+                            Image(systemName: "eye").font(.caption).foregroundStyle(.secondary)
+                        }.buttonStyle(.plain)
+                    } else {
+                        Text(deger).font(.subheadline.bold()).foregroundStyle(.primary).textSelection(.enabled)
+                        if gizle {
+                            Button { goster = false } label: {
+                                Image(systemName: "eye.slash").font(.caption).foregroundStyle(.secondary)
+                            }.buttonStyle(.plain)
+                        }
+                        Button {
+                            UIPasteboard.general.string = deger
+                        } label: {
+                            Image(systemName: "doc.on.doc").font(.caption).foregroundStyle(.secondary)
+                        }.buttonStyle(.plain)
+                    }
+                }
+            }.frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+}
+
+struct BosPaket: View {
+    let ikon: String; let baslik: String; let mesaj: String
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: ikon).font(.system(size: 20)).foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(baslik).font(.subheadline.bold()).foregroundStyle(.secondary)
+                Text(mesaj).font(.caption2).foregroundStyle(.tertiary)
+            }
+        }.padding(14).background(.ultraThinMaterial.opacity(0.5), in: .rect(cornerRadius: 14)).padding(.horizontal)
+    }
+}

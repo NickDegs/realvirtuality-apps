@@ -40,6 +40,16 @@ final class Magaza: ObservableObject {
         } catch { return (nil, error.localizedDescription) }
     }
 
+    // Restore Purchases — App Store'dan mevcut abonelikleri yeniden çek
+    func restorePurchases() async -> String {
+        do {
+            try await AppStore.sync()
+            return "ok"
+        } catch {
+            return error.localizedDescription
+        }
+    }
+
     // Provision: işletme aboneliği alındıysa sunucuda tenant + Dashboard hesabı açtırır
     func provision(jws: String, ad: String, sektor: String) async -> [String: Any] {
         var r = URLRequest(url: URL(string: "https://nickdegs.com/api/iap/provision")!)

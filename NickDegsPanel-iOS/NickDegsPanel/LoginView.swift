@@ -3,7 +3,7 @@ import SwiftUI
 struct LoginView: View {
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var oturum: Oturum
-    @State private var mod = 0            // 0: şifre, 1: SMS
+    @State private var mod = 0            // 0: SMS (varsayılan), 1: SMS (eski tag)
     @State private var kod = ""           // işletme kodu / telefon
     @State private var ulke = ULKE_VARSAYILAN
     @State private var tel = ""           // SMS modunda yerel numara
@@ -24,18 +24,9 @@ struct LoginView: View {
                     Spacer(minLength: 60)
                     Image(systemName: "diamond.fill").font(.system(size: 54)).foregroundStyle(tema.grad).shimmer()
                     Text("NickDegs Dashboard").font(.largeTitle.bold()).foregroundStyle(.rvText)
-                    Text("İşletme yönetim paneline giriş").font(.subheadline).foregroundStyle(.rvMut)
+                    Text("Telefon numaranızla güvenli giriş yapın").font(.subheadline).foregroundStyle(.rvMut)
 
-                    // Mod seçici
-                    Picker("", selection: $mod) {
-                        Text("Şifre ile").tag(0); Text("SMS ile").tag(1)
-                    }.pickerStyle(.segmented).padding(.top, 6)
-
-                    if mod == 0 {
-                        alan("İşletme kodu veya telefon", $kod, sym: "person.text.rectangle")
-                        alan("Şifre", $sifre, sym: "lock.fill", gizli: true)
-                        anaButon("Giriş Yap") { Task { await sifreGiris() } }
-                    } else {
+                    if mod == 0 {  // SMS (varsayılan)
                         HStack(spacing: 10) {
                             UlkeKodSecici(secili: $ulke)
                             Divider().frame(height: 22).overlay(Color.rvMut.opacity(0.4))
@@ -57,15 +48,26 @@ struct LoginView: View {
                         Text(hata).font(.caption).foregroundStyle(.orange).multilineTextAlignment(.center)
                     }
 
-                    // Gelişmiş: host (white-label / self-host)
+                    // Gelişmiş: host + şifre ile giriş
                     DisclosureGroup(isExpanded: $gelismis) {
-                        alan("Sunucu adresi", $host, sym: "server.rack")
+                        VStack(spacing: 10) {
+                            alan("Sunucu adresi", $host, sym: "server.rack")
+                            Divider()
+                            Text("Kod + şifre ile giriş").font(.caption.bold()).foregroundStyle(.rvMut).frame(maxWidth: .infinity, alignment: .leading)
+                            alan("İşletme kodu veya telefon", $kod, sym: "person.text.rectangle")
+                            alan("Şifre", $sifre, sym: "lock.fill", gizli: true)
+                            Button { Task { await sifreGiris() } } label: {
+                                Text("Şifre ile Giriş").font(.subheadline.bold()).foregroundStyle(.white)
+                                    .frame(maxWidth: .infinity).padding(.vertical, 12)
+                                    .background(Color.gray.opacity(0.6), in: .rect(cornerRadius: 14))
+                            }
+                        }
                     } label: {
-                        Text("Gelişmiş (sunucu)").font(.caption).foregroundStyle(.rvMut)
+                        Text("Gelişmiş giriş seçenekleri").font(.caption).foregroundStyle(.rvMut)
                     }
                     .tint(tema.c2).padding(.top, 4)
 
-                    Text("Her işletme yalnızca kendi panelini görür. Veriler izole ve şifrelidir.")
+                    Text("SMS ile giriş yapınca sisteminiz otomatik tanınır.")
                         .font(.caption2).foregroundStyle(.rvMut).multilineTextAlignment(.center).padding(.top, 8)
                     Spacer()
                 }

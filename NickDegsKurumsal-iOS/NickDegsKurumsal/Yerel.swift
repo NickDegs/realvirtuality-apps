@@ -31,6 +31,7 @@ final class Yerel: ObservableObject {
         "kapat": ["tr":"Kapat","en":"Close"],
         "sekme_isletme": ["tr":"İşletme","en":"Business"],
         "sekme_guvenlik": ["tr":"Güvenlik","en":"Security"],
+        "sekme_hesabim": ["tr":"Hesabım","en":"My Account"],
         "kat_isletme": ["tr":"İşletme Çözümleri","en":"Business Solutions"],
         "kat_akilli": ["tr":"Akıllı Sistemler","en":"Smart Systems"],
         "kat_kurumsal": ["tr":"Kurumsal","en":"Enterprise"],

@@ -26,13 +26,23 @@ extension ShapeStyle where Self == Color {
     static var rvText: Color { .rvText }; static var rvMut: Color { .rvMut }
 }
 
-// MARK: - Sekmeler (B2B: İşletme + Güvenlik)
+// MARK: - Sekmeler (B2B: İşletme + Güvenlik + Hesabım)
 enum Sekme: String, CaseIterable, Identifiable {
-    case isletme, guvenlik
+    case isletme, guvenlik, hesabim
     var id: String { rawValue }
     var ikon: String {
-        switch self { case .isletme: return "building.2.fill"
-        case .guvenlik: return "lock.shield.fill" }
+        switch self {
+        case .isletme: return "building.2.fill"
+        case .guvenlik: return "lock.shield.fill"
+        case .hesabim: return "bag.fill.badge.checkmark"
+        }
+    }
+    var baslik: String {
+        switch self {
+        case .isletme: return "İşletme"
+        case .guvenlik: return "Güvenlik"
+        case .hesabim: return "Hesabım"
+        }
     }
 }
 
