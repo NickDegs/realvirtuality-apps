@@ -71,9 +71,8 @@ struct MainView: View {
     }
 }
 
-// Native ekranı olan bölümler (geri kalan Safari'de açılır — app içinde WebView YOK)
-// "admin" burada YOK — /dash/s?s=admin ile tam 14 sekmeli web admin paneli açılır (token-inject)
-let NATIVE_BOLUMLER: Set<String> = ["sunucu","iptv","odemeler","uyeler","teslimat",
+// Native ekranı olan bölümler (Safari YOK — her şey native SwiftUI)
+let NATIVE_BOLUMLER: Set<String> = ["admin","sunucu","iptv","odemeler","uyeler","teslimat",
     "siparis","stok","randevu","ozet","raporlar","musteriler",
     "koruma","ziyaretci","ban","erisim","isletme_ekle","personel",
     "ulke","asn","ipyonet","adminhub","hediye","demo","medya","kpi","abonelik","kontrol",

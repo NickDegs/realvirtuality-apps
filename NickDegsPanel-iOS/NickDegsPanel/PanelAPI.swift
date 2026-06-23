@@ -148,4 +148,14 @@ final class PanelAPI {
         c.queryItems = [URLQueryItem(name:"url",value:link), URLQueryItem(name:"token",value:token)]
         return c.url
     }
+    // ── Admin Panel (14-sekme native) ──
+    func adminPost(_ yol: String, _ body: [String:Any]) async -> [String:Any]? {
+        await post("/dash/aapi/\(yol)", body)
+    }
+    func adminIpAksiyon(_ ip: String, _ act: String) async -> [String:Any]? {
+        await post("/dash/aapi/ip-action", ["ip": ip, "action": act])
+    }
+    func adminContainerAksiyon(_ name: String, _ action: String, _ server: String) async -> [String:Any]? {
+        await post("/dash/aapi/container-action", ["name": name, "action": action, "server": server])
+    }
 }

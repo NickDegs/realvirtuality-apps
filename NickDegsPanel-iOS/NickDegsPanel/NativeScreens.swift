@@ -364,85 +364,592 @@ struct IsletmeVeriNative: View {
     }
 }
 
-// MARK: - Native Admin (14 sekme → JSON API /dash/aapi) — WebView yok
+// MARK: - Native Admin (14 sekme → JSON API /dash/aapi) — WebView YOK, tamamen native
 struct AdminNative: View {
     @EnvironmentObject var oturum: Oturum
     @EnvironmentObject var tema: Tema
     @State private var sekme = "overview"
-    @State private var ozet: [(String,String)] = []
-    @State private var liste: [[String:Any]] = []
-    @State private var yukleniyor = true
+    // overview
+    @State private var ozetVeri: [String:Any] = [:]
+    // members
+    @State private var uyeler: [[String:Any]] = []
     @State private var seciliUye: [String:Any]? = nil
+    // grant
+    @State private var grantEmail = ""; @State private var grantPlan = "premium"
+    @State private var grantGun = 30;   @State private var grantBasari = false; @State private var grantMesaj = ""
+    // payments
+    @State private var odemeler: [[String:Any]] = []
+    // services
+    @State private var servisler: [[String:Any]] = []
+    // ips
+    @State private var ipVeri: [String:Any] = []; @State private var ipGiris = ""; @State private var ipMesaj = ""
+    // containers
+    @State private var containerlar: [[String:Any]] = []
+    // logs
+    @State private var logTip = "auth"; @State private var logMetin = ""
+    // leads
+    @State private var leadler: [[String:Any]] = []
+    // teslimat
+    @State private var teslimatVeri: [String:Any] = [:]
+    // coupons
+    @State private var kuponlar: [[String:Any]] = []
+    @State private var yeniKod = ""; @State private var yeniTip = "percent"; @State private var yeniDeger = ""; @State private var yeniGun = ""
+    // broadcast
+    @State private var brdKonu = ""; @State private var brdMesaj = ""; @State private var brdSonuc = ""
+    // apps / entitlements
+    @State private var yetki: [[String:Any]] = []
+    // system
+    @State private var sistemVeri: [String:Any] = [:]
+
+    @State private var yukleniyor = false
     @State private var islemMesaj = ""
+    @State private var bekle = false
+
     private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
-    let sekmeler: [(String,String)] = [("overview","📊 Genel"),("members","👥 Üye"),("payments","💳 Ödeme"),("ips","🛡️ IP"),("containers","🐳 Container"),("teslimat","📦 Teslimat")]
+
+    let sekmeler: [(String,String)] = [
+        ("overview","📊 Genel"), ("members","👥 Üye"),   ("grant","🎫 Erişim"),
+        ("payments","💳 Ödeme"), ("services","📋 Plan"),  ("ips","🛡️ IP"),
+        ("containers","🐳 Cont"),("logs","🗒️ Log"),      ("leads","📣 Lead"),
+        ("teslimat","📦 Teslimat"),("coupons","🏷️ Kupon"),("broadcast","📢 Duyuru"),
+        ("apps","🔐 Yetki"),    ("system","🖥️ Sistem")
+    ]
 
     var body: some View {
         ZStack {
             AnimatedArka(c1: tema.c1, c2: tema.c2)
             VStack(spacing: 0) {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) { ForEach(sekmeler, id:\.0){ s in
-                        Text(s.1).font(.caption.bold()).padding(.horizontal,13).padding(.vertical,8)
-                            .background(sekme==s.0 ? AnyShapeStyle(tema.grad):AnyShapeStyle(.clear), in: .capsule)
-                            .foregroundStyle(sekme==s.0 ? .white : .rvMut)
-                            .overlay(Capsule().stroke(.white.opacity(sekme==s.0 ?0:0.15)))
-                            .onTapGesture { sekme=s.0; Task { await yukle() } }
-                    }}.padding(.horizontal,16).padding(.vertical,10)
+                    HStack(spacing: 8) {
+                        ForEach(sekmeler, id: \.0) { s in
+                            Text(s.1).font(.caption.bold()).padding(.horizontal, 12).padding(.vertical, 8)
+                                .background(sekme==s.0 ? AnyShapeStyle(tema.grad) : AnyShapeStyle(Color.clear), in: .capsule)
+                                .foregroundStyle(sekme==s.0 ? .white : .rvMut)
+                                .overlay(Capsule().stroke(.white.opacity(sekme==s.0 ? 0 : 0.15)))
+                                .onTapGesture { sekme = s.0; Task { await yukle() } }
+                        }
+                    }.padding(.horizontal, 16).padding(.vertical, 8)
                 }
-                if yukleniyor { Spacer(); ProgressView().tint(tema.c1).scaleEffect(1.2); Spacer() }
-                else { ScrollView {
-                    if sekme=="overview" {
-                        LazyVGrid(columns:[GridItem(.flexible(),spacing:12),GridItem(.flexible(),spacing:12)], spacing:12) {
-                            ForEach(ozet, id:\.0){ o in VStack(alignment:.leading,spacing:4){ Text(o.1).font(.title3.bold()).foregroundStyle(.rvText); Text(o.0).font(.caption2).foregroundStyle(.rvMut) }.frame(maxWidth:.infinity,alignment:.leading).padding(14).glassEffect(.regular,in:.rect(cornerRadius:14)) }
-                        }.padding(16)
-                    } else {
-                        LazyVStack(spacing:8){ ForEach(Array(liste.prefix(200).enumerated()),id:\.offset){ _,it in
-                            if sekme=="members", it["id"] != nil {
-                                Button { seciliUye = it } label: {
-                                    HStack { Text(_satirMetin(it)).font(.caption).foregroundStyle(.rvText).frame(maxWidth:.infinity,alignment:.leading)
-                                        Image(systemName:"slider.horizontal.3").font(.caption2).foregroundStyle(tema.c1) }
-                                    .padding(12).glassEffect(.regular,in:.rect(cornerRadius:12))
-                                }
-                            } else {
-                                Text(_satirMetin(it)).font(.caption).foregroundStyle(.rvText).frame(maxWidth:.infinity,alignment:.leading).padding(12).glassEffect(.regular,in:.rect(cornerRadius:12))
-                            }
-                        }}.padding(16)
-                    }
-                }.refreshable { await yukle() } }
-                if !islemMesaj.isEmpty { Text(islemMesaj).font(.caption).foregroundStyle(.green).padding(8) }
+                if yukleniyor {
+                    Spacer(); ProgressView().tint(tema.c1).scaleEffect(1.2); Spacer()
+                } else {
+                    ScrollView { sekmeIcerik }.refreshable { await yukle() }
+                }
+                if !islemMesaj.isEmpty {
+                    Text(islemMesaj).font(.caption).foregroundStyle(.green).padding(8)
+                }
             }
         }
         .navigationTitle("Admin Panel").navigationBarTitleDisplayMode(.inline)
-        .confirmationDialog("Üye işlemi", isPresented: Binding(get:{seciliUye != nil}, set:{ if !$0 { seciliUye=nil } }), presenting: seciliUye) { u in
-            Button("30 gün uzat") { Task { await uyeIslem(u, 30) } }
-            Button("90 gün uzat") { Task { await uyeIslem(u, 90) } }
+        .confirmationDialog("Üye işlemi",
+            isPresented: Binding(get: { seciliUye != nil }, set: { if !$0 { seciliUye = nil } }),
+            presenting: seciliUye
+        ) { u in
+            Button("30 gün uzat")  { Task { await uyeIslem(u, 30) } }
+            Button("90 gün uzat")  { Task { await uyeIslem(u, 90) } }
             Button("365 gün uzat") { Task { await uyeIslem(u, 365) } }
-            Button("Erişimi kaldır", role:.destructive) { Task { await uyeIslem(u, 0) } }
-            Button("Vazgeç", role:.cancel) {}
-        } message: { u in Text("\(u["email"] ?? u["name"] ?? "")") }
+            Button("Erişimi kaldır", role: .destructive) { Task { await uyeIslem(u, 0) } }
+            Button("Vazgeç", role: .cancel) {}
+        } message: { u in Text(u["email"] as? String ?? "-") }
         .task { await yukle() }
     }
-    func uyeIslem(_ u:[String:Any], _ uzat:Int) async {
-        let id = "\(u["id"] ?? "")"; let email = "\(u["email"] ?? "")"
-        islemMesaj = "⏳ İşleniyor…"
-        if uzat > 0 { _ = await api.uyeUzat(id:id, days:uzat); islemMesaj = "✅ \(email): \(uzat) gün uzatıldı" }
-        else { _ = await api.uyeErisimKaldir(user:email); islemMesaj = "✅ \(email): erişim kaldırıldı" }
-        seciliUye = nil; await yukle()
-    }
-    func _satirMetin(_ it: [String:Any]) -> String {
-        let keys = ["name","email","tg_user","ip","plan","ad","tutar","amount","durum","status","when","reason"]
-        let parts = keys.compactMap { it[$0].map { v in "\(v)" } }.filter { !$0.isEmpty }
-        return parts.isEmpty ? it.map { "\($0.key): \($0.value)" }.prefix(3).joined(separator: " · ") : parts.prefix(4).joined(separator: " · ")
-    }
-    func yukle() async {
-        yukleniyor = true; defer { yukleniyor = false }
-        if sekme=="overview" {
-            let d = await api.get_overview()
-            ozet = [("Aktif üye","\(d["active_members"] ?? "-")"),("Ödeme","\(d["payments_count"] ?? d["payments"] ?? "-")"),("Servis","\(d["services"] ?? "-")"),("RAM",(d["ram"] as? String ?? "-")),("Disk",(d["disk"] as? String ?? "-")),("Uptime",(d["uptime"] as? String ?? "-"))]
-        } else {
-            liste = await api.adminListe(sekme)
+
+    @ViewBuilder var sekmeIcerik: some View {
+        switch sekme {
+        case "overview":   ozetSekmesi
+        case "members":    uyelerSekmesi
+        case "grant":      grantSekmesi
+        case "payments":   odemeSekmesi
+        case "services":   servisSekmesi
+        case "ips":        ipSekmesi
+        case "containers": containerSekmesi
+        case "logs":       logSekmesi
+        case "leads":      leadSekmesi
+        case "teslimat":   teslimatSekmesi
+        case "coupons":    kuponSekmesi
+        case "broadcast":  duyuruSekmesi
+        case "apps":       yetkiSekmesi
+        default:           sistemSekmesi
         }
+    }
+
+    // MARK: Overview
+    var ozetSekmesi: some View {
+        LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
+            kpi("Aktif üye",  "\(ozetVeri["active_members"] ?? "-")", "person.fill.checkmark", .green)
+            kpi("Toplam",     "\(ozetVeri["total_members"] ?? "-")",  "person.3.fill",          tema.c1)
+            kpi("Ödeme",      "\(ozetVeri["total_payments"] ?? "-")", "creditcard.fill",         .blue)
+            kpi("Servis",     "\(ozetVeri["services"] ?? "-")",       "square.stack.3d.up.fill", .purple)
+            kpi("RAM",        ozetVeri["ram"]  as? String ?? "-",     "memorychip.fill",         tema.c2)
+            kpi("Disk",       ozetVeri["disk"] as? String ?? "-",     "internaldrive.fill",      tema.c1)
+            kpi("Yük",        ozetVeri["load"] as? String ?? "-",     "gauge.medium",            .yellow)
+            kpi("Container",  "\(ozetVeri["containers"] ?? "-")",     "shippingbox.fill",        .cyan)
+            kpi("ND2 RAM",    ozetVeri["nd2_ram"]  as? String ?? "-", "memorychip",              .teal)
+            kpi("ND2 Yük",    ozetVeri["nd2_load"] as? String ?? "-", "gauge.medium",            .orange)
+            kpi("ND2 Cnt.",   "\(ozetVeri["nd2_containers"] ?? "-")", "shippingbox",             .cyan)
+            kpi("Uptime",     ozetVeri["uptime"] as? String ?? "-",   "clock.fill",              .green)
+        }.padding(16)
+    }
+
+    // MARK: Members
+    var uyelerSekmesi: some View {
+        LazyVStack(spacing: 8) {
+            ForEach(Array(uyeler.prefix(200).enumerated()), id: \.offset) { _, u in
+                Button { seciliUye = u } label: {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(u["email"] as? String ?? "-").font(.caption.bold()).foregroundStyle(.rvText).lineLimit(1)
+                            HStack(spacing: 4) {
+                                Text(u["plan"] as? String ?? "-").font(.caption2).foregroundStyle(tema.c1)
+                                Text("·").foregroundStyle(.rvMut)
+                                Text(u["expires"] as? String ?? "-").font(.caption2).foregroundStyle(.rvMut)
+                            }
+                        }
+                        Spacer()
+                        Image(systemName: "slider.horizontal.3").font(.caption).foregroundStyle(tema.c1)
+                    }.padding(12).glassEffect(.regular, in: .rect(cornerRadius: 12))
+                }.buttonStyle(.plain)
+            }
+            if uyeler.isEmpty { bos("Üye bulunamadı") }
+        }.padding(16)
+    }
+
+    // MARK: Grant
+    var grantSekmesi: some View {
+        VStack(spacing: 14) {
+            Text("E-posta + plan + gün → erişim ver / uzat").font(.caption).foregroundStyle(.rvMut).frame(maxWidth: .infinity, alignment: .leading)
+            alan("E-posta", $grantEmail)
+            Picker("Plan", selection: $grantPlan) {
+                ForEach(["premium","pro","basic","business"], id: \.self) { Text($0.uppercased()).tag($0) }
+            }.pickerStyle(.segmented).padding(4).glassEffect(.regular, in: .rect(cornerRadius: 12))
+            Stepper("Süre: \(grantGun) gün", value: $grantGun, in: 1...3650, step: 30)
+                .foregroundStyle(.rvText).padding(12).glassEffect(.regular, in: .rect(cornerRadius: 14))
+            HStack(spacing: 6) {
+                ForEach([30, 90, 180, 365], id: \.self) { g in
+                    Button("\(g)g") { grantGun = g }
+                        .font(.caption.bold()).foregroundStyle(grantGun==g ? .white : tema.c1)
+                        .frame(maxWidth: .infinity).padding(.vertical, 9)
+                        .background(grantGun==g ? AnyShapeStyle(tema.grad) : AnyShapeStyle(Color.clear), in: .capsule)
+                        .overlay(Capsule().stroke(tema.c1.opacity(0.4)))
+                }
+            }
+            Button { Task { await grantVer() } } label: {
+                HStack { if bekle { ProgressView().tint(.white) }; Text("✅ Erişim Ver").bold() }
+                    .foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 15).background(tema.grad, in: .rect(cornerRadius: 14))
+            }.disabled(bekle || !grantEmail.contains("@"))
+            if !grantMesaj.isEmpty {
+                Text(grantMesaj).font(.callout).foregroundStyle(grantBasari ? .green : .orange)
+                    .frame(maxWidth: .infinity, alignment: .leading).padding(12).glassEffect(.regular, in: .rect(cornerRadius: 12))
+            }
+        }.padding(16)
+    }
+
+    // MARK: Payments
+    var odemeSekmesi: some View {
+        LazyVStack(spacing: 8) {
+            ForEach(Array(odemeler.prefix(60).enumerated()), id: \.offset) { _, p in
+                HStack {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(p["email"] as? String ?? "-").font(.caption.bold()).foregroundStyle(.rvText).lineLimit(1)
+                        Text(p["plan"] as? String ?? "-").font(.caption2).foregroundStyle(.rvMut).lineLimit(1)
+                    }
+                    Spacer()
+                    VStack(alignment: .trailing, spacing: 3) {
+                        let amt = (p["amount"] as? Double) ?? Double(p["amount"] as? Int ?? 0)
+                        Text(String(format: "$%.0f", amt)).font(.caption.bold()).foregroundStyle(tema.c2)
+                        Text(p["date"] as? String ?? "-").font(.system(size: 9)).foregroundStyle(.rvMut)
+                    }
+                    Circle().fill((p["status"] as? String ?? "") == "completed" ? Color.green : Color.orange).frame(width: 7, height: 7)
+                }.padding(11).glassEffect(.regular, in: .rect(cornerRadius: 12))
+            }
+            if odemeler.isEmpty { bos("Ödeme yok") }
+        }.padding(16)
+    }
+
+    // MARK: Services (plan catalog)
+    var servisSekmesi: some View {
+        LazyVStack(spacing: 8) {
+            ForEach(Array(servisler.enumerated()), id: \.offset) { _, s in
+                HStack {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(s["name"] as? String ?? s["id"] as? String ?? "-").font(.caption.bold()).foregroundStyle(.rvText).lineLimit(1)
+                        Text(s["desc"] as? String ?? "").font(.caption2).foregroundStyle(.rvMut).lineLimit(1)
+                    }
+                    Spacer()
+                    VStack(alignment: .trailing, spacing: 2) {
+                        let price = (s["price"] as? Double) ?? Double(s["price"] as? Int ?? 0)
+                        Text(price > 0 ? String(format: "$%.0f", price) : "Ücretsiz").font(.caption.bold()).foregroundStyle(tema.c1)
+                        let days = s["days"] as? Int ?? 0
+                        Text(days > 0 ? "\(days) gün" : "Süresiz").font(.system(size: 9)).foregroundStyle(.rvMut)
+                    }
+                }.padding(11).glassEffect(.regular, in: .rect(cornerRadius: 12))
+            }
+            if servisler.isEmpty { bos("Plan yok") }
+        }.padding(16)
+    }
+
+    // MARK: IPs
+    var ipSekmesi: some View {
+        VStack(spacing: 14) {
+            alan("IP adresi (203.x.x.x)", $ipGiris)
+            HStack(spacing: 8) {
+                ipBtn("🔴 Banla", "ban", .red); ipBtn("🟢 Whitelist", "whitelist", .green); ipBtn("🔵 Aç", "unban", .blue)
+            }
+            if !ipMesaj.isEmpty { Text(ipMesaj).font(.caption).foregroundStyle(.green).frame(maxWidth: .infinity, alignment: .leading) }
+            Divider().overlay(Color.rvLine)
+            let recent = (ipVeri["recent"] as? [[String:Any]]) ?? []
+            if !recent.isEmpty {
+                Text("Son engellenenler (\(recent.count))").font(.caption.bold()).foregroundStyle(.rvMut).frame(maxWidth: .infinity, alignment: .leading)
+                ForEach(Array(recent.enumerated()), id: \.offset) { _, r in
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(r["ip"] as? String ?? "").font(.caption.bold()).foregroundStyle(.rvText)
+                            Text(r["reason"] as? String ?? "").font(.caption2).foregroundStyle(.rvMut).lineLimit(1)
+                        }
+                        Spacer()
+                        Text(r["when"] as? String ?? "").font(.system(size: 9)).foregroundStyle(.rvMut)
+                    }.padding(10).glassEffect(.regular, in: .rect(cornerRadius: 11))
+                }
+            }
+            HStack {
+                Text("Blocklist: \(ipVeri["blocklist"] as? Int ?? 0)").font(.caption2).foregroundStyle(.rvMut)
+                Spacer()
+                Text("Whitelist: \(ipVeri["whitelist"] as? Int ?? 0)").font(.caption2).foregroundStyle(.rvMut)
+            }
+        }.padding(16)
+    }
+
+    // MARK: Containers
+    var containerSekmesi: some View {
+        LazyVStack(spacing: 8) {
+            ForEach(Array(containerlar.prefix(120).enumerated()), id: \.offset) { _, c in
+                HStack {
+                    Circle().fill((c["state"] as? String ?? "").contains("running") ? Color.green : Color.red).frame(width: 9, height: 9)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(c["name"] as? String ?? "").font(.caption.bold()).foregroundStyle(.rvText).lineLimit(1)
+                        Text("\(c["server"] as? String ?? "") · \(c["status"] as? String ?? "")").font(.system(size: 9)).foregroundStyle(.rvMut).lineLimit(1)
+                    }
+                    Spacer()
+                    let nm = c["name"] as? String ?? ""
+                    let sv = c["server"] as? String ?? "main"
+                    let running = (c["state"] as? String ?? "").contains("running")
+                    Button { Task { await containerAksiyon(nm, "restart", sv) } } label: {
+                        Text("↻").font(.caption.bold()).foregroundStyle(.white).frame(width: 26, height: 22).background(Color.orange, in: .rect(cornerRadius: 5))
+                    }
+                    Button { Task { await containerAksiyon(nm, running ? "stop" : "start", sv) } } label: {
+                        Text(running ? "■" : "▶").font(.caption.bold()).foregroundStyle(.white).frame(width: 26, height: 22).background(running ? Color.red : Color.green, in: .rect(cornerRadius: 5))
+                    }
+                }.padding(9).glassEffect(.regular, in: .rect(cornerRadius: 11))
+            }
+            if containerlar.isEmpty { bos("Container yok") }
+        }.padding(16)
+    }
+
+    // MARK: Logs
+    var logSekmesi: some View {
+        VStack(spacing: 12) {
+            HStack(spacing: 6) {
+                ForEach([("auth","Auth"),("nginx","Nginx"),("payment","Payment"),("visitor","Visitor")], id: \.0) { t in
+                    Button(t.1) { logTip = t.0; Task { await logYukle() } }
+                        .font(.caption.bold()).foregroundStyle(logTip==t.0 ? .white : tema.c1)
+                        .padding(.horizontal, 10).padding(.vertical, 7)
+                        .background(logTip==t.0 ? AnyShapeStyle(tema.grad) : AnyShapeStyle(Color.clear), in: .capsule)
+                        .overlay(Capsule().stroke(tema.c1.opacity(0.4)))
+                }
+            }
+            Text(logMetin.isEmpty ? "(log boş)" : logMetin)
+                .font(.system(size: 9, design: .monospaced)).foregroundStyle(.rvText)
+                .frame(maxWidth: .infinity, alignment: .leading).textSelection(.enabled)
+                .padding(12).glassEffect(.regular, in: .rect(cornerRadius: 12))
+        }.padding(16)
+    }
+
+    // MARK: Leads
+    var leadSekmesi: some View {
+        LazyVStack(spacing: 8) {
+            ForEach(Array(leadler.prefix(100).enumerated()), id: \.offset) { i, l in
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack {
+                        Text(l["ad"] as? String ?? l["isletme_ad"] as? String ?? "-").font(.caption.bold()).foregroundStyle(.rvText).lineLimit(1)
+                        Spacer()
+                        let st = l["durum"] as? String ?? l["status"] as? String ?? "yeni"
+                        Text(st).font(.caption2.bold()).foregroundStyle(.orange).padding(.horizontal, 8).padding(.vertical, 3).background(.orange.opacity(0.15), in: .capsule)
+                    }
+                    Text("\(l["tel"] as? String ?? l["phone"] as? String ?? "") · \(l["date"] as? String ?? "-")").font(.caption2).foregroundStyle(.rvMut)
+                    HStack(spacing: 6) {
+                        leadBtn("📞 Arandı", "aranacak", i, l, .blue)
+                        leadBtn("✅ Satış",  "satis",    i, l, .green)
+                        leadBtn("❌ İptal",  "iptal",    i, l, .red)
+                    }
+                }.padding(11).glassEffect(.regular, in: .rect(cornerRadius: 12))
+            }
+            if leadler.isEmpty { bos("Lead yok") }
+        }.padding(16)
+    }
+
+    // MARK: Teslimat
+    var teslimatSekmesi: some View {
+        VStack(spacing: 12) {
+            HStack {
+                Text("Bekleyen: \(teslimatVeri["bekleyen"] as? Int ?? 0)").font(.subheadline.bold()).foregroundStyle(tema.c1)
+                Spacer()
+                Text("Toplam: \(teslimatVeri["toplam"] as? Int ?? 0)").font(.caption).foregroundStyle(.rvMut)
+            }
+            LazyVStack(spacing: 8) {
+                ForEach(Array(((teslimatVeri["siparisler"] as? [[String:Any]]) ?? []).enumerated()), id: \.offset) { _, s in
+                    HStack {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(s["urun"] as? String ?? "-").font(.caption.bold()).foregroundStyle(.rvText).lineLimit(1)
+                            Text(s["email"] as? String ?? "-").font(.caption2).foregroundStyle(.rvMut).lineLimit(1)
+                            Text(s["tarih"] as? String ?? "-").font(.system(size: 9)).foregroundStyle(.rvMut)
+                        }
+                        Spacer()
+                        if s["durum"] as? String == "bekliyor" {
+                            Button { Task { await teslimatTamamAksiyon(s["idx"] as? Int ?? -1) } } label: {
+                                Text("✓ Teslim").font(.caption2.bold()).foregroundStyle(.white).padding(.horizontal, 10).padding(.vertical, 6).background(Color.green, in: .capsule)
+                            }
+                        } else {
+                            Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
+                        }
+                    }.padding(11).glassEffect(.regular, in: .rect(cornerRadius: 12))
+                }
+            }
+        }.padding(16)
+    }
+
+    // MARK: Coupons
+    var kuponSekmesi: some View {
+        VStack(spacing: 14) {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Yeni Kupon").font(.caption.bold()).foregroundStyle(.rvMut)
+                alan("KOD (BÜYÜK HARF)", $yeniKod)
+                HStack(spacing: 8) {
+                    Picker("Tip", selection: $yeniTip) { Text("%").tag("percent"); Text("$").tag("fixed") }
+                        .pickerStyle(.segmented).frame(width: 80)
+                    alan("Değer", $yeniDeger)
+                    alan("Gün(0=∞)", $yeniGun)
+                }
+                Button { Task { await kuponOlusturAksiyon() } } label: {
+                    HStack { if bekle { ProgressView().tint(.white) }; Text("Oluştur").bold() }
+                        .foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 12).background(tema.grad, in: .rect(cornerRadius: 12))
+                }.disabled(bekle || yeniKod.isEmpty || yeniDeger.isEmpty)
+            }.padding(12).glassEffect(.regular, in: .rect(cornerRadius: 14))
+
+            ForEach(Array(kuponlar.enumerated()), id: \.offset) { _, k in
+                HStack {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(k["code"] as? String ?? "-").font(.caption.bold()).foregroundStyle(.rvText)
+                        let typ = k["type"] as? String ?? "percent"
+                        let val = (k["value"] as? Double) ?? Double(k["value"] as? Int ?? 0)
+                        Text(typ=="fixed" ? String(format: "$%.0f indirim", val) : String(format: "%%%g indirim", val)).font(.caption2).foregroundStyle(tema.c1)
+                        Text("Kullanım: \(k["used"] as? Int ?? 0)  ·  Bitiş: \(k["expires"] as? String ?? "-")").font(.system(size: 9)).foregroundStyle(.rvMut)
+                    }
+                    Spacer()
+                    Circle().fill((k["expired"] as? Bool ?? false) ? Color.red : Color.green).frame(width: 8, height: 8)
+                    Button(role: .destructive) { Task { await kuponSilAksiyon(k["code"] as? String ?? "") } } label: {
+                        Image(systemName: "trash").font(.caption).foregroundStyle(.red)
+                    }
+                }.padding(11).glassEffect(.regular, in: .rect(cornerRadius: 12))
+            }
+            if kuponlar.isEmpty { bos("Kupon yok") }
+        }.padding(16)
+    }
+
+    // MARK: Broadcast
+    var duyuruSekmesi: some View {
+        VStack(spacing: 14) {
+            Text("Tüm aktif üyelere e-posta duyurusu gönder.").font(.caption).foregroundStyle(.rvMut).frame(maxWidth: .infinity, alignment: .leading)
+            alan("Konu", $brdKonu)
+            ZStack(alignment: .topLeading) {
+                if brdMesaj.isEmpty { Text("Mesaj…").font(.caption).foregroundStyle(.rvMut).padding(.leading, 4).padding(.top, 8) }
+                TextEditor(text: $brdMesaj).frame(minHeight: 130).foregroundStyle(.rvText).scrollContentBackground(.hidden)
+            }.padding(12).glassEffect(.regular, in: .rect(cornerRadius: 14))
+            Button { Task { await duyuruGonderAksiyon() } } label: {
+                HStack { if bekle { ProgressView().tint(.white) }; Text("📢 Duyuru Gönder").bold() }
+                    .foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 15).background(tema.grad, in: .rect(cornerRadius: 14))
+            }.disabled(bekle || brdKonu.isEmpty || brdMesaj.isEmpty)
+            if !brdSonuc.isEmpty { Text(brdSonuc).font(.callout).foregroundStyle(.green).frame(maxWidth: .infinity, alignment: .leading) }
+        }.padding(16)
+    }
+
+    // MARK: Apps / Entitlements
+    var yetkiSekmesi: some View {
+        LazyVStack(spacing: 8) {
+            ForEach(Array(yetki.prefix(200).enumerated()), id: \.offset) { _, e in
+                HStack {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(e["email"] as? String ?? e["user"] as? String ?? "-").font(.caption.bold()).foregroundStyle(.rvText).lineLimit(1)
+                        Text(e["host"] as? String ?? "-").font(.caption2).foregroundStyle(.rvMut).lineLimit(1)
+                        HStack(spacing: 4) {
+                            Text(e["plan"] as? String ?? "").font(.caption2).foregroundStyle(tema.c1)
+                            if let dc = e["device_count"] as? Int { Text("· \(dc) cihaz").font(.caption2).foregroundStyle(.rvMut) }
+                        }
+                    }
+                    Spacer()
+                    VStack(alignment: .trailing, spacing: 2) {
+                        Circle().fill((e["expired"] as? Bool ?? false) ? Color.red : Color.green).frame(width: 8, height: 8)
+                        Text(e["expires"] as? String ?? "-").font(.system(size: 9)).foregroundStyle(.rvMut)
+                    }
+                }.padding(11).glassEffect(.regular, in: .rect(cornerRadius: 12))
+            }
+            if yetki.isEmpty { bos("Yetki kaydı yok") }
+        }.padding(16)
+    }
+
+    // MARK: System (POS + son işlemler)
+    var sistemSekmesi: some View {
+        VStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("💳 Ödeme Yöntemleri").font(.subheadline.bold()).foregroundStyle(.rvText)
+                if let kt = sistemVeri["kuveyt"] as? [String:Any] {
+                    HStack {
+                        Circle().fill((kt["enabled"] as? Bool ?? false) ? Color.green : Color.red).frame(width: 9, height: 9)
+                        Text("Kuveyt Türk — \(kt["mode"] as? String ?? "")").font(.caption).foregroundStyle(.rvText)
+                    }
+                }
+                if let ts = sistemVeri["tosla"] as? [String:Any] {
+                    HStack {
+                        Circle().fill((ts["enabled"] as? Bool ?? false) ? Color.green : Color.red).frame(width: 9, height: 9)
+                        Text("Tosla POS — \(ts["mode"] as? String ?? "")").font(.caption).foregroundStyle(.rvText)
+                    }
+                }
+            }.padding(12).glassEffect(.regular, in: .rect(cornerRadius: 14))
+
+            let txs = (sistemVeri["transactions"] as? [[String:Any]]) ?? []
+            if !txs.isEmpty {
+                Text("Son İşlemler").font(.caption.bold()).foregroundStyle(.rvMut).frame(maxWidth: .infinity, alignment: .leading)
+                ForEach(Array(txs.prefix(20).enumerated()), id: \.offset) { _, t in
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(t["email"] as? String ?? "-").font(.caption2).foregroundStyle(.rvText).lineLimit(1)
+                            Text("\(t["plan"] as? String ?? "-") · \(t["method"] as? String ?? "")").font(.system(size: 9)).foregroundStyle(.rvMut)
+                        }
+                        Spacer()
+                        VStack(alignment: .trailing, spacing: 2) {
+                            let amt = (t["amount"] as? Double) ?? Double(t["amount"] as? Int ?? 0)
+                            Text(String(format: "₺%.0f", amt)).font(.caption2.bold()).foregroundStyle(tema.c2)
+                            Text(t["date"] as? String ?? "-").font(.system(size: 9)).foregroundStyle(.rvMut)
+                        }
+                        Circle().fill((t["status"] as? String ?? "") == "completed" ? Color.green : Color.orange).frame(width: 7, height: 7)
+                    }.padding(10).glassEffect(.regular, in: .rect(cornerRadius: 11))
+                }
+            }
+        }.padding(16)
+    }
+
+    // MARK: Helpers
+    func kpi(_ ad: String, _ d: String, _ ic: String, _ c: Color) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Image(systemName: ic).foregroundStyle(c).font(.title3)
+            Text(d).font(.title3.bold()).foregroundStyle(.rvText).lineLimit(1).minimumScaleFactor(0.6)
+            Text(ad).font(.caption2).foregroundStyle(.rvMut)
+        }.frame(maxWidth: .infinity, alignment: .leading).padding(14).glassEffect(.regular, in: .rect(cornerRadius: 16))
+    }
+    func bos(_ t: String) -> some View {
+        Text(t).font(.caption).foregroundStyle(.rvMut).frame(maxWidth: .infinity).padding(.top, 20)
+    }
+    func alan(_ ip: String, _ b: Binding<String>) -> some View {
+        TextField(ip, text: b).autocorrectionDisabled().textInputAutocapitalization(.never)
+            .foregroundStyle(.rvText).padding(13).glassEffect(.regular, in: .rect(cornerRadius: 13))
+    }
+    func ipBtn(_ t: String, _ act: String, _ c: Color) -> some View {
+        Button { Task { await ipAksiyonUygula(act) } } label: {
+            Text(t).font(.caption.bold()).foregroundStyle(c).frame(maxWidth: .infinity).padding(.vertical, 11)
+                .overlay(RoundedRectangle(cornerRadius: 12).stroke(c.opacity(0.6)))
+        }.disabled(ipGiris.trimmingCharacters(in: .whitespaces).isEmpty)
+    }
+    func leadBtn(_ t: String, _ st: String, _ i: Int, _ l: [String:Any], _ c: Color) -> some View {
+        Button { Task { await leadGuncelle(i, l, st) } } label: {
+            Text(t).font(.caption2.bold()).foregroundStyle(c)
+                .padding(.horizontal, 9).padding(.vertical, 5).overlay(RoundedRectangle(cornerRadius: 7).stroke(c.opacity(0.5)))
+        }
+    }
+
+    // MARK: Load
+    func yukle() async {
+        if sekme == "grant" || sekme == "broadcast" { return }
+        yukleniyor = true; defer { yukleniyor = false }
+        switch sekme {
+        case "overview":   ozetVeri = await api.get_overview()
+        case "members":    uyeler = await api.adminListe("members")
+        case "payments":   odemeler = await api.adminListe("payments")
+        case "services":   servisler = await api.adminListe("services")
+        case "ips":        ipVeri = (await api.get("/dash/aapi/ips")) ?? [:]
+        case "containers": containerlar = await api.adminListe("containers")
+        case "logs":       await logYukle()
+        case "leads":      leadler = await api.adminListe("leads")
+        case "teslimat":   teslimatVeri = (await api.get("/dash/aapi/teslimat")) ?? [:]
+        case "coupons":    kuponlar = await api.adminListe("coupons")
+        case "apps":       yetki = await api.adminListe("entitlements")
+        case "system":     sistemVeri = (await api.get("/dash/aapi/pos-status")) ?? [:]
+        default: break
+        }
+    }
+    func logYukle() async {
+        logMetin = "(yükleniyor…)"
+        let h = oturum.host.hasPrefix("http") ? oturum.host : "https://" + oturum.host
+        guard let u = URL(string: "\(h)/dash/aapi/logs?type=\(logTip)&t=\(oturum.token)&_t=\(oturum.token)") else { return }
+        if let (d, _) = try? await URLSession.shared.data(from: u) {
+            logMetin = String(data: d, encoding: .utf8) ?? "(boş)"
+        } else { logMetin = "(yüklenemedi)" }
+    }
+
+    // MARK: Actions
+    func uyeIslem(_ u: [String:Any], _ uzat: Int) async {
+        let id = "\(u["id"] ?? "")"; let email = u["email"] as? String ?? ""
+        islemMesaj = "⏳ İşleniyor…"
+        if uzat > 0 { _ = await api.uyeUzat(id: id, days: uzat); islemMesaj = "✅ \(email): \(uzat) gün uzatıldı" }
+        else { _ = await api.uyeErisimKaldir(user: email); islemMesaj = "✅ \(email): erişim kaldırıldı" }
+        seciliUye = nil; await yukle()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { islemMesaj = "" }
+    }
+    func grantVer() async {
+        bekle = true; defer { bekle = false }; grantMesaj = ""
+        let r = await api.grant(email: grantEmail.trimmingCharacters(in: .whitespaces), days: grantGun, plan: grantPlan)
+        if r?["ok"] as? Bool == true {
+            grantBasari = true; grantMesaj = "✅ \(grantEmail) → \(grantPlan) · \(grantGun) gün erişim verildi"; grantEmail = ""
+        } else { grantBasari = false; grantMesaj = "⚠️ " + (r?["error"] as? String ?? r?["mesaj"] as? String ?? "Hata") }
+    }
+    func ipAksiyonUygula(_ act: String) async {
+        let ip = ipGiris.trimmingCharacters(in: .whitespaces)
+        let r = await api.adminIpAksiyon(ip, act)
+        ipMesaj = r?["ok"] as? Bool == true ? "✅ \(ip) → \(act)" : "⚠️ " + (r?["err"] as? String ?? "Hata")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { ipMesaj = "" }
+    }
+    func containerAksiyon(_ nm: String, _ act: String, _ sv: String) async {
+        islemMesaj = "⏳ \(act) \(nm)…"
+        let r = await api.adminContainerAksiyon(nm, act, sv)
+        islemMesaj = r?["ok"] as? Bool == true ? "✅ \(nm): \(act)" : "⚠️ \(nm): hata"
+        await yukle()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { islemMesaj = "" }
+    }
+    func leadGuncelle(_ i: Int, _ l: [String:Any], _ st: String) async {
+        let ts = (l["ts"] as? Int) ?? Int(l["ts"] as? Double ?? 0)
+        _ = await api.adminPost("lead-status", ["ts": ts, "status": st])
+        if i < leadler.count { leadler[i]["durum"] = st; leadler[i]["status"] = st }
+    }
+    func teslimatTamamAksiyon(_ idx: Int) async {
+        let r = await api.adminPost("teslimat-tamam", ["idx": idx])
+        if r?["ok"] as? Bool == true { await yukle() }
+    }
+    func kuponOlusturAksiyon() async {
+        let kod = yeniKod.trimmingCharacters(in: .whitespaces).uppercased()
+        guard !kod.isEmpty, let val = Double(yeniDeger), val > 0 else { return }
+        let days = Int(yeniGun) ?? 0
+        bekle = true; defer { bekle = false }
+        let r = await api.adminPost("coupon-create", ["code": kod, "type": yeniTip, "value": val, "days": days, "limit": 0])
+        if r?["ok"] as? Bool == true { yeniKod = ""; yeniDeger = ""; yeniGun = ""; await yukle() }
+    }
+    func kuponSilAksiyon(_ kod: String) async {
+        _ = await api.adminPost("coupon-delete", ["code": kod])
+        await yukle()
+    }
+    func duyuruGonderAksiyon() async {
+        bekle = true; defer { bekle = false }; brdSonuc = ""
+        let r = await api.adminPost("broadcast", ["subject": brdKonu, "message": brdMesaj])
+        if r?["ok"] as? Bool == true {
+            brdSonuc = "✅ \(r?["sent"] as? Int ?? 0) kişiye gönderildi"; brdKonu = ""; brdMesaj = ""
+        } else { brdSonuc = "⚠️ " + (r?["error"] as? String ?? "Hata") }
     }
 }
 extension PanelAPI {
