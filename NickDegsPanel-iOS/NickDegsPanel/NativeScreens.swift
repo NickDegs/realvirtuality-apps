@@ -1141,3 +1141,328 @@ struct DemoNative: View {
         } else { basari = false; sonuc = "⚠️ " + ((r?["mesaj"] as? String) ?? "Hata") }
     }
 }
+
+// MARK: - Kontrol Merkezi Native
+struct KontrolMerkeziNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    @State private var sekme = 0
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            VStack(spacing: 0) {
+                Picker("", selection: $sekme) {
+                    Text("📋 Görevler").tag(0)
+                    Text("🤖 Claude").tag(1)
+                    Text("⚙️ Servisler").tag(2)
+                    Text("🚀 Git/CI").tag(3)
+                }.pickerStyle(.segmented).padding(12)
+                    .background(.ultraThinMaterial)
+                Group {
+                    if sekme == 0 { GorevlerTab(api: api) }
+                    else if sekme == 1 { ClaudeTab(api: api) }
+                    else if sekme == 2 { ServislerTab(api: api) }
+                    else { GitTab(api: api) }
+                }
+            }
+        }
+        .navigationTitle("🎮 Kontrol Merkezi").navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+// MARK: Görevler
+struct GorevlerTab: View {
+    let api: PanelAPI
+    @EnvironmentObject var tema: Tema
+    @State private var gorevler: [[String:Any]] = []
+    @State private var yeniBas = ""
+    @State private var yeniOt = "server"
+    @State private var yeniOnc = "orta"
+    @State private var eklemeAc = false
+    @State private var yukl = false
+    let oturumlar = ["server","media","matrix","finans","developer","yedek1"]
+    let onclikler = ["yuksek","orta","dusuk"]
+    let durumlar = [("todo","📌"),("devam","⚡"),("bitti","✅"),("iptal","❌")]
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 10) {
+                // Yeni ekle
+                Button { eklemeAc.toggle() } label: {
+                    Label(eklemeAc ? "İptal" : "Yeni Görev", systemImage: eklemeAc ? "xmark" : "plus")
+                        .font(.subheadline.bold()).foregroundStyle(.white)
+                        .frame(maxWidth: .infinity).padding(12)
+                        .background(tema.grad, in: .rect(cornerRadius: 12))
+                }.padding(.horizontal)
+                if eklemeAc {
+                    VStack(spacing: 8) {
+                        TextField("Görev başlığı", text: $yeniBas)
+                            .textFieldStyle(.roundedBorder).autocorrectionDisabled()
+                        HStack(spacing: 8) {
+                            Picker("Oturum", selection: $yeniOt) {
+                                ForEach(oturumlar, id: \.self) { Text($0).tag($0) }
+                            }.pickerStyle(.menu).frame(maxWidth: .infinity)
+                                .padding(8).background(.ultraThinMaterial, in: .rect(cornerRadius: 10))
+                            Picker("Öncelik", selection: $yeniOnc) {
+                                ForEach(onclikler, id: \.self) { Text($0).tag($0) }
+                            }.pickerStyle(.menu).frame(maxWidth: .infinity)
+                                .padding(8).background(.ultraThinMaterial, in: .rect(cornerRadius: 10))
+                        }
+                        Button("Ekle") { Task { await ekle() } }
+                            .disabled(yeniBas.trimmingCharacters(in: .whitespaces).isEmpty)
+                            .font(.subheadline.bold()).foregroundStyle(.white)
+                            .frame(maxWidth: .infinity).padding(10)
+                            .background(Color.blue, in: .rect(cornerRadius: 10))
+                    }.padding(.horizontal)
+                }
+                if yukl { ProgressView().tint(tema.c1) }
+                ForEach(durumlar, id: \.0) { (dur, ikon) in
+                    let liste = gorevler.filter { ($0["durum"] as? String ?? "todo") == dur }
+                    if !liste.isEmpty {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("\(ikon) \(dur.capitalized) (\(liste.count))")
+                                .font(.caption.bold()).foregroundStyle(.secondary).padding(.horizontal)
+                            ForEach(liste, id: { $0["id"] as? Int ?? 0 }) { g in
+                                GorevSatir(g: g, api: api, yenile: { Task { await yukle() } })
+                            }
+                        }
+                    }
+                }
+            }.padding(.vertical, 8)
+        }
+        .task { await yukle() }.refreshable { await yukle() }
+    }
+    func yukle() async { yukl = true; gorevler = await api.gorevler(); yukl = false }
+    func ekle() async {
+        let bas = yeniBas.trimmingCharacters(in: .whitespaces); guard !bas.isEmpty else { return }
+        _ = await api.gorevEkle(["baslik":bas,"oturum":yeniOt,"oncelik":yeniOnc,"durum":"todo"])
+        yeniBas = ""; eklemeAc = false; await yukle()
+    }
+}
+struct GorevSatir: View {
+    let g: [String:Any]; let api: PanelAPI; let yenile: () -> Void
+    @EnvironmentObject var tema: Tema
+    @State private var secDurum: String
+    let durumlar = ["todo","devam","bitti","iptal"]
+    let durRenk: [String: Color] = ["todo":.gray,"devam":.blue,"bitti":.green,"iptal":.red]
+    init(g: [String:Any], api: PanelAPI, yenile: @escaping () -> Void) {
+        self.g = g; self.api = api; self.yenile = yenile
+        _secDurum = State(initialValue: g["durum"] as? String ?? "todo")
+    }
+    var body: some View {
+        HStack(spacing: 10) {
+            Circle().fill(durRenk[secDurum] ?? .gray).frame(width: 10, height: 10)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(g["baslik"] as? String ?? "").font(.subheadline.bold()).foregroundStyle(.primary)
+                if let ot = g["oturum"] as? String, !ot.isEmpty {
+                    Text(ot).font(.caption2).foregroundStyle(.secondary)
+                }
+            }
+            Spacer()
+            Picker("", selection: $secDurum) {
+                ForEach(durumlar, id: \.self) { Text($0).tag($0) }
+            }.pickerStyle(.menu).onChange(of: secDurum) { _, yeni in
+                Task { _ = await api.gorevGuncelle(["id":g["id"] as? Int ?? 0,"durum":yeni]); yenile() }
+            }
+            Button { Task { _ = await api.gorevSil(g["id"] as? Int ?? 0); yenile() } } label: {
+                Image(systemName: "trash").foregroundStyle(.red)
+            }
+        }
+        .padding(.horizontal, 16).padding(.vertical, 10)
+        .background(.ultraThinMaterial, in: .rect(cornerRadius: 12))
+        .padding(.horizontal)
+    }
+}
+
+// MARK: Claude Tab
+struct ClaudeTab: View {
+    let api: PanelAPI
+    @EnvironmentObject var tema: Tema
+    @State private var oturumlar: [[String:Any]] = []
+    @State private var cmdOt = "server"
+    @State private var cmdMetin = ""
+    @State private var cmdMsg = ""
+    @State private var ekranOt = "server"
+    @State private var ekranIc = ""
+    @State private var yukl = false
+    let otList = ["server","media","matrix","finans","developer","yedek1"]
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 12) {
+                // Oturum durumu
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack {
+                        Text("🖥️ Oturumlar").font(.headline).foregroundStyle(.primary)
+                        Spacer()
+                        Button("Yenile") { Task { await yukle() } }.font(.caption).foregroundStyle(tema.c1)
+                    }
+                    if yukl { ProgressView().tint(tema.c1) }
+                    ForEach(oturumlar, id: { $0["oturum"] as? String ?? "" }) { ot in
+                        HStack(spacing: 8) {
+                            Circle().fill((ot["aktif"] as? Bool == true) ? Color.green : Color.red)
+                                .frame(width: 8, height: 8)
+                            Text(ot["oturum"] as? String ?? "").font(.subheadline.bold()).frame(width: 70, alignment: .leading)
+                            Text(ot["son"] as? String ?? "—").font(.caption).foregroundStyle(.secondary)
+                                .lineLimit(1).truncationMode(.tail)
+                        }.padding(.vertical, 4)
+                    }
+                }.padding(14).background(.ultraThinMaterial, in: .rect(cornerRadius: 14)).padding(.horizontal)
+                // Komut gönder
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("📡 Komut Gönder").font(.headline).foregroundStyle(.primary)
+                    Picker("Oturum", selection: $cmdOt) {
+                        ForEach(otList, id: \.self) { Text($0).tag($0) }
+                    }.pickerStyle(.menu).frame(maxWidth: .infinity, alignment: .leading)
+                    TextEditor(text: $cmdMetin).frame(minHeight: 60)
+                        .padding(8).background(Color(.systemBackground).opacity(0.3))
+                        .clipShape(.rect(cornerRadius: 10)).overlay(RoundedRectangle(cornerRadius:10).stroke(.quaternary))
+                    Button("Gönder →") { Task { await cmdGonder() } }
+                        .disabled(cmdMetin.trimmingCharacters(in: .whitespaces).isEmpty)
+                        .font(.subheadline.bold()).foregroundStyle(.white)
+                        .frame(maxWidth: .infinity).padding(10).background(Color.blue, in: .rect(cornerRadius: 10))
+                    if !cmdMsg.isEmpty { Text(cmdMsg).font(.caption).foregroundStyle(cmdMsg.hasPrefix("✅") ? .green : .orange) }
+                }.padding(14).background(.ultraThinMaterial, in: .rect(cornerRadius: 14)).padding(.horizontal)
+                // Ekran görüntü
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("📺 Oturum Ekranı").font(.headline).foregroundStyle(.primary)
+                    HStack {
+                        Picker("", selection: $ekranOt) {
+                            ForEach(otList, id: \.self) { Text($0).tag($0) }
+                        }.pickerStyle(.menu)
+                        Button("Göster") { Task { await ekranYukle() } }
+                            .font(.caption.bold()).foregroundStyle(.white)
+                            .padding(.horizontal, 12).padding(.vertical, 6)
+                            .background(tema.c1, in: .rect(cornerRadius: 8))
+                    }
+                    if !ekranIc.isEmpty {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            Text(ekranIc).font(.system(size: 10, design: .monospaced))
+                                .foregroundStyle(Color.green).frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .frame(maxHeight: 180).padding(8)
+                        .background(Color.black.opacity(0.7), in: .rect(cornerRadius: 10))
+                    }
+                }.padding(14).background(.ultraThinMaterial, in: .rect(cornerRadius: 14)).padding(.horizontal)
+            }.padding(.vertical, 8)
+        }
+        .task { await yukle() }.refreshable { await yukle() }
+    }
+    func yukle() async { yukl = true; oturumlar = await api.claudeOturumlar(); yukl = false }
+    func cmdGonder() async {
+        let m = cmdMetin.trimmingCharacters(in: .whitespaces); guard !m.isEmpty else { return }
+        let ok = await api.claudeCmd(cmdOt, m)
+        cmdMsg = ok ? "✅ Gönderildi" : "⚠️ Hata"
+        if ok { cmdMetin = "" }
+        try? await Task.sleep(nanoseconds: 3_000_000_000); cmdMsg = ""
+    }
+    func ekranYukle() async { ekranIc = await api.claudeEkran(ekranOt) }
+}
+
+// MARK: Servisler Tab
+struct ServislerTab: View {
+    let api: PanelAPI
+    @EnvironmentObject var tema: Tema
+    @State private var servisler: [[String:Any]] = []
+    @State private var logServis = ""
+    @State private var logIc = ""
+    @State private var yukl = false
+    @State private var mesaj = ""
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 8) {
+                if yukl { ProgressView().tint(tema.c1).padding() }
+                ForEach(servisler, id: { $0["servis"] as? String ?? "" }) { s in
+                    let ad = s["servis"] as? String ?? ""
+                    let aktif = (s["durum"] as? String ?? "") == "active"
+                    HStack(spacing: 10) {
+                        Circle().fill(aktif ? Color.green : Color.red).frame(width: 8, height: 8)
+                        Text(ad).font(.caption.bold()).foregroundStyle(.primary).frame(maxWidth: .infinity, alignment: .leading)
+                        Button("log") { Task { await logYukle(ad) } }.font(.caption2).foregroundStyle(.secondary)
+                        Button { Task { await aksiyon(ad, "restart") } } label: {
+                            Image(systemName: "arrow.clockwise").foregroundStyle(tema.c1)
+                        }.font(.caption)
+                        Button { Task { await aksiyon(ad, "stop") } } label: {
+                            Image(systemName: "stop.fill").foregroundStyle(.red)
+                        }.font(.caption)
+                    }
+                    .padding(.horizontal, 14).padding(.vertical, 8)
+                    .background(.ultraThinMaterial, in: .rect(cornerRadius: 10))
+                    .padding(.horizontal)
+                }
+                if !mesaj.isEmpty { Text(mesaj).font(.caption).foregroundStyle(mesaj.hasPrefix("✅") ? .green : .orange).padding(.horizontal) }
+                if !logIc.isEmpty {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("📄 \(logServis)").font(.caption.bold()).foregroundStyle(.secondary)
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            Text(logIc).font(.system(size: 9, design: .monospaced)).foregroundStyle(Color.cyan)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .frame(maxHeight: 200).padding(8).background(Color.black.opacity(0.7), in: .rect(cornerRadius: 10))
+                    }.padding(.horizontal)
+                }
+            }.padding(.vertical, 8)
+        }
+        .task { await yukle() }.refreshable { await yukle() }
+    }
+    func yukle() async { yukl = true; servisler = await api.servislerDetay(); yukl = false }
+    func aksiyon(_ s: String, _ a: String) async {
+        if a == "stop" { mesaj = "\(s) durduruluyor…" }
+        let ok = await api.servisAksiyon(s, a)
+        mesaj = ok ? "✅ \(a) ok" : "⚠️ Hata"
+        await yukle()
+        try? await Task.sleep(nanoseconds: 3_000_000_000); mesaj = ""
+    }
+    func logYukle(_ s: String) async {
+        logServis = s; logIc = "Yükleniyor…"
+        logIc = await api.servisLog(s)
+    }
+}
+
+// MARK: Git/CI Tab
+struct GitTab: View {
+    let api: PanelAPI
+    @EnvironmentObject var tema: Tema
+    @State private var commitler: [String] = []
+    @State private var ci: [[String:Any]] = []
+    @State private var yukl = false
+    let durRenk: [String: Color] = ["success": .green, "failure": .red, "in_progress": .blue, "cancelled": .gray]
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 12) {
+                if yukl { ProgressView().tint(tema.c1) }
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("📦 Son Commitler").font(.headline).foregroundStyle(.primary)
+                    ForEach(commitler, id: \.self) { c in
+                        let parts = c.split(separator: " ", maxSplits: 1).map(String.init)
+                        HStack(alignment: .top, spacing: 8) {
+                            Text(parts.first ?? "").font(.system(size: 10, design: .monospaced))
+                                .foregroundStyle(.secondary).frame(width: 55, alignment: .leading)
+                            Text(parts.dropFirst().first ?? c).font(.caption).foregroundStyle(.primary)
+                        }.padding(.vertical, 3)
+                    }
+                }.padding(14).background(.ultraThinMaterial, in: .rect(cornerRadius: 14)).padding(.horizontal)
+                if !ci.isEmpty {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("🔄 CI/CD Durumu").font(.headline).foregroundStyle(.primary)
+                        ForEach(ci, id: { $0["isim"] as? String ?? "" }) { r in
+                            let sonuc = r["sonuc"] as? String ?? r["durum"] as? String ?? ""
+                            HStack(spacing: 8) {
+                                Circle().fill(durRenk[sonuc] ?? .gray).frame(width: 8, height: 8)
+                                Text(r["isim"] as? String ?? "").font(.caption).foregroundStyle(.primary).frame(maxWidth: .infinity, alignment: .leading)
+                                Text(r["tarih"] as? String ?? "").font(.caption2).foregroundStyle(.secondary)
+                            }.padding(.vertical, 3)
+                        }
+                    }.padding(14).background(.ultraThinMaterial, in: .rect(cornerRadius: 14)).padding(.horizontal)
+                }
+            }.padding(.vertical, 8)
+        }
+        .task { await yukle() }.refreshable { await yukle() }
+    }
+    func yukle() async {
+        yukl = true
+        let d = await api.gitDurum()
+        commitler = d["commitler"] as? [String] ?? []
+        ci = d["ci"] as? [[String:Any]] ?? []
+        yukl = false
+    }
+}

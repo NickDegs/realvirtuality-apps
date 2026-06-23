@@ -113,4 +113,16 @@ final class PanelAPI {
     // ── Admin Hub zamanlı duyuru ──
     func hubZamanla(_ body: [String:Any]) async -> [String:Any]? { await post("/api/panel/hub-schedule", body) }
     func hubZamanliListe() async -> [[String:Any]] { ((await get("/api/panel/hub-schedule"))?["kayitlar"] as? [[String:Any]]) ?? [] }
+    // ── Kontrol Merkezi ──
+    func gorevler() async -> [[String:Any]] { ((await get("/api/panel/gorevler"))?["gorevler"] as? [[String:Any]]) ?? [] }
+    func gorevEkle(_ body: [String:Any]) async -> [String:Any]? { await post("/api/panel/gorev-ekle", body) }
+    func gorevGuncelle(_ body: [String:Any]) async -> [String:Any]? { await post("/api/panel/gorev-guncelle", body) }
+    func gorevSil(_ id: Int) async -> Bool { (await post("/api/panel/gorev-sil", ["id":id]))?["ok"] as? Bool ?? false }
+    func claudeOturumlar() async -> [[String:Any]] { ((await get("/api/panel/claude-oturumlar"))?["oturumlar"] as? [[String:Any]]) ?? [] }
+    func claudeCmd(_ oturum: String, _ komut: String) async -> Bool { (await post("/api/panel/claude-cmd", ["oturum":oturum,"komut":komut]))?["ok"] as? Bool ?? false }
+    func claudeEkran(_ oturum: String) async -> String { (await get("/api/panel/claude-ekran", ["o":oturum]))?["icerik"] as? String ?? "" }
+    func servislerDetay() async -> [[String:Any]] { ((await get("/api/panel/servisler-detay"))?["servisler"] as? [[String:Any]]) ?? [] }
+    func servisAksiyon(_ servis: String, _ aksiyon: String) async -> Bool { (await post("/api/panel/servis-aksiyon", ["servis":servis,"aksiyon":aksiyon]))?["ok"] as? Bool ?? false }
+    func servisLog(_ servis: String) async -> String { (await get("/api/panel/servis-log", ["s":servis]))?["log"] as? String ?? "" }
+    func gitDurum() async -> [String:Any] { (await get("/api/panel/git-durum")) ?? [:] }
 }
