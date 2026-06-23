@@ -55,6 +55,7 @@ struct Urun: Identifiable, Decodable {
     let ad: [String:String]
     let aciklama: [String:String]
     let pr: String
+    let demo: String?
     func metin(_ alan: [String:String], _ dil: String) -> String {
         alan[dil] ?? alan["en"] ?? alan["tr"] ?? ""
     }

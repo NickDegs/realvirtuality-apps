@@ -7,6 +7,12 @@ struct UrunDetayView: View {
     @State private var satinAlAcik = false
     @State private var bel = false
 
+    private var demoURL: URL? {
+        guard let d = urun.demo else { return nil }
+        if d.hasPrefix("http") { return URL(string: d) }
+        return URL(string: "https://nickdegs.com" + d)
+    }
+
     var body: some View {
         ZStack {
             LinearGradient(colors: [.rvBg, .rvBg2, .rvBg], startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea()
@@ -24,7 +30,7 @@ struct UrunDetayView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(18).frame(maxWidth: .infinity, alignment: .leading)
                         .glassEffect(.regular, in: .rect(cornerRadius: 20))
-                    Color.clear.frame(height: 80)
+                    Color.clear.frame(height: 100)
                 }
                 .padding(.horizontal, 16).padding(.top, 8)
             }
@@ -54,15 +60,31 @@ struct UrunDetayView: View {
     }
 
     var cta: some View {
-        Button { satinAlAcik = true } label: {
-            HStack(spacing: 8) {
-                Image(systemName: "applelogo")
-                Text("App Store ile Satın Al")
+        VStack(spacing: 10) {
+            if let url = demoURL {
+                Button {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "play.circle.fill")
+                        Text("Canlı Demo Dene")
+                    }
+                    .font(.headline.bold()).foregroundStyle(tema.c1)
+                    .frame(maxWidth: .infinity).padding(.vertical, 15)
+                    .background(tema.c1.opacity(0.12), in: .rect(cornerRadius: 18))
+                    .overlay(RoundedRectangle(cornerRadius: 18).stroke(tema.c1.opacity(0.4), lineWidth: 1))
+                }
             }
-            .font(.headline.bold()).foregroundStyle(.white)
-            .frame(maxWidth: .infinity).padding(.vertical, 17)
-            .background(tema.grad, in: .rect(cornerRadius: 20))
-            .shadow(color: tema.c1.opacity(0.45), radius: 16, y: 7)
+            Button { satinAlAcik = true } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "applelogo")
+                    Text("App Store ile Satın Al")
+                }
+                .font(.headline.bold()).foregroundStyle(.white)
+                .frame(maxWidth: .infinity).padding(.vertical, 17)
+                .background(tema.grad, in: .rect(cornerRadius: 20))
+                .shadow(color: tema.c1.opacity(0.45), radius: 16, y: 7)
+            }
         }
         .padding(.horizontal, 16).padding(.bottom, 10)
     }
