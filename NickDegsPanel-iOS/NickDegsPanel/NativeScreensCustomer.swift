@@ -72,8 +72,10 @@ struct QRNative: View {
 
 // MARK: - Görevlerim (çalışan / işletme görev listesi — GorevlerTab'ı sarıp gösterir)
 struct GorevlerimNative: View {
+    @EnvironmentObject var oturum: Oturum
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
     var body: some View {
-        GorevlerTab()
+        GorevlerTab(api: api)
             .navigationTitle("Görevlerim")
             .navigationBarTitleDisplayMode(.inline)
     }
