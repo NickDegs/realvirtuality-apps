@@ -4,4 +4,6 @@
   <key>CFBundleDisplayName</key><string>RealVirtuality AI</string>
   <key>ITSAppUsesNonExemptEncryption</key><false/>
   <key>UILaunchScreen</key><dict/>
+  <key>UISupportedInterfaceOrientations</key>
+  <array><string>UIInterfaceOrientationPortrait</string></array>
 </dict></plist>

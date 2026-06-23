@@ -186,6 +186,16 @@ struct AyarlarNative: View {
                     Text("Gelişmiş ayarlar için sektör panelinizi veya yöneticinizi kullanın.")
                         .font(.caption).foregroundStyle(.secondary)
                         .multilineTextAlignment(.center).padding(.horizontal)
+
+                    Divider().padding(.horizontal)
+
+                    HStack(spacing: 16) {
+                        Link("Gizlilik Politikası", destination: URL(string: "https://nickdegs.com/gizlilik")!)
+                            .font(.caption).foregroundStyle(.purple)
+                        Text("·").foregroundStyle(.secondary).font(.caption)
+                        Link("Kullanım Koşulları", destination: URL(string: "https://nickdegs.com/kosullar")!)
+                            .font(.caption).foregroundStyle(.purple)
+                    }
                 }
             }
             .padding(.vertical, 20)

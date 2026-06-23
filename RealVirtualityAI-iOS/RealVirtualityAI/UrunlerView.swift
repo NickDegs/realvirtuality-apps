@@ -194,8 +194,8 @@ struct RVUrunDetay: View {
                         Button { tapSiparisVer() } label: {
                             HStack(spacing: 8) {
                                 if siparisYukleniyor { ProgressView().tint(.white) }
-                                Image(systemName: "cart.badge.plus")
-                                Text("Sipariş Ver — \(urun.pr)")
+                                Image(systemName: "envelope.badge.fill")
+                                Text(yerel.p("hizmetTalebi"))
                             }
                             .font(.headline.bold()).foregroundStyle(.white)
                             .frame(maxWidth: .infinity).padding(.vertical, 17)
@@ -214,11 +214,11 @@ struct RVUrunDetay: View {
         .sheet(isPresented: $girisAcik) {
             LoginView().environmentObject(api).environmentObject(tema).environmentObject(yerel)
         }
-        .alert("Siparişi Onayla", isPresented: $onayla) {
-            Button("Sipariş Ver") { Task { await siparisTamamla() } }
-            Button("Vazgeç", role: .cancel) {}
+        .alert(yerel.p("talepBaslik"), isPresented: $onayla) {
+            Button(yerel.p("talepGonder")) { Task { await siparisTamamla() } }
+            Button(yerel.p("vazgec"), role: .cancel) {}
         } message: {
-            Text("\(yerel.u(urun.ad)) — \(urun.pr)\n\nSipariş onaylandıktan sonra SMS ile ödeme linki gönderilir.")
+            Text(yerel.p("talepAciklama"))
         }
     }
 

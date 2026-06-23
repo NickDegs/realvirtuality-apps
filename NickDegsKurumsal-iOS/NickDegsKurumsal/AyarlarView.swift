@@ -52,6 +52,16 @@ struct AyarlarView: View {
                             }
                             .padding(.top, 6)
                         }
+                        // Gizlilik & Kullanım Koşulları
+                        HStack(spacing: 16) {
+                            Link("Gizlilik Politikası", destination: URL(string: "https://nickdegs.com/gizlilik")!)
+                                .font(.caption).foregroundStyle(tema.c1)
+                            Text("·").foregroundStyle(.rvMut).font(.caption)
+                            Link("Kullanım Koşulları", destination: URL(string: "https://nickdegs.com/kosullar")!)
+                                .font(.caption).foregroundStyle(tema.c1)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, 4).padding(.bottom, 8)
                     }
                     .padding(16)
                 }
