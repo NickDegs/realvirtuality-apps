@@ -5,13 +5,10 @@ struct UrunDetayView: View {
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
     @State private var satinAlAcik = false
+    @State private var demoAcik = false
     @State private var bel = false
 
-    private var demoURL: URL? {
-        guard let d = urun.demo else { return nil }
-        if d.hasPrefix("http") { return URL(string: d) }
-        return URL(string: "https://nickdegs.com" + d)
-    }
+    private var demoVar: Bool { urun.demo != nil }
 
     var body: some View {
         ZStack {
@@ -38,7 +35,8 @@ struct UrunDetayView: View {
         }
         .navigationTitle(yerel.u(urun.ad))
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $satinAlAcik) { SatinAlView(urun: urun) }
+        .sheet(isPresented: $satinAlAcik) { SatinAlView(urun: urun).environmentObject(tema).environmentObject(yerel) }
+        .sheet(isPresented: $demoAcik) { DemoView(urun: urun).environmentObject(tema).environmentObject(yerel) }
         .onAppear { withAnimation(.smooth(duration: 0.5)) { bel = true } }
     }
 
@@ -61,13 +59,11 @@ struct UrunDetayView: View {
 
     var cta: some View {
         VStack(spacing: 10) {
-            if let url = demoURL {
-                Button {
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                } label: {
+            if demoVar {
+                Button { demoAcik = true } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "play.circle.fill")
-                        Text("Canlı Demo Dene")
+                        Text("Ücretsiz 1 Gün Demo Dene")
                     }
                     .font(.headline.bold()).foregroundStyle(tema.c1)
                     .frame(maxWidth: .infinity).padding(.vertical, 15)

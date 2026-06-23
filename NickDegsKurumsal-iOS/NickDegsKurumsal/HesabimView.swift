@@ -4,12 +4,11 @@ import StoreKit
 // MARK: - Hesabım (SMS ile doğrula → satın alınanları göster + Restore)
 
 private let BASE_URL = "https://nickdegs.com"
-private let ULKE_VARSAYILAN_KOD = "+90"
 
 struct HesabimView: View {
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
-    @State private var ulkeKod = ULKE_VARSAYILAN_KOD
+    @State private var ulke = ULKE_VARSAYILAN
     @State private var tel = ""
     @State private var smsKod = ""
     @State private var smsGonderildi = false
@@ -81,17 +80,10 @@ struct HesabimView: View {
         VStack(spacing: 14) {
             // Ülke kodu + tel
             HStack(spacing: 10) {
-                // basit ülke kodu seçici — sadece +90 gösteriyoruz, genişletilebilir
-                Menu {
-                    Button("+90 🇹🇷") { ulkeKod = "+90" }
-                    Button("+1 🇺🇸") { ulkeKod = "+1" }
-                    Button("+44 🇬🇧") { ulkeKod = "+44" }
-                    Button("+49 🇩🇪") { ulkeKod = "+49" }
-                } label: {
-                    Text(ulkeKod).font(.subheadline.bold()).foregroundStyle(.rvText)
-                        .padding(.horizontal, 12).padding(.vertical, 14)
-                        .background(Color.rvCard, in: .rect(cornerRadius: 12))
-                }
+                UlkeKodSecici(secili: $ulke)
+                    .padding(.horizontal, 12).padding(.vertical, 14)
+                    .background(Color.rvCard, in: .rect(cornerRadius: 12))
+                Divider().frame(height: 22).overlay(Color.rvMut.opacity(0.4))
                 TextField("5xx xxx xx xx", text: $tel)
                     .keyboardType(.phonePad).autocorrectionDisabled()
                     .foregroundStyle(.rvText).padding(.vertical, 14).padding(.horizontal, 12)
@@ -171,8 +163,7 @@ struct HesabimView: View {
 
     // MARK: API
     func tamNumara() -> String {
-        let t = tel.trimmingCharacters(in: .whitespaces).filter { $0.isNumber }
-        return ulkeKod + t
+        tamNumara(ulke.kod, tel)
     }
 
     func post(_ yol: String, _ govde: [String: Any]) async -> [String: Any] {

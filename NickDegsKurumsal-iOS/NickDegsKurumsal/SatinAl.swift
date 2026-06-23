@@ -74,6 +74,7 @@ struct SatinAlView: View {
     @State private var bekle = false
     @State private var sonuc: [String: Any]? = nil
     @State private var hata = ""
+    @State private var lokalFiyatlar: [String: String] = [:]   // pid → "₺X,XXX"
 
     // Bu ürünün sekmesine göre uygun App Store abonelikleri
     private var planlar: [Product] {
@@ -132,11 +133,15 @@ struct SatinAlView: View {
             .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Kapat") { dismiss() }.foregroundStyle(tema.c1) } }
         }
         .tint(tema.c1)
-        .task { await magaza.yukle(); secili = planlar.first }
+        .task {
+            await magaza.yukle(); secili = planlar.first
+            await lokalFiyatYukle()
+        }
     }
 
     func planKart(_ p: Product) -> some View {
         let sec = secili?.id == p.id
+        let gosterFiyat = lokalFiyatlar[p.id] ?? p.displayPrice
         return Button { secili = p } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 3) {
@@ -144,13 +149,33 @@ struct SatinAlView: View {
                     Text(p.description).font(.caption2).foregroundStyle(.rvMut).lineLimit(1)
                 }
                 Spacer()
-                Text(p.displayPrice).font(.subheadline.bold()).foregroundStyle(tema.c2)
+                VStack(alignment: .trailing, spacing: 1) {
+                    Text(gosterFiyat).font(.subheadline.bold()).foregroundStyle(tema.c2)
+                    if lokalFiyatlar[p.id] != nil {
+                        Text(p.displayPrice).font(.system(size: 9)).foregroundStyle(.rvMut)
+                    }
+                }
                 Image(systemName: sec ? "checkmark.circle.fill" : "circle").foregroundStyle(sec ? tema.c1 : .rvMut)
             }
             .padding(15)
             .background(Color.rvCard, in: .rect(cornerRadius: 14))
             .overlay(RoundedRectangle(cornerRadius: 14).stroke(sec ? tema.c1 : Color.rvLine, lineWidth: sec ? 2 : 1))
         }.buttonStyle(.plain)
+    }
+
+    func lokalFiyatYukle() async {
+        let lang = Locale.current.language.languageCode?.identifier ?? "en"
+        guard let url = URL(string: "https://nickdegs.com/api/iap/local-prices?lang=\(lang)") else { return }
+        guard let (d, _) = try? await URLSession.shared.data(from: url),
+              let j = try? JSONSerialization.jsonObject(with: d) as? [String: Any],
+              let prices = j["prices"] as? [String: Any] else { return }
+        var dict: [String: String] = [:]
+        for (k, v) in prices {
+            if let info = v as? [String: Any], let price = info["price"] as? String {
+                dict[k] = price
+            }
+        }
+        lokalFiyatlar = dict
     }
 
     func basariKart(_ s: [String: Any]) -> some View {
