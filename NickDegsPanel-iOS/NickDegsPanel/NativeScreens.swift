@@ -1216,13 +1216,14 @@ struct GorevlerTab: View {
                     }.padding(.horizontal)
                 }
                 if yukl { ProgressView().tint(tema.c1) }
-                ForEach(durumlar, id: \.0) { (dur, ikon) in
+                ForEach(Array(durumlar.enumerated()), id: \.offset) { _, pair in
+                    let dur = pair.0; let ikon = pair.1
                     let liste = gorevler.filter { ($0["durum"] as? String ?? "todo") == dur }
                     if !liste.isEmpty {
                         VStack(alignment: .leading, spacing: 6) {
                             Text("\(ikon) \(dur.capitalized) (\(liste.count))")
                                 .font(.caption.bold()).foregroundStyle(.secondary).padding(.horizontal)
-                            ForEach(liste, id: { $0["id"] as? Int ?? 0 }) { g in
+                            ForEach(Array(liste.enumerated()), id: \.offset) { _, g in
                                 GorevSatir(g: g, api: api, yenile: { Task { await yukle() } })
                             }
                         }
@@ -1297,7 +1298,7 @@ struct ClaudeTab: View {
                         Button("Yenile") { Task { await yukle() } }.font(.caption).foregroundStyle(tema.c1)
                     }
                     if yukl { ProgressView().tint(tema.c1) }
-                    ForEach(oturumlar, id: { $0["oturum"] as? String ?? "" }) { ot in
+                    ForEach(Array(oturumlar.enumerated()), id: \.offset) { _, ot in
                         HStack(spacing: 8) {
                             Circle().fill((ot["aktif"] as? Bool == true) ? Color.green : Color.red)
                                 .frame(width: 8, height: 8)
@@ -1371,7 +1372,7 @@ struct ServislerTab: View {
         ScrollView {
             VStack(spacing: 8) {
                 if yukl { ProgressView().tint(tema.c1).padding() }
-                ForEach(servisler, id: { $0["servis"] as? String ?? "" }) { s in
+                ForEach(Array(servisler.enumerated()), id: \.offset) { _, s in
                     let ad = s["servis"] as? String ?? ""
                     let aktif = (s["durum"] as? String ?? "") == "active"
                     HStack(spacing: 10) {
@@ -1444,7 +1445,7 @@ struct GitTab: View {
                 if !ci.isEmpty {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("🔄 CI/CD Durumu").font(.headline).foregroundStyle(.primary)
-                        ForEach(ci, id: { $0["isim"] as? String ?? "" }) { r in
+                        ForEach(Array(ci.enumerated()), id: \.offset) { _, r in
                             let sonuc = r["sonuc"] as? String ?? r["durum"] as? String ?? ""
                             HStack(spacing: 8) {
                                 Circle().fill(durRenk[sonuc] ?? .gray).frame(width: 8, height: 8)
