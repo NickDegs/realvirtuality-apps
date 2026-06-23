@@ -182,15 +182,30 @@ struct SatinAlView: View {
         VStack(alignment: .leading, spacing: 12) {
             Image(systemName: "checkmark.seal.fill").font(.system(size: 50)).foregroundStyle(.green)
             Text("Sistemin hazır! 🎉").font(.title2.bold()).foregroundStyle(.rvText)
-            if let url = s["url"] as? String, !url.isEmpty {
-                satir("Panel", url)
+            if let url = s["url"] as? String, !url.isEmpty { satir("Panel adresi", url) }
+            if let sf = s["sifre"] as? String, !sf.isEmpty { satir("Şifre (kaydet)", sf) }
+
+            // Otomatik giriş butonu — panel_token varsa tek tıkla Dashboard açılır
+            if let pt = s["panel_token"] as? String, !pt.isEmpty,
+               let deeplink = URL(string: "nickdegs-panel://login?t=\(pt)") {
+                Link(destination: deeplink) {
+                    HStack(spacing: 10) {
+                        Image(systemName: "arrow.right.app.fill")
+                        Text("Paneli Hemen Aç")
+                    }
+                    .font(.headline.bold()).foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 16)
+                    .background(tema.grad, in: .rect(cornerRadius: 16))
+                }.padding(.top, 4)
+                Text("NickDegs Dashboard uygulaması açılır ve otomatik giriş yapılır.")
+                    .font(.caption2).foregroundStyle(.rvMut).multilineTextAlignment(.center)
+            } else if let kod = s["dashboard_kod"] as? String ?? s["tenant"] as? String {
+                satir("Dashboard giriş kodu", kod)
+                Text("NickDegs Dashboard uygulamasından bu kod ile giriş yapabilirsin.")
+                    .font(.caption).foregroundStyle(.rvMut).padding(.top, 4)
             }
-            if let kod = s["dashboard_kod"] as? String ?? s["tenant"] as? String { satir("Dashboard kodu", kod) }
-            if let sf = s["sifre"] as? String, !sf.isEmpty { satir("Şifre", sf) }
-            Text("NickDegs Dashboard uygulamasından bu kod ve şifreyle giriş yapabilirsin.")
-                .font(.caption).foregroundStyle(.rvMut).padding(.top, 6)
-            Button("Tamam") { dismiss() }.font(.headline.bold()).foregroundStyle(.white)
-                .frame(maxWidth: .infinity).padding(.vertical, 15).background(tema.grad, in: .rect(cornerRadius: 16)).padding(.top, 8)
+
+            Button("Kapat") { dismiss() }.font(.subheadline).foregroundStyle(.rvMut)
+                .frame(maxWidth: .infinity).padding(.vertical, 12).padding(.top, 4)
         }
     }
     func satir(_ k: String, _ v: String) -> some View {

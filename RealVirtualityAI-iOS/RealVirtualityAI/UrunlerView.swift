@@ -1,4 +1,14 @@
 import SwiftUI
+import SafariServices
+
+struct UrunSafariView: UIViewControllerRepresentable {
+    let url: URL
+    func makeUIViewController(context: Context) -> SFSafariViewController {
+        let c = SFSafariViewController.Configuration(); c.barCollapsingEnabled = true
+        let vc = SFSafariViewController(url: url, configuration: c); vc.dismissButtonStyle = .close; return vc
+    }
+    func updateUIViewController(_ vc: SFSafariViewController, context: Context) {}
+}
 
 // MARK: - Ürün modeli (urunler.json — bireysel + içerik üretici)
 struct RVUrun: Identifiable, Decodable {
@@ -116,8 +126,8 @@ struct RVUrunDetay: View {
     let urun: RVUrun
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
-    @Environment(\.openURL) var openURL
-    private var url: URL {
+    @State private var satinAlAcik = false
+    private var katalogURL: URL {
         let yol = urun.sekme == "bireysel" ? "urunler" : "dijital"
         return URL(string: "https://nickdegs.com/\(yol)?grup=\(urun.g)#\(urun.id)")!
     }
@@ -147,13 +157,17 @@ struct RVUrunDetay: View {
                 }.padding(.horizontal, 16).padding(.top, 8)
             }
             VStack { Spacer()
-                Button { openURL(url) } label: {
-                    HStack(spacing: 8) { Image(systemName: "safari.fill"); Text(yerel.p("urunIncele")) }
+                Button { satinAlAcik = true } label: {
+                    HStack(spacing: 8) { Image(systemName: "cart.fill"); Text(yerel.p("urunIncele")) }
                         .font(.headline.bold()).foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 17)
                         .background(tema.grad, in: .rect(cornerRadius: 20)).shadow(color: tema.c1.opacity(0.45), radius: 16, y: 7)
                 }.padding(.horizontal, 16).padding(.bottom, 10)
             }
         }
         .navigationTitle(yerel.u(urun.ad)).navigationBarTitleDisplayMode(.inline)
+        // Ürün sayfası uygulama içinde açılır — Safari'ye çıkılmaz
+        .sheet(isPresented: $satinAlAcik) {
+            UrunSafariView(url: katalogURL).ignoresSafeArea()
+        }
     }
 }

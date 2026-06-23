@@ -35,6 +35,10 @@ final class Oturum: ObservableObject {
     init() { girisli = !token.isEmpty }
     func girisYap(token: String) { self.token = token; girisli = true }
     func cikis() { token = ""; girisli = false }
+    func otomatikGiris(token: String, host: String = "https://nickdegs.com") {
+        self.host = host
+        girisYap(token: token)
+    }
 }
 
 @main
@@ -51,6 +55,15 @@ struct NickDegsPanelApp: App {
             .environmentObject(oturum)
             .preferredColorScheme(tema.renkSemasi)
             .tint(tema.c1)
+            .onOpenURL { url in
+                // nickdegs-panel://login?t=TOKEN — NickDegsKurumsal IAP sonrası otomatik giriş
+                guard url.scheme == "nickdegs-panel", url.host == "login",
+                      let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems,
+                      let t = items.first(where: { $0.name == "t" })?.value, !t.isEmpty
+                else { return }
+                let h = items.first(where: { $0.name == "host" })?.value ?? "https://nickdegs.com"
+                oturum.otomatikGiris(token: t, host: h)
+            }
         }
     }
 }
