@@ -382,7 +382,7 @@ struct AdminNative: View {
     // services
     @State private var servisler: [[String:Any]] = []
     // ips
-    @State private var ipVeri: [String:Any] = []; @State private var ipGiris = ""; @State private var ipMesaj = ""
+    @State private var ipVeri: [String:Any] = [:]; @State private var ipGiris = ""; @State private var ipMesaj = ""
     // containers
     @State private var containerlar: [[String:Any]] = []
     // logs
