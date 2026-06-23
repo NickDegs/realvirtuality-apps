@@ -163,7 +163,8 @@ struct HesabimView: View {
 
     // MARK: API
     func tamNumara() -> String {
-        tamNumara(ulke.kod, tel)
+        let d = String(tel.filter { $0.isNumber }.drop(while: { $0 == "0" }))
+        return "+\(ulke.kod)\(d)"
     }
 
     func post(_ yol: String, _ govde: [String: Any]) async -> [String: Any] {
