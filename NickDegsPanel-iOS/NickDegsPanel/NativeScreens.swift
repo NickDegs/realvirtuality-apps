@@ -2097,3 +2097,204 @@ struct BosPaket: View {
         }.padding(14).background(.ultraThinMaterial.opacity(0.5), in: .rect(cornerRadius: 14)).padding(.horizontal)
     }
 }
+
+// MARK: - Hızlı Ödeme (anlık link + QR — kart makinesi gerekmez)
+struct HizliOdemeNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+
+    @State private var tutar = ""
+    @State private var aciklama = ""
+    @State private var musteri = ""
+    @State private var months = 0
+    @State private var bekle = false
+    @State private var sonucLink = ""
+    @State private var sonucQR: URL? = nil
+    @State private var hata = ""
+    @State private var linkler: [[String:Any]] = []
+    @State private var paylasItem: String? = nil
+    @State private var showShare = false
+
+    private let periyotlar = [(0,"Tek seferlik"),(1,"Aylık"),(3,"3 Aylık"),(12,"Yıllık")]
+
+    var body: some View {
+        ZStack { AnimatedArka(c1: tema.c1, c2: tema.c2); LensFlare().opacity(0.6)
+            ScrollView { VStack(spacing: 14) {
+                // ── Form ──────────────────────────────────
+                VStack(spacing: 12) {
+                    HStack(spacing: 10) {
+                        VStack(alignment:.leading, spacing:4) {
+                            Text("TUTAR (₺)").font(.caption2).bold().foregroundStyle(.rvMut)
+                            TextField("500", text: $tutar)
+                                .keyboardType(.decimalPad)
+                                .font(.title2.bold()).foregroundStyle(.rvText)
+                                .padding(13).glassEffect(.regular, in:.rect(cornerRadius:13))
+                        }.frame(maxWidth:.infinity)
+                        VStack(alignment:.leading, spacing:4) {
+                            Text("PERİYOT").font(.caption2).bold().foregroundStyle(.rvMut)
+                            Picker("", selection: $months) {
+                                ForEach(periyotlar, id:\.0) { v, l in Text(l).tag(v) }
+                            }.pickerStyle(.menu).tint(tema.c1)
+                                .padding(11).glassEffect(.regular, in:.rect(cornerRadius:13))
+                        }
+                    }
+                    VStack(alignment:.leading, spacing:4) {
+                        Text("AÇIKLAMA").font(.caption2).bold().foregroundStyle(.rvMut)
+                        TextField("Yazılım danışmanlığı, Masa 3, Servis ücreti…", text: $aciklama)
+                            .foregroundStyle(.rvText).padding(13).glassEffect(.regular, in:.rect(cornerRadius:13))
+                    }
+                    VStack(alignment:.leading, spacing:4) {
+                        Text("MÜŞTERİ (opsiyonel)").font(.caption2).bold().foregroundStyle(.rvMut)
+                        TextField("Ahmet Bey, Masa 5…", text: $musteri)
+                            .foregroundStyle(.rvText).padding(13).glassEffect(.regular, in:.rect(cornerRadius:13))
+                    }
+                    Button { Task { await olustur() } } label: {
+                        HStack(spacing:8) {
+                            if bekle { ProgressView().tint(.white) }
+                            Image(systemName:"bolt.fill"); Text("Link & QR Oluştur").bold()
+                        }.foregroundStyle(.white).frame(maxWidth:.infinity).padding(.vertical,14)
+                            .background(tema.grad, in:.rect(cornerRadius:14))
+                    }.disabled(bekle || tutar.isEmpty || aciklama.isEmpty)
+                    if !hata.isEmpty {
+                        Text(hata).font(.caption).foregroundStyle(.orange).frame(maxWidth:.infinity,alignment:.leading)
+                    }
+                }.padding(16).glassEffect(.regular, in:.rect(cornerRadius:18))
+
+                // ── QR Sonucu ────────────────────────────
+                if !sonucLink.isEmpty {
+                    VStack(spacing:12) {
+                        HStack(spacing:14) {
+                            if let qrURL = sonucQR {
+                                AsyncImage(url: qrURL) { phase in
+                                    if let img = phase.image { img.resizable().interpolation(.none).scaledToFit() }
+                                    else { ProgressView() }
+                                }.frame(width:130, height:130).background(.white).clipShape(.rect(cornerRadius:12))
+                            }
+                            VStack(alignment:.leading, spacing:8) {
+                                Text("Link hazır").font(.subheadline.bold()).foregroundStyle(Color.green)
+                                Text(sonucLink).font(.caption2).foregroundStyle(.rvMut).lineLimit(3).textSelection(.enabled)
+                                HStack(spacing:8) {
+                                    Button {
+                                        UIPasteboard.general.string = sonucLink
+                                    } label: {
+                                        Label("Kopyala", systemImage:"doc.on.doc").font(.caption.bold())
+                                            .padding(.horizontal,12).padding(.vertical,7)
+                                            .glassEffect(.regular.tint(tema.c1.opacity(0.2)), in:.capsule)
+                                    }
+                                    Button {
+                                        paylasItem = sonucLink; showShare = true
+                                    } label: {
+                                        Label("Paylaş", systemImage:"square.and.arrow.up").font(.caption.bold())
+                                            .padding(.horizontal,12).padding(.vertical,7)
+                                            .glassEffect(.regular.tint(tema.c2.opacity(0.2)), in:.capsule)
+                                    }
+                                }.foregroundStyle(.rvText)
+                            }
+                        }
+                    }.padding(16).glassEffect(.regular.tint(Color.green.opacity(0.08)), in:.rect(cornerRadius:18))
+                }
+
+                // ── Mevcut Linkler ───────────────────────
+                VStack(alignment:.leading, spacing:10) {
+                    HStack {
+                        Text("Oluşturulan Linkler").font(.subheadline.bold()).foregroundStyle(.rvText)
+                        Spacer()
+                        Button { Task { linkler = await api.hizliSubs() } } label: {
+                            Image(systemName:"arrow.clockwise").font(.caption).foregroundStyle(.rvMut)
+                        }
+                    }
+                    if linkler.isEmpty {
+                        Text("Henüz link oluşturulmadı").font(.caption).foregroundStyle(.rvMut)
+                            .frame(maxWidth:.infinity, alignment:.center).padding(.vertical,10)
+                    } else {
+                        ForEach(Array(linkler.enumerated()), id:\.offset) { _, s in
+                            LinkSatir(s: s, api: api) { Task { linkler = await api.hizliSubs() } }
+                        }
+                    }
+                }.padding(16).glassEffect(.regular, in:.rect(cornerRadius:18))
+
+            }.padding(16) }
+        }
+        .navigationTitle("⚡ Hızlı Ödeme").navigationBarTitleDisplayMode(.inline)
+        .task { linkler = await api.hizliSubs() }
+        .sheet(isPresented: $showShare) {
+            if let s = paylasItem { ShareSheet(items: [s]) }
+        }
+    }
+
+    func olustur() async {
+        guard let tl = Double(tutar.replacingOccurrences(of:",",with:".")) else { hata = "Geçerli tutar gir"; return }
+        bekle = true; hata = ""; defer { bekle = false }
+        let r = await api.hizliOlustur(amount: tl, desc: aciklama, customer: musteri, months: months)
+        if let link = r?["link"] as? String {
+            sonucLink = link
+            sonucQR = api.hizliQRURL(link)
+            linkler = await api.hizliSubs()
+        } else {
+            hata = "⚠️ " + ((r?["error"] as? String) ?? "Oluşturulamadı")
+        }
+    }
+}
+
+struct LinkSatir: View {
+    let s: [String:Any]
+    let api: PanelAPI
+    let yenile: () -> Void
+    @State private var bekle = false
+    @EnvironmentObject var tema: Tema
+
+    private var aktif: Bool { (s["status"] as? String) == "active" }
+    private var link: String { s["link"] as? String ?? "" }
+    private var periyot: String {
+        let m = s["months"] as? Int ?? 0
+        switch m { case 0: return "Tek seferlik"; case 1: return "Aylık"; case 12: return "Yıllık"; default: return "\(m) Aylık" }
+    }
+
+    var body: some View {
+        HStack(spacing:10) {
+            VStack(alignment:.leading, spacing:3) {
+                Text(s["desc"] as? String ?? "").font(.subheadline.bold()).foregroundStyle(.rvText).lineLimit(1)
+                HStack(spacing:6) {
+                    Text("₺\(String(format:"%.0f", s["amount"] as? Double ?? 0))").font(.caption.bold()).foregroundStyle(tema.c1)
+                    Text("·").foregroundStyle(.rvMut)
+                    Text(periyot).font(.caption).foregroundStyle(.rvMut)
+                    if let pc = s["pay_count"] as? Int, pc > 0 {
+                        Text("· \(pc)x ödendi").font(.caption2).foregroundStyle(.green)
+                    }
+                }
+                if let c = s["customer"] as? String, !c.isEmpty {
+                    Text(c).font(.caption2).foregroundStyle(.rvMut).lineLimit(1)
+                }
+            }.frame(maxWidth:.infinity, alignment:.leading)
+
+            HStack(spacing:6) {
+                Circle().fill(aktif ? Color.green : Color.red).frame(width:7,height:7)
+                Button {
+                    UIPasteboard.general.string = link
+                } label: { Image(systemName:"doc.on.doc").font(.caption).foregroundStyle(.rvMut) }
+                Button {
+                    Task {
+                        bekle = true
+                        _ = await api.hizliSubAksiyon(s["id"] as? String ?? "", aktif ? "cancel" : "activate")
+                        yenile()
+                        bekle = false
+                    }
+                } label: {
+                    if bekle { ProgressView().scaleEffect(0.7) }
+                    else { Image(systemName: aktif ? "xmark.circle" : "checkmark.circle")
+                        .font(.caption).foregroundStyle(aktif ? Color.red : Color.green) }
+                }.disabled(bekle)
+            }
+        }
+        .padding(12).glassEffect(.regular, in:.rect(cornerRadius:14))
+    }
+}
+
+struct ShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
+    }
+    func updateUIViewController(_ vc: UIActivityViewController, context: Context) {}
+}

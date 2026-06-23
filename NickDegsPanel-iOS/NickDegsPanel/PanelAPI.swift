@@ -135,4 +135,17 @@ final class PanelAPI {
     func oturumEkrani(_ o: String) async -> String { await claudeEkran(o) }
     // ── Satın Aldıklarım (işletme sahibi — panel/güvenlik/hush detayları) ──
     func satinAldiklarim() async -> [String:Any] { (await get("/api/panel/satinaldiklarim")) ?? ["ok":false,"mesaj":"Bağlantı hatası"] }
+    // ── Hızlı Ödeme (anlık link & abonelik) ──
+    func hizliOlustur(amount: Double, desc: String, customer: String, months: Int) async -> [String:Any]? {
+        await post("/api/admin/paylink", ["amount":amount,"desc":desc,"customer":customer,"months":months])
+    }
+    func hizliSubs() async -> [[String:Any]] { await getArr("/api/admin/subs") }
+    func hizliSubAksiyon(_ id: String, _ action: String) async -> Bool {
+        (await post("/api/admin/sub-action", ["id":id,"action":action]))?["ok"] as? Bool ?? false
+    }
+    func hizliQRURL(_ link: String) -> URL? {
+        var c = URLComponents(string: host + "/api/admin/qr")!
+        c.queryItems = [URLQueryItem(name:"url",value:link), URLQueryItem(name:"token",value:token)]
+        return c.url
+    }
 }
