@@ -1466,3 +1466,215 @@ struct GitTab: View {
         yukl = false
     }
 }
+
+// MARK: - Meta Reklam Analiz
+
+struct MetaAnalizNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @State private var veri: [String:Any] = [:]
+    @State private var yukl = true
+    @State private var hata = ""
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+
+    private var kampanyalar: [[String:Any]] { veri["kampanyalar"] as? [[String:Any]] ?? [] }
+
+    var body: some View {
+        ScrollView {
+            if yukl {
+                ProgressView("Reklam verisi yükleniyor…").padding(40)
+            } else if !hata.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: "exclamationmark.triangle").font(.largeTitle).foregroundStyle(.orange)
+                    Text(hata).font(.caption).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                }.padding(30)
+            } else {
+                VStack(spacing: 12) {
+                    // Hesap özet kartı
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Hesap Özeti — Bugün").font(.caption.bold()).foregroundStyle(.secondary)
+                        HStack(spacing: 0) {
+                            MetriKutu(ikon: "turkishlirasign.circle", baslik: "Harcama", deger: String(format: "₺%.0f", veri["bugun_harcama"] as? Double ?? 0), renk: .red)
+                            MetriKutu(ikon: "eye", baslik: "Gösterim", deger: fmt(veri["bugun_gosterim"] as? Int ?? 0), renk: .blue)
+                            MetriKutu(ikon: "cursorarrow.click", baslik: "Tıklama", deger: fmt(veri["bugun_tiklama"] as? Int ?? 0), renk: .green)
+                            MetriKutu(ikon: "person.2", baslik: "Erişim", deger: fmt(veri["bugun_erisim"] as? Int ?? 0), renk: .purple)
+                        }
+                        Divider()
+                        HStack {
+                            Label(String(format: "Bakiye: ₺%d", veri["bakiye"] as? Int ?? 0), systemImage: "creditcard.fill").font(.caption).foregroundStyle(.secondary)
+                            Spacer()
+                            Label(String(format: "Toplam: ₺%d", veri["toplam_harcama"] as? Int ?? 0), systemImage: "chart.bar.fill").font(.caption).foregroundStyle(.secondary)
+                        }
+                    }.padding(14).background(.ultraThinMaterial, in: .rect(cornerRadius: 16)).padding(.horizontal)
+
+                    // Kampanya listesi
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Kampanyalar (\(kampanyalar.count))").font(.caption.bold()).foregroundStyle(.secondary).padding(.horizontal)
+                        ForEach(Array(kampanyalar.enumerated()), id: \.offset) { _, k in
+                            KampanyaSatir(k: k)
+                        }
+                    }
+                }.padding(.vertical, 8)
+            }
+        }
+        .navigationTitle("Meta Reklam")
+        .navigationBarTitleDisplayMode(.large)
+        .task { await yukle() }
+        .refreshable { await yukle() }
+    }
+    private func fmt(_ n: Int) -> String {
+        n >= 1_000_000 ? String(format: "%.1fM", Double(n)/1_000_000) :
+        n >= 1_000 ? String(format: "%.1fK", Double(n)/1_000) : "\(n)"
+    }
+    func yukle() async {
+        yukl = true; hata = ""
+        let d = await api.metaAnaliz()
+        if d["ok"] as? Bool == false { hata = d["mesaj"] as? String ?? "Hata" }
+        else { veri = d }
+        yukl = false
+    }
+}
+
+struct MetriKutu: View {
+    let ikon: String; let baslik: String; let deger: String; let renk: Color
+    var body: some View {
+        VStack(spacing: 4) {
+            Image(systemName: ikon).font(.system(size: 18)).foregroundStyle(renk)
+            Text(deger).font(.system(size: 14, weight: .bold))
+            Text(baslik).font(.system(size: 10)).foregroundStyle(.secondary)
+        }.frame(maxWidth: .infinity)
+    }
+}
+
+struct KampanyaSatir: View {
+    let k: [String:Any]
+    @State private var acik = false
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Button { acik.toggle() } label: {
+                HStack(spacing: 10) {
+                    Circle().fill(statusRenk(k["durum"] as? String ?? "")).frame(width: 9, height: 9)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(k["isim"] as? String ?? "").font(.subheadline.bold()).foregroundStyle(.primary).lineLimit(1)
+                        HStack(spacing: 6) {
+                            Text(k["durum"] as? String ?? "").font(.caption2).foregroundStyle(.secondary)
+                            Text("•").foregroundStyle(.tertiary)
+                            Text(String(format: "₺%d/gün", k["gunluk_butce"] as? Int ?? 0)).font(.caption2).foregroundStyle(.secondary)
+                        }
+                    }
+                    Spacer()
+                    Image(systemName: acik ? "chevron.up" : "chevron.down").font(.caption).foregroundStyle(.secondary)
+                }.padding(.horizontal, 14).padding(.vertical, 12)
+            }.buttonStyle(.plain)
+
+            if acik {
+                HStack(spacing: 0) {
+                    MetriKutu(ikon: "turkishlirasign.circle", baslik: "Harcama", deger: String(format: "₺%.2f", k["harcama"] as? Double ?? 0), renk: .red)
+                    MetriKutu(ikon: "eye", baslik: "Gösterim", deger: fmtN(k["gosterim"] as? Int ?? 0), renk: .blue)
+                    MetriKutu(ikon: "cursorarrow.click", baslik: "CTR", deger: String(format: "%.2f%%", k["ctr"] as? Double ?? 0), renk: .green)
+                    MetriKutu(ikon: "turkishlirasign", baslik: "TBM", deger: String(format: "₺%.2f", k["cpc"] as? Double ?? 0), renk: .orange)
+                }.padding(.horizontal, 10).padding(.bottom, 10)
+            }
+        }.background(.ultraThinMaterial, in: .rect(cornerRadius: 12)).padding(.horizontal)
+    }
+    private func fmtN(_ n: Int) -> String {
+        n >= 1_000_000 ? String(format: "%.1fM", Double(n)/1_000_000) :
+        n >= 1_000 ? String(format: "%.1fK", Double(n)/1_000) : "\(n)"
+    }
+    private func statusRenk(_ s: String) -> Color {
+        switch s { case "ACTIVE": return .green; case "PAUSED": return .orange; default: return .gray }
+    }
+}
+
+// MARK: - Satış & Gelir
+
+struct SatisNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @State private var veri: [String:Any] = [:]
+    @State private var yukl = true
+    @State private var hata = ""
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+
+    private var sonOdemeler: [[String:Any]] { veri["son_odemeler"] as? [[String:Any]] ?? [] }
+
+    var body: some View {
+        ScrollView {
+            if yukl {
+                ProgressView("Satış verileri yükleniyor…").padding(40)
+            } else if !hata.isEmpty {
+                VStack(spacing: 10) {
+                    Image(systemName: "exclamationmark.triangle").font(.largeTitle).foregroundStyle(.orange)
+                    Text(hata).font(.caption).foregroundStyle(.secondary)
+                }.padding(30)
+            } else {
+                VStack(spacing: 12) {
+                    // Üye özet
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Üye Durumu").font(.caption.bold()).foregroundStyle(.secondary)
+                        HStack(spacing: 0) {
+                            MetriKutu(ikon: "person.fill.checkmark", baslik: "Aktif", deger: "\(veri["aktif_uye"] as? Int ?? 0)", renk: .green)
+                            MetriKutu(ikon: "person.2.fill", baslik: "Toplam", deger: "\(veri["toplam_uye"] as? Int ?? 0)", renk: .blue)
+                            MetriKutu(ikon: "creditcard.fill", baslik: "Ödeme", deger: "\(veri["toplam_odeme"] as? Int ?? 0)", renk: .purple)
+                        }
+                    }.padding(14).background(.ultraThinMaterial, in: .rect(cornerRadius: 16)).padding(.horizontal)
+
+                    // Gelir özet
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Gelir Özeti").font(.caption.bold()).foregroundStyle(.secondary)
+                        HStack(spacing: 0) {
+                            MetriKutu(ikon: "sun.max.fill", baslik: "Bugün", deger: String(format: "$%.2f", veri["bugun_gelir"] as? Double ?? 0), renk: .yellow)
+                            MetriKutu(ikon: "calendar.badge.checkmark", baslik: "7 Gün", deger: String(format: "$%.2f", veri["yedi_gelir"] as? Double ?? 0), renk: .orange)
+                            MetriKutu(ikon: "chart.line.uptrend.xyaxis", baslik: "30 Gün", deger: String(format: "$%.2f", veri["otuz_gelir"] as? Double ?? 0), renk: .green)
+                        }
+                        HStack {
+                            Label("Bugün \(veri["bugun_odeme"] as? Int ?? 0) işlem", systemImage: "checkmark.circle").font(.caption2).foregroundStyle(.secondary)
+                            Spacer()
+                            Label("7 günde \(veri["yedi_odeme"] as? Int ?? 0) işlem", systemImage: "calendar").font(.caption2).foregroundStyle(.secondary)
+                        }
+                    }.padding(14).background(.ultraThinMaterial, in: .rect(cornerRadius: 16)).padding(.horizontal)
+
+                    // Son ödemeler
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Son Ödemeler").font(.caption.bold()).foregroundStyle(.secondary).padding(.horizontal)
+                        ForEach(Array(sonOdemeler.enumerated()), id: \.offset) { _, o in
+                            OdemeSatir(o: o)
+                        }
+                    }
+                }.padding(.vertical, 8)
+            }
+        }
+        .navigationTitle("Satış & Gelir")
+        .navigationBarTitleDisplayMode(.large)
+        .task { await yukle() }
+        .refreshable { await yukle() }
+    }
+    func yukle() async {
+        yukl = true; hata = ""
+        let d = await api.satisOzet()
+        if d["ok"] as? Bool == false { hata = d["mesaj"] as? String ?? "Hata" }
+        else { veri = d }
+        yukl = false
+    }
+}
+
+struct OdemeSatir: View {
+    let o: [String:Any]
+    var body: some View {
+        HStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(o["email"] as? String ?? "-").font(.subheadline).lineLimit(1)
+                HStack(spacing: 4) {
+                    Text(o["plan"] as? String ?? "").font(.caption2).foregroundStyle(.secondary)
+                    Text("·").foregroundStyle(.tertiary)
+                    Text(o["yontem"] as? String ?? "").font(.caption2).foregroundStyle(.secondary)
+                }
+            }
+            Spacer()
+            VStack(alignment: .trailing, spacing: 2) {
+                Text(String(format: "$%.2f", o["tutar"] as? Double ?? 0)).font(.subheadline.bold()).foregroundStyle(.green)
+                Text(o["tarih"] as? String ?? "").font(.caption2).foregroundStyle(.tertiary)
+            }
+        }.padding(.horizontal, 14).padding(.vertical, 10)
+        .background(.ultraThinMaterial, in: .rect(cornerRadius: 10))
+        .padding(.horizontal)
+    }
+}

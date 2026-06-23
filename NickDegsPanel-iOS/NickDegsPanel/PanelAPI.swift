@@ -125,4 +125,8 @@ final class PanelAPI {
     func servisAksiyon(_ servis: String, _ aksiyon: String) async -> Bool { (await post("/api/panel/servis-aksiyon", ["servis":servis,"aksiyon":aksiyon]))?["ok"] as? Bool ?? false }
     func servisLog(_ servis: String) async -> String { (await get("/api/panel/servis-log", ["s":servis]))?["log"] as? String ?? "" }
     func gitDurum() async -> [String:Any] { (await get("/api/panel/git-durum")) ?? [:] }
+    // ── Meta Reklam Analiz ──
+    func metaAnaliz() async -> [String:Any] { (await get("/api/panel/meta-analiz")) ?? [:] }
+    // ── Satış & Gelir ──
+    func satisOzet() async -> [String:Any] { (await get("/api/panel/satis-ozet")) ?? [:] }
 }
