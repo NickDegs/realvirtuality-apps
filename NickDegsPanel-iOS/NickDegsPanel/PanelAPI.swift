@@ -150,6 +150,19 @@ final class PanelAPI {
     }
     // ── İşletme bilgisi (slug, site_url, sektör) ──
     func bizInfo() async -> [String:Any]? { await get("/api/panel/biz-info") }
+    // ── Seslendir (Piper TTS) ──
+    func seslendirTTS(metin: String, hiz: Double = 1.0) async -> [String:Any]? {
+        await post("/dash/seslendir/tts", ["metin": metin, "hiz": hiz])
+    }
+    // ── AI Görsel (FLUX) ──
+    func gorselUret(prompt: String, kalite: String = "normal") async -> [String:Any]? {
+        await post("/dash/gorsel/uret", ["prompt": prompt, "kalite": kalite])
+    }
+    func gorselOzet() async -> [String:Any] { (await get("/dash/gorsel/ozet")) ?? [:] }
+    // ── Hukuk Bürosu ──
+    func hukukInstances() async -> [[String:Any]] { await getArr("/dash/hukuk/instances") }
+    func hukukDavalar(_ did: String) async -> [[String:Any]] { await getArr("/dash/hukuk/davalar", ["did": did]) }
+    func hukukSureler(_ did: String) async -> [[String:Any]] { await getArr("/dash/hukuk/sureler", ["did": did]) }
     // ── Admin Panel (14-sekme native) ──
     func adminPost(_ yol: String, _ body: [String:Any]) async -> [String:Any]? {
         await post("/dash/aapi/\(yol)", body)

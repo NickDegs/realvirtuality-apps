@@ -77,7 +77,7 @@ let NATIVE_BOLUMLER: Set<String> = [
     "admin","sunucu","iptv","odemeler","uyeler","teslimat","isletme_ekle",
     "ziyaretci","ban","koruma","ulke","asn","ipyonet","adminhub","hediye","demo",
     "medya","kpi","abonelik","kontrol","meta","satis","koordinasyon","satinaldiklarim","hizliodeme",
-    "kisisel","is",
+    "kisisel","is","seslendir","gorsel","hukuk","aistudio","traccar","chat","komuta",
     // İşletme sahibi
     "siparis","stok","randevu","ozet","raporlar","musteriler","erisim","personel",
     "qr","gorevlerim","sitem","ayarlar","kampanya","kanit","destek","baglan",
@@ -170,6 +170,13 @@ struct HedefNative: View {
         case "hizliodeme": HizliOdemeNative()
         case "kisisel": KisiselNative()
         case "is": IsNative()
+        case "seslendir": SeslendirNative()
+        case "gorsel": GorselNative()
+        case "hukuk": HukukNative()
+        case "aistudio": AistudioNative()
+        case "traccar": TraccarNative()
+        case "chat": ChatNative()
+        case "komuta": KomutaNative()
         // ── İşletme Sahibi / Çalışan ──
         case "siparis": IsletmeVeriNative(kind: "orders", baslik: "Siparişler")
         case "stok": IsletmeVeriNative(kind: "menu", baslik: "Menü / Stok")
