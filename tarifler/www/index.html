@@ -729,6 +729,59 @@ body[data-theme="light"] .step-num { box-shadow: 0 3px 10px rgba(255,113,51,0.28
 .restore-btn-main{display:block;width:100%;background:rgba(255,255,255,0.10);border:1.5px solid var(--acc);border-radius:16px;padding:13px 18px;color:var(--acc);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .18s}
 .restore-btn-main:active{opacity:.6}
 
+/* ─── PREMIUM ÖZELLİKLER ─────────────────────────────── */
+.prem-best{position:relative;border:1.5px solid var(--acc);border-radius:18px;margin:6px 12px;background:linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))}
+.prem-best+.prem-product{border-top:none}
+.prem-badge{position:absolute;top:-10px;left:20px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;font-size:10px;font-weight:800;letter-spacing:.5px;padding:3px 10px;border-radius:10px}
+/* Porsiyon */
+.portion-row{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.portion-opt{background:var(--gl-med,rgba(255,255,255,0.08));border:1.5px solid var(--gl-bdr);border-radius:14px;padding:7px 14px;font-size:14px;font-weight:700;color:var(--txt);cursor:pointer;transition:all .15s var(--spring)}
+.portion-opt.active{background:var(--acc);border-color:transparent;color:#fff}
+.portion-opt:active{transform:scale(.92)}
+.portion-locked{width:100%;text-align:left;background:rgba(255,255,255,0.06);border:1.5px dashed var(--gl-bdr);border-radius:14px;padding:11px 14px;font-size:13px;font-weight:600;color:var(--sub);cursor:pointer}
+/* Detay özellik butonları */
+.feat-btn-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.feat-btn{flex:1;min-width:140px;background:rgba(255,255,255,0.08);border:1.5px solid var(--acc);border-radius:16px;padding:13px;font-size:14px;font-weight:700;color:var(--acc);cursor:pointer;font-family:inherit;transition:transform .15s var(--spring)}
+.feat-btn:active{transform:scale(.96)}
+/* Pişirme Modu */
+#cook-ov{position:fixed;inset:0;z-index:400;background:var(--bg-base);display:none;flex-direction:column}
+#cook-ov.open{display:flex}
+#cook-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(var(--st) + 12px) 16px 12px;background:var(--nav-bg);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);border-bottom:1px solid var(--gl-bdr);font-weight:700}
+#cook-body{flex:1;overflow-y:auto;padding:28px 24px;display:flex;flex-direction:column}
+.cook-prog{font-size:14px;font-weight:700;color:var(--sub);text-align:center}
+.cook-bar{height:6px;border-radius:6px;background:var(--dim);margin:12px 0 28px;overflow:hidden}
+.cook-bar-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:6px;transition:width .3s var(--spring)}
+.cook-step-text{font-size:23px;line-height:1.55;color:var(--txt);font-weight:600;flex:1}
+#cook-timer-wrap{margin-top:24px;text-align:center}
+.cook-timer-btn{background:rgba(255,255,255,0.10);border:1.5px solid var(--acc);border-radius:18px;padding:14px 22px;font-size:16px;font-weight:700;color:var(--acc);cursor:pointer;font-family:inherit}
+.cook-timer-btn.cancel{border-color:var(--sub);color:var(--sub);margin-top:12px;display:inline-block}
+.cook-countdown{font-size:54px;font-weight:800;color:var(--acc);font-variant-numeric:tabular-nums}
+.cook-countdown.done{font-size:30px;color:#ff7043}
+#cook-nav{display:flex;gap:12px;padding:14px 20px calc(var(--st) + 16px);background:var(--nav-bg);border-top:1px solid var(--gl-bdr)}
+.cook-nav-btn{background:rgba(255,255,255,0.10);border:none;border-radius:20px;padding:16px;font-size:18px;font-weight:800;color:var(--txt);cursor:pointer;flex:0 0 70px}
+.cook-nav-btn.primary{flex:1;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff}
+.cook-nav-btn[disabled]{opacity:.35}
+.cook-nav-btn:active{transform:scale(.96)}
+/* Menü Planı */
+#plan-ov{position:fixed;inset:0;z-index:300;background:var(--bg-base);display:none;flex-direction:column}
+#plan-ov.open{display:flex}
+#plan-ov-title{flex:1;font-size:16px;font-weight:700;text-align:center}
+#plan-body{flex:1;overflow-y:auto;padding:12px 16px}
+.plan-day{margin-bottom:18px}
+.plan-day-h{font-size:15px;font-weight:800;color:var(--acc);margin-bottom:8px}
+.plan-item{display:flex;align-items:center;gap:12px;padding:8px;border-radius:14px;background:rgba(255,255,255,0.05);margin-bottom:8px;cursor:pointer}
+.plan-item img{width:46px;height:46px;border-radius:10px;object-fit:cover;flex-shrink:0}
+.plan-item span{flex:1;font-size:14px;color:var(--txt)}
+.plan-del{background:none;border:none;color:var(--sub);font-size:15px;cursor:pointer;padding:6px}
+.plan-empty{font-size:13px;color:var(--sub);padding:6px 2px}
+.plan-entry{display:block;width:100%;background:rgba(255,255,255,0.07);border:1.5px solid var(--acc);border-radius:16px;padding:14px;color:var(--acc);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:14px}
+.plan-day-pick{display:flex;align-items:center;justify-content:space-between;width:100%;background:rgba(255,255,255,0.05);border:none;border-radius:14px;padding:14px 16px;font-size:15px;font-weight:600;color:var(--txt);cursor:pointer;margin-bottom:8px;font-family:inherit}
+.plan-day-count{background:var(--acc);color:#fff;font-size:12px;font-weight:800;min-width:22px;height:22px;border-radius:11px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px}
+.plan-view-link{width:100%;background:none;border:none;color:var(--acc);font-size:14px;font-weight:700;padding:12px;cursor:pointer;font-family:inherit;margin-top:4px}
+/* Toast */
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:rgba(20,20,25,0.95);color:#fff;padding:12px 22px;border-radius:22px;font-size:14px;font-weight:600;z-index:500;opacity:0;pointer-events:none;transition:all .25s var(--spring);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
 /* ─── AUTH SHEET ───────────────────────────────────────── */
 #profile-btn.signed-in { color: #4ade80 }
 .auth-login { padding: 20px 20px 8px }
@@ -912,6 +965,41 @@ body[data-theme="light"] .feat-card, body[data-theme="light"] .rcard { border-co
   </div>
   <div id="shop-items-wrap"></div>
 </div>
+
+<!-- Pişirme Modu -->
+<div id="cook-ov">
+  <div id="cook-head">
+    <button class="nav-btn" onclick="closeCookMode()">✕</button>
+    <span>👨‍🍳 <span id="cook-head-title">Cooking Mode</span></span>
+    <span style="width:40px"></span>
+  </div>
+  <div id="cook-body"></div>
+  <div id="cook-nav">
+    <button class="cook-nav-btn" id="cook-prev" onclick="cookNav(-1)">←</button>
+    <button class="cook-nav-btn primary" id="cook-next" onclick="cookNav(1)">→</button>
+  </div>
+</div>
+
+<!-- Haftalık Menü Planı -->
+<div id="plan-ov">
+  <div id="shoplist-head">
+    <button class="nav-btn" onclick="closeMealPlan()">←</button>
+    <span id="plan-ov-title">📅 Haftalık Plan</span>
+    <span style="width:40px"></span>
+  </div>
+  <div id="plan-body"></div>
+</div>
+
+<!-- Gün seçici sheet -->
+<div id="sheet-planday" class="sheet-bg" onclick="if(event.target===this)closeSheet('planday')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="plan-day-title">Add to which day?</div>
+    <div id="plan-day-list"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
 
 <script>
 // ===== TYPOGRAPHY HELPERS =====
@@ -1355,9 +1443,17 @@ const cuisineFlag=area=>{const c=CUISINES.find(x=>x.area===area);return c?c.flag
 const isFav=id=>!!favs[id];
 function saveFav(id,name,thumb,type){
   if(favs[id])delete favs[id];
-  else favs[id]={id,name,thumb,type,ts:Date.now()};
+  else{
+    if(Object.keys(favs).length>=MAX_FREE_FAVS && !hasFeature('unlimitedfavs')){
+      alert(lang==='tr'?`Ücretsiz ${MAX_FREE_FAVS} favori sınırına ulaştın. Sınırsız kaydetmek için Premium ya da "Sınırsız Favori" al.`:`You've reached the ${MAX_FREE_FAVS} free favorites limit. Get Premium or "Unlimited Favorites" to save more.`);
+      openSheet('premium');
+      return false;
+    }
+    favs[id]={id,name,thumb,type,ts:Date.now()};
+  }
   localStorage.setItem('favs2',JSON.stringify(favs));
   _icloudPush();
+  return true;
 }
 
 // ===== iCloud Sync (GİRİŞSİZ — NSUbiquitousKeyValueStore, Apple ID'ye bağlı) =====
@@ -1379,7 +1475,11 @@ async function initICloud(){
   const p=window.Capacitor?.Plugins?.ICloudKV; if(!p)return;
   try{
     p.addListener('icloudChange', ()=>{ if(icloudEnabled()) _icloudPull(); });
-    if(icloudEnabled()){ await _icloudPull(); await _icloudPush(); }
+    if(icloudEnabled()){
+      await _icloudPull(); await _icloudPush();
+      // Menü planını da çek (yerel boşsa uzaktakini al)
+      try{ const r=await p.get({key:'meal_plan'}); if(r&&r.value){ const remote=JSON.parse(r.value); if(!Object.keys(mealPlan).length){ mealPlan=remote; localStorage.setItem('meal_plan',JSON.stringify(mealPlan)); } } }catch(e){}
+    }
   }catch(e){}
 }
 function toggleICloud(){
@@ -1788,9 +1888,10 @@ function showFavs(){
   setSearchWrap(false);
   const list=Object.values(favs).sort((a,b)=>b.ts-a.ts);
   const content=document.getElementById('content');
-  if(!list.length){content.innerHTML=empty('❤️',t('noFavs'));animContent();return}
+  const planBtn=`<button class="plan-entry" onclick="openMealPlan()">📅 ${lang==='tr'?'Haftalık Menü Planı':'Weekly Meal Planner'}${hasFeature('mealplan')?'':' 🔒'}</button>`;
+  if(!list.length){content.innerHTML=planBtn+empty('❤️',t('noFavs'));animContent();return}
   const items=list.map(f=>({id:f.id,rid:f.id.substring(2),name:f.name,thumb:f.thumb,cat:'',area:'',type:f.type||'food'}));
-  content.innerHTML=rgrid(items)+'<div style="height:20px"></div>';
+  content.innerHTML=planBtn+rgrid(items)+'<div style="height:20px"></div>';
   animContent();
   attachImgReveal(content);
   staggerCardsIO();
@@ -1841,6 +1942,8 @@ async function openDetail(id,type){
       return _rawIngs.map((x,i)=>({...x,ing:names[i]}));
     })():_rawIngs;
     const areaDisplay=area?`<span class="dmeta-tag" style="cursor:pointer" onclick="closeDetail();filterArea('${area}')">${cuisineFlag(area)} ${cuisineName(area)}</span>`:'';
+    _detailIngs=ings; _portionMult=1;
+    const TRd=lang==='tr';
     document.getElementById('dbody').innerHTML=`
       <div class="dmeta">
         ${cat?`<span class="dmeta-tag">🏷️ ${cn(cat)}</span>`:''}
@@ -1848,19 +1951,18 @@ async function openDetail(id,type){
         ${alc&&alc!=='Unknown'?`<span class="dmeta-tag">🍸 ${alc}</span>`:''}
       </div>
       <div class="dsec">${t('ingrs')}</div>
-      <ul class="ing-list">${ings.map(x=>{
-        const inList=shopList.some(s=>s.ing===x.ing);
-        return`<li class="ing-item" onclick="toggleIngr(this)">
-          <input type="checkbox" onclick="event.stopPropagation()">
-          <span class="ing-name">${x.ing}</span>
-          ${x.meas?`<span class="ing-meas">${x.meas}</span>`:''}
-          ${isPremium()?`<button class="shop-add-btn${inList?' added':''}" data-ing="${x.ing.replace(/"/g,'&quot;')}" data-meas="${(x.meas||'').replace(/"/g,'&quot;')}" onclick="addToShopList(event,this)">${inList?'✓':t('addToList')}</button>`:''}
-        </li>`;}).join('')}</ul>
+      <div class="portion-row" id="portion-row">${portionRowHTML()}</div>
+      <ul class="ing-list" id="ing-list"></ul>
       <div class="dsec">${t('howto')}</div>
       <div class="instr">${formatInstructions(instr)}</div>
+      <div class="feat-btn-row">
+        <button class="feat-btn" onclick="openCookMode()">👨‍🍳 ${TRd?'Pişirme Modu':'Cooking Mode'}${hasFeature('cookmode')?'':' 🔒'}</button>
+        <button class="feat-btn" onclick="openMealPlanAdd()">📅 ${TRd?'Plana Ekle':'Add to Plan'}${hasFeature('mealplan')?'':' 🔒'}</button>
+      </div>
       ${src?`<div style="margin-top:16px;font-size:12px;color:var(--sub)">${t('source')}: <a href="${src}" target="_blank" style="color:var(--acc)">${src.replace(/^https?:\/\//,'').substring(0,50)}</a></div>`:''}
       ${yt?`<button class="yt-btn" onclick="window.open('${yt}','_blank')">▶ ${t('watchVid')}</button>`:''}
       <div style="height:50px"></div>`;
+    renderIngList();
 
     // Stagger ingredient items + animate steps on scroll
     requestAnimationFrame(()=>{
@@ -1880,6 +1982,174 @@ function toggleIngr(li){
   const cb=li.querySelector('input[type=checkbox]');
   if(cb)cb.checked=!cb.checked;
   li.classList.toggle('checked',cb&&cb.checked);
+}
+
+// ===== PREMIUM ÖZELLİKLERİ: Porsiyon / Pişirme Modu / Menü Planı =====
+var _detailIngs=[], _portionMult=1;
+const _UNI_FRAC={'½':0.5,'¼':0.25,'¾':0.75,'⅓':1/3,'⅔':2/3,'⅛':0.125,'⅜':0.375,'⅝':0.625,'⅞':0.875,'⅙':1/6,'⅚':5/6,'⅕':0.2,'⅖':0.4,'⅗':0.6,'⅘':0.8};
+function _parseQty(s){
+  s=s.trim();
+  let m=s.match(/^(\d+)\s*([½¼¾⅓⅔⅛⅜⅝⅞⅙⅚⅕⅖⅗⅘])/);
+  if(m)return{val:parseInt(m[1])+_UNI_FRAC[m[2]],rest:s.slice(m[0].length)};
+  m=s.match(/^([½¼¾⅓⅔⅛⅜⅝⅞⅙⅚⅕⅖⅗⅘])/);
+  if(m)return{val:_UNI_FRAC[m[1]],rest:s.slice(m[0].length)};
+  m=s.match(/^(\d+)\s+(\d+)\/(\d+)/);
+  if(m)return{val:parseInt(m[1])+parseInt(m[2])/parseInt(m[3]),rest:s.slice(m[0].length)};
+  m=s.match(/^(\d+)\/(\d+)/);
+  if(m)return{val:parseInt(m[1])/parseInt(m[2]),rest:s.slice(m[0].length)};
+  m=s.match(/^(\d+(?:[.,]\d+)?)/);
+  if(m)return{val:parseFloat(m[1].replace(',','.')),rest:s.slice(m[0].length)};
+  return null;
+}
+function _fmtQty(v){
+  if(!isFinite(v))return'';
+  const whole=Math.floor(v+1e-9), frac=v-whole;
+  const map=[[0,''],[0.125,'⅛'],[0.25,'¼'],[1/3,'⅓'],[0.5,'½'],[2/3,'⅔'],[0.75,'¾'],[0.875,'⅞']];
+  let bestSym='',bd=1;
+  for(const[f,sym] of map){const d=Math.abs(frac-f);if(d<bd){bd=d;bestSym=sym;}}
+  if(bd<0.05)return bestSym===''?String(whole):(whole?whole+' ':'')+bestSym;
+  return String(Math.round(v*100)/100);
+}
+function scaleMeasure(meas,mult){
+  if(!meas||mult===1)return meas||'';
+  const p=_parseQty(meas); if(!p)return meas;
+  return _fmtQty(p.val*mult)+p.rest;
+}
+function portionRowHTML(){
+  const TRd=lang==='tr';
+  if(!hasFeature('portions'))
+    return `<button class="portion-locked" onclick="openSheet('premium')">🔒 ${TRd?'Porsiyon Ayarlayıcı — malzemeleri kişiye göre ölçekle':'Portion Scaler — scale by servings'}</button>`;
+  return [0.5,1,2,3,4].map(m=>`<button class="portion-opt${m===_portionMult?' active':''}" onclick="setPortion(${m})">${m===0.5?'½×':m+'×'}</button>`).join('');
+}
+function renderIngList(){
+  const ul=document.getElementById('ing-list'); if(!ul)return;
+  ul.innerHTML=_detailIngs.map(x=>{
+    const inList=shopList.some(s=>s.ing===x.ing);
+    const meas=scaleMeasure(x.meas,_portionMult);
+    return`<li class="ing-item visible" onclick="toggleIngr(this)">
+      <input type="checkbox" onclick="event.stopPropagation()">
+      <span class="ing-name">${x.ing}</span>
+      ${meas?`<span class="ing-meas">${meas}</span>`:''}
+      ${isPremium()?`<button class="shop-add-btn${inList?' added':''}" data-ing="${x.ing.replace(/"/g,'&quot;')}" data-meas="${(meas||'').replace(/"/g,'&quot;')}" onclick="addToShopList(event,this)">${inList?'✓':t('addToList')}</button>`:''}
+    </li>`;}).join('');
+}
+function setPortion(m){
+  if(!hasFeature('portions')){openSheet('premium');return;}
+  _portionMult=m;
+  const pr=document.getElementById('portion-row'); if(pr)pr.innerHTML=portionRowHTML();
+  renderIngList();
+}
+
+// ---- Pişirme Modu (adım adım + zamanlayıcı) ----
+var _cookSteps=[],_cookIdx=0,_cookTimer=null,_cookRemain=0;
+function openCookMode(){
+  if(!hasFeature('cookmode')){openSheet('premium');return;}
+  _cookSteps=[...document.querySelectorAll('#dbody .instr .instr-step')].map(p=>{
+    const sp=p.querySelectorAll('span'); return((sp[1]||sp[0])?.textContent||'').trim();
+  }).filter(Boolean);
+  if(!_cookSteps.length){alert(lang==='tr'?'Bu tarifte adım bulunamadı.':'No steps found.');return;}
+  _cookIdx=0;
+  document.getElementById('cook-head-title').textContent=lang==='tr'?'Pişirme Modu':'Cooking Mode';
+  document.getElementById('cook-ov').classList.add('open');
+  renderCookStep();
+}
+function closeCookMode(){_stopTimer();document.getElementById('cook-ov').classList.remove('open');}
+function _detectMins(txt){
+  let m=txt.match(/(\d+)\s*(hours?|hrs?|saat)/i); if(m)return parseInt(m[1])*60;
+  m=txt.match(/(\d+)\s*(minutes?|mins?|dakika|dk)\b/i); if(m)return parseInt(m[1]);
+  return 0;
+}
+function renderCookStep(){
+  const TRd=lang==='tr', total=_cookSteps.length, txt=_cookSteps[_cookIdx], mins=_detectMins(txt);
+  document.getElementById('cook-body').innerHTML=`
+    <div class="cook-prog">${TRd?'Adım':'Step'} ${_cookIdx+1} / ${total}</div>
+    <div class="cook-bar"><div class="cook-bar-fill" style="width:${(_cookIdx+1)/total*100}%"></div></div>
+    <div class="cook-step-text">${txt}</div>
+    <div id="cook-timer-wrap">${mins?`<button class="cook-timer-btn" onclick="startStepTimer(${mins})">⏱️ ${mins} ${TRd?'dk — zamanlayıcı':'min — timer'}</button>`:''}</div>`;
+  document.getElementById('cook-prev').disabled=_cookIdx===0;
+  document.getElementById('cook-next').textContent=_cookIdx===total-1?(TRd?'Bitir ✓':'Finish ✓'):(TRd?'Sonraki →':'Next →');
+}
+function cookNav(d){
+  _stopTimer();
+  if(d>0&&_cookIdx===_cookSteps.length-1){closeCookMode();return;}
+  _cookIdx=Math.max(0,Math.min(_cookSteps.length-1,_cookIdx+d));
+  renderCookStep();
+}
+function startStepTimer(mins){_stopTimer();_cookRemain=mins*60;_tickTimer();_cookTimer=setInterval(_tickTimer,1000);}
+function _tickTimer(){
+  const w=document.getElementById('cook-timer-wrap'); if(!w)return;
+  if(_cookRemain<=0){
+    _stopTimer();
+    try{navigator.vibrate&&navigator.vibrate([400,150,400,150,400]);}catch(e){}
+    try{const{Haptics}=window.Capacitor?.Plugins||{};Haptics&&Haptics.vibrate();}catch(e){}
+    w.innerHTML=`<div class="cook-countdown done">⏰ ${lang==='tr'?'Süre doldu!':"Time's up!"}</div>`;
+    return;
+  }
+  const mm=Math.floor(_cookRemain/60), ss=_cookRemain%60;
+  w.innerHTML=`<div class="cook-countdown">${mm}:${String(ss).padStart(2,'0')}</div><button class="cook-timer-btn cancel" onclick="_stopTimer();renderCookStep()">${lang==='tr'?'Durdur':'Stop'}</button>`;
+  _cookRemain--;
+}
+function _stopTimer(){if(_cookTimer){clearInterval(_cookTimer);_cookTimer=null;}}
+
+// ---- Haftalık Menü Planı ----
+var mealPlan=JSON.parse(localStorage.getItem('meal_plan')||'{}');
+const PLAN_DAYS=['mon','tue','wed','thu','fri','sat','sun'];
+function _dayFull(d){
+  const tr={mon:'Pazartesi',tue:'Salı',wed:'Çarşamba',thu:'Perşembe',fri:'Cuma',sat:'Cumartesi',sun:'Pazar'};
+  const en={mon:'Monday',tue:'Tuesday',wed:'Wednesday',thu:'Thursday',fri:'Friday',sat:'Saturday',sun:'Sunday'};
+  return(lang==='tr'?tr:en)[d];
+}
+function _savePlan(){
+  localStorage.setItem('meal_plan',JSON.stringify(mealPlan));
+  try{const p=window.Capacitor?.Plugins?.ICloudKV;if(p&&icloudEnabled())p.set({key:'meal_plan',value:JSON.stringify(mealPlan)});}catch(e){}
+}
+function openMealPlanAdd(){
+  if(!hasFeature('mealplan')){openSheet('premium');return;}
+  if(!currentRecipe)return;
+  const r=currentRecipe;
+  const rid=(r._type==='drink'?'d_':'f_')+(r.idDrink||r.idMeal);
+  const name=(document.getElementById('dtitle').textContent||'').replace(/'/g,'’');
+  const thumb=r.strMealThumb||r.strDrinkThumb||'';
+  document.getElementById('plan-day-title').textContent=lang==='tr'?'Hangi güne eklensin?':'Add to which day?';
+  document.getElementById('plan-day-list').innerHTML=PLAN_DAYS.map(d=>
+    `<button class="plan-day-pick" onclick="addToPlan('${d}','${rid}','${name}','${thumb}','${r._type||'food'}')">
+      <span>${_dayFull(d)}</span><span class="plan-day-count">${(mealPlan[d]||[]).length}</span></button>`).join('')
+    + `<button class="plan-view-link" onclick="closeSheet('planday');openMealPlan()">📅 ${lang==='tr'?'Tüm planı gör':'View full plan'}</button>`;
+  openSheet('planday');
+}
+function addToPlan(day,rid,name,thumb,type){
+  mealPlan[day]=mealPlan[day]||[];
+  if(!mealPlan[day].some(x=>x.rid===rid)) mealPlan[day].push({rid,name,thumb,type});
+  _savePlan();
+  closeSheet('planday');
+  const w=document.getElementById('toast');
+  if(w){w.textContent=(lang==='tr'?'Eklendi: ':'Added: ')+_dayFull(day);w.classList.add('show');setTimeout(()=>w.classList.remove('show'),1600);}
+}
+function openMealPlan(){
+  if(!hasFeature('mealplan')){openSheet('premium');return;}
+  document.getElementById('plan-ov-title').textContent=lang==='tr'?'📅 Haftalık Plan':'📅 Weekly Plan';
+  renderMealPlan();
+  document.getElementById('plan-ov').classList.add('open');
+}
+function closeMealPlan(){document.getElementById('plan-ov').classList.remove('open');}
+function renderMealPlan(){
+  const TRd=lang==='tr';
+  document.getElementById('plan-body').innerHTML=PLAN_DAYS.map(d=>{
+    const items=mealPlan[d]||[];
+    return`<div class="plan-day">
+      <div class="plan-day-h">${_dayFull(d)}</div>
+      ${items.length?items.map((x,i)=>`<div class="plan-item" onclick="openDetail('${x.rid.slice(2)}','${x.type}')">
+        <img src="${x.thumb}" loading="lazy"><span>${x.name}</span>
+        <button class="plan-del" onclick="event.stopPropagation();removeFromPlan('${d}',${i})">✕</button></div>`).join('')
+      :`<div class="plan-empty">${TRd?'Boş':'Empty'}</div>`}
+    </div>`;}).join('');
+}
+function removeFromPlan(day,i){ (mealPlan[day]||[]).splice(i,1); _savePlan(); renderMealPlan(); }
+
+// Satın alma sonrası açık ekranı tazele
+function updateFeatureUI(){
+  const pr=document.getElementById('portion-row'); if(pr){pr.innerHTML=portionRowHTML();renderIngList();}
+  if(typeof renderPremiumSheet==='function')renderPremiumSheet();
 }
 
 function closeDetail(){
@@ -1915,6 +2185,8 @@ function openSheet(id){
     ).join('');
   }else if(id==='premium'){
     renderPremiumSheet();
+  }else if(id==='planday'){
+    // içerik openMealPlanAdd() içinde dolduruluyor
   }else{
     document.getElementById('mode-list').innerHTML=[
       {m:'name',icon:'📝',label:t('byName')},
@@ -1990,6 +2262,14 @@ function initTheme(){
 // ===== IAP =====
 const IAP_NOADS='com.nickdegs.tarifler.noads';
 const IAP_PREMIUM='com.nickdegs.tarifler.premium';
+const IAP_PORTIONS='com.nickdegs.tarifler.portions';
+const IAP_COOKMODE='com.nickdegs.tarifler.cookmode';
+const IAP_MEALPLAN='com.nickdegs.tarifler.mealplan';
+const IAP_UNLIMITEDFAVS='com.nickdegs.tarifler.unlimitedfavs';
+const FEATURE_IAP={portions:IAP_PORTIONS,cookmode:IAP_COOKMODE,mealplan:IAP_MEALPLAN,unlimitedfavs:IAP_UNLIMITEDFAVS};
+// Premium her özelliği kapsar; ya da o özelliğin kendi IAP'si alınmışsa açık
+function hasFeature(f){ return ownedIap(IAP_PREMIUM)||ownedIap(FEATURE_IAP[f]); }
+const MAX_FREE_FAVS=15;
 
 function crownTap(){
   if(isPremium())openShopList();
@@ -1999,19 +2279,27 @@ function crownTap(){
 function renderPremiumSheet(){
   // Native'de gerçek StoreKit/Play fiyatını göster (ASC'de ne ayarlanırsa o); web fallback yeni ortalama
   const _storePrice=(id,fb)=>{ try{ const p=window.CdvPurchase?.store?.get?.(id); return p?.pricing?.price || p?.offers?.[0]?.pricingPhases?.[0]?.price || fb; }catch(e){ return fb; } };
+  const TR=lang==='tr';
+  const premium={id:IAP_PREMIUM,name:'👑 Premium',
+     price:_storePrice(IAP_PREMIUM,'$14.99'),
+     desc:TR?'Hepsi bir arada: reklamsız + alışveriş listesi + porsiyon ayarlayıcı + pişirme modu + menü planı + sınırsız favori. En iyi değer.':'Everything: ad-free + shopping list + portion scaler + cooking mode + meal planner + unlimited favorites. Best value.',
+     best:true};
   const products=[
-    {id:IAP_NOADS,
-     name:lang==='tr'?'Reklamsız':'Remove Ads',
-     price:_storePrice(IAP_NOADS,'$4.99'),
-     desc:lang==='tr'?'Tüm banner reklamları kalıcı olarak kaldırır.':'Permanently removes all banner ads from the app.'},
-    {id:IAP_PREMIUM,
-     name:'Premium',
-     price:_storePrice(IAP_PREMIUM,'$9.99'),
-     desc:lang==='tr'?'Alışveriş listesi + reklamsız. Eksiksiz deneyim.':'Shopping list + ad-free. The complete experience.'},
+    {id:IAP_NOADS,name:TR?'Reklamsız':'Remove Ads',price:_storePrice(IAP_NOADS,'$4.99'),
+     desc:TR?'Tüm banner reklamları kalıcı kaldırır + alışveriş listesi.':'Permanently removes all banner ads + shopping list.'},
+    {id:IAP_PORTIONS,name:TR?'Porsiyon Ayarlayıcı':'Portion Scaler',price:_storePrice(IAP_PORTIONS,'$1.99'),
+     desc:TR?'Malzemeleri kişi sayısına göre otomatik ölçekle (½×–4×).':'Auto-scale ingredients by serving size (½×–4×).'},
+    {id:IAP_COOKMODE,name:TR?'Pişirme Modu':'Cooking Mode',price:_storePrice(IAP_COOKMODE,'$2.99'),
+     desc:TR?'Tam ekran adım adım pişirme + dahili zamanlayıcı.':'Full-screen step-by-step cooking with built-in timers.'},
+    {id:IAP_MEALPLAN,name:TR?'Haftalık Menü Planı':'Meal Planner',price:_storePrice(IAP_MEALPLAN,'$2.99'),
+     desc:TR?'Tarifleri haftanın günlerine ata, haftanı planla.':'Assign recipes to days and plan your week.'},
+    {id:IAP_UNLIMITEDFAVS,name:TR?'Sınırsız Favori':'Unlimited Favorites',price:_storePrice(IAP_UNLIMITEDFAVS,'$1.99'),
+     desc:TR?`Ücretsiz ${MAX_FREE_FAVS} favori sınırını kaldır, sınırsız kaydet.`:`Remove the ${MAX_FREE_FAVS}-favorite free limit, save unlimited.`},
   ];
-  document.getElementById('prem-product-list').innerHTML=products.map(p=>`
-    <div class="prem-product">
-      <div class="prem-product-name">${ownedIap(p.id)?'👑 ':''} ${p.name}</div>
+  const card=p=>`
+    <div class="prem-product${p.best?' prem-best':''}">
+      ${p.best?`<div class="prem-badge">${TR?'EN İYİ DEĞER':'BEST VALUE'}</div>`:''}
+      <div class="prem-product-name">${ownedIap(p.id)?'✓ ':''}${p.name}</div>
       <div class="prem-product-desc">${p.desc}</div>
       <div class="prem-product-foot">
         <span class="prem-product-price">${ownedIap(p.id)?(t('owned')||'✓ Owned'):p.price}</span>
@@ -2019,7 +2307,8 @@ function renderPremiumSheet(){
           ${ownedIap(p.id)?(t('owned')||'Owned'):(t('buyNow')||'Buy Now')}
         </button>
       </div>
-    </div>`).join('')
+    </div>`;
+  document.getElementById('prem-product-list').innerHTML=card(premium)+products.map(card).join('')
     + (window.Capacitor?.Plugins?.ICloudKV ? `
     <div class="prem-product" style="cursor:pointer" onclick="toggleICloud()">
       <div class="prem-product-foot" style="margin-bottom:6px">
@@ -2382,17 +2671,16 @@ function openAuthSheet() {
 function initIAP(){
   if(!window.CdvPurchase)return;
   const{store,ProductType,Platform}=window.CdvPurchase;
+  const _allIaps=[IAP_NOADS,IAP_PREMIUM,IAP_PORTIONS,IAP_COOKMODE,IAP_MEALPLAN,IAP_UNLIMITEDFAVS];
   store.register([
-    {type:ProductType.NON_CONSUMABLE,id:IAP_NOADS,platform:Platform.APPLE_APPSTORE},
-    {type:ProductType.NON_CONSUMABLE,id:IAP_PREMIUM,platform:Platform.APPLE_APPSTORE},
-    {type:ProductType.NON_CONSUMABLE,id:IAP_NOADS,platform:Platform.GOOGLE_PLAY},
-    {type:ProductType.NON_CONSUMABLE,id:IAP_PREMIUM,platform:Platform.GOOGLE_PLAY},
+    ..._allIaps.map(id=>({type:ProductType.NON_CONSUMABLE,id,platform:Platform.APPLE_APPSTORE})),
+    ..._allIaps.map(id=>({type:ProductType.NON_CONSUMABLE,id,platform:Platform.GOOGLE_PLAY})),
   ]);
   store.when().approved(p=>{p.verify();}).verified(p=>{
     p.finish();
     grantIap(p.id);
     updateCrownBtn();
-    renderPremiumSheet();
+    if(typeof updateFeatureUI==='function')updateFeatureUI();
     if(isNoAds()){
       const{AdMob}=window.Capacitor?.Plugins||{};
       if(AdMob)AdMob.hideBanner().catch(()=>{});
