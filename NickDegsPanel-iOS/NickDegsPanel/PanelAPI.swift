@@ -132,7 +132,7 @@ final class PanelAPI {
     // ── Tam Koordinasyon ──
     func tamKoordinasyon() async -> [String:Any] { (await get("/api/panel/tam-koordinasyon")) ?? [:] }
     // ── Claude ekran görüntüsü (tek oturum) ──
-    func oturumEkrani(_ o: String) async -> String { claudeEkran(o) }
+    func oturumEkrani(_ o: String) async -> String { await claudeEkran(o) }
     // ── Satın Aldıklarım (işletme sahibi — panel/güvenlik/hush detayları) ──
     func satinAldiklarim() async -> [String:Any] { (await get("/api/panel/satinaldiklarim")) ?? ["ok":false,"mesaj":"Bağlantı hatası"] }
 }
