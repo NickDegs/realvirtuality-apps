@@ -148,6 +148,8 @@ final class PanelAPI {
         c.queryItems = [URLQueryItem(name:"url",value:link), URLQueryItem(name:"token",value:token)]
         return c.url
     }
+    // ── İşletme bilgisi (slug, site_url, sektör) ──
+    func bizInfo() async -> [String:Any]? { await get("/api/panel/biz-info") }
     // ── Admin Panel (14-sekme native) ──
     func adminPost(_ yol: String, _ body: [String:Any]) async -> [String:Any]? {
         await post("/dash/aapi/\(yol)", body)

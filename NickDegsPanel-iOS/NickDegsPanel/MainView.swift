@@ -72,11 +72,16 @@ struct MainView: View {
 }
 
 // Native ekranı olan bölümler (Safari YOK — her şey native SwiftUI)
-let NATIVE_BOLUMLER: Set<String> = ["admin","sunucu","iptv","odemeler","uyeler","teslimat",
-    "siparis","stok","randevu","ozet","raporlar","musteriler",
-    "koruma","ziyaretci","ban","erisim","isletme_ekle","personel",
-    "ulke","asn","ipyonet","adminhub","hediye","demo","medya","kpi","abonelik","kontrol",
-    "meta","satis","koordinasyon","satinaldiklarim","hizliodeme"]
+let NATIVE_BOLUMLER: Set<String> = [
+    // Süper admin
+    "admin","sunucu","iptv","odemeler","uyeler","teslimat","isletme_ekle",
+    "ziyaretci","ban","koruma","ulke","asn","ipyonet","adminhub","hediye","demo",
+    "medya","kpi","abonelik","kontrol","meta","satis","koordinasyon","satinaldiklarim","hizliodeme",
+    "kisisel","is",
+    // İşletme sahibi
+    "siparis","stok","randevu","ozet","raporlar","musteriler","erisim","personel",
+    "qr","gorevlerim","sitem","ayarlar","kampanya","kanit","destek","baglan",
+]
 
 struct GrupView: View {
     let grup: HubGrup
@@ -140,22 +145,16 @@ struct HedefNative: View {
     let kart: HubKart
     var body: some View {
         switch kart.s {
+        // ── Süper Admin ──
         case "kpi": OzetNative()
         case "abonelik": AbonelikNative()
         case "sunucu": SunucuNative()
         case "iptv": IPTVNative()
         case "admin","odemeler","uyeler","teslimat": AdminNative()
-        case "siparis": IsletmeVeriNative(kind: "orders", baslik: "Siparişler")
-        case "stok": IsletmeVeriNative(kind: "menu", baslik: "Menü / Stok")
-        case "randevu": IsletmeVeriNative(kind: "appts", baslik: "Randevular")
-        case "musteriler": IsletmeVeriNative(kind: "appts", baslik: "Müşteriler")
-        case "ozet","raporlar": IsletmeVeriNative(kind: "stats", baslik: "Raporlar")
         case "koruma": GuvenlikNative(tip: "koruma", baslik: "Koruma Durumu")
         case "ziyaretci": GuvenlikNative(tip: "ziyaretci", baslik: "Ziyaretçi Logları")
         case "ban": GuvenlikNative(tip: "ban", baslik: "Engellenen IP")
-        case "erisim": GuvenlikNative(tip: "ziyaretci", baslik: "Erişim Logları")
         case "isletme_ekle": IsletmeEkleNative()
-        case "personel": PersonelNative()
         case "ulke": UlkeNative()
         case "asn": AsnNative()
         case "ipyonet": IPYonetNative()
@@ -169,7 +168,25 @@ struct HedefNative: View {
         case "koordinasyon": KoordinasyonNative()
         case "satinaldiklarim": SatinAldiklarimNative()
         case "hizliodeme": HizliOdemeNative()
-        default: Text("Bu bölüm Safari'de açılır").foregroundStyle(.rvMut)
+        case "kisisel": KisiselNative()
+        case "is": IsNative()
+        // ── İşletme Sahibi / Çalışan ──
+        case "siparis": IsletmeVeriNative(kind: "orders", baslik: "Siparişler")
+        case "stok": IsletmeVeriNative(kind: "menu", baslik: "Menü / Stok")
+        case "randevu": IsletmeVeriNative(kind: "appts", baslik: "Randevular")
+        case "musteriler": IsletmeVeriNative(kind: "appts", baslik: "Müşteriler")
+        case "ozet","raporlar": IsletmeVeriNative(kind: "stats", baslik: "Raporlar")
+        case "erisim": GuvenlikNative(tip: "ziyaretci", baslik: "Erişim Logları")
+        case "personel": PersonelNative()
+        case "qr": QRNative()
+        case "gorevlerim": GorevlerimNative()
+        case "sitem": SitemNative()
+        case "ayarlar": AyarlarNative()
+        case "kampanya": KampanyaNative()
+        case "kanit": KanitNative()
+        case "destek": DestekNative()
+        case "baglan": BaglanNative()
+        default: Text("Yakında…").foregroundStyle(.rvMut).frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }
