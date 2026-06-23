@@ -76,7 +76,7 @@ let NATIVE_BOLUMLER: Set<String> = ["sunucu","iptv","admin","odemeler","uyeler",
     "siparis","stok","randevu","ozet","raporlar","musteriler",
     "koruma","ziyaretci","ban","erisim","isletme_ekle","personel",
     "ulke","asn","ipyonet","adminhub","hediye","demo","medya","kpi","abonelik","kontrol",
-    "meta","satis"]
+    "meta","satis","koordinasyon"]
 
 struct GrupView: View {
     let grup: HubGrup
@@ -166,6 +166,7 @@ struct HedefNative: View {
         case "kontrol": KontrolMerkeziNative()
         case "meta": MetaAnalizNative()
         case "satis": SatisNative()
+        case "koordinasyon": KoordinasyonNative()
         default: Text("Bu bölüm Safari'de açılır").foregroundStyle(.rvMut)
         }
     }

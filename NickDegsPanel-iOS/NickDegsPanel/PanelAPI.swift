@@ -129,4 +129,8 @@ final class PanelAPI {
     func metaAnaliz() async -> [String:Any] { (await get("/api/panel/meta-analiz")) ?? [:] }
     // ── Satış & Gelir ──
     func satisOzet() async -> [String:Any] { (await get("/api/panel/satis-ozet")) ?? [:] }
+    // ── Tam Koordinasyon ──
+    func tamKoordinasyon() async -> [String:Any] { (await get("/api/panel/tam-koordinasyon")) ?? [:] }
+    // ── Claude ekran görüntüsü (tek oturum) ──
+    func oturumEkrani(_ o: String) async -> String { claudeEkran(o) }
 }

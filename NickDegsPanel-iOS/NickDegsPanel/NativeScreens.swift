@@ -1678,3 +1678,267 @@ struct OdemeSatir: View {
         .padding(.horizontal)
     }
 }
+
+// MARK: - Tam Koordinasyon (tüm oturumlar + her iki sunucu)
+
+struct KoordinasyonNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @State private var veri: [String:Any] = [:]
+    @State private var yukl = true
+    @State private var sekme = 0   // 0=Oturumlar 1=Ana Sunucu 2=ND2 3=Özet
+    @State private var komutOturum = ""
+    @State private var komutMetin = ""
+    @State private var komutSonuc = ""
+    @State private var ekranOturum = ""
+    @State private var ekranIcerik = ""
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            Picker("", selection: $sekme) {
+                Text("Oturumlar").tag(0)
+                Text("Ana Sunucu").tag(1)
+                Text("ND2").tag(2)
+                Text("Özet").tag(3)
+            }.pickerStyle(.segmented).padding(.horizontal, 14).padding(.vertical, 8)
+
+            if yukl {
+                Spacer()
+                ProgressView("Tüm sistem sorgulanıyor…\n(sıralı, ~10 sn)").multilineTextAlignment(.center).padding(40)
+                Spacer()
+            } else {
+                ScrollView {
+                    switch sekme {
+                    case 0: OturumlarTab(veri: veri, komutOturum: $komutOturum, komutMetin: $komutMetin, komutSonuc: $komutSonuc, ekranOturum: $ekranOturum, ekranIcerik: $ekranIcerik, api: api)
+                    case 1: AnaSunucuTab(veri: veri)
+                    case 2: ND2Tab(veri: veri)
+                    default: KoorOzetTab(veri: veri)
+                    }
+                }
+            }
+        }
+        .navigationTitle("Tam Koordinasyon")
+        .navigationBarTitleDisplayMode(.large)
+        .task { await yukle() }
+        .refreshable { await yukle() }
+    }
+    func yukle() async {
+        yukl = true
+        veri = await api.tamKoordinasyon()
+        yukl = false
+    }
+}
+
+// MARK: Koordinasyon alt görünümler
+
+struct OturumlarTab: View {
+    let veri: [String:Any]
+    @Binding var komutOturum: String
+    @Binding var komutMetin: String
+    @Binding var komutSonuc: String
+    @Binding var ekranOturum: String
+    @Binding var ekranIcerik: String
+    let api: PanelAPI
+
+    private var oturumlar: [[String:Any]] { veri["oturumlar"] as? [[String:Any]] ?? [] }
+    var body: some View {
+        VStack(spacing: 10) {
+            ForEach(Array(oturumlar.enumerated()), id: \.offset) { _, o in
+                OturumSatirK(o: o, onCmd: { otur in komutOturum = otur },
+                             onEkran: { otur in
+                    Task {
+                        ekranOturum = otur
+                        ekranIcerik = await api.claudeEkran(otur)
+                    }
+                })
+            }
+            // Komut gönder
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Komut Gönder").font(.caption.bold()).foregroundStyle(.secondary)
+                HStack(spacing: 8) {
+                    Text(komutOturum.isEmpty ? "oturum seçin ↑" : komutOturum)
+                        .font(.caption).padding(6).background(.ultraThinMaterial, in: .rect(cornerRadius: 8))
+                    Spacer()
+                }
+                TextField("Komut yaz…", text: $komutMetin).font(.caption).padding(8)
+                    .background(.ultraThinMaterial, in: .rect(cornerRadius: 10))
+                Button {
+                    guard !komutOturum.isEmpty && !komutMetin.isEmpty else { return }
+                    Task {
+                        let ok = await api.claudeCmd(komutOturum, komutMetin)
+                        komutSonuc = ok ? "✓ Gönderildi" : "✗ Hata"
+                        komutMetin = ""
+                    }
+                } label: { Text("Gönder").font(.caption.bold()).frame(maxWidth: .infinity).padding(8)
+                    .background(komutOturum.isEmpty ? Color.secondary.opacity(0.3) : Color.blue, in: .rect(cornerRadius: 10))
+                    .foregroundStyle(.white) }
+                .disabled(komutOturum.isEmpty)
+                if !komutSonuc.isEmpty { Text(komutSonuc).font(.caption).foregroundStyle(.green) }
+            }.padding(12).background(.ultraThinMaterial, in: .rect(cornerRadius: 14)).padding(.horizontal)
+            // Ekran görüntüsü
+            if !ekranIcerik.isEmpty {
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack {
+                        Text("Ekran: \(ekranOturum)").font(.caption.bold()).foregroundStyle(.secondary)
+                        Spacer()
+                        Button("Kapat") { ekranIcerik = "" }.font(.caption).foregroundStyle(.secondary)
+                    }
+                    ScrollView(.vertical) {
+                        Text(ekranIcerik).font(.system(size: 10, design: .monospaced)).foregroundStyle(.primary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }.frame(maxHeight: 200)
+                }.padding(12).background(.ultraThinMaterial, in: .rect(cornerRadius: 14)).padding(.horizontal)
+            }
+        }.padding(.vertical, 8)
+    }
+}
+
+struct OturumSatirK: View {
+    let o: [String:Any]
+    let onCmd: (String) -> Void
+    let onEkran: (String) -> Void
+    private var isim: String { o["isim"] as? String ?? "" }
+    private var aktif: Bool { o["aktif"] as? Bool ?? false }
+    var body: some View {
+        HStack(spacing: 10) {
+            Circle().fill(aktif ? Color.green : Color.red).frame(width: 8, height: 8)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(isim).font(.subheadline.bold())
+                Text(o["rol"] as? String ?? "").font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                if let son = o["son"] as? String, !son.isEmpty {
+                    Text(son).font(.system(size: 9, design: .monospaced)).foregroundStyle(.tertiary).lineLimit(1)
+                }
+            }
+            Spacer()
+            if aktif {
+                HStack(spacing: 6) {
+                    Button { onEkran(isim) } label: {
+                        Image(systemName: "rectangle.on.rectangle").font(.caption2).foregroundStyle(.secondary)
+                    }.buttonStyle(.plain)
+                    Button { onCmd(isim) } label: {
+                        Image(systemName: "chevron.right.square").font(.caption2).foregroundStyle(.blue)
+                    }.buttonStyle(.plain)
+                }
+            }
+        }.padding(.horizontal, 14).padding(.vertical, 9)
+        .background(.ultraThinMaterial, in: .rect(cornerRadius: 12)).padding(.horizontal)
+    }
+}
+
+struct AnaSunucuTab: View {
+    let veri: [String:Any]
+    private var gruplar: [[String:Any]] { veri["ana_sunucu"] as? [[String:Any]] ?? [] }
+    private var kaynak: [String:Any] { veri["ana_kaynak"] as? [String:Any] ?? [:] }
+    var body: some View {
+        VStack(spacing: 10) {
+            // Kaynak özeti
+            HStack(spacing: 0) {
+                MetriKutu(ikon: "memorychip", baslik: "RAM", deger: kaynak["ram"] as? String ?? "?", renk: .blue)
+                MetriKutu(ikon: "internaldrive", baslik: "/", deger: kaynak["disk"] as? String ?? "?", renk: .orange)
+                MetriKutu(ikon: "externaldrive", baslik: "/opt", deger: kaynak["disk_opt"] as? String ?? "?", renk: .purple)
+                MetriKutu(ikon: "cpu", baslik: "Load", deger: kaynak["load"] as? String ?? "?", renk: .green)
+            }.padding(10).background(.ultraThinMaterial, in: .rect(cornerRadius: 14)).padding(.horizontal)
+            // Servis grupları
+            ForEach(Array(gruplar.enumerated()), id: \.offset) { _, g in
+                let servisler = g["servisler"] as? [[String:Any]] ?? []
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(g["grup"] as? String ?? "").font(.caption.bold()).foregroundStyle(.secondary)
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 4) {
+                        ForEach(Array(servisler.enumerated()), id: \.offset) { _, s in
+                            HStack(spacing: 6) {
+                                Circle().fill(servisDurum(s["durum"] as? String ?? "")).frame(width: 7, height: 7)
+                                Text(servisKısa(s["isim"] as? String ?? "")).font(.system(size: 10)).lineLimit(1)
+                            }.frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+                }.padding(10).background(.ultraThinMaterial, in: .rect(cornerRadius: 12)).padding(.horizontal)
+            }
+        }.padding(.vertical, 8)
+    }
+    private func servisDurum(_ d: String) -> Color { d == "active" ? .green : d == "inactive" ? .orange : .red }
+    private func servisKısa(_ s: String) -> String { s.replacingOccurrences(of: ".service", with: "") }
+}
+
+struct ND2Tab: View {
+    let veri: [String:Any]
+    private var nd2: [String:Any] { veri["nd2"] as? [String:Any] ?? [:] }
+    private var containers: [[String:Any]] { nd2["containers"] as? [[String:Any]] ?? [] }
+    var body: some View {
+        VStack(spacing: 10) {
+            let erisim = nd2["erisim"] as? String ?? "?"
+            HStack(spacing: 8) {
+                Circle().fill(erisim == "ok" ? Color.green : Color.red).frame(width: 10, height: 10)
+                Text("NickDegs2 (10.99.0.2)").font(.subheadline.bold())
+                Spacer()
+                Text(erisim == "ok" ? "Bağlı" : "Ulaşılamıyor").font(.caption).foregroundStyle(erisim == "ok" ? .green : .red)
+            }.padding(12).background(.ultraThinMaterial, in: .rect(cornerRadius: 14)).padding(.horizontal)
+
+            if erisim == "ok" {
+                HStack(spacing: 0) {
+                    MetriKutu(ikon: "memorychip", baslik: "RAM", deger: nd2["ram"] as? String ?? "?", renk: .blue)
+                    MetriKutu(ikon: "cpu", baslik: "Load", deger: nd2["load"] as? String ?? "?", renk: .green)
+                    MetriKutu(ikon: "shippingbox", baslik: "Cont.", deger: nd2["container"] as? String ?? "?", renk: .purple)
+                    MetriKutu(ikon: "externaldrive", baslik: "/opt", deger: nd2["disk"] as? String ?? "?", renk: .orange)
+                }.padding(10).background(.ultraThinMaterial, in: .rect(cornerRadius: 14)).padding(.horizontal)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Medya Container'ları").font(.caption.bold()).foregroundStyle(.secondary)
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 5) {
+                        ForEach(Array(containers.enumerated()), id: \.offset) { _, c in
+                            HStack(spacing: 6) {
+                                Circle().fill(nd2ContRenk(c["durum"] as? String ?? "")).frame(width: 7, height: 7)
+                                Text(c["isim"] as? String ?? "").font(.system(size: 10)).lineLimit(1)
+                            }.frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+                }.padding(10).background(.ultraThinMaterial, in: .rect(cornerRadius: 12)).padding(.horizontal)
+            }
+        }.padding(.vertical, 8)
+    }
+    private func nd2ContRenk(_ d: String) -> Color { d.hasPrefix("Up") ? .green : .red }
+}
+
+struct KoorOzetTab: View {
+    let veri: [String:Any]
+    private var odeme: [String:Any] { veri["odeme"] as? [String:Any] ?? [:] }
+    private var meta: [String:Any] { veri["meta"] as? [String:Any] ?? [:] }
+    private var oturumlar: [[String:Any]] { veri["oturumlar"] as? [[String:Any]] ?? [] }
+    private var aktifOturum: Int { oturumlar.filter { $0["aktif"] as? Bool == true }.count }
+    var body: some View {
+        VStack(spacing: 12) {
+            // Oturum özeti
+            HStack(spacing: 0) {
+                MetriKutu(ikon: "terminal.fill", baslik: "Aktif", deger: "\(aktifOturum)/\(oturumlar.count)", renk: .green)
+                MetriKutu(ikon: "person.fill.checkmark", baslik: "Üye", deger: "\(odeme["aktif_uye"] as? Int ?? 0)", renk: .blue)
+                MetriKutu(ikon: "turkishlirasign.circle", baslik: "Bugün", deger: String(format: "$%.2f", odeme["bugun_gelir"] as? Double ?? 0), renk: .orange)
+                MetriKutu(ikon: "megaphone", baslik: "Meta ₺", deger: String(format: "%.0f", meta["harcama"] as? Double ?? 0), renk: .red)
+            }.padding(10).background(.ultraThinMaterial, in: .rect(cornerRadius: 14)).padding(.horizontal)
+
+            // Aktif Claude oturumları listesi
+            let aktifler = oturumlar.filter { $0["aktif"] as? Bool == true }
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Aktif Claude Oturumları (\(aktifler.count))").font(.caption.bold()).foregroundStyle(.secondary)
+                ForEach(Array(aktifler.enumerated()), id: \.offset) { _, o in
+                    HStack(spacing: 8) {
+                        Circle().fill(Color.green).frame(width: 7, height: 7)
+                        Text(o["isim"] as? String ?? "").font(.caption.bold()).foregroundStyle(.primary)
+                        Text(o["rol"] as? String ?? "").font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                    }
+                }
+            }.padding(12).background(.ultraThinMaterial, in: .rect(cornerRadius: 12)).padding(.horizontal)
+
+            // Meta özet
+            if !(meta.isEmpty) {
+                HStack(spacing: 0) {
+                    MetriKutu(ikon: "eye", baslik: "Gösterim", deger: fmtN(meta["gosterim"] as? Int ?? 0), renk: .blue)
+                    MetriKutu(ikon: "cursorarrow.click", baslik: "Tıklama", deger: fmtN(meta["tiklama"] as? Int ?? 0), renk: .green)
+                    MetriKutu(ikon: "turkishlirasign.circle", baslik: "Harcama", deger: String(format: "₺%.0f", meta["harcama"] as? Double ?? 0), renk: .red)
+                }.padding(10).background(.ultraThinMaterial, in: .rect(cornerRadius: 14)).padding(.horizontal)
+            }
+        }.padding(.vertical, 8)
+    }
+    private func fmtN(_ n: Int) -> String {
+        n >= 1_000_000 ? String(format: "%.1fM", Double(n)/1_000_000) :
+        n >= 1_000 ? String(format: "%.1fK", Double(n)/1_000) : "\(n)"
+    }
+}
