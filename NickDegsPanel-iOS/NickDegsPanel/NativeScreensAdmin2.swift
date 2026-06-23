@@ -242,7 +242,7 @@ struct HukukNative: View {
                     // Büro seçici
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
-                            ForEach(instances, id: { $0["id"] as? String ?? "" }) { inst in
+                            ForEach(Array(instances.enumerated()), id: \.offset) { _, inst in
                                 let did = inst["id"] as? String ?? ""
                                 Button {
                                     secilenDid = did
