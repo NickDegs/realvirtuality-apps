@@ -8,7 +8,9 @@ final class Yerel: ObservableObject {
         "tr":"Türkçe","en":"English","de":"Deutsch","fr":"Français","es":"Español","ar":"العربية","ru":"Русский"]
 
     // "" = cihaz dili (otomatik); aksi halde manuel seçim
-    @AppStorage("dil_secim") var secim = "" { didSet { objectWillChange.send() } }
+    @Published var secim: String = UserDefaults.standard.string(forKey: "dil_secim") ?? "" {
+        didSet { UserDefaults.standard.set(secim, forKey: "dil_secim") }
+    }
 
     var aktif: String {
         if !secim.isEmpty, Yerel.diller.contains(secim) { return secim }

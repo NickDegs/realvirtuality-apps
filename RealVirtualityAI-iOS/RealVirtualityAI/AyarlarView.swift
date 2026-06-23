@@ -117,10 +117,12 @@ struct AyarlarView: View {
                 Text("Örnek araç kartı").font(.subheadline.bold()).foregroundStyle(.rvText)
                 Spacer()
             }
-            Text("Hemen Kullan")
-                .font(.subheadline.bold()).foregroundStyle(.white)
-                .frame(maxWidth: .infinity).padding(.vertical, 12)
-                .background(tema.grad, in: .rect(cornerRadius: 13))
+            Button { dismiss() } label: {
+                Text("Hemen Kullan")
+                    .font(.subheadline.bold()).foregroundStyle(.white)
+                    .frame(maxWidth: .infinity).padding(.vertical, 12)
+                    .background(tema.grad, in: .rect(cornerRadius: 13))
+            }
         }
         .padding(16)
         .background(Color.rvCard, in: .rect(cornerRadius: 20))

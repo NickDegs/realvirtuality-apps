@@ -52,9 +52,9 @@ struct ContentView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ust }
-            .sheet(isPresented: $girisAcik) { LoginView() }
-            .sheet(isPresented: $krediAcik) { KrediView() }
-            .sheet(isPresented: $ayarlarAcik) { AyarlarView() }
+            .sheet(isPresented: $girisAcik) { LoginView().environmentObject(api).environmentObject(tema).environmentObject(yerel) }
+            .sheet(isPresented: $krediAcik) { KrediView().environmentObject(api).environmentObject(tema).environmentObject(yerel) }
+            .sheet(isPresented: $ayarlarAcik) { AyarlarView().environmentObject(api).environmentObject(tema).environmentObject(yerel) }
         }
         .tint(tema.c1)
     }
@@ -72,10 +72,11 @@ struct ContentView: View {
     @ToolbarContentBuilder
     var ust: some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
-            HStack(spacing: 7) {
-                Image(systemName: "sparkles")
-                    .foregroundStyle(tema.grad)
-                Text("RealVirtuality").font(.headline.bold()).foregroundStyle(.rvText)
+            Button { ayarlarAcik = true } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "sparkles").foregroundStyle(tema.grad)
+                    Text("RV").font(.headline.bold()).foregroundStyle(.rvText)
+                }
             }
         }
         ToolbarItem(placement: .topBarTrailing) {
