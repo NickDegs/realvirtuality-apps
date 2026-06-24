@@ -638,3 +638,430 @@ struct BizHukukNative: View {
         .padding(14).glassEffect(.regular, in: .rect(cornerRadius: 14))
     }
 }
+
+// MARK: - Müşteri İşletmeleri (master admin — sektöre göre gruplu liste)
+
+struct IsletmeBizItem: Identifiable, Hashable {
+    let id: String   // kod
+    let data: [String:Any]
+    init(_ d: [String:Any]) { self.id = d["kod"] as? String ?? UUID().uuidString; self.data = d }
+    static func == (l: Self, r: Self) -> Bool { l.id == r.id }
+    func hash(into h: inout Hasher) { h.combine(id) }
+}
+
+struct IsletmelerNative: View {
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    @State private var gruplar: [(sek: String, isletmeler: [IsletmeBizItem])] = []
+    @State private var yukleniyor = true
+    @State private var secili: IsletmeBizItem? = nil
+
+    private let sektorSira = ["Restoran","Randevu / Klinik","Hukuk Bürosu","Kurumsal","Genel"]
+
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            if yukleniyor {
+                ProgressView().tint(tema.c1).scaleEffect(1.3)
+            } else if gruplar.isEmpty {
+                VStack(spacing: 14) {
+                    Image(systemName: "storefront").font(.system(size: 44)).foregroundStyle(tema.c2)
+                    Text("Henüz müşteri işletme yok").foregroundStyle(.rvMut)
+                }
+            } else {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 22) {
+                        ForEach(gruplar, id: \.sek) { grup in
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack(spacing: 6) {
+                                    Image(systemName: sektorIkon(grup.sek)).font(.caption.bold()).foregroundStyle(tema.c1)
+                                    Text(grup.sek.uppercased()).font(.caption.bold()).foregroundStyle(.rvMut)
+                                    Spacer()
+                                    Text("\(grup.isletmeler.count)").font(.caption2.bold()).foregroundStyle(tema.c1)
+                                        .padding(.horizontal, 8).padding(.vertical, 3)
+                                        .background(tema.c1.opacity(0.15), in: .capsule)
+                                }
+                                .padding(.horizontal, 4)
+                                ForEach(grup.isletmeler) { item in
+                                    Button { secili = item } label: {
+                                        isletmeSatir(item.data)
+                                    }.buttonStyle(.plain)
+                                }
+                            }
+                        }
+                    }
+                    .padding(16).padding(.bottom, 30)
+                }
+                .refreshable { await yukle() }
+            }
+        }
+        .navigationTitle("Müşteriler")
+        .navigationBarTitleDisplayMode(.large)
+        .task { await yukle() }
+        .navigationDestination(item: $secili) { item in
+            BizDetayView(biz: item.data)
+        }
+    }
+
+    func isletmeSatir(_ biz: [String:Any]) -> some View {
+        let suspended = biz["suspended"] as? Bool ?? false
+        return HStack(spacing: 12) {
+            ZStack {
+                Circle().fill(suspended ? Color.orange.opacity(0.2) : tema.c1.opacity(0.18)).frame(width: 44, height: 44)
+                Image(systemName: suspended ? "pause.circle.fill" : "storefront.fill")
+                    .foregroundStyle(suspended ? .orange : tema.c1).font(.system(size: 20))
+            }
+            VStack(alignment: .leading, spacing: 3) {
+                Text(biz["ad"] as? String ?? "—").font(.subheadline.bold()).foregroundStyle(.rvText)
+                HStack(spacing: 6) {
+                    if let tel = biz["tel"] as? String, !tel.isEmpty {
+                        Text(tel).font(.caption2).foregroundStyle(.rvMut)
+                    }
+                    if suspended {
+                        Text("Askıya Alındı").font(.caption2.bold()).foregroundStyle(.orange)
+                    }
+                }
+            }
+            Spacer()
+            Image(systemName: "chevron.right").font(.caption).foregroundStyle(.rvMut)
+        }
+        .padding(14)
+        .background(Color.rvCard, in: .rect(cornerRadius: 14))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(suspended ? Color.orange.opacity(0.4) : Color.rvLine, lineWidth: 1))
+    }
+
+    func sektorIkon(_ sek: String) -> String {
+        switch sek {
+        case "Restoran": return "fork.knife"
+        case "Randevu / Klinik": return "calendar"
+        case "Hukuk Bürosu": return "building.columns.fill"
+        case "Kurumsal": return "briefcase.fill"
+        default: return "storefront.fill"
+        }
+    }
+
+    func yukle() async {
+        yukleniyor = true; defer { yukleniyor = false }
+        let api = PanelAPI(host: oturum.host, token: oturum.token)
+        guard let d = await api.isletmeler(), let raw = d["gruplar"] as? [String: Any] else { return }
+        var dict: [String: [[String:Any]]] = [:]
+        for (k, v) in raw {
+            if let arr = v as? [[String:Any]] { dict[k] = arr }
+        }
+        gruplar = sektorSira.compactMap { s in
+            guard let arr = dict[s], !arr.isEmpty else { return nil }
+            return (sek: s, isletmeler: arr.map { IsletmeBizItem($0) })
+        }
+        for (k, arr) in dict where !sektorSira.contains(k) && !arr.isEmpty {
+            gruplar.append((sek: k, isletmeler: arr.map { IsletmeBizItem($0) }))
+        }
+    }
+}
+
+// MARK: - İşletme Detay & Yönetim (master admin girişi)
+
+struct BizDetayView: View {
+    let biz: [String:Any]
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    @State private var bizPanelAcik = false
+    @State private var bizToken = ""
+    @State private var bizTokenYukleniyor = false
+    @State private var suspended: Bool
+    @State private var aksiyonMesaj = ""
+    @State private var aksiyonBekle = false
+    @State private var bizVeri: [[String:Any]] = []
+    @State private var veriYukleniyor = true
+
+    init(biz: [String:Any]) {
+        self.biz = biz
+        _suspended = State(initialValue: biz["suspended"] as? Bool ?? false)
+    }
+
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+    private var ad: String { biz["ad"] as? String ?? "İşletme" }
+    private var sektor: String { biz["sektor"] as? String ?? "Genel" }
+    private var tel: String { biz["tel"] as? String ?? "" }
+    private var slug: String { biz["slug"] as? String ?? "" }
+    private var kod: String { biz["kod"] as? String ?? "" }
+    private var kindForSektor: String {
+        switch sektor {
+        case "Randevu / Klinik": return "appts"
+        case "Hukuk Bürosu": return "davalar"
+        default: return "orders"
+        }
+    }
+
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 18) {
+                    // Başlık
+                    HStack(spacing: 14) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 16).fill(tema.c1.opacity(0.2)).frame(width: 60, height: 60)
+                            Image(systemName: "storefront.fill").font(.system(size: 26)).foregroundStyle(tema.grad)
+                        }
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(ad).font(.title3.bold()).foregroundStyle(.rvText)
+                            Text(sektor).font(.caption.bold()).foregroundStyle(tema.c1)
+                            if !tel.isEmpty { Text(tel).font(.caption).foregroundStyle(.rvMut) }
+                        }
+                        Spacer()
+                        if suspended {
+                            Text("Askıya Alındı").font(.caption2.bold()).foregroundStyle(.orange)
+                                .padding(.horizontal, 10).padding(.vertical, 5)
+                                .background(Color.orange.opacity(0.15), in: .capsule)
+                        }
+                    }
+                    .padding(16).glassEffect(.regular, in: .rect(cornerRadius: 18))
+
+                    // Bilgi satırları
+                    if !slug.isEmpty {
+                        bilgiSatir("Panel Adresi", "nickdegs.com/\(slug)", "link")
+                    }
+                    bilgiSatir("Sektör Sistemi", sektor, "building.2.fill")
+                    bilgiSatir("Hesap Kodu", kod, "person.text.rectangle")
+
+                    // Admin aksiyonları
+                    HStack(spacing: 10) {
+                        aksiyon(suspended ? "Aktifleştir" : "Askıya Al",
+                                suspended ? "checkmark.circle.fill" : "pause.circle.fill",
+                                suspended ? Color.green : Color.orange) {
+                            await toggleSuspend()
+                        }
+                        aksiyon("Paneline Gir", "arrow.right.square.fill", tema.c1) {
+                            await panelAc()
+                        }
+                    }
+
+                    if !aksiyonMesaj.isEmpty {
+                        Text(aksiyonMesaj).font(.caption).foregroundStyle(.rvMut)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
+
+                    // Canlı veri önizleme
+                    Text("Son Aktivite").font(.caption.bold()).foregroundStyle(.rvMut).padding(.top, 4)
+                    if veriYukleniyor {
+                        ProgressView().tint(tema.c1).frame(maxWidth: .infinity).padding()
+                    } else if bizVeri.isEmpty {
+                        Text("Kayıt yok").font(.caption).foregroundStyle(.rvMut).frame(maxWidth: .infinity, alignment: .center).padding()
+                    } else {
+                        ForEach(Array(bizVeri.prefix(5).enumerated()), id: \.offset) { _, item in
+                            veriSatir(item)
+                        }
+                    }
+                }
+                .padding(16).padding(.bottom, 40)
+            }
+        }
+        .navigationTitle(ad).navigationBarTitleDisplayMode(.inline)
+        .task { await yukleVeri() }
+        .navigationDestination(isPresented: $bizPanelAcik) {
+            BizPanelInlineView(host: oturum.host, bizToken: bizToken, ad: ad, sektor: sektor)
+        }
+    }
+
+    func bilgiSatir(_ k: String, _ v: String, _ ic: String) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: ic).foregroundStyle(tema.c1).frame(width: 22)
+            Text(k).font(.caption).foregroundStyle(.rvMut)
+            Spacer()
+            Text(v).font(.caption.bold()).foregroundStyle(.rvText).lineLimit(1)
+        }
+        .padding(12).glassEffect(.regular, in: .rect(cornerRadius: 12))
+    }
+
+    @ViewBuilder
+    func aksiyon(_ baslik: String, _ ic: String, _ renk: Color, _ action: @escaping () async -> Void) -> some View {
+        Button {
+            Task { await action() }
+        } label: {
+            VStack(spacing: 6) {
+                Image(systemName: ic).font(.system(size: 22)).foregroundStyle(renk)
+                Text(baslik).font(.caption.bold()).foregroundStyle(.rvText)
+            }
+            .frame(maxWidth: .infinity).padding(.vertical, 14)
+            .glassEffect(.regular, in: .rect(cornerRadius: 14))
+        }
+        .buttonStyle(.plain)
+        .disabled(aksiyonBekle || bizTokenYukleniyor)
+    }
+
+    func veriSatir(_ it: [String:Any]) -> some View {
+        HStack(spacing: 10) {
+            Circle().fill(tema.c1.opacity(0.2)).frame(width: 8, height: 8)
+            Text(it["name"] as? String ?? it["client"] as? String ?? it["aciklama"] as? String ?? "#\(it["id"] ?? "")")
+                .font(.caption).foregroundStyle(.rvText).lineLimit(1)
+            Spacer()
+            if let t = it["total"] { Text("\(t)₺").font(.caption.bold()).foregroundStyle(.green) }
+            else if let ts = it["created"] as? String { Text(ts).font(.system(size: 10)).foregroundStyle(.rvMut) }
+        }
+        .padding(10).background(Color.rvCard, in: .rect(cornerRadius: 10))
+    }
+
+    func toggleSuspend() async {
+        aksiyonBekle = true; defer { aksiyonBekle = false }
+        let yeni = suspended ? "unsuspend" : "suspend"
+        let ok = await api.isletmelerAksiyon(biz: kod, aksiyon: yeni)
+        if ok { suspended.toggle(); aksiyonMesaj = suspended ? "İşletme askıya alındı." : "İşletme aktifleştirildi." }
+        else { aksiyonMesaj = "İşlem başarısız." }
+    }
+
+    func panelAc() async {
+        guard bizToken.isEmpty else { bizPanelAcik = true; return }
+        bizTokenYukleniyor = true; defer { bizTokenYukleniyor = false }
+        if let tok = await api.isletmelerToken(biz: kod) {
+            bizToken = tok; bizPanelAcik = true
+        } else {
+            aksiyonMesaj = "Token alınamadı."
+        }
+    }
+
+    func yukleVeri() async {
+        veriYukleniyor = true; defer { veriYukleniyor = false }
+        guard let tok = await api.isletmelerToken(biz: kod) else { return }
+        let bizApi = PanelAPI(host: oturum.host, token: tok)
+        switch kindForSektor {
+        case "appts":  bizVeri = await bizApi.bizVeri("appts")
+        case "davalar": bizVeri = await bizApi.bizHukukDavalar()
+        default:       bizVeri = await bizApi.bizVeri("orders")
+        }
+    }
+}
+
+// MARK: - İşletme Paneli İçe Gömülü (master admin — biz token ile)
+
+struct BizPanelInlineView: View {
+    let host: String
+    let bizToken: String
+    let ad: String
+    let sektor: String
+    @EnvironmentObject var tema: Tema
+    @State private var gruplar: [HubGrup] = []
+    @State private var yukleniyor = true
+    @State private var hedef: HubKart? = nil
+
+    private var api: PanelAPI { PanelAPI(host: host, token: bizToken) }
+    private var kolonlar: [GridItem] { [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)] }
+
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            if yukleniyor {
+                ProgressView().tint(tema.c1).scaleEffect(1.3)
+            } else {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
+                        ForEach(gruplar) { g in
+                            VStack(alignment: .leading, spacing: 8) {
+                                Label(g.ad, systemImage: g.ikon).font(.caption.bold()).foregroundStyle(.rvMut).padding(.horizontal, 4)
+                                LazyVGrid(columns: kolonlar, spacing: 10) {
+                                    ForEach(g.kartlar) { k in
+                                        Button { hedef = k } label: {
+                                            bizKart(k)
+                                        }.buttonStyle(.plain)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .padding(16).padding(.bottom, 40)
+                }
+            }
+        }
+        .navigationTitle("\(ad) Paneli").navigationBarTitleDisplayMode(.inline)
+        .task { await yukle() }
+        .navigationDestination(item: $hedef) { k in
+            BizPanelSectionView(host: host, bizToken: bizToken, kart: k)
+        }
+    }
+
+    func bizKart(_ k: HubKart) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Image(systemName: k.ic).font(.system(size: 22, weight: .semibold)).foregroundStyle(tema.grad)
+            Text(k.baslik).font(.caption.bold()).foregroundStyle(.rvText).lineLimit(2)
+            Text(k.alt).font(.system(size: 10)).foregroundStyle(.rvMut).lineLimit(1)
+        }
+        .frame(maxWidth: .infinity, minHeight: 90, alignment: .topLeading)
+        .padding(12)
+        .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 16))
+    }
+
+    func yukle() async {
+        yukleniyor = true; defer { yukleniyor = false }
+        guard let url = URL(string: (host.hasPrefix("http") ? host : "https://\(host)") + "/api/panel/hub?t=\(bizToken)") else { return }
+        guard let (d, _) = try? await URLSession.shared.data(from: url) else { return }
+        struct Y: Decodable { let ok: Bool; let gruplar: [HubGrup]? }
+        if let y = try? JSONDecoder().decode(Y.self, from: d), y.ok { gruplar = y.gruplar ?? [] }
+    }
+}
+
+// Sektör paneli içinde bir bölümü izleme (biz token kullanır)
+struct BizPanelSectionView: View {
+    let host: String
+    let bizToken: String
+    let kart: HubKart
+    @EnvironmentObject var tema: Tema
+    @State private var liste: [[String:Any]] = []
+    @State private var yukleniyor = true
+
+    private var api: PanelAPI { PanelAPI(host: host, token: bizToken) }
+
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            if yukleniyor { ProgressView().tint(tema.c1).scaleEffect(1.3) }
+            else if liste.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: kart.ic).font(.system(size: 40)).foregroundStyle(tema.c2)
+                    Text("Kayıt yok").foregroundStyle(.rvMut)
+                }
+            } else {
+                ScrollView {
+                    LazyVStack(spacing: 10) {
+                        ForEach(Array(liste.enumerated()), id: \.offset) { _, it in
+                            satir(it)
+                        }
+                    }.padding(16)
+                }.refreshable { await yukle() }
+            }
+        }
+        .navigationTitle(kart.baslik).navigationBarTitleDisplayMode(.inline)
+        .task { await yukle() }
+    }
+
+    func satir(_ it: [String:Any]) -> some View {
+        VStack(alignment: .leading, spacing: 5) {
+            HStack {
+                Text(it["name"] as? String ?? it["table_no"] as? String
+                     ?? it["client"] as? String ?? it["aciklama"] as? String
+                     ?? "#\(it["id"] ?? "")").font(.subheadline.bold()).foregroundStyle(.rvText)
+                Spacer()
+                if let t = it["total"] { Text("\(t)₺").font(.subheadline.bold()).foregroundStyle(.green) }
+                else if let p = it["price"] { Text("\(p)₺").font(.subheadline.bold()).foregroundStyle(tema.c2) }
+            }
+            if let items = it["items"] as? [[String:Any]] {
+                Text(items.map { "\($0["qty"] ?? 1)× \($0["name"] ?? "")" }.joined(separator: ", "))
+                    .font(.caption2).foregroundStyle(.rvMut).lineLimit(2)
+            } else if let c = it["category"] as? String { Text(c).font(.caption2).foregroundStyle(.rvMut) }
+            if let cr = it["created"] as? String { Text(cr).font(.caption2).foregroundStyle(.rvMut) }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14).glassEffect(.regular, in: .rect(cornerRadius: 14))
+    }
+
+    func yukle() async {
+        yukleniyor = true; defer { yukleniyor = false }
+        switch kart.s {
+        case "siparis": liste = await api.bizVeri("orders")
+        case "stok":    liste = await api.bizVeri("menu")
+        case "randevu","musteriler": liste = await api.bizVeri("appts")
+        case "ozet","raporlar":      liste = await api.bizVeri("stats")
+        case "davalar": liste = await api.bizHukukDavalar()
+        case "sureler": liste = await api.bizHukukSureler()
+        default:        liste = await api.bizVeri(kart.s)
+        }
+    }
+}

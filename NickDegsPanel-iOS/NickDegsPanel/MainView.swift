@@ -71,6 +71,8 @@ let NATIVE_BOLUMLER: Set<String> = [
     "qr","gorevlerim","sitem","ayarlar","kampanya","kanit","destek","baglan",
     // Hukuk sektörü
     "davalar","belgeler","sureler",
+    // Master admin — müşteri işletmeleri
+    "isletmeler",
 ]
 
 struct GrupView: View {
@@ -179,6 +181,7 @@ struct HedefNative: View {
         case "davalar": BizHukukNative(kind: "davalar")
         case "sureler": BizHukukNative(kind: "sureler")
         case "belgeler": BizHukukNative(kind: "belgeler")
+        case "isletmeler": IsletmelerNative()
         default: Text("Yakında…").foregroundStyle(.rvMut).frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
