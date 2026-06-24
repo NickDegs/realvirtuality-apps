@@ -70,7 +70,7 @@ def make_token():
     if _tok_cache[0] and now - _tok_cache[1] < 1500:
         return _tok_cache[0]
     hdr = _b64u(json.dumps({"alg":"ES256","kid":KEY_ID,"typ":"JWT"}, separators=(',',':')))
-    pay = _b64u(json.dumps({"iss":ISSUER_ID,"exp":now+1800,"aud":"appstoreconnect-v1"}, separators=(',',':')))
+    pay = _b64u(json.dumps({"iss":ISSUER_ID,"iat":now,"exp":now+1200,"aud":"appstoreconnect-v1"}, separators=(',',':')))
     msg = f"{hdr}.{pay}".encode()
     sig = _privkey.sign(msg, ec.ECDSA(hashes.SHA256()))
     r, s = decode_dss_signature(sig)

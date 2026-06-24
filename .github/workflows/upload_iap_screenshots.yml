@@ -75,7 +75,7 @@ jobs:
               now = int(time.time())
               if _tok[0] and now - _tok[1] < 1500: return _tok[0]
               h = b64u(json.dumps({"alg":"ES256","kid":KEY_ID,"typ":"JWT"}, separators=(',',':')))
-              p = b64u(json.dumps({"iss":ISSUER_ID,"exp":now+1800,"aud":"appstoreconnect-v1"}, separators=(',',':')))
+              p = b64u(json.dumps({"iss":ISSUER_ID,"iat":now,"exp":now+1200,"aud":"appstoreconnect-v1"}, separators=(',',':')))
               sig = _priv.sign(f"{h}.{p}".encode(), ec.ECDSA(hashes.SHA256()))
               r, s = decode_dss_signature(sig)
               t = f"{h}.{p}.{b64u(r.to_bytes(32,'big')+s.to_bytes(32,'big'))}"
