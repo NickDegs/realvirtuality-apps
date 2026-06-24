@@ -137,9 +137,8 @@ struct RealVirtualityAIApp: App {
 
     // Family Sharing / Ask to Buy onayı / çökme recovery
     private func islemDinle() async {
-        for await result in Transaction.updates {
+        for await result in StoreKit.Transaction.updates {
             if case .verified(let tx) = result {
-                // jwsRepresentation VerificationResult üzerinde, tx (Transaction) üzerinde değil
                 _ = await api.iapDogrula(jws: result.jwsRepresentation)
                 await tx.finish()
             }

@@ -90,7 +90,7 @@ struct NickDegsKurumsalApp: App {
 
     // Uçuş modu / çökme sonrası bitmemiş transaction'ları kurtarır
     private func islemDinle() async {
-        for await result in Transaction.updates {
+        for await result in StoreKit.Transaction.updates {
             if case .verified(let tx) = result {
                 // Zaten provision edilmişse sunucu idempotent döner, sadece finish et
                 _ = await yenidenProvision(jws: result.jwsRepresentation)

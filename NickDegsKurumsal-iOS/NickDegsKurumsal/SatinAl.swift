@@ -27,7 +27,7 @@ final class Magaza: ObservableObject {
 
     // Satın al → doğrulanmış işlemin imzalı JWS'ini döndür
     // tx.finish() ÇAĞIRMA — provision başarılı olunca çağıran finish() çağırır
-    func satinAl(_ p: Product) async -> (jws: String?, tx: Transaction?, hata: String?) {
+    func satinAl(_ p: Product) async -> (jws: String?, tx: StoreKit.Transaction?, hata: String?) {
         do {
             switch try await p.purchase() {
             case .success(let v):
