@@ -153,7 +153,7 @@ def get_edit_version(app_id):
                  "PENDING_APPLE_RELEASE","PROCESSING_FOR_APP_STORE"}
 
     d, code = api_get(f"/v1/apps/{app_id}/appStoreVersions",
-                      "filter[platform]=IOS&sort=-createdDate&limit=5")
+                      "filter[platform]=IOS&limit=5")
     if "_err" in d:
         print(f"  ⚠ versions API {code}: {d.get('_body','')[:100]}")
     versions = d.get("data", [])

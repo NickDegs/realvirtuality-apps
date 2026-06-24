@@ -216,7 +216,7 @@ jobs:
 
           def get_versions(app_id):
               d, _ = GET(f"/v1/apps/{app_id}/appStoreVersions",
-                         "filter[platform]=IOS&sort=-createdDate&limit=5")
+                         "filter[platform]=IOS&limit=5")
               return d.get("data", [])
 
           # ── Ana işlem ────────────────────────────────────────────────────
