@@ -1,4 +1,5 @@
 import SwiftUI
+import StoreKit
 
 // MARK: - Marka renkleri (Dark + Light adaptif)
 extension Color {
@@ -83,6 +84,29 @@ struct NickDegsKurumsalApp: App {
                 .environment(\.layoutDirection, yerel.yon)
                 .preferredColorScheme(tema.renkSemasi)
                 .tint(tema.c1)
+                .task { await islemDinle() }
         }
+    }
+
+    // Uçuş modu / çökme sonrası bitmemiş transaction'ları kurtarır
+    private func islemDinle() async {
+        for await result in Transaction.updates {
+            if case .verified(let tx) = result {
+                // Zaten provision edilmişse sunucu idempotent döner, sadece finish et
+                _ = await yenidenProvision(tx)
+                await tx.finish()
+            }
+        }
+    }
+
+    private func yenidenProvision(_ tx: Transaction) async -> Bool {
+        guard let url = URL(string: "https://nickdegs.com/api/iap/provision") else { return false }
+        var r = URLRequest(url: url); r.httpMethod = "POST"; r.timeoutInterval = 60
+        r.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        // ad boş göndeririz; sunucu önceki kaydı varsa adı kullanmadan döner
+        r.httpBody = try? JSONSerialization.data(withJSONObject: ["signedTransaction": tx.jwsRepresentation, "ad": ""])
+        guard let (d, _) = try? await URLSession.shared.data(for: r),
+              let j = try? JSONSerialization.jsonObject(with: d) as? [String: Any] else { return false }
+        return j["ok"] as? Bool == true
     }
 }

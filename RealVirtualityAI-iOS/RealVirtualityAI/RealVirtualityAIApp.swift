@@ -1,4 +1,5 @@
 import SwiftUI
+import StoreKit
 
 // MARK: - Marka renkleri (Dark + Light uyumlu / adaptif)
 extension Color {
@@ -130,6 +131,18 @@ struct RealVirtualityAIApp: App {
                 .preferredColorScheme(tema.renkSemasi)
                 .tint(tema.c1)
                 .task { await api.durumYukle() }
+                .task { await islemDinle() }
+        }
+    }
+
+    // Family Sharing / Ask to Buy onayı / çökme recovery
+    private func islemDinle() async {
+        for await result in Transaction.updates {
+            if case .verified(let tx) = result {
+                // Sunucuya JWS gönder (kredi yükle, idempotent)
+                _ = await api.iapDogrula(jws: tx.jwsRepresentation)
+                await tx.finish()
+            }
         }
     }
 }

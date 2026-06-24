@@ -26,18 +26,20 @@ final class Magaza: ObservableObject {
     func urun(_ id: String) -> Product? { urunler.first { $0.id == id } }
 
     // Satın al → doğrulanmış işlemin imzalı JWS'ini döndür
-    func satinAl(_ p: Product) async -> (jws: String?, hata: String?) {
+    // tx.finish() ÇAĞIRMA — provision başarılı olunca çağıran finish() çağırır
+    func satinAl(_ p: Product) async -> (jws: String?, tx: Transaction?, hata: String?) {
         do {
             switch try await p.purchase() {
             case .success(let v):
-                let jws = v.jwsRepresentation
-                if case .verified(let t) = v { await t.finish() }
-                return (jws, nil)
-            case .userCancelled: return (nil, "iptal")
-            case .pending: return (nil, "Onay bekleniyor")
-            @unknown default: return (nil, "Bilinmeyen durum")
+                if case .verified(let t) = v {
+                    return (v.jwsRepresentation, t, nil)
+                }
+                return (nil, nil, "Satın alma doğrulanamadı")
+            case .userCancelled: return (nil, nil, "iptal")
+            case .pending: return (nil, nil, "Onay bekleniyor")
+            @unknown default: return (nil, nil, "Bilinmeyen durum")
             }
-        } catch { return (nil, error.localizedDescription) }
+        } catch { return (nil, nil, error.localizedDescription) }
     }
 
     // Restore Purchases — App Store'dan mevcut abonelikleri yeniden çek
@@ -218,12 +220,17 @@ struct SatinAlView: View {
     func satinAl() async {
         guard let p = secili else { return }
         hata = ""; bekle = true; defer { bekle = false }
-        let (jws, h) = await magaza.satinAl(p)
+        let (jws, tx, h) = await magaza.satinAl(p)
         if let h = h { if h != "iptal" { hata = h }; return }
         guard let jws = jws else { hata = "Satın alma doğrulanamadı"; return }
-        let sektor = urun.g
-        let r = await magaza.provision(jws: jws, ad: isletmeAd, sektor: sektor)
-        if r["ok"] as? Bool == true { sonuc = r }
-        else { hata = (r["err"] as? String) ?? "Kurulum yapılamadı — abonelik aktif, destek ile iletişime geç." }
+        let r = await magaza.provision(jws: jws, ad: isletmeAd, sektor: urun.g)
+        if r["ok"] as? Bool == true {
+            // Provision başarılı → şimdi finish()
+            if let tx = tx { await tx.finish() }
+            sonuc = r
+        } else {
+            // Provision başarısız — transaction bitmedi, Apple yeniden deneyecek
+            hata = (r["err"] as? String) ?? "Kurulum yapılamadı — abonelik aktif, destek ile iletişime geç."
+        }
     }
 }
