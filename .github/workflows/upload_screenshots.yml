@@ -1,0 +1,58 @@
+name: Upload App Store Screenshots
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_target:
+        description: 'Hangi app (all/nickdegs-panel/nickdegs-business/realvirtuality-ai)'
+        required: false
+        default: 'all'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  upload-screenshots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Python bağımlılıkları
+        run: pip install Pillow cryptography
+
+      - name: Screenshot'ları üret
+        run: |
+          mkdir -p screenshots
+          python3 scripts/gen_screenshots.py --app "${{ github.event.inputs.app_target || 'all' }}" --out screenshots
+          echo "--- Üretilen dosyalar ---"
+          find screenshots -name "*.png" | wc -l
+
+      - name: ASC'ye yükle
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8_BASE64 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          SS_DIR: screenshots
+          APP_TARGET: ${{ github.event.inputs.app_target || 'all' }}
+        run: |
+          # Base64 kodlu key'i decode et (CI'da base64 olarak saklanmış olabilir)
+          if echo "$ASC_KEY_P8" | grep -q "^LS0t"; then
+            # Base64 kodlu
+            export ASC_KEY_P8=$(echo "$ASC_KEY_P8" | base64 -d)
+          fi
+          python3 scripts/upload_screenshots.py
+
+      # Yedek: APPLE_ prefix'li secrets ile dene
+      - name: ASC'ye yükle (yedek key)
+        if: failure()
+        env:
+          ASC_KEY_P8: ${{ secrets.APPLE_ASC_API_KEY }}
+          ASC_KEY_ID: ${{ secrets.APPLE_ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.APPLE_ASC_ISSUER_ID }}
+          SS_DIR: screenshots
+          APP_TARGET: ${{ github.event.inputs.app_target || 'all' }}
+        run: |
+          if echo "$ASC_KEY_P8" | grep -q "^LS0t"; then
+            export ASC_KEY_P8=$(echo "$ASC_KEY_P8" | base64 -d)
+          fi
+          python3 scripts/upload_screenshots.py
