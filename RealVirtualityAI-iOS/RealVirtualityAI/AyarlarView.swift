@@ -55,7 +55,7 @@ struct AyarlarView: View {
                     }
                     // Gizlilik & Kullanım Koşulları
                     HStack(spacing: 16) {
-                        Link(yerel.p("gizlilikPolitikasi"), destination: URL(string: "https://nickdegs.com/gizlilik")!)
+                        Link(yerel.p("gizlilikPolitikasi"), destination: URL(string: "https://nickdegs.com/legal/privacy")!)
                             .font(.caption).foregroundStyle(tema.c1)
                         Text("·").foregroundStyle(.rvMut).font(.caption)
                         Link(yerel.p("kullanımKosullari"), destination: URL(string: "https://nickdegs.com/kosullar")!)

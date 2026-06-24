@@ -190,7 +190,7 @@ struct AyarlarNative: View {
                     Divider().padding(.horizontal)
 
                     HStack(spacing: 16) {
-                        Link("Gizlilik Politikası", destination: URL(string: "https://nickdegs.com/gizlilik")!)
+                        Link("Gizlilik Politikası", destination: URL(string: "https://nickdegs.com/legal/privacy")!)
                             .font(.caption).foregroundStyle(.purple)
                         Text("·").foregroundStyle(.secondary).font(.caption)
                         Link("Kullanım Koşulları", destination: URL(string: "https://nickdegs.com/kosullar")!)
