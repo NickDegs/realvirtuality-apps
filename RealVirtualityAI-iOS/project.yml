@@ -26,3 +26,13 @@ targets:
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         ITSAppUsesNonExemptEncryption: false
+  RealVirtualityAIUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources: [RealVirtualityAIUITests]
+    settings:
+      base:
+        TARGETED_DEVICE_FAMILY: "1"
+    dependencies:
+      - target: RealVirtualityAI

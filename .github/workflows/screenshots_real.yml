@@ -1,0 +1,561 @@
+name: Real Screenshots — Simulator + FLUX + ASC
+
+on:
+  workflow_dispatch:
+    inputs:
+      apps:
+        description: 'Uygulamalar (all/rv/business/panel)'
+        default: 'all'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  # ─── macOS: Simulator'da gerçek ekran görüntüleri ─────────────────────────
+  simulator-screenshots:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - app: rv
+            dir: RealVirtualityAI-iOS
+            target: RealVirtualityAI
+            test_target: RealVirtualityAIUITests
+            bundle: com.nickdegs.realvirtualityai
+          - app: business
+            dir: NickDegsKurumsal-iOS
+            target: NickDegsBusiness
+            test_target: NickDegsBusinessUITests
+            bundle: com.nickdegs.business
+          - app: panel
+            dir: NickDegsPanel-iOS
+            target: NickDegsPanel
+            test_target: NickDegsPanelUITests
+            bundle: com.nickdegs.dashboard
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Xcode seç (en güncel)
+        run: |
+          BEST=$(ls /Applications/ | grep -E "^Xcode_[0-9]" | sort -V | tail -1)
+          if [ -n "$BEST" ]; then
+            sudo xcode-select -s "/Applications/$BEST/Contents/Developer"
+          fi
+          xcodebuild -version
+
+      - name: XcodeGen
+        working-directory: ${{ matrix.dir }}
+        run: |
+          brew install xcodegen --quiet 2>/dev/null || true
+          xcodegen generate
+
+      - name: iPhone 16 Pro Max Simulator'u başlat
+        run: |
+          # iPhone 16 Pro Max UDID bul
+          UDID=$(xcrun simctl list devices available --json | python3 -c "
+          import json,sys
+          d=json.load(sys.stdin)
+          for runtime,devs in d['devices'].items():
+              for dev in devs:
+                  if 'iPhone 16 Pro Max' in dev.get('name','') and dev.get('isAvailable'):
+                      print(dev['udid']); exit()
+          # Fallback: en yeni iPhone
+          for runtime,devs in sorted(d['devices'].items(), reverse=True):
+              for dev in devs:
+                  if 'iPhone' in dev.get('name','') and dev.get('isAvailable'):
+                      print(dev['udid']); exit()
+          ")
+          echo "SIMULATOR_UDID=$UDID" >> $GITHUB_ENV
+          xcrun simctl boot "$UDID" 2>/dev/null || true
+          # Simulator'un tamamen açılmasını bekle
+          xcrun simctl bootstatus "$UDID" -b
+
+      - name: Build (Simulator için)
+        working-directory: ${{ matrix.dir }}
+        run: |
+          xcodebuild build \
+            -scheme "${{ matrix.target }}" \
+            -destination "id=${{ env.SIMULATOR_UDID }}" \
+            -derivedDataPath /tmp/DerivedData/${{ matrix.app }} \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO \
+            -quiet 2>&1 | tail -20
+
+      - name: App'i yükle ve UI testleri çalıştır
+        working-directory: ${{ matrix.dir }}
+        run: |
+          RESULT_DIR=/tmp/ss_results/${{ matrix.app }}
+          mkdir -p "$RESULT_DIR"
+
+          xcodebuild test \
+            -scheme "${{ matrix.target }}" \
+            -destination "id=${{ env.SIMULATOR_UDID }}" \
+            -derivedDataPath /tmp/DerivedData/${{ matrix.app }} \
+            -testPlan "" \
+            -only-testing:"${{ matrix.test_target }}/ScreenshotTests/testAppScreenshots" \
+            -resultBundlePath "$RESULT_DIR/test.xcresult" \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO \
+            -quiet 2>&1 | tail -30 || true
+
+          echo "Test tamamlandı, xcresult: $RESULT_DIR/test.xcresult"
+
+      - name: Screenshots'ları xcresult'tan çıkar
+        run: |
+          RESULT_DIR=/tmp/ss_results/${{ matrix.app }}
+          OUT_DIR=/tmp/ss_raw/${{ matrix.app }}
+          mkdir -p "$OUT_DIR"
+
+          xcresult="$RESULT_DIR/test.xcresult"
+          if [ ! -d "$xcresult" ]; then
+            echo "xcresult bulunamadı, fallback simctl screenshot"
+            xcrun simctl io "${{ env.SIMULATOR_UDID }}" screenshot "$OUT_DIR/01_fallback.png" 2>/dev/null || true
+            exit 0
+          fi
+
+          # Attachment'ları JSON ile listele ve PNG olarak kaydet
+          python3 - "$xcresult" "$OUT_DIR" << 'PYEOF'
+          import subprocess, json, sys, os, base64
+          xcresult, outdir = sys.argv[1], sys.argv[2]
+
+          # Attachment ID'lerini bul
+          try:
+              raw = subprocess.check_output(
+                  ["xcrun", "xcresulttool", "get", "--path", xcresult, "--format", "json"],
+                  timeout=60
+              )
+              data = json.loads(raw)
+          except Exception as e:
+              print(f"xcresulttool hata: {e}")
+              sys.exit(0)
+
+          # Recursive attachment bul
+          attachments = []
+          def find_attachments(obj, depth=0):
+              if depth > 10: return
+              if isinstance(obj, dict):
+                  if obj.get("_type", {}).get("_name") == "ActionTestAttachment":
+                      name = obj.get("name", {}).get("_value", "screen")
+                      ident = obj.get("payloadRef", {}).get("id", {}).get("_value", "")
+                      if ident:
+                          attachments.append((name, ident))
+                  for v in obj.values():
+                      find_attachments(v, depth+1)
+              elif isinstance(obj, list):
+                  for v in obj:
+                      find_attachments(v, depth+1)
+
+          find_attachments(data)
+          print(f"Bulunan attachment: {len(attachments)}")
+
+          for i, (name, ident) in enumerate(attachments):
+              try:
+                  img_data = subprocess.check_output(
+                      ["xcrun", "xcresulttool", "get", "--path", xcresult, "--id", ident],
+                      timeout=30
+                  )
+                  fname = f"{name}.png" if not name.endswith(".png") else name
+                  out_path = os.path.join(outdir, fname)
+                  with open(out_path, "wb") as f:
+                      f.write(img_data)
+                  print(f"  ✅ {fname} ({len(img_data)} bytes)")
+              except Exception as e:
+                  print(f"  ⚠ {name}: {e}")
+          PYEOF
+
+          # Fallback: DerivedData içindeki PNG dosyaları
+          if [ -z "$(ls -A $OUT_DIR 2>/dev/null)" ]; then
+            echo "Attachment bulunamadı, DerivedData PNG aranıyor..."
+            find /tmp/DerivedData/${{ matrix.app }} -name "*.png" -newer /tmp/DerivedData/${{ matrix.app }}/Build -type f 2>/dev/null | head -10 | while read f; do
+              cp "$f" "$OUT_DIR/$(basename $f)"
+            done
+          fi
+
+          ls -la "$OUT_DIR/"
+
+      - name: Artifact yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw-screenshots-${{ matrix.app }}
+          path: /tmp/ss_raw/${{ matrix.app }}/
+          retention-days: 1
+
+  # ─── Ubuntu: FLUX ile cilala + ASC'ye yükle ───────────────────────────────
+  flux-composite-upload:
+    needs: simulator-screenshots
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Python bağımlılıkları
+        run: pip install Pillow requests cryptography
+
+      - name: Tüm screenshot artifact'larını indir
+        uses: actions/download-artifact@v4
+        with:
+          pattern: raw-screenshots-*
+          path: /tmp/raw_ss/
+          merge-multiple: false
+
+      - name: Screenshot'ları listele
+        run: find /tmp/raw_ss -name "*.png" | sort
+
+      - name: FLUX backgrounds üret + composite
+        env:
+          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+        run: |
+          mkdir -p /tmp/final_ss
+          python3 - << 'PYEOF'
+          import os, sys, time, requests, base64, struct, json
+          from pathlib import Path
+          from PIL import Image, ImageDraw, ImageFont, ImageFilter
+
+          HF_TOKEN = os.environ.get("HUGGINGFACE_TOKEN", "")
+          RAW_DIR  = Path("/tmp/raw_ss")
+          OUT_DIR  = Path("/tmp/final_ss")
+          OUT_DIR.mkdir(exist_ok=True)
+
+          FONT_BOLD = "/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf"
+          FONT_REG  = "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf"
+
+          # Hedef çıktı boyutları (App Store)
+          SIZES = {"6.9": (1320, 2868), "6.5": (1242, 2688)}
+
+          # App config
+          APPS = {
+              "rv": {
+                  "name": "RealVirtuality AI",
+                  "accent": (124, 92, 255),   # rvViolet
+                  "accent2": (34, 211, 238),   # rvCyan
+                  "bg": (10, 11, 20),           # rvBg dark
+                  "flux_prompt": "dark cosmic space background with purple violet nebula glow, cyan light particles, premium gradient, no text, abstract, ultra detailed",
+                  "captions": {
+                      "01_ana_ekran":    {"tr": "Yapay Zeka ile Yaratın",        "en": "Create with AI"},
+                      "02_kategoriler":  {"tr": "Her Araç Elinizin Altında",     "en": "Every AI Tool At Hand"},
+                      "03_arac_detay":   {"tr": "Güçlü AI Araçları",             "en": "Powerful AI Tools"},
+                      "04_kredi_iap":    {"tr": "Kredi Satın Alın",              "en": "Get Credits"},
+                      "05_ayarlar":      {"tr": "Kişiselleştirin",               "en": "Personalize"},
+                      "06_ana_tam":      {"tr": "Tam Deneyim",                   "en": "Full Experience"},
+                  }
+              },
+              "business": {
+                  "name": "NickDegs Business",
+                  "accent": (74, 134, 255),    # #4A86FF
+                  "accent2": (255, 180, 60),   # #FFB43C
+                  "bg": (8, 12, 22),
+                  "flux_prompt": "dark navy blue professional business background, golden amber gradient accents, premium bokeh, no text, abstract luxury",
+                  "captions": {
+                      "01_isletme_katalog": {"tr": "İşletmenizi Büyütün",         "en": "Grow Your Business"},
+                      "02_katalog_scroll":  {"tr": "Her Sektöre Çözüm",           "en": "Solutions for Every Sector"},
+                      "03_urun_detay":      {"tr": "Detaylı Ürün Bilgisi",        "en": "Detailed Product Info"},
+                      "04_bireysel":        {"tr": "Bireysel Hizmetler",          "en": "Personal Services"},
+                      "05_dijital":         {"tr": "Dijital Çözümler",            "en": "Digital Solutions"},
+                      "06_hesabim_abonelik":{"tr": "Abonelik Yönetimi",           "en": "Subscription Management"},
+                  }
+              },
+              "panel": {
+                  "name": "NickDegs Dashboard",
+                  "accent": (41, 121, 216),
+                  "accent2": (100, 200, 255),
+                  "bg": (7, 10, 20),
+                  "flux_prompt": "dark blue server data center background, glowing network nodes, premium digital infrastructure, no text, abstract professional",
+                  "captions": {
+                      "01_login":          {"tr": "Güvenli Giriş",                "en": "Secure Login"},
+                      "02_login_form":     {"tr": "Hızlı Erişim",                 "en": "Quick Access"},
+                      "03_advanced_login": {"tr": "Gelişmiş Yönetim",             "en": "Advanced Management"},
+                      "04_state":          {"tr": "Anlık Durum",                  "en": "Live Status"},
+                      "05_hub_or_error":   {"tr": "Tam Kontrol",                  "en": "Full Control"},
+                  }
+              }
+          }
+
+          def load_font(size, bold=True):
+              try: return ImageFont.truetype(FONT_BOLD if bold else FONT_REG, size)
+              except: return ImageFont.load_default()
+
+          def generate_flux_bg(prompt, w, h, token):
+              """HuggingFace FLUX.1-schnell ile arka plan üret."""
+              if not token:
+                  print("  ⚠ HF_TOKEN yok, gradient kullanılıyor")
+                  return None
+              url = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell"
+              headers = {"Authorization": f"Bearer {token}"}
+              payload = {
+                  "inputs": prompt,
+                  "parameters": {
+                      "width": min(w, 1024),
+                      "height": min(h, 1024),
+                      "num_inference_steps": 4,
+                      "guidance_scale": 0.0
+                  }
+              }
+              try:
+                  r = requests.post(url, headers=headers, json=payload, timeout=120)
+                  if r.status_code == 200:
+                      return r.content  # PNG bytes
+                  print(f"  FLUX HTTP {r.status_code}: {r.text[:100]}")
+              except Exception as e:
+                  print(f"  FLUX hata: {e}")
+              return None
+
+          def make_gradient_bg(w, h, c1, c2, c3):
+              img = Image.new("RGB", (w, h))
+              draw = ImageDraw.Draw(img)
+              for y in range(h):
+                  t = y / h
+                  if t < 0.5:
+                      t2 = t * 2
+                      r = int(c1[0] + (c2[0]-c1[0])*t2)
+                      g = int(c1[1] + (c2[1]-c1[1])*t2)
+                      b = int(c1[2] + (c2[2]-c1[2])*t2)
+                  else:
+                      t2 = (t-0.5)*2
+                      r = int(c2[0] + (c3[0]-c2[0])*t2)
+                      g = int(c2[1] + (c3[1]-c2[1])*t2)
+                      b = int(c2[2] + (c3[2]-c2[2])*t2)
+                  draw.line([(0,y),(w,y)], fill=(r,g,b))
+              # Accent glow
+              for _ in range(3):
+                  import random
+                  gx = random.randint(w//4, 3*w//4)
+                  gy = random.randint(h//6, h//3)
+                  for ri in range(200, 0, -10):
+                      alpha = int((200-ri)/200 * 30)
+                      gc = tuple(min(255, int(cc * 1.2)) for cc in c2)
+                      for xi in range(-ri, ri, 4):
+                          yi_sq = ri*ri - xi*xi
+                          if yi_sq < 0: continue
+                          import math
+                          yi = int(math.sqrt(yi_sq))
+                          if 0 <= gx+xi < w and 0 <= gy-yi < h:
+                              orig = img.getpixel((gx+xi, gy-yi))
+                              blended = tuple(min(255, int(orig[i] + (gc[i]-orig[i]) * alpha/255 * 0.15)) for i in range(3))
+                              img.putpixel((gx+xi, gy-yi), blended)
+              return img
+
+          def composite(bg_img, screenshot_path, w, h, app_cfg, caption_tr, caption_en, lang="tr"):
+              # Arka planı tam boyuta getir
+              bg = bg_img.resize((w, h), Image.LANCZOS)
+              # Hafif blur → derinlik
+              bg = bg.filter(ImageFilter.GaussianBlur(radius=2))
+
+              draw = ImageDraw.Draw(bg)
+              accent = app_cfg["accent"]
+              accent2 = app_cfg["accent2"]
+
+              caption = caption_tr if lang == "tr" else caption_en
+
+              # --- Üst gradient overlay (başlık alanı) ---
+              for gy in range(int(h * 0.30)):
+                  t = 1 - gy / (h * 0.30)
+                  alpha = int(t * 180)
+                  bg_col = app_cfg["bg"]
+                  dc = tuple(int(c * alpha/255) for c in bg_col)
+                  # blend üste
+                  for gx in range(w):
+                      px = bg.getpixel((gx, gy))
+                      blended = tuple(min(255, int(px[i] * (1-alpha/255) + bg_col[i] * alpha/255)) for i in range(3))
+                      bg.putpixel((gx, gy), blended)
+
+              # --- Alt gradient overlay ---
+              for gy in range(int(h * 0.85), h):
+                  t = (gy - h*0.85) / (h * 0.15)
+                  alpha = int(t * 160)
+                  bg_col = app_cfg["bg"]
+                  for gx in range(0, w, 2):
+                      px = bg.getpixel((gx, gy))
+                      blended = tuple(min(255, int(px[i] * (1-t*0.6) + bg_col[i] * t*0.6)) for i in range(3))
+                      bg.putpixel((gx, gy), blended)
+
+              draw = ImageDraw.Draw(bg)
+
+              # --- Başlık metni ---
+              title_font = load_font(int(w * 0.072))
+              lines = caption.split('\n') if '\n' in caption else [caption]
+              ty = int(h * 0.04)
+              for line in lines:
+                  bbox = title_font.getbbox(line)
+                  tw = bbox[2] - bbox[0]
+                  draw.text(((w-tw)//2, ty), line, font=title_font, fill=(255,255,255))
+                  ty += int(title_font.size * 1.2)
+
+              # App adı (küçük - alt)
+              name_font = load_font(int(w * 0.033), bold=False)
+              app_name = app_cfg["name"]
+              bbox = name_font.getbbox(app_name)
+              nw = bbox[2] - bbox[0]
+              draw.text(((w-nw)//2, int(h*0.92)), app_name, font=name_font, fill=tuple(int(c*0.6) for c in (255,255,255)))
+
+              # Accent line alt
+              line_y = int(h * 0.93 + name_font.size * 1.5)
+              lw = int(w * 0.3)
+              lx = (w-lw)//2
+              for li in range(3):
+                  t = li / 3
+                  col = tuple(int(accent[i] + (accent2[i]-accent[i])*t) for i in range(3))
+                  draw.line([(lx + li*lw//3, line_y), (lx + (li+1)*lw//3, line_y)], fill=col, width=2)
+
+              # --- Telefon çerçevesi ---
+              phone_w = int(w * 0.82)
+              phone_h = int(h * 0.62)
+              phone_x = (w - phone_w) // 2
+              phone_y = int(h * 0.20)
+              phone_r = int(phone_w * 0.09)
+
+              # Gölge
+              for si in range(20, 0, -1):
+                  alpha = int((20-si)/20 * 80)
+                  shadow_col = (0, 0, 0)
+                  # blend shadow
+                  pass
+
+              # Frame
+              frame_col = (22, 28, 42)
+              draw.rounded_rectangle([phone_x, phone_y, phone_x+phone_w, phone_y+phone_h],
+                                      radius=phone_r, fill=frame_col, outline=(45,60,90), width=int(4*w/1290))
+
+              # Ekran iç
+              margin = int(phone_w * 0.04)
+              sx, sy = phone_x + margin, phone_y + margin
+              sw, sh = phone_w - 2*margin, phone_h - 2*margin
+              sr = max(phone_r - margin, 10)
+              draw.rounded_rectangle([sx, sy, sx+sw, sy+sh], radius=sr, fill=(10, 14, 26))
+
+              # Dynamic Island
+              di_w = int(sw * 0.28); di_h = int(22 * w/1290)
+              di_x = sx + (sw - di_w)//2; di_y = sy + int(14 * w/1290)
+              draw.rounded_rectangle([di_x, di_y, di_x+di_w, di_y+di_h], radius=di_h//2, fill=(6,8,16))
+
+              # Gerçek app screenshot'ını çerçeve içine koy
+              try:
+                  shot = Image.open(screenshot_path).convert("RGB")
+                  # Crop ortasını al (Simulator borders olabilir)
+                  shot_w, shot_h = shot.size
+                  # En-boy oranı koru, ekran alanına sığdır
+                  ratio = min(sw/shot_w, sh/shot_h)
+                  new_w = int(shot_w * ratio)
+                  new_h = int(shot_h * ratio)
+                  shot = shot.resize((new_w, new_h), Image.LANCZOS)
+                  # Rounded mask
+                  mask = Image.new("L", (new_w, new_h), 0)
+                  md = ImageDraw.Draw(mask)
+                  md.rounded_rectangle([0,0,new_w,new_h], radius=sr, fill=255)
+                  # Ortaya yerleştir
+                  paste_x = sx + (sw - new_w)//2
+                  paste_y = sy + (sh - new_h)//2
+                  bg.paste(shot, (paste_x, paste_y), mask)
+                  print(f"    Screenshot eklendi: {shot.size}")
+              except Exception as e:
+                  print(f"    ⚠ Screenshot eklenemedi: {e}")
+                  # Placeholder
+                  draw.text((sx+sw//4, sy+sh//2), "📱", font=load_font(int(sw*0.3)), fill=accent)
+
+              # Home indicator
+              hi_w = int(sw * 0.35); hi_h = int(4 * w/1290)
+              hi_x = sx + (sw - hi_w)//2; hi_y = sy + sh - int(14 * w/1290)
+              draw.rounded_rectangle([hi_x, hi_y, hi_x+hi_w, hi_y+hi_h], radius=hi_h//2, fill=(60,75,100))
+
+              # Accent glow telefon etrafında
+              glow_size = int(phone_w * 0.1)
+              for gi in range(glow_size, 0, -5):
+                  alpha = int((glow_size-gi)/glow_size * 20)
+                  col = tuple(min(255, int(c * 0.8)) for c in accent)
+                  draw.rounded_rectangle([phone_x-gi, phone_y-gi, phone_x+phone_w+gi, phone_y+phone_h+gi],
+                                          radius=phone_r+gi, outline=col+tuple([alpha]), width=1)
+
+              return bg
+
+          # ─── Ana işlem ───────────────────────────────────────────────────
+          flux_cache = {}  # app → PIL.Image background
+
+          for app_key, cfg in APPS.items():
+              raw_app_dir = RAW_DIR / f"raw-screenshots-{app_key}"
+              if not raw_app_dir.exists():
+                  print(f"⏭ {app_key} raw dir yok: {raw_app_dir}")
+                  continue
+
+              pngs = sorted(raw_app_dir.glob("*.png"))
+              if not pngs:
+                  print(f"⏭ {app_key} PNG yok")
+                  continue
+
+              print(f"\n📱 {cfg['name']} — {len(pngs)} screenshot")
+
+              # FLUX background üret (bir kez, her boyut için)
+              for size_label, (tw, th) in SIZES.items():
+                  cache_key = f"{app_key}_{size_label}"
+
+                  if cache_key not in flux_cache:
+                      print(f"  🎨 FLUX background üretiliyor {size_label}...")
+                      flux_bytes = generate_flux_bg(cfg["flux_prompt"], tw, th, HF_TOKEN)
+                      if flux_bytes:
+                          import io
+                          bg_img = Image.open(io.BytesIO(flux_bytes)).convert("RGB")
+                          flux_cache[cache_key] = bg_img
+                          print(f"  ✅ FLUX background: {bg_img.size}")
+                      else:
+                          # Gradient fallback
+                          bg_img = make_gradient_bg(tw, th, cfg["bg"],
+                                                    tuple(int(c*0.3) for c in cfg["accent"]),
+                                                    cfg["bg"])
+                          flux_cache[cache_key] = bg_img
+                          print(f"  ✅ Gradient fallback: {bg_img.size}")
+
+                  bg_base = flux_cache[cache_key]
+
+                  for lang in ["tr", "en"]:
+                      lang_asc = "tr-TR" if lang == "tr" else "en-US"
+                      out_dir = OUT_DIR / app_key / lang_asc / size_label
+                      out_dir.mkdir(parents=True, exist_ok=True)
+
+                      for shot_path in pngs:
+                          stem = shot_path.stem
+                          captions = cfg["captions"]
+                          cap = captions.get(stem, {"tr": stem, "en": stem})
+
+                          print(f"  ⚙ {lang_asc}/{size_label}/{stem}.png", end="... ", flush=True)
+                          try:
+                              result = composite(
+                                  bg_base.copy(), shot_path, tw, th,
+                                  cfg, cap["tr"], cap["en"], lang
+                              )
+                              result.save(str(out_dir / f"{stem}.png"), "PNG", optimize=True)
+                              print("✅")
+                          except Exception as e:
+                              print(f"❌ {e}")
+
+          print(f"\n📁 Final screenshots:")
+          import subprocess
+          subprocess.run(["find", str(OUT_DIR), "-name", "*.png"], check=False)
+          PYEOF
+
+      - name: Final screenshot artifact'ı yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: final-screenshots
+          path: /tmp/final_ss/
+          retention-days: 7
+
+      - name: ASC'ye yükle
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8_BASE64 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          SS_DIR: /tmp/final_ss
+        run: |
+          if echo "$ASC_KEY_P8" | grep -q "^LS0t"; then
+            export ASC_KEY_P8=$(echo "$ASC_KEY_P8" | base64 -d)
+          fi
+          python3 scripts/upload_screenshots.py
+
+      - name: ASC yükle (yedek key ile)
+        if: failure()
+        env:
+          ASC_KEY_P8: ${{ secrets.APPLE_ASC_API_KEY }}
+          ASC_KEY_ID: ${{ secrets.APPLE_ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.APPLE_ASC_ISSUER_ID }}
+          SS_DIR: /tmp/final_ss
+        run: |
+          if echo "$ASC_KEY_P8" | grep -q "^LS0t"; then
+            export ASC_KEY_P8=$(echo "$ASC_KEY_P8" | base64 -d)
+          fi
+          python3 scripts/upload_screenshots.py

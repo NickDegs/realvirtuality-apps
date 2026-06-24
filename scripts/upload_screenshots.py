@@ -33,6 +33,10 @@ _privkey = serialization.load_pem_private_key(KEY_PEM.encode(), password=None)
 
 # App ID'leri
 APPS = {
+    "panel":    "6782606941",
+    "business": "6782595925",
+    "rv":       "6782458951",
+    # eski isimler de desteklenir (geriye uyumluluk)
     "nickdegs-panel":   "6782606941",
     "nickdegs-business":"6782595925",
     "realvirtuality-ai":"6782458951",
@@ -139,17 +143,58 @@ def md5b64(file_path):
 # ─── ASC helpers ──────────────────────────────────────────────────────────────
 
 def get_edit_version(app_id):
-    """PREPARE_FOR_SUBMISSION veya DEVELOPER_REJECTED versiyonu bul."""
-    states = ["PREPARE_FOR_SUBMISSION","DEVELOPER_REJECTED","REJECTED","METADATA_REJECTED","INVALID_BINARY"]
+    """Düzenlenebilir versiyon bul; READY_FOR_SALE ise yeni versiyon oluştur."""
+    EDITABLE = {"PREPARE_FOR_SUBMISSION","DEVELOPER_REJECTED","REJECTED","METADATA_REJECTED","INVALID_BINARY"}
+    IN_REVIEW = {"WAITING_FOR_REVIEW","IN_REVIEW","PENDING_DEVELOPER_RELEASE",
+                 "PENDING_APPLE_RELEASE","PROCESSING_FOR_APP_STORE"}
+
     d, _ = api_get(f"/v1/apps/{app_id}/appStoreVersions",
                     "filter[platform]=IOS&sort=-createdDate&limit=5")
     versions = d.get("data", [])
-    # Önce editable state'leri dene
-    for state in states:
-        for v in versions:
-            if v["attributes"].get("appStoreState") == state:
-                return v["id"], v["attributes"]["versionString"]
-    # En son versiyonu döndür (belki ready_for_sale ama screenshotlar güncellenebilir)
+
+    for v in versions:
+        state = v["attributes"].get("appStoreState", "")
+        if state in EDITABLE:
+            return v["id"], v["attributes"]["versionString"]
+
+    # İncelemede: screenshot güncellemesi için yeni versiyon gerekli
+    # Önce READY_FOR_SALE var mı bak
+    ready_version = None
+    for v in versions:
+        state = v["attributes"].get("appStoreState", "")
+        if state == "READY_FOR_SALE":
+            ready_version = v
+            break
+
+    # READY_FOR_SALE ise yeni versiyon oluştur
+    if ready_version:
+        old_ver = ready_version["attributes"]["versionString"]
+        parts = old_ver.split(".")
+        try:
+            parts[-1] = str(int(parts[-1]) + 1)
+        except:
+            parts.append("1")
+        new_ver = ".".join(parts)
+        print(f"  📦 READY_FOR_SALE: yeni versiyon {new_ver} oluşturuluyor...")
+        body = {"data": {"type": "appStoreVersions",
+                         "attributes": {"platform": "IOS", "versionString": new_ver},
+                         "relationships": {"app": {"data": {"type":"apps","id":app_id}}}}}
+        res, code = api_post("/v1/appStoreVersions", body)
+        if code in (200, 201) and "data" in res:
+            vid = res["data"]["id"]
+            print(f"  ✅ Yeni versiyon {new_ver} oluşturuldu (ID: {vid})")
+            return vid, new_ver
+        print(f"  ⚠ Versiyon oluşturulamadı ({code}): {res.get('_body','')[:200]}")
+        # Yine de devam et: ready_for_sale sürümün screenshot setini güncellemeyi dene
+        return ready_version["id"], old_ver
+
+    # IN_REVIEW: screenshot değiştirilemez, log at
+    for v in versions:
+        state = v["attributes"].get("appStoreState", "")
+        if state in IN_REVIEW:
+            print(f"  ⚠ Versiyon incelemede ({state}). Screenshot güncellenemiyor, atlanıyor.")
+            return None, None
+
     if versions:
         v = versions[0]
         return v["id"], v["attributes"]["versionString"]

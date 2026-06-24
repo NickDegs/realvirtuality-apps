@@ -26,3 +26,13 @@ targets:
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         ITSAppUsesNonExemptEncryption: false
+  NickDegsPanelUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources: [NickDegsPanelUITests]
+    settings:
+      base:
+        TARGETED_DEVICE_FAMILY: "1"
+    dependencies:
+      - target: NickDegsPanel
