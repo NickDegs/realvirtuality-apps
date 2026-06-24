@@ -56,7 +56,7 @@ print(f"✅ Build VALID: {bid}")
 
 # ── 2) PREPARE_FOR_SUBMISSION durumundaki versiyonu bul ───────────────────────
 ver_id = None
-for state in ("PREPARE_FOR_SUBMISSION", "WAITING_FOR_REVIEW", "IN_REVIEW", "REJECTED"):
+for state in ("PREPARE_FOR_SUBMISSION", "DEVELOPER_REJECTED", "WAITING_FOR_REVIEW", "IN_REVIEW", "REJECTED", "READY_FOR_REVIEW"):
     d = api(f"/v1/apps/{APP}/appStoreVersions?filter[appStoreState]={state}&filter[platform]=IOS&limit=1")
     items = d.get("data") or []
     if items:
