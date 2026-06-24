@@ -163,6 +163,9 @@ final class PanelAPI {
     func hukukInstances() async -> [[String:Any]] { await getArr("/dash/hukuk/instances") }
     func hukukDavalar(_ did: String) async -> [[String:Any]] { await getArr("/dash/hukuk/davalar", ["did": did]) }
     func hukukSureler(_ did: String) async -> [[String:Any]] { await getArr("/dash/hukuk/sureler", ["did": did]) }
+    // İşletme (business) — kendi tenant'ının hukuk verisi
+    func bizHukukDavalar() async -> [[String:Any]] { await getArr("/dash/biz/hukuk-davalar") }
+    func bizHukukSureler() async -> [[String:Any]] { await getArr("/dash/biz/hukuk-sureler") }
     // ── Admin Panel (14-sekme native) ──
     func adminPost(_ yol: String, _ body: [String:Any]) async -> [String:Any]? {
         await post("/dash/aapi/\(yol)", body)

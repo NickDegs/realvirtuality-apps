@@ -64,6 +64,24 @@ final class Magaza: ObservableObject {
     }
 }
 
+// MARK: - Sektör modeli
+struct Sektor: Identifiable {
+    let id: String; let ad: String; let ikon: String
+}
+let SEKTORLER: [Sektor] = [
+    Sektor(id: "lokanta",    ad: "Restoran / Lokanta",     ikon: "fork.knife"),
+    Sektor(id: "kafe",       ad: "Kafe",                   ikon: "cup.and.saucer.fill"),
+    Sektor(id: "market",     ad: "Market / Mağaza",        ikon: "cart.fill"),
+    Sektor(id: "otel",       ad: "Otel / Pansiyon",        ikon: "bed.double.fill"),
+    Sektor(id: "kuafor",     ad: "Kuaför / Güzellik",      ikon: "scissors"),
+    Sektor(id: "klinik",     ad: "Klinik / Hastane",       ikon: "cross.fill"),
+    Sektor(id: "veteriner",  ad: "Veteriner",              ikon: "pawprint.fill"),
+    Sektor(id: "spor",       ad: "Spor Salonu",            ikon: "figure.run"),
+    Sektor(id: "estetik",    ad: "Estetik / Spa",          ikon: "sparkles"),
+    Sektor(id: "hukuk",      ad: "Hukuk Bürosu",           ikon: "building.columns.fill"),
+    Sektor(id: "diger",      ad: "Diğer İşletme",          ikon: "briefcase.fill"),
+]
+
 // MARK: - Satın alma sayfası
 struct SatinAlView: View {
     let urun: Urun
@@ -72,6 +90,7 @@ struct SatinAlView: View {
     @StateObject private var magaza = Magaza()
     @Environment(\.dismiss) var dismiss
     @State private var isletmeAd = ""
+    @State private var seciliSektor: Sektor = SEKTORLER[0]
     @State private var secili: Product? = nil
     @State private var bekle = false
     @State private var sonuc: [String: Any]? = nil
@@ -104,6 +123,25 @@ struct SatinAlView: View {
                                 Text("İşletme adı").font(.caption.bold()).foregroundStyle(.rvMut).padding(.top, 4)
                                 TextField("Örn. Köşe Cafe", text: $isletmeAd)
                                     .padding(14).glassEffect(.regular, in: .rect(cornerRadius: 14)).foregroundStyle(.rvText)
+
+                                Text("Sektör").font(.caption.bold()).foregroundStyle(.rvMut).padding(.top, 2)
+                                Menu {
+                                    ForEach(SEKTORLER) { s in
+                                        Button {
+                                            seciliSektor = s
+                                        } label: {
+                                            Label(s.ad, systemImage: s.ikon)
+                                        }
+                                    }
+                                } label: {
+                                    HStack {
+                                        Image(systemName: seciliSektor.ikon).foregroundStyle(tema.c1)
+                                        Text(seciliSektor.ad).foregroundStyle(.rvText)
+                                        Spacer()
+                                        Image(systemName: "chevron.up.chevron.down").font(.caption).foregroundStyle(.rvMut)
+                                    }
+                                    .padding(14).glassEffect(.regular, in: .rect(cornerRadius: 14))
+                                }
                             }
 
                             if magaza.yukleniyor {
@@ -123,7 +161,8 @@ struct SatinAlView: View {
                                 }
                                 .font(.headline.bold()).foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 16)
                                 .background(tema.grad, in: .rect(cornerRadius: 16))
-                            }.disabled(bekle || secili == nil || (isletmeMi && isletmeAd.trimmingCharacters(in: .whitespaces).isEmpty)).padding(.top, 6)
+                            }.disabled(bekle || secili == nil || (isletmeMi && isletmeAd.trimmingCharacters(in: .whitespaces).isEmpty))
+                            .padding(.top, 6)
 
                             Text("Abonelik otomatik yenilenir, dilediğin an iptal edebilirsin. Ödeme Apple hesabından alınır.")
                                 .font(.caption2).foregroundStyle(.rvMut).padding(.top, 4)
@@ -233,7 +272,7 @@ struct SatinAlView: View {
         let (jws, tx, h) = await magaza.satinAl(p)
         if let h = h { if h != "iptal" { hata = h }; return }
         guard let jws = jws else { hata = "Satın alma doğrulanamadı"; return }
-        let r = await magaza.provision(jws: jws, ad: isletmeAd, sektor: urun.g)
+        let r = await magaza.provision(jws: jws, ad: isletmeAd, sektor: isletmeMi ? seciliSektor.id : urun.g)
         if r["ok"] as? Bool == true {
             // Provision başarılı → şimdi finish()
             if let tx = tx { await tx.finish() }

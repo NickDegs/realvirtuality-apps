@@ -537,3 +537,104 @@ struct IsNative: View {
         .padding(.vertical, 4)
     }
 }
+
+// MARK: - Hukuk Bürosu (business kullanıcısı — kendi tenant verisi)
+struct BizHukukNative: View {
+    let kind: String   // "davalar" | "sureler" | "belgeler"
+    @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
+    @State private var davalar: [[String:Any]] = []
+    @State private var sureler: [[String:Any]] = []
+    @State private var yukl = true
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+
+    var baslik: String {
+        switch kind {
+        case "sureler": return "Süre Takibi"
+        case "belgeler": return "Belge Kasası"
+        default: return "Dava Takibi"
+        }
+    }
+
+    var body: some View {
+        ZStack {
+            AnimatedArka(c1: tema.c1, c2: tema.c2)
+            if yukl {
+                ProgressView().tint(tema.c1).scaleEffect(1.3)
+            } else {
+                ScrollView {
+                    LazyVStack(spacing: 10) {
+                        if kind == "belgeler" {
+                            VStack(spacing: 14) {
+                                Image(systemName: "lock.doc.fill").font(.system(size: 48)).foregroundStyle(tema.grad).padding(.top, 30)
+                                Text("Belge Kasası").font(.title3.bold()).foregroundStyle(.rvText)
+                                Text("Şifreli belgelerinize hukuk yönetim sisteminizden erişebilirsiniz.").font(.subheadline).foregroundStyle(.rvMut).multilineTextAlignment(.center).padding(.horizontal)
+                            }.frame(maxWidth: .infinity).padding(.top, 40)
+                        } else if kind == "sureler" {
+                            if sureler.isEmpty {
+                                bosEkran("calendar.badge.checkmark", "Yaklaşan süre yok")
+                            } else {
+                                ForEach(Array(sureler.enumerated()), id: \.offset) { _, s in sureSatiri(s) }
+                            }
+                        } else {
+                            if davalar.isEmpty {
+                                bosEkran("doc.text.fill", "Dava kaydı yok")
+                            } else {
+                                ForEach(Array(davalar.enumerated()), id: \.offset) { _, d in davaSatiri(d) }
+                            }
+                        }
+                    }.padding(16)
+                }.refreshable { await yukle() }
+            }
+        }
+        .navigationTitle(baslik).navigationBarTitleDisplayMode(.inline)
+        .task { await yukle() }
+    }
+
+    func yukle() async {
+        yukl = true
+        async let d = api.bizHukukDavalar()
+        async let s = api.bizHukukSureler()
+        (davalar, sureler) = await (d, s)
+        yukl = false
+    }
+
+    func bosEkran(_ ikon: String, _ metin: String) -> some View {
+        VStack(spacing: 14) {
+            Image(systemName: ikon).font(.system(size: 44)).foregroundStyle(tema.c2).padding(.top, 30)
+            Text(metin).font(.subheadline).foregroundStyle(.rvMut)
+        }.frame(maxWidth: .infinity).padding(.top, 40)
+    }
+
+    func davaSatiri(_ d: [String:Any]) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: "doc.text.fill").foregroundStyle(.teal).frame(width: 30)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(d["baslik"] as? String ?? "Dava").font(.subheadline.bold()).foregroundStyle(.rvText).lineLimit(2)
+                HStack(spacing: 6) {
+                    if let mv = d["muvekkil"] as? String { Text(mv).font(.caption2).foregroundStyle(.rvMut) }
+                    if let a = d["asama"] as? String {
+                        Text("·").foregroundStyle(.rvMut)
+                        Text(a).font(.caption2.bold()).foregroundStyle(.teal)
+                    }
+                }
+            }
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14).glassEffect(.regular, in: .rect(cornerRadius: 14))
+    }
+
+    func sureSatiri(_ s: [String:Any]) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: "clock.badge.exclamationmark.fill").foregroundStyle(.orange).frame(width: 30)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(s["aciklama"] as? String ?? s["tur"] as? String ?? "Süre").font(.subheadline.bold()).foregroundStyle(.rvText).lineLimit(2)
+                if let tarih = s["tarih"] as? String { Text(tarih).font(.caption2).foregroundStyle(.rvMut) }
+            }
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14).glassEffect(.regular, in: .rect(cornerRadius: 14))
+    }
+}

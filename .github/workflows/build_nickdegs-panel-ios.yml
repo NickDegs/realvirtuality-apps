@@ -77,20 +77,23 @@ jobs:
           ASC_KEY_ID: ${{ secrets.APPLE_ASC_KEY_ID }}
           ASC_ISSUER: ${{ secrets.APPLE_ASC_ISSUER_ID }}
           ASC_APP_ID: "6782606941"
-          WHATS_NEW: "Stability improvements and UI refinements."
+          WHATS_NEW: "New: Dashboard now shows only panels relevant to your business type. Restaurant owners see orders and menus; salons see appointments; law firms see case management."
           REVIEW_NOTES: |
-            This is the NickDegs Dashboard app — a native admin panel for business owners who subscribe to NickDegs services (nickdegs.com).
+            This is the NickDegs Dashboard app — a native management panel for business owners who subscribe via the NickDegs Business app (nickdegs.com).
 
-            The app does NOT have In-App Purchase. Access is granted via a subscription code obtained through the NickDegs Business app or the website.
+            The app does NOT have In-App Purchase. Access is via phone number SMS login (account created automatically after purchase in the NickDegs Business app).
+
+            What's new in this build:
+            - Sector-based navigation: each business type sees only the panels relevant to their sector (restaurant: orders/menu/QR; salon/clinic: appointments/customers; law firm: cases/documents/deadlines; etc.)
+            - Admin account sees all panels including system management — regular business users see only their sector
+            - New native screens for law firm sector: case tracking, document vault, deadline management
 
             To test the app:
-            1. Launch the app. You will see a login screen asking for a phone number.
-            2. Use the test credentials: phone +905346065072, the SMS code will be sent (or use the bypass code shown on screen in test builds).
-            3. After login, the dashboard shows business stats, IPTV management, and service controls.
+            1. Launch the app. Enter phone number +905346065072 and tap "SMS Kodu Gönder".
+            2. Enter the received SMS code and tap "Doğrula & Giriş".
+            3. The dashboard loads with panels appropriate for the test account's business type.
 
-            The backend is live at nickdegs.com. All API calls are authenticated with a session token.
-
-            This build has no In-App Purchase changes — it is a clean rebuild to accompany the NickDegs Business and RealVirtuality AI updates.
+            The backend is live at nickdegs.com. All data is fetched via authenticated JSON APIs — no WebView or Safari is used anywhere in the app.
         run: |
           echo "${{ secrets.APPLE_ASC_API_KEY }}" > "$ASC_KEY_PATH"
           python3 scripts/submit_to_review.py
