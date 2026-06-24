@@ -127,6 +127,16 @@ struct SatinAlView: View {
 
                             Text("Abonelik otomatik yenilenir, dilediğin an iptal edebilirsin. Ödeme Apple hesabından alınır.")
                                 .font(.caption2).foregroundStyle(.rvMut).padding(.top, 4)
+
+                            // Guideline 3.1.2(c): Privacy + Terms abonelik ekranında görünmeli
+                            HStack(spacing: 12) {
+                                Link("Gizlilik Politikası", destination: URL(string: "https://nickdegs.com/legal/privacy")!)
+                                Text("·").foregroundStyle(.rvMut)
+                                Link("Kullanım Koşulları", destination: URL(string: "https://nickdegs.com/kosullar")!)
+                            }
+                            .font(.caption2).foregroundStyle(tema.c1)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.top, 2)
                         }
                     }.padding(20)
                 }
