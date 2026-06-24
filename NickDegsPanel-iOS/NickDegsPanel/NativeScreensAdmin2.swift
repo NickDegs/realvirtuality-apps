@@ -1,5 +1,6 @@
 import SwiftUI
 import AVFoundation
+import MapKit
 
 // MARK: - Seslendir (Piper TTS — native audio)
 struct SeslendirNative: View {
@@ -426,17 +427,76 @@ struct AistudioNative: View {
 
 // MARK: - Traccar Konum (yakında — native harita)
 struct TraccarNative: View {
-    var body: some View {
-        VStack(spacing: 16) {
-            Spacer()
-            Image(systemName: "location.fill").font(.system(size: 52)).foregroundStyle(.blue)
-            Text("Traccar Konum").font(.title2.bold())
-            Text("Canlı araç/kişi konumu ND2 sunucusunda çalışıyor.\nNative harita entegrasyonu yakında.")
-                .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center).padding(.horizontal)
-            Spacer()
+    @EnvironmentObject var oturum: Oturum
+    @State private var cihazlar: [[String:Any]] = []
+    @State private var yukl = true
+    @State private var kamera: MapCameraPosition = .region(MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 41.01, longitude: 28.97),
+        span: MKCoordinateSpan(latitudeDelta: 0.4, longitudeDelta: 0.4)))
+    private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
+
+    struct Konum: Identifiable { let id: Int; let isim: String; let online: Bool; let lat: Double; let lon: Double }
+    private var konumlar: [Konum] {
+        cihazlar.compactMap { c in
+            guard let lat = c["enlem"] as? Double, let lon = c["boylam"] as? Double else { return nil }
+            let id = (c["id"] as? Int) ?? Int((c["id"] as? Double) ?? 0)
+            return Konum(id: id, isim: (c["isim"] as? String) ?? "Cihaz",
+                         online: (c["durum"] as? String) == "online", lat: lat, lon: lon)
         }
-        .navigationTitle("Traccar")
+    }
+
+    var body: some View {
+        Group {
+            if yukl {
+                ProgressView().padding(60).frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if konumlar.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: "location.slash.fill").font(.system(size: 46)).foregroundStyle(.blue)
+                    Text("Konum Yok").font(.title3.bold())
+                    Text("Aktif cihaz konumu bulunamadı.").font(.caption).foregroundStyle(.secondary)
+                }.frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                Map(position: $kamera) {
+                    ForEach(konumlar) { k in
+                        Marker(k.isim, systemImage: k.online ? "location.fill" : "location.slash",
+                               coordinate: CLLocationCoordinate2D(latitude: k.lat, longitude: k.lon))
+                            .tint(k.online ? .green : .gray)
+                    }
+                }
+                .mapStyle(.standard(elevation: .realistic))
+                .safeAreaInset(edge: .bottom) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 10) {
+                            ForEach(konumlar) { k in
+                                Button { withAnimation { kamera = .region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: k.lat, longitude: k.lon), span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))) } } label: {
+                                    HStack(spacing: 8) {
+                                        Circle().fill(k.online ? Color.green : Color.gray).frame(width: 9, height: 9)
+                                        VStack(alignment: .leading, spacing: 1) {
+                                            Text(k.isim).font(.subheadline.bold())
+                                            Text(k.online ? "Çevrimiçi" : "Çevrimdışı").font(.caption2).foregroundStyle(.secondary)
+                                        }
+                                    }
+                                    .padding(.horizontal, 14).padding(.vertical, 10)
+                                    .background(.ultraThinMaterial, in: .capsule)
+                                }.buttonStyle(.plain)
+                            }
+                        }.padding(.horizontal, 14).padding(.bottom, 10)
+                    }
+                }
+            }
+        }
+        .navigationTitle("Traccar Konum")
         .navigationBarTitleDisplayMode(.inline)
+        .task { await yukle() }
+        .refreshable { await yukle() }
+    }
+
+    func yukle() async {
+        cihazlar = await api.traccarKonumlar(); yukl = false
+        if let f = konumlar.first {
+            kamera = .region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: f.lat, longitude: f.lon),
+                                                span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)))
+        }
     }
 }
 
@@ -470,9 +530,10 @@ struct ChatNative: View {
         .navigationTitle("Chat Logları")
         .navigationBarTitleDisplayMode(.inline)
         .task {
-            // Matrix admin API — /api/panel/matrix-odalar henüz yok, placeholder
+            odalar = await api.matrixOdalar()
             yukl = false
         }
+        .refreshable { odalar = await api.matrixOdalar() }
     }
 
     func odaSatiri(_ oda: [String:Any]) -> some View {

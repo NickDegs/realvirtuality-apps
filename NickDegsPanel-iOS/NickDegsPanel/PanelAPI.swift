@@ -133,6 +133,10 @@ final class PanelAPI {
     func metaAnaliz() async -> [String:Any] { (await get("/api/panel/meta-analiz")) ?? [:] }
     // ── Satış & Gelir ──
     func satisOzet() async -> [String:Any] { (await get("/api/panel/satis-ozet")) ?? [:] }
+    // ── Chat Logları (Matrix/Hush odaları) ──
+    func matrixOdalar() async -> [[String:Any]] { ((await get("/api/panel/matrix-odalar"))?["odalar"] as? [[String:Any]]) ?? [] }
+    // ── Traccar canlı konumlar ──
+    func traccarKonumlar() async -> [[String:Any]] { ((await get("/api/panel/traccar-konumlar"))?["cihazlar"] as? [[String:Any]]) ?? [] }
     // ── Tam Koordinasyon ──
     func tamKoordinasyon() async -> [String:Any] { (await get("/api/panel/tam-koordinasyon")) ?? [:] }
     // ── Claude ekran görüntüsü (tek oturum) ──
