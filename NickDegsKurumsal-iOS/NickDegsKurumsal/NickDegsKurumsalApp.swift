@@ -35,7 +35,7 @@ enum Sekme: String, CaseIterable, Identifiable {
         switch self {
         case .isletme: return "building.2.fill"
         case .guvenlik: return "lock.shield.fill"
-        case .hesabim: return "bag.fill.badge.checkmark"
+        case .hesabim: return "person.crop.circle.fill"
         }
     }
     var baslik: String {

@@ -4,6 +4,12 @@ struct AyarlarView: View {
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
     @Environment(\.dismiss) var dismiss
+    @State private var inceleAcik = false
+
+    // Önizleme kartındaki "İncele & Satın Al" → bu ürünü açar (ilk İşletme paketi)
+    private var vitrinUrun: Urun? {
+        Katalog.urunler.first { $0.sekme == "isletme" } ?? Katalog.urunler.first
+    }
 
     var modlar: [(String,String,String)] {
         [("sistem",yerel.t("sistem"),"circle.lefthalf.filled"), ("koyu",yerel.t("koyu"),"moon.fill"), ("acik",yerel.t("acik"),"sun.max.fill")]
@@ -75,6 +81,11 @@ struct AyarlarView: View {
             }
         }
         .tint(tema.c1)
+        .sheet(isPresented: $inceleAcik) {
+            if let u = vitrinUrun {
+                NavigationStack { UrunDetayView(urun: u) }
+            }
+        }
     }
 
     // Dil seçimi (otomatik cihaz dili + manuel)
@@ -127,10 +138,14 @@ struct AyarlarView: View {
                 Text(yerel.t("sekme_isletme")).font(.subheadline.bold()).foregroundStyle(.rvText)
                 Spacer()
             }
-            Text(yerel.t("incele"))
-                .font(.subheadline.bold()).foregroundStyle(.white)
-                .frame(maxWidth: .infinity).padding(.vertical, 12)
-                .background(tema.grad, in: .rect(cornerRadius: 13))
+            Button { Haptik.orta(); inceleAcik = true } label: {
+                Text(yerel.t("incele"))
+                    .font(.subheadline.bold()).foregroundStyle(.white)
+                    .frame(maxWidth: .infinity).padding(.vertical, 12)
+                    .background(tema.grad, in: .rect(cornerRadius: 13))
+            }
+            .buttonStyle(.plain)
+            .disabled(vitrinUrun == nil)
         }
         .padding(16)
         .background(Color.rvCard, in: .rect(cornerRadius: 20))
