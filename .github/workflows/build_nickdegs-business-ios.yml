@@ -79,6 +79,33 @@ jobs:
           echo "${{ secrets.APPLE_ASC_API_KEY }}" > "$ASC_KEY_PATH"
           python3 scripts/assign_beta.py
           rm -f "$ASC_KEY_PATH"
+      - name: App Store incelemeye gönder
+        if: success()
+        env:
+          ASC_KEY_PATH: ${{ github.workspace }}/.asc_key.p8
+          ASC_KEY_ID: ${{ secrets.APPLE_ASC_KEY_ID }}
+          ASC_ISSUER: ${{ secrets.APPLE_ASC_ISSUER_ID }}
+          ASC_APP_ID: "6782595925"
+          WHATS_NEW: "Bug fix: Business plan activation after purchase now works reliably on all devices."
+          REVIEW_NOTES: |
+            Bug fix build — previous version had a StoreKit 2 transaction handling issue. transaction.finish() was called before the server-side business provisioning (tenant creation) completed. If the provisioning took longer than expected (e.g. slow network, iPad in "Designed for iPhone" mode), the purchase would appear to succeed but the business panel would not be activated.
+
+            This build fixes the order: finish() is only called after the server returns a successful response with the panel URL and credentials. A Transaction.updates listener was also added to handle recovery after network interruptions or app crashes mid-purchase.
+
+            The server-side provision endpoint is idempotent — if the same Apple transaction ID is submitted twice, the existing tenant is returned rather than creating a duplicate.
+
+            To test In-App Purchase:
+            1. Open the app and tap any plan (e.g. "İşletme Başlangıç").
+            2. Enter a business name (e.g. "Test Cafe") and tap "App Store ile Satın Al".
+            3. Complete the Apple payment sheet.
+            4. The app should display the panel URL and credentials immediately after purchase.
+            5. Tapping "Paneli Hemen Aç" should deep-link to the NickDegs Dashboard app with auto-login.
+
+            Note: This app requires the NickDegs Business backend (nickdegs.com). The backend is live and accessible.
+        run: |
+          echo "${{ secrets.APPLE_ASC_API_KEY }}" > "$ASC_KEY_PATH"
+          python3 scripts/submit_to_review.py
+          rm -f "$ASC_KEY_PATH"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -139,8 +139,8 @@ struct RealVirtualityAIApp: App {
     private func islemDinle() async {
         for await result in Transaction.updates {
             if case .verified(let tx) = result {
-                // Sunucuya JWS gönder (kredi yükle, idempotent)
-                _ = await api.iapDogrula(jws: tx.jwsRepresentation)
+                // jwsRepresentation VerificationResult üzerinde, tx (Transaction) üzerinde değil
+                _ = await api.iapDogrula(jws: result.jwsRepresentation)
                 await tx.finish()
             }
         }

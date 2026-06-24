@@ -70,6 +70,31 @@ jobs:
           echo "${{ secrets.APPLE_ASC_API_KEY }}" > "$ASC_KEY_PATH"
           python3 scripts/assign_beta.py
           rm -f "$ASC_KEY_PATH"
+      - name: App Store incelemeye gönder
+        if: success()
+        env:
+          ASC_KEY_PATH: ${{ github.workspace }}/.asc_key.p8
+          ASC_KEY_ID: ${{ secrets.APPLE_ASC_KEY_ID }}
+          ASC_ISSUER: ${{ secrets.APPLE_ASC_ISSUER_ID }}
+          ASC_APP_ID: "6782606941"
+          WHATS_NEW: "Stability improvements and UI refinements."
+          REVIEW_NOTES: |
+            This is the NickDegs Dashboard app — a native admin panel for business owners who subscribe to NickDegs services (nickdegs.com).
+
+            The app does NOT have In-App Purchase. Access is granted via a subscription code obtained through the NickDegs Business app or the website.
+
+            To test the app:
+            1. Launch the app. You will see a login screen asking for a phone number.
+            2. Use the test credentials: phone +905346065072, the SMS code will be sent (or use the bypass code shown on screen in test builds).
+            3. After login, the dashboard shows business stats, IPTV management, and service controls.
+
+            The backend is live at nickdegs.com. All API calls are authenticated with a session token.
+
+            This build has no In-App Purchase changes — it is a clean rebuild to accompany the NickDegs Business and RealVirtuality AI updates.
+        run: |
+          echo "${{ secrets.APPLE_ASC_API_KEY }}" > "$ASC_KEY_PATH"
+          python3 scripts/submit_to_review.py
+          rm -f "$ASC_KEY_PATH"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

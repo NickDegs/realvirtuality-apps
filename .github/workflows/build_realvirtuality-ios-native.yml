@@ -85,6 +85,28 @@ jobs:
           echo "${{ secrets.APPLE_ASC_API_KEY }}" > "$ASC_KEY_PATH"
           python3 scripts/assign_beta.py
           rm -f "$ASC_KEY_PATH"
+      - name: App Store incelemeye gönder
+        if: success()
+        env:
+          ASC_KEY_PATH: ${{ github.workspace }}/.asc_key.p8
+          ASC_KEY_ID: ${{ secrets.APPLE_ASC_KEY_ID }}
+          ASC_ISSUER: ${{ secrets.APPLE_ASC_ISSUER_ID }}
+          ASC_APP_ID: "6782458951"
+          WHATS_NEW: "Bug fix: In-App Purchase reliability improved. Credits now activate correctly on all devices including iPad."
+          REVIEW_NOTES: |
+            Bug fix build — previous version had a StoreKit 2 issue where transaction.finish() was called before server-side credit activation completed. On iPad this caused a timing gap where credits didn't appear immediately after purchase.
+
+            This build fixes it: finish() is called only after the server confirms the credit load. A Transaction.updates listener was also added so pending transactions (network interruption, Family Sharing, Ask to Buy approval) are automatically recovered on next app launch.
+
+            To test In-App Purchase:
+            1. Open the app and tap the credit icon (⚡) in the top bar.
+            2. Select any credit package and tap to purchase.
+            3. After Apple payment sheet completes, credits should appear immediately in the top bar.
+            4. The app does NOT require an account — credits are tied to the Apple ID.
+        run: |
+          echo "${{ secrets.APPLE_ASC_API_KEY }}" > "$ASC_KEY_PATH"
+          python3 scripts/submit_to_review.py
+          rm -f "$ASC_KEY_PATH"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

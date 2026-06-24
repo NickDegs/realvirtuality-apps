@@ -93,18 +93,18 @@ struct NickDegsKurumsalApp: App {
         for await result in Transaction.updates {
             if case .verified(let tx) = result {
                 // Zaten provision edilmişse sunucu idempotent döner, sadece finish et
-                _ = await yenidenProvision(tx)
+                _ = await yenidenProvision(jws: result.jwsRepresentation)
                 await tx.finish()
             }
         }
     }
 
-    private func yenidenProvision(_ tx: Transaction) async -> Bool {
+    private func yenidenProvision(jws: String) async -> Bool {
         guard let url = URL(string: "https://nickdegs.com/api/iap/provision") else { return false }
         var r = URLRequest(url: url); r.httpMethod = "POST"; r.timeoutInterval = 60
         r.setValue("application/json", forHTTPHeaderField: "Content-Type")
         // ad boş göndeririz; sunucu önceki kaydı varsa adı kullanmadan döner
-        r.httpBody = try? JSONSerialization.data(withJSONObject: ["signedTransaction": tx.jwsRepresentation, "ad": ""])
+        r.httpBody = try? JSONSerialization.data(withJSONObject: ["signedTransaction": jws, "ad": ""])
         guard let (d, _) = try? await URLSession.shared.data(for: r),
               let j = try? JSONSerialization.jsonObject(with: d) as? [String: Any] else { return false }
         return j["ok"] as? Bool == true
