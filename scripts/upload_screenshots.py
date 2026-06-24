@@ -85,13 +85,17 @@ def _hdrs(extra=None):
 
 def api_get(path, params=""):
     url = BASE + path + (("?" + params) if params else "")
-    req = urllib.request.Request(url, headers=_hdrs())
     try:
+        req = urllib.request.Request(url, headers=_hdrs())
         with urllib.request.urlopen(req, timeout=30) as r:
             return json.loads(r.read()), r.status
     except urllib.error.HTTPError as e:
         body = e.read().decode()[:300]
+        print(f"    ⚠ API HTTP {e.code}: {body[:150]}")
         return {"_err": e.code, "_body": body}, e.code
+    except Exception as e:
+        print(f"    ⚠ API hatası ({type(e).__name__}): {e}")
+        return {"_err": str(e)}, 0
 
 def api_post(path, body):
     data = json.dumps(body).encode()
@@ -148,9 +152,12 @@ def get_edit_version(app_id):
     IN_REVIEW = {"WAITING_FOR_REVIEW","IN_REVIEW","PENDING_DEVELOPER_RELEASE",
                  "PENDING_APPLE_RELEASE","PROCESSING_FOR_APP_STORE"}
 
-    d, _ = api_get(f"/v1/apps/{app_id}/appStoreVersions",
-                    "filter[platform]=IOS&sort=-createdDate&limit=5")
+    d, code = api_get(f"/v1/apps/{app_id}/appStoreVersions",
+                      "filter[platform]=IOS&sort=-createdDate&limit=5")
+    if "_err" in d:
+        print(f"  ⚠ versions API {code}: {d.get('_body','')[:100]}")
     versions = d.get("data", [])
+    print(f"  versions: {[v['attributes'].get('appStoreState','?')+'/'+v['attributes']['versionString'] for v in versions]}")
 
     for v in versions:
         state = v["attributes"].get("appStoreState", "")
