@@ -15,8 +15,7 @@ jobs:
       - name: Python bağımlılıkları
         run: pip install Pillow cryptography requests
 
-      - name: IAP screenshots indir (önceki run'dan)
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           name: raw-screenshots-rv
           path: /tmp/raw/rv
@@ -55,7 +54,7 @@ jobs:
           python3 - << 'PYEOF'
           import os, sys, time, json, base64, hashlib, urllib.request, urllib.error
           from pathlib import Path
-          from PIL import Image, ImageDraw, ImageFont, ImageFilter
+          from PIL import Image, ImageDraw, ImageFont
 
           KEY_PEM   = os.environ["ASC_KEY_P8"]
           KEY_ID    = os.environ["ASC_KEY_ID"]
@@ -68,279 +67,270 @@ jobs:
           _priv = serialization.load_pem_private_key(KEY_PEM.encode(), password=None)
 
           def b64u(d):
-              if isinstance(d,str): d=d.encode()
+              if isinstance(d, str): d = d.encode()
               return base64.urlsafe_b64encode(d).rstrip(b"=").decode()
 
-          _tok=[None,0]
+          _tok = [None, 0]
           def tok():
-              now=int(time.time())
-              if _tok[0] and now-_tok[1]<1500: return _tok[0]
-              h=b64u(json.dumps({"alg":"ES256","kid":KEY_ID,"typ":"JWT"},separators=(',',':')))
-              p=b64u(json.dumps({"iss":ISSUER_ID,"exp":now+1800,"aud":"appstoreconnect-v1"},separators=(',',':')))
-              msg=f"{h}.{p}".encode()
-              sig=_priv.sign(msg, ec.ECDSA(hashes.SHA256()))
-              r,s=decode_dss_signature(sig)
-              t=f"{h}.{p}.{b64u(r.to_bytes(32,'big')+s.to_bytes(32,'big'))}"
-              _tok[0]=t; _tok[1]=now; return t
+              now = int(time.time())
+              if _tok[0] and now - _tok[1] < 1500: return _tok[0]
+              h = b64u(json.dumps({"alg":"ES256","kid":KEY_ID,"typ":"JWT"}, separators=(',',':')))
+              p = b64u(json.dumps({"iss":ISSUER_ID,"exp":now+1800,"aud":"appstoreconnect-v1"}, separators=(',',':')))
+              sig = _priv.sign(f"{h}.{p}".encode(), ec.ECDSA(hashes.SHA256()))
+              r, s = decode_dss_signature(sig)
+              t = f"{h}.{p}.{b64u(r.to_bytes(32,'big')+s.to_bytes(32,'big'))}"
+              _tok[0] = t; _tok[1] = now; return t
 
-          def hdrs(extra=None):
-              h={"Authorization":f"Bearer {tok()}","Content-Type":"application/json"}
-              if extra: h.update(extra)
-              return h
+          def hdrs():
+              return {"Authorization": f"Bearer {tok()}", "Content-Type": "application/json"}
 
           def GET(path, params=""):
-              url=BASE+path+("?"+params if params else "")
-              req=urllib.request.Request(url,headers=hdrs())
+              url = BASE + path + ("?" + params if params else "")
               try:
-                  with urllib.request.urlopen(req,timeout=30) as r: return json.loads(r.read()),r.status
-              except urllib.error.HTTPError as e: return {"_err":e.code,"_body":e.read().decode()[:300]},e.code
+                  with urllib.request.urlopen(urllib.request.Request(url, headers=hdrs()), timeout=30) as r:
+                      return json.loads(r.read()), r.status
+              except urllib.error.HTTPError as e:
+                  return {"_err": e.code, "_body": e.read().decode()[:200]}, e.code
 
           def POST(path, body):
-              data=json.dumps(body).encode()
-              req=urllib.request.Request(BASE+path,data=data,headers=hdrs(),method="POST")
+              data = json.dumps(body).encode()
+              req = urllib.request.Request(BASE+path, data=data, headers=hdrs(), method="POST")
               try:
-                  with urllib.request.urlopen(req,timeout=30) as r:
-                      raw=r.read(); return (json.loads(raw) if raw else {}),r.status
+                  with urllib.request.urlopen(req, timeout=30) as r:
+                      raw = r.read(); return (json.loads(raw) if raw else {}), r.status
               except urllib.error.HTTPError as e:
-                  body2=e.read().decode()[:400]
-                  print(f"  POST {path} {e.code}: {body2[:150]}")
-                  return {"_err":e.code,"_body":body2},e.code
+                  return {"_err": e.code, "_body": e.read().decode()[:300]}, e.code
 
           def PATCH(path, body):
-              data=json.dumps(body).encode()
-              req=urllib.request.Request(BASE+path,data=data,headers=hdrs(),method="PATCH")
+              data = json.dumps(body).encode()
+              req = urllib.request.Request(BASE+path, data=data, headers=hdrs(), method="PATCH")
               try:
-                  with urllib.request.urlopen(req,timeout=30) as r:
-                      raw=r.read(); return (json.loads(raw) if raw else {}),r.status
-              except urllib.error.HTTPError as e: return {"_err":e.code},e.code
+                  with urllib.request.urlopen(req, timeout=30) as r:
+                      raw = r.read(); return (json.loads(raw) if raw else {}), r.status
+              except urllib.error.HTTPError as e:
+                  return {"_err": e.code}, e.code
 
-          def upload_png(upload_url, req_headers, png_path):
-              data=Path(png_path).read_bytes()
-              put_hdrs={h["name"]:h["value"] for h in req_headers}
-              put_hdrs["Content-Type"]="image/png"
-              req=urllib.request.Request(upload_url,data=data,method="PUT",headers=put_hdrs)
+          def upload_s3(op, png_bytes):
+              put_hdrs = {h["name"]: h["value"] for h in op.get("requestHeaders", [])}
+              put_hdrs["Content-Type"] = "image/png"
+              req = urllib.request.Request(op["url"], data=png_bytes, method="PUT", headers=put_hdrs)
               try:
-                  with urllib.request.urlopen(req,timeout=120) as r: return r.status in (200,204)
-              except urllib.error.HTTPError as e: return False
+                  with urllib.request.urlopen(req, timeout=120) as r:
+                      return r.status in (200, 204)
+              except: return False
 
-          def md5b64(path):
-              return base64.b64encode(hashlib.md5(Path(path).read_bytes()).digest()).decode()
+          def md5b64(data):
+              return base64.b64encode(hashlib.md5(data).digest()).decode()
 
-          # ── IAP screenshot oluştur (app screenshot'ından crop) ────────────
-          def make_iap_shot(raw_dir, app_cfg, out_path):
-              """Mevcut raw screenshot'tan IAP için 1290x2796 PNG üret."""
-              pngs = sorted(Path(raw_dir).glob("*.png"))
-              # En son frame'i IAP screenshot olarak kullan
-              src = pngs[-1] if pngs else None
+          # ── IAP screenshot üret ───────────────────────────────────────────
+          def make_iap_png(raw_dir, bg_col, accent, title, subtitle):
               w, h = 1290, 2796
-              bg = Image.new("RGB", (w, h), app_cfg["bg"])
-              draw = ImageDraw.Draw(bg)
-              accent = app_cfg["accent"]
-
+              img = Image.new("RGB", (w, h), bg_col)
+              draw = ImageDraw.Draw(img)
               # Gradient
               for y in range(h):
-                  t=y/h
-                  c2=tuple(min(255,int(c*0.5)) for c in accent)
-                  col=tuple(int(app_cfg["bg"][i]+(c2[i]-app_cfg["bg"][i])*t*0.6) for i in range(3))
-                  draw.line([(0,y),(w,y)],fill=col)
-
-              # Gerçek screenshot varsa büyük olarak göster
-              if src:
+                  t = y / h
+                  col = tuple(int(bg_col[i] + (min(255, accent[i]) - bg_col[i]) * t * 0.4) for i in range(3))
+                  draw.line([(0,y),(w,y)], fill=col)
+              # App screenshot
+              pngs = sorted(Path(raw_dir).glob("*.png")) if Path(raw_dir).exists() else []
+              if pngs:
                   try:
-                      shot=Image.open(src).convert("RGB")
-                      ratio=min(w*0.9/shot.width, h*0.7/shot.height)
-                      nw,nh=int(shot.width*ratio),int(shot.height*ratio)
-                      shot=shot.resize((nw,nh),Image.LANCZOS)
-                      mask=Image.new("L",(nw,nh),0)
-                      ImageDraw.Draw(mask).rounded_rectangle([0,0,nw,nh],radius=40,fill=255)
-                      bg.paste(shot,((w-nw)//2,(h-nh)//2-100),mask)
+                      shot = Image.open(pngs[-1]).convert("RGB")
+                      ratio = min(w * 0.85 / shot.width, h * 0.65 / shot.height)
+                      nw, nh = int(shot.width * ratio), int(shot.height * ratio)
+                      shot = shot.resize((nw, nh), Image.LANCZOS)
+                      mask = Image.new("L", (nw, nh), 0)
+                      ImageDraw.Draw(mask).rounded_rectangle([0,0,nw,nh], radius=36, fill=255)
+                      img.paste(shot, ((w-nw)//2, (h-nh)//2), mask)
                   except: pass
-
               # Başlık
-              try:
-                  fnt=ImageFont.truetype("/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf",int(w*0.055))
-              except:
-                  fnt=ImageFont.load_default(size=int(w*0.055))
-              title=app_cfg["iap_title"]
-              bb=fnt.getbbox(title)
-              draw.text(((w-(bb[2]-bb[0]))//2,int(h*0.06)),title,font=fnt,fill=(255,255,255))
+              try: fnt = ImageFont.truetype("/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf", int(w*0.05))
+              except: fnt = ImageFont.load_default(size=int(w*0.05))
+              bb = fnt.getbbox(title)
+              draw.text(((w-(bb[2]-bb[0]))//2, int(h*0.05)), title, font=fnt, fill=(255,255,255))
+              try: sfnt = ImageFont.truetype("/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf", int(w*0.03))
+              except: sfnt = ImageFont.load_default(size=int(w*0.03))
+              bb2 = sfnt.getbbox(subtitle)
+              draw.text(((w-(bb2[2]-bb2[0]))//2, int(h*0.105)), subtitle, font=sfnt, fill=(180,190,220))
+              import io
+              buf = io.BytesIO(); img.save(buf, "PNG"); return buf.getvalue()
 
-              try:
-                  sfnt=ImageFont.truetype("/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",int(w*0.033))
-              except:
-                  sfnt=ImageFont.load_default(size=int(w*0.033))
-              sub=app_cfg["iap_sub"]
-              bb2=sfnt.getbbox(sub)
-              draw.text(((w-(bb2[2]-bb2[0]))//2,int(h*0.115)),sub,font=sfnt,fill=(180,190,220))
-
-              bg.save(out_path,"PNG")
-              print(f"  IAP screenshot: {out_path} ({w}x{h})")
-
-          # ── Review notes güncelle ─────────────────────────────────────────
-          REVIEW_NOTES = {
-              "6782458951": {  # RV AI
-                  "notes": (
+          # ── App config ───────────────────────────────────────────────────
+          APPS = {
+              "6782458951": {
+                  "name": "RealVirtuality AI",
+                  "raw_dir": "/tmp/raw/rv",
+                  "bg": (10,11,20), "accent": (124,92,255),
+                  "iap_title": "Credits & Pricing",
+                  "iap_sub": "Purchase credits to use AI tools",
+                  "review_notes": (
                       "Hello App Review Team,\n\n"
-                      "Thank you for reviewing RealVirtuality AI.\n\n"
                       "I am a solo indie developer. This app provides AI-powered creative tools "
                       "(image generation, face swap, voice synthesis, background removal, upscaling).\n\n"
-                      "In-App Purchase (Credits): Users purchase credit packs to use AI tools. "
-                      "The subscription/credits screen is accessible via the ⚡ button in the top toolbar on the main screen. "
-                      "No account is required to browse tools — guest mode shows limited free credits.\n\n"
-                      "Test account is not required for basic browsing. "
-                      "If any issue is found, please describe it and I will fix it promptly. "
-                      "Thank you for your time and consideration."
+                      "In-App Purchases (Credits): Users purchase credit packs to use AI tools. "
+                      "The credits/purchase screen is accessible via the bolt (⚡) button in the top toolbar. "
+                      "Guest mode is available with limited free credits — no account required to browse.\n\n"
+                      "If any issue is found, please let me know and I will fix it promptly. "
+                      "Thank you for your time."
                   ),
               },
-              "6782595925": {  # Business
-                  "notes": (
+              "6782595925": {
+                  "name": "NickDegs Business",
+                  "raw_dir": "/tmp/raw/business",
+                  "bg": (8,12,22), "accent": (74,134,255),
+                  "iap_title": "Subscription Plans",
+                  "iap_sub": "Choose a plan that fits your business",
+                  "review_notes": (
                       "Hello App Review Team,\n\n"
-                      "Thank you for reviewing NickDegs Business.\n\n"
                       "I am a solo indie developer. This app is a B2B platform for small business owners "
-                      "in Turkey to manage their digital presence and access business tools.\n\n"
-                      "Subscription: Users can subscribe to access premium business features. "
-                      "The subscription screen is in the last tab (Account / Hesabım). "
-                      "The app catalog and pricing is fully visible without login.\n\n"
-                      "No special test credentials needed to browse the catalog. "
+                      "to manage their digital presence and access business tools.\n\n"
+                      "Subscription: The subscription screen is in the last tab (Account). "
+                      "The catalog and pricing is fully visible without any login.\n\n"
                       "If any issue is found during review, please let me know and I will fix it immediately. "
                       "Thank you for your thorough review."
                   ),
               },
-              "6782606941": {  # Panel
-                  "notes": (
+              "6782606941": {
+                  "name": "NickDegs Dashboard",
+                  "raw_dir": "/tmp/raw/panel",
+                  "bg": (7,10,20), "accent": (41,121,216),
+                  "iap_title": "Dashboard Management",
+                  "iap_sub": "Full control for business owners",
+                  "review_notes": (
                       "Hello App Review Team,\n\n"
-                      "Thank you for reviewing NickDegs Dashboard.\n\n"
-                      "I am a solo indie developer. This is an admin/management dashboard app for "
-                      "business owners who have subscribed to the NickDegs platform.\n\n"
-                      "Login: The app uses SMS OTP authentication. "
-                      "A valid Turkish phone number registered on the platform is required to log in. "
-                      "Please use the test account below if needed:\n"
+                      "I am a solo indie developer. This is an admin/management dashboard for "
+                      "business owners subscribed to the NickDegs platform.\n\n"
+                      "Login: The app uses SMS OTP. Please use test account:\n"
                       "  Phone: +90 539 912 5223\n"
-                      "  (OTP will be sent via SMS)\n\n"
-                      "This is a utility app for existing customers only — no public sign-up. "
+                      "  (OTP will arrive via SMS — I can provide it on request)\n\n"
+                      "This is a utility app for existing customers only. "
                       "If any issue is found, I am available to fix it right away. "
                       "Thank you for your time."
                   ),
               },
           }
 
-          APP_CONFIGS = {
-              "6782458951": {
-                  "raw_dir": "/tmp/raw/rv",
-                  "bg": (10,11,20),
-                  "accent": (124,92,255),
-                  "iap_title": "Credits & Pricing",
-                  "iap_sub": "Purchase credits to use AI tools",
-              },
-              "6782595925": {
-                  "raw_dir": "/tmp/raw/business",
-                  "bg": (8,12,22),
-                  "accent": (74,134,255),
-                  "iap_title": "Subscription Plans",
-                  "iap_sub": "Choose a plan that fits your business",
-              },
-              "6782606941": {
-                  "raw_dir": "/tmp/raw/panel",
-                  "bg": (7,10,20),
-                  "accent": (41,121,216),
-                  "iap_title": "Dashboard Access",
-                  "iap_sub": "Manage your business from anywhere",
-              },
-          }
+          # ── Version state helper ──────────────────────────────────────────
+          EDITABLE = {"PREPARE_FOR_SUBMISSION","DEVELOPER_REJECTED","REJECTED","METADATA_REJECTED"}
 
-          # ── Her app için işlem ────────────────────────────────────────────
-          for app_id, cfg in APP_CONFIGS.items():
+          def get_versions(app_id):
+              d, _ = GET(f"/v1/apps/{app_id}/appStoreVersions",
+                         "filter[platform]=IOS&sort=-createdDate&limit=5")
+              return d.get("data", [])
+
+          # ── Ana işlem ────────────────────────────────────────────────────
+          for app_id, cfg in APPS.items():
               print(f"\n{'='*50}")
-              print(f"📱 App {app_id}")
+              print(f"📱 {cfg['name']} ({app_id})")
 
-              # 1. IAP listesi
-              d, code = GET(f"/v1/apps/{app_id}/inAppPurchasesV2",
-                            "fields[inAppPurchasesV2]=name,productId,inAppPurchaseType&limit=50")
-              iaps = d.get("data", [])
-              print(f"  IAP sayısı: {len(iaps)}")
-              for iap in iaps:
-                  print(f"    - {iap['attributes']['name']} ({iap['attributes']['productId']})")
+              # 1. Tüm versiyonları göster
+              versions = get_versions(app_id)
+              print(f"  Versiyonlar:")
+              for v in versions:
+                  print(f"    {v['attributes']['versionString']} — {v['attributes'].get('appStoreState','?')}")
 
-              # 2. IAP'lar için screenshot yükle
-              iap_shot_path = f"/tmp/iap_shot_{app_id}.png"
-              make_iap_shot(cfg["raw_dir"], cfg, iap_shot_path)
+              # 2. Abonelik gruplarını bul (subscriptions ≠ inAppPurchasesV2)
+              sg_d, sg_code = GET(f"/v1/apps/{app_id}/subscriptionGroups",
+                                  "fields[subscriptionGroups]=referenceName&limit=20")
+              groups = sg_d.get("data", [])
+              print(f"  Abonelik grubu: {len(groups)}")
 
-              for iap in iaps:
-                  iap_id = iap["id"]
-                  iap_name = iap["attributes"]["name"]
-                  print(f"\n  📎 IAP: {iap_name}")
+              # Her grup → abonelikler → IAP screenshot
+              for group in groups:
+                  gid = group["id"]
+                  gname = group["attributes"].get("referenceName","")
+                  print(f"    Grup: {gname} ({gid})")
 
-                  # IAP localization bul
-                  locs_d, _ = GET(f"/v1/inAppPurchasesV2/{iap_id}/iapPriceSchedule",
-                                  "fields[iapPriceSchedules]=manualPrices&limit=1")
+                  subs_d, _ = GET(f"/v1/subscriptionGroups/{gid}/subscriptions",
+                                  "fields[subscriptions]=name,productId,state&limit=20")
+                  subs = subs_d.get("data", [])
+                  print(f"    Abonelik sayısı: {len(subs)}")
 
-                  # Screenshot set oluştur/bul
-                  shot_d, shot_code = GET(f"/v1/inAppPurchasesV2/{iap_id}/promotedPurchase")
-                  print(f"    Promoted purchase: {shot_code}")
+                  iap_png = make_iap_png(cfg["raw_dir"], cfg["bg"], cfg["accent"],
+                                         cfg["iap_title"], cfg["iap_sub"])
 
-                  # IAP review screenshot
-                  # Her IAP'ın review screenshot'ı: /v1/inAppPurchaseLocalizations → screenshot
-                  locs_d2, _ = GET(f"/v1/inAppPurchasesV2/{iap_id}/inAppPurchaseLocalizations",
-                                   "fields[inAppPurchaseLocalizations]=name,locale,state&limit=10")
-                  loc_list = locs_d2.get("data", [])
-                  print(f"    Localization sayısı: {len(loc_list)}")
+                  for sub in subs:
+                      sub_id = sub["id"]
+                      sub_name = sub["attributes"].get("name","")
+                      sub_state = sub["attributes"].get("state","")
+                      print(f"      Abonelik: {sub_name} ({sub_state})")
 
-                  for loc in loc_list:
-                      loc_id = loc["id"]
-                      locale = loc["attributes"].get("locale","")
-                      # Screenshot ekle
-                      body = {"data": {"type": "inAppPurchaseImages",
-                                       "attributes": {"fileType": "REVIEW_SCREENSHOT",
-                                                       "fileName": f"iap_screenshot_{app_id}.png",
-                                                       "fileSize": Path(iap_shot_path).stat().st_size},
-                                       "relationships": {"inAppPurchaseLocalization": {"data": {"type":"inAppPurchaseLocalizations","id":loc_id}}}}}
-                      res, code = POST("/v1/inAppPurchaseImages", body)
-                      if code in (200,201) and "data" in res:
-                          ops = res["data"]["attributes"].get("uploadOperations",[])
-                          if ops:
-                              op = ops[0]
-                              ok = upload_png(op["url"], op.get("requestHeaders",[]), iap_shot_path)
-                              if ok:
-                                  chk = md5b64(iap_shot_path)
+                      # Localization'ları bul
+                      loc_d, _ = GET(f"/v1/subscriptions/{sub_id}/subscriptionLocalizations",
+                                     "fields[subscriptionLocalizations]=locale&limit=10")
+                      locs = loc_d.get("data", [])
+
+                      for loc in locs:
+                          loc_id = loc["id"]
+                          locale = loc["attributes"].get("locale","")
+
+                          # Mevcut screenshot var mı kontrol et
+                          img_d, _ = GET(f"/v1/subscriptionLocalizations/{loc_id}/subscriptionImages")
+                          existing = img_d.get("data",[])
+                          if existing:
+                              print(f"        {locale}: screenshot zaten var, atlanıyor")
+                              continue
+
+                          # Screenshot ekle
+                          body = {"data": {
+                              "type": "subscriptionImages",
+                              "attributes": {
+                                  "fileName": f"sub_shot_{sub_id}.png",
+                                  "fileSize": len(iap_png)
+                              },
+                              "relationships": {
+                                  "subscriptionLocalization": {"data": {"type":"subscriptionLocalizations","id":loc_id}}
+                              }
+                          }}
+                          res, code = POST("/v1/subscriptionImages", body)
+                          if code in (200,201) and "data" in res:
+                              ops = res["data"]["attributes"].get("uploadOperations",[])
+                              if ops and upload_s3(ops[0], iap_png):
                                   img_id = res["data"]["id"]
-                                  PATCH(f"/v1/inAppPurchaseImages/{img_id}",
-                                        {"data":{"type":"inAppPurchaseImages","id":img_id,
-                                                 "attributes":{"uploaded":True,"sourceFileChecksum":chk}}})
-                                  print(f"    ✅ {locale} IAP screenshot yüklendi")
+                                  PATCH(f"/v1/subscriptionImages/{img_id}", {
+                                      "data": {"type":"subscriptionImages","id":img_id,
+                                               "attributes": {"uploaded":True,"sourceFileChecksum":md5b64(iap_png)}}
+                                  })
+                                  print(f"        ✅ {locale} screenshot yüklendi")
                               else:
-                                  print(f"    ⚠ {locale} S3 upload başarısız")
+                                  print(f"        ⚠ {locale} upload başarısız")
                           else:
-                              print(f"    ⚠ {locale} uploadOperations boş: {res}")
-                      else:
-                          print(f"    ⚠ {locale} reserve başarısız ({code})")
+                              print(f"        ⚠ {locale} reserve hata ({code}): {res.get('_body','')[:100]}")
 
-              # 3. Review notes güncelle (PREPARE_FOR_SUBMISSION versiyonu)
-              ver_d, _ = GET(f"/v1/apps/{app_id}/appStoreVersions",
-                             "filter[platform]=IOS&filter[appStoreState]=PREPARE_FOR_SUBMISSION&sort=-createdDate&limit=1")
-              versions = ver_d.get("data", [])
-              if versions:
-                  ver_id = versions[0]["id"]
-                  ver_str = versions[0]["attributes"]["versionString"]
-                  print(f"\n  📝 Review notes güncelleniyor: {ver_str} ({ver_id})")
+              # 3. Review notes — düzenlenebilir versiyon bul
+              edit_ver = None
+              for v in versions:
+                  if v["attributes"].get("appStoreState","") in EDITABLE:
+                      edit_ver = v; break
 
-                  notes_text = REVIEW_NOTES[app_id]["notes"]
+              if not edit_ver and versions:
+                  # En son versiyonu kullan
+                  edit_ver = versions[0]
 
-                  # AppStoreReviewDetail oluştur veya güncelle
+              if edit_ver:
+                  ver_id = edit_ver["id"]
+                  ver_str = edit_ver["attributes"]["versionString"]
+                  ver_state = edit_ver["attributes"].get("appStoreState","")
+                  print(f"\n  📝 Review notes → {ver_str} ({ver_state})")
+
                   rev_d, rev_code = GET(f"/v1/appStoreVersions/{ver_id}/appStoreReviewDetail")
+                  notes = cfg["review_notes"]
+
                   if rev_code == 200 and rev_d.get("data"):
                       rev_id = rev_d["data"]["id"]
-                      res, code = PATCH(f"/v1/appStoreReviewDetails/{rev_id}",
+                      _, code = PATCH(f"/v1/appStoreReviewDetails/{rev_id}",
                           {"data":{"type":"appStoreReviewDetails","id":rev_id,
-                                   "attributes":{"notesForReview":notes_text}}})
-                      print(f"    Review notes güncellendi: {code}")
+                                   "attributes":{"notesForReview":notes}}})
+                      print(f"    Review notes güncellendi: HTTP {code}")
                   else:
-                      res, code = POST("/v1/appStoreReviewDetails",
+                      _, code = POST("/v1/appStoreReviewDetails",
                           {"data":{"type":"appStoreReviewDetails",
-                                   "attributes":{"notesForReview":notes_text},
+                                   "attributes":{"notesForReview":notes},
                                    "relationships":{"appStoreVersion":{"data":{"type":"appStoreVersions","id":ver_id}}}}})
-                      print(f"    Review notes oluşturuldu: {code}")
+                      print(f"    Review notes oluşturuldu: HTTP {code}")
               else:
-                  print(f"  ⚠ PREPARE_FOR_SUBMISSION versiyon yok (henüz build yüklenmemiş olabilir)")
+                  print(f"  ⚠ Hiç versiyon bulunamadı")
 
           print("\n✅ Tüm işlemler tamamlandı")
           PYEOF
