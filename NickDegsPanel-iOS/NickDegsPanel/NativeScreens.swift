@@ -61,6 +61,7 @@ struct SunucuNative: View {
     }
 }
 
+#if IPTV_MODULE
 // MARK: - Native IPTV (WebView yok)
 struct IPTVNative: View {
     @EnvironmentObject var oturum: Oturum
@@ -322,6 +323,7 @@ struct IPTVNative: View {
     }
 }
 
+#endif  // IPTV_MODULE
 // MARK: - Native İşletme verisi (sipariş/menü/randevu/özet) — WebView yok
 struct IsletmeVeriNative: View {
     let kind: String      // orders / menu / appts / stats
@@ -1191,11 +1193,13 @@ struct OzetNative: View {
                     kpi("Yük","\(ov["nd2_load"] ?? "-")","gauge.medium",.yellow)
                     kpi("Container","\(ov["nd2_containers"] ?? "-")","shippingbox",.cyan)
                 }
+                #if IPTV_MODULE
                 bolum("🎬 Medya / IPTV")
                 LazyVGrid(columns:izgara,spacing:12){
                     kpi("IPTV hat","\(iptv["hatlar"] ?? iptv["lines"] ?? "-")","tv.fill",.pink)
                     kpi("Kanal","\(iptv["kanallar"] ?? iptv["channels"] ?? "-")","play.tv.fill",.indigo)
                 }
+                #endif
                 Text("⏱ Uptime: \(ov["uptime"] as? String ?? "-")").font(.caption2).foregroundStyle(.rvMut).padding(.top,4)
             }.padding(16) }.refreshable { await yukle() } }
         }
@@ -1214,11 +1218,14 @@ struct OzetNative: View {
         yukleniyor = true; defer { yukleniyor = false }
         async let a = api.get_overview()
         async let b = api.guvenlik("koruma")
-        async let c = api.iptvDurum()
-        ov = await a; guv = (await b) ?? [:]; iptv = (await c) ?? [:]
+        ov = await a; guv = (await b) ?? [:]
+        #if IPTV_MODULE
+        iptv = (await api.iptvDurum()) ?? [:]
+        #endif
     }
 }
 
+#if IPTV_MODULE
 // MARK: - Native Medya (Emby+Plex film/dizi/canlı + indirme/istek/sistem) — WebView yok
 struct MedyaNative: View {
     @EnvironmentObject var oturum: Oturum
@@ -1356,6 +1363,7 @@ struct MedyaNative: View {
     }
 }
 
+#endif  // IPTV_MODULE
 // MARK: - Native Ülke Erişimi (aç/kapat — topluluk ban muafiyeti) — WebView yok
 struct UlkeNative: View {
     @EnvironmentObject var oturum: Oturum

@@ -43,6 +43,7 @@ final class PanelAPI {
     // Sunucu
     func durum() async -> [String:Any]? { await get("/api/panel/durum") }
     func servisRestart(_ svc: String) async -> Bool { (await post("/api/panel/servis-restart", ["svc":svc]))?["ok"] as? Bool ?? false }
+#if IPTV_MODULE
     // IPTV
     func iptvDurum() async -> [String:Any]? { await get("/dash/iptv/durum") }
     func iptvKanallar() async -> [[String:Any]] { await getArr("/dash/iptv/kanallar") }
@@ -54,6 +55,7 @@ final class PanelAPI {
     func iptvDavetIptal(_ kullanici: String) async -> Bool { (await post("/dash/iptv/davet-iptal", ["kullanici":kullanici]))?["ok"] as? Bool ?? false }
     func iptvDavetUzat(_ kullanici: String, _ gun: Int) async -> Bool { (await post("/dash/iptv/davet-uzat", ["kullanici":kullanici,"gun":gun]))?["ok"] as? Bool ?? false }
     func iptvKaynakGuncelle(_ adresler: [String]) async -> Bool { (await post("/dash/iptv/kaynak-guncelle", ["adresler":adresler]))?["ok"] as? Bool ?? false }
+#endif  // IPTV_MODULE
     // İşletme
     func bizVeri(_ kind: String) async -> [[String:Any]] { await getArr("/dash/biz/\(kind)") }
     // Güvenlik
@@ -89,6 +91,7 @@ final class PanelAPI {
     func demoListe() async -> [[String:Any]] { ((await get("/api/panel/demo-liste"))?["kayitlar"] as? [[String:Any]]) ?? [] }
 
     // ── Medya: Emby / Plex / indirme / istek / sistem (tv.nickdegs.com) ──
+#if IPTV_MODULE
     func embyOzet() async -> [String:Any] { (await get("/dash/iptv/emby-ozet")) ?? [:] }
     func embyIcerik(_ tip: String, _ ara: String, _ offset: Int) async -> [[String:Any]] {
         ((await get("/dash/iptv/emby-icerik", ["tip":tip,"ara":ara,"offset":"\(offset)","limit":"60"]))?["items"] as? [[String:Any]]) ?? []
@@ -100,6 +103,7 @@ final class PanelAPI {
     func indirmeler() async -> [[String:Any]] { ((await get("/dash/iptv/indirmeler"))?["indirmeler"] as? [[String:Any]]) ?? [] }
     func istekler() async -> [[String:Any]] { ((await get("/dash/iptv/istekler"))?["istekler"] as? [[String:Any]]) ?? [] }
     func sistemOzet() async -> [String:Any] { (await get("/dash/iptv/sistem-ozet")) ?? [:] }
+#endif  // IPTV_MODULE
     // ── Abonelik / erişim (admin) ──
     func grant(email: String, days: Int, plan: String) async -> [String:Any]? {
         await post("/dash/aapi/grant", ["email":email,"days":days,"plan":plan])

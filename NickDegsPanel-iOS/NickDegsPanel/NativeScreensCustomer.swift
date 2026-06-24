@@ -435,7 +435,9 @@ struct KisiselNative: View {
         ScrollView {
             VStack(spacing: 10) {
                 kisiselSatir("person.crop.circle.fill", "Kişisel Panel", "Satın aldıklarım · abonelik durumu") { SatinAldiklarimNative() }
+                #if IPTV_MODULE
                 kisiselSatir("film.stack.fill", "Medya", "Emby · Plex · IPTV yönetim") { MedyaNative() }
+                #endif
                 kisiselSatir("waveform", "Seslendir (Piper)", "Türkçe TTS — metni sese çevir") { SeslendirNative() }
                 kisiselSatir("photo.fill.on.rectangle.fill", "AI Görsel (FLUX)", "Yazıdan görsel üret") { GorselNative() }
                 kisiselSatir("doc.text.magnifyingglass", "Hukuk Bürosu", "Dava takibi · şifreli belge kasası") { HukukNative() }

@@ -62,9 +62,9 @@ struct MainView: View {
 // Native ekranı olan bölümler (Safari YOK — her şey native SwiftUI)
 let NATIVE_BOLUMLER: Set<String> = [
     // Süper admin
-    "admin","sunucu","iptv","odemeler","uyeler","teslimat","isletme_ekle",
+    "admin","sunucu","odemeler","uyeler","teslimat","isletme_ekle",
     "ziyaretci","ban","koruma","ulke","asn","ipyonet","adminhub","hediye","demo",
-    "medya","kpi","abonelik","kontrol","meta","satis","koordinasyon","satinaldiklarim","hizliodeme",
+    "kpi","abonelik","kontrol","meta","satis","koordinasyon","satinaldiklarim","hizliodeme",
     "kisisel","is","seslendir","gorsel","hukuk","aistudio","traccar","chat","komuta",
     // İşletme sahibi
     "siparis","stok","randevu","ozet","raporlar","musteriler","erisim","personel",
@@ -143,7 +143,9 @@ struct HedefNative: View {
         case "kpi": OzetNative()
         case "abonelik": AbonelikNative()
         case "sunucu": SunucuNative()
+        #if IPTV_MODULE
         case "iptv": IPTVNative()
+        #endif
         case "admin","odemeler","uyeler","teslimat": AdminNative()
         case "koruma": GuvenlikNative(tip: "koruma", baslik: "Koruma Durumu")
         case "ziyaretci": GuvenlikNative(tip: "ziyaretci", baslik: "Ziyaretçi Logları")
@@ -155,7 +157,9 @@ struct HedefNative: View {
         case "adminhub": AdminHubNative()
         case "hediye": HediyeNative()
         case "demo": DemoNative()
+        #if IPTV_MODULE
         case "medya": MedyaNative()
+        #endif
         case "kontrol": KontrolMerkeziNative()
         case "meta": MetaAnalizNative()
         case "satis": SatisNative()
