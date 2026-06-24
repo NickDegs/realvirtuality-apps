@@ -90,7 +90,7 @@ struct GrupView: View {
         NavigationStack {
             ZStack {
                 AnimatedArka(c1: tema.c1, c2: tema.c2)
-                LensFlare().opacity(0.7)
+                LensFlare(c1: tema.c1, c2: tema.c2).opacity(0.75)
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
                         if !ad.isEmpty {

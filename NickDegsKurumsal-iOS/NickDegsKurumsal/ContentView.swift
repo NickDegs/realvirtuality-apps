@@ -57,8 +57,8 @@ struct SekmeView: View {
             ZStack {
                 // Marka gradyanı arka plan
                 AnimatedArka(c1: tema.c1, c2: tema.c2)
-                // Mercek yanması (lens flare) — yavaş, ultra yumuşak
-                LensFlare()
+                // Mercek yanması (lens flare) — yavaş, ultra yumuşak, tema renginde
+                LensFlare(c1: tema.c1, c2: tema.c2)
                 ScrollView {
                     VStack(alignment: .leading, spacing: 34) {
                         kahraman

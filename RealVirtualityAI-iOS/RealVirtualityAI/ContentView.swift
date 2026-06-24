@@ -64,7 +64,7 @@ struct ContentView: View {
         ZStack {
             LinearGradient(colors: [.rvBg, .rvBg2, .rvBg], startPoint: .topLeading, endPoint: .bottomTrailing)
                 .ignoresSafeArea()
-            LensFlare().opacity(0.9)
+            LensFlare(c1: tema.c1, c2: tema.c2).opacity(0.95)
         }
     }
 
@@ -105,18 +105,23 @@ struct ContentView: View {
 
     // MARK: kahraman / hero
     var kahraman: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 7) {
+                Image(systemName: "sparkles").font(.subheadline).foregroundStyle(tema.grad)
+                Text(yerel.t("studyoEyebrow")).font(.subheadline.weight(.semibold)).foregroundStyle(.rvMut)
+            }
             Text(yerel.t("heroBaslik1"))
-                .font(.largeTitle.bold()).foregroundStyle(.rvText)
+                .font(.system(size: 36, weight: .heavy)).foregroundStyle(.rvText)
+                .fixedSize(horizontal: false, vertical: true)
             Text(yerel.t("heroBaslik2"))
-                .font(.largeTitle.bold())
+                .font(.system(size: 36, weight: .heavy))
                 .foregroundStyle(tema.grad)
                 .fixedSize(horizontal: false, vertical: true)
             Text(yerel.t("heroAlt"))
                 .font(.body).foregroundStyle(.rvMut)
                 .lineSpacing(3)
                 .fixedSize(horizontal: false, vertical: true)
-                .padding(.top, 2)
+                .padding(.top, 4)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.top, 12)
@@ -124,24 +129,28 @@ struct ContentView: View {
 
     // MARK: arama
     var aramaKutusu: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "magnifyingglass").foregroundStyle(.rvMut)
+        HStack(spacing: 10) {
+            Image(systemName: "magnifyingglass").font(.body).foregroundStyle(.rvMut)
             TextField(yerel.t("aramaIpucu"), text: $arama)
                 .foregroundStyle(.rvText).autocorrectionDisabled()
             if !arama.isEmpty {
                 Button { arama = "" } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.rvMut) }
             }
         }
-        .padding(.horizontal, 14).padding(.vertical, 11)
-        .background(Color.rvCard, in: .rect(cornerRadius: 14))
-        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.rvLine, lineWidth: 1))
+        .padding(.horizontal, 18).padding(.vertical, 16)
+        .glassEffect(.regular, in: .rect(cornerRadius: 18))
     }
 
     // MARK: kategori bölümü
     func bolum(_ kat: Kategori, _ liste: [Arac]) -> some View {
         VStack(alignment: .leading, spacing: 18) {
-            HStack(spacing: 9) {
-                Image(systemName: kat.ikon).font(.title3).foregroundStyle(tema.c2)
+            HStack(spacing: 10) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 9)
+                        .fill(LinearGradient(colors: [tema.c1.opacity(0.30), tema.c2.opacity(0.16)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                        .frame(width: 30, height: 30)
+                    Image(systemName: kat.ikon).font(.system(size: 14, weight: .semibold)).foregroundStyle(tema.grad)
+                }
                 Text(yerel.t(kat.key)).font(.title2.bold()).foregroundStyle(.rvText)
             }
             grid(liste)
