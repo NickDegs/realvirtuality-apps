@@ -171,7 +171,7 @@ struct SatinAlView: View {
                             HStack(spacing: 12) {
                                 Link("Gizlilik Politikası", destination: URL(string: "https://nickdegs.com/legal/privacy")!)
                                 Text("·").foregroundStyle(.rvMut)
-                                Link("Kullanım Koşulları", destination: URL(string: "https://nickdegs.com/kosullar")!)
+                                Link("Kullanım Koşulları", destination: URL(string: "https://nickdegs.com/legal/tos")!)
                             }
                             .font(.caption2).foregroundStyle(tema.c1)
                             .frame(maxWidth: .infinity, alignment: .center)

@@ -25,12 +25,15 @@ final class Store: ObservableObject {
             switch sonuc {
             case .success(let dogrulama):
                 if case .verified(let tx) = dogrulama {
+                    // Sunucu krediyi yükledi mi? SADECE başarıda finish et.
+                    // Başarısızsa transaction'ı BİTİRME — Transaction.updates/unfinished
+                    // (app launch dinleyicisi) tekrar dener, kredi kaybolmaz.
                     if let err = await api.iapDogrula(jws: dogrulama.jwsRepresentation) {
-                        mesaj = "Doğrulama hatası: \(err)"
+                        mesaj = "Kredi yükleme gecikti, birazdan otomatik tamamlanacak. (\(err))"
                     } else {
+                        await tx.finish()
                         mesaj = "✓ Kredi yüklendi!"
                     }
-                    await tx.finish()
                 } else {
                     mesaj = "Satın alma doğrulanamadı."
                 }

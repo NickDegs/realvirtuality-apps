@@ -58,7 +58,7 @@ struct AyarlarView: View {
                         Link(yerel.p("gizlilikPolitikasi"), destination: URL(string: "https://nickdegs.com/legal/privacy")!)
                             .font(.caption).foregroundStyle(tema.c1)
                         Text("·").foregroundStyle(.rvMut).font(.caption)
-                        Link(yerel.p("kullanımKosullari"), destination: URL(string: "https://nickdegs.com/kosullar")!)
+                        Link(yerel.p("kullanımKosullari"), destination: URL(string: "https://nickdegs.com/legal/tos")!)
                             .font(.caption).foregroundStyle(tema.c1)
                     }
                     .frame(maxWidth: .infinity, alignment: .center)

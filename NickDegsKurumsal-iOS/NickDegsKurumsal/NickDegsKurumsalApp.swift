@@ -84,17 +84,29 @@ struct NickDegsKurumsalApp: App {
                 .environment(\.layoutDirection, yerel.yon)
                 .preferredColorScheme(tema.renkSemasi)
                 .tint(tema.c1)
+                .task { await bitmemisleriKurtar() }   // launch'ta bekleyen/kesintili abonelikler
                 .task { await islemDinle() }
         }
     }
 
-    // Uçuş modu / çökme sonrası bitmemiş transaction'ları kurtarır
+    // App açılışında bekleyen/bitmemiş transaction'ları süpür (uçuş modu, Ask to Buy,
+    // Family Sharing, çökme sonrası, yenileme). Apple EK ÖNLEM (a).
+    private func bitmemisleriKurtar() async {
+        for await result in StoreKit.Transaction.unfinished {
+            if case .verified(let tx) = result {
+                // Sunucu provision/idempotent başarılıysa finish; değilse bırak, tekrar denenir.
+                if await yenidenProvision(jws: result.jwsRepresentation) { await tx.finish() }
+            }
+        }
+    }
+
+    // Uçuş modu / çökme / yenileme sonrası bitmemiş transaction'ları kurtarır (canlı dinleyici)
     private func islemDinle() async {
         for await result in StoreKit.Transaction.updates {
             if case .verified(let tx) = result {
-                // Zaten provision edilmişse sunucu idempotent döner, sadece finish et
-                _ = await yenidenProvision(jws: result.jwsRepresentation)
-                await tx.finish()
+                // SADECE sunucu provision başarılıysa finish — yoksa abonelik aktif ama
+                // tenant açılmamış kalır; bitirmeyince Apple tekrar teslim eder.
+                if await yenidenProvision(jws: result.jwsRepresentation) { await tx.finish() }
             }
         }
     }

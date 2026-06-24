@@ -131,16 +131,31 @@ struct RealVirtualityAIApp: App {
                 .preferredColorScheme(tema.renkSemasi)
                 .tint(tema.c1)
                 .task { await api.durumYukle() }
+                .task { await bitmemisleriKurtar() }   // launch'ta bekleyen/kesintili satın almalar
                 .task { await islemDinle() }
         }
     }
 
-    // Family Sharing / Ask to Buy onayı / çökme recovery
+    // App açılışında bekleyen/bitmemiş transaction'ları süpür (uçuş modu, Ask to Buy,
+    // Family Sharing, çökme sonrası). Apple EK ÖNLEM (a).
+    private func bitmemisleriKurtar() async {
+        for await result in StoreKit.Transaction.unfinished {
+            if case .verified(let tx) = result {
+                if await api.iapDogrula(jws: result.jwsRepresentation) == nil {
+                    await tx.finish()
+                }
+            }
+        }
+    }
+
+    // Family Sharing / Ask to Buy onayı / çökme recovery (canlı dinleyici)
     private func islemDinle() async {
         for await result in StoreKit.Transaction.updates {
             if case .verified(let tx) = result {
-                _ = await api.iapDogrula(jws: result.jwsRepresentation)
-                await tx.finish()
+                // SADECE sunucu doğrulaması başarılıysa finish et — yoksa kredi kaybolur.
+                if await api.iapDogrula(jws: result.jwsRepresentation) == nil {
+                    await tx.finish()
+                }
             }
         }
     }
