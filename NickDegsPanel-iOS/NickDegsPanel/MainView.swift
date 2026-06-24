@@ -115,7 +115,13 @@ struct GrupView: View {
             .navigationDestination(item: $hedef) { k in HedefNative(kart: k) }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    HStack(spacing: 7) { Image(systemName: "diamond.fill").foregroundStyle(tema.grad); Text("NickDegs").font(.headline.bold()).foregroundStyle(.rvText) }
+                    Menu {
+                        if !ad.isEmpty { Text(ad) }
+                        Button { sifreAcik = true } label: { Label("Şifre Değiştir", systemImage: "lock.rotation") }
+                        Button("Çıkış Yap", role: .destructive) { oturum.cikis() }
+                    } label: {
+                        HStack(spacing: 7) { Image(systemName: "diamond.fill").foregroundStyle(tema.grad); Text("NickDegs").font(.headline.bold()).foregroundStyle(.rvText) }
+                    }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {

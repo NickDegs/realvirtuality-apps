@@ -96,9 +96,11 @@ struct SekmeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    HStack(spacing: 7) {
-                        Image(systemName: "diamond.fill").foregroundStyle(tema.grad)
-                        Text("NickDegs").font(.headline.bold()).foregroundStyle(.rvText)
+                    Button { ayarlarAcik = true } label: {
+                        HStack(spacing: 7) {
+                            Image(systemName: "diamond.fill").foregroundStyle(tema.grad)
+                            Text("NickDegs").font(.headline.bold()).foregroundStyle(.rvText)
+                        }
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
