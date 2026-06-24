@@ -84,7 +84,7 @@ struct GrupView: View {
     @State private var sifreAcik = false
     @State private var hedef: HubKart? = nil
 
-    private var kolonlar: [GridItem] { Array(repeating: GridItem(.flexible(), spacing: 14), count: hsc == .regular ? 3 : 2) }
+    private var kolonlar: [GridItem] { Array(repeating: GridItem(.flexible(), spacing: 16), count: hsc == .regular ? 3 : 2) }
 
     var body: some View {
         NavigationStack {
@@ -92,12 +92,21 @@ struct GrupView: View {
                 AnimatedArka(c1: tema.c1, c2: tema.c2)
                 LensFlare().opacity(0.7)
                 ScrollView {
-                    LazyVGrid(columns: kolonlar, spacing: 14) {
-                        ForEach(grup.kartlar) { k in
-                            BasilabilirKart { ac(k) } content: { KartGor(kart: k) }
+                    VStack(alignment: .leading, spacing: 20) {
+                        if !ad.isEmpty {
+                            HStack(spacing: 8) {
+                                Image(systemName: "hand.wave.fill").font(.subheadline).foregroundStyle(tema.c2)
+                                Text(ad).font(.subheadline.weight(.semibold)).foregroundStyle(.rvMut)
+                            }
+                            .padding(.top, 2)
+                        }
+                        LazyVGrid(columns: kolonlar, spacing: 16) {
+                            ForEach(grup.kartlar) { k in
+                                BasilabilirKart { ac(k) } content: { KartGor(kart: k) }
+                            }
                         }
                     }
-                    .padding(.horizontal, 16).padding(.top, 8).padding(.bottom, 30)
+                    .padding(.horizontal, 22).padding(.top, 6).padding(.bottom, 40)
                 }
                 .scrollIndicators(.hidden)
             }
@@ -191,19 +200,26 @@ struct KartGor: View {
     let kart: HubKart
     @EnvironmentObject var tema: Tema
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             ZStack {
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(LinearGradient(colors: [tema.c1.opacity(0.28), tema.c2.opacity(0.16)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .frame(width: 50, height: 50)
-                Image(systemName: kart.ic).font(.system(size: 23, weight: .semibold)).foregroundStyle(tema.grad)
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(LinearGradient(colors: [tema.c1.opacity(0.30), tema.c2.opacity(0.16)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                    .frame(width: 56, height: 56)
+                Image(systemName: kart.ic).font(.system(size: 25, weight: .semibold)).foregroundStyle(tema.grad)
             }
-            Text(kart.baslik).font(.subheadline.bold()).foregroundStyle(.rvText).lineLimit(2).fixedSize(horizontal: false, vertical: true)
-            Text(kart.alt).font(.caption2).foregroundStyle(.rvMut).lineLimit(1)
-            Spacer(minLength: 0)
+            Text(kart.baslik).font(.system(size: 17, weight: .bold)).foregroundStyle(.rvText)
+                .lineLimit(2).fixedSize(horizontal: false, vertical: true).padding(.top, 4)
+            Text(kart.alt).font(.caption).foregroundStyle(.rvMut).lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 8)
+            HStack(spacing: 6) {
+                Circle().fill(Color.green).frame(width: 7, height: 7)
+                    .shadow(color: .green.opacity(0.8), radius: 4)
+                Text("Aktif").font(.system(size: 12, weight: .semibold)).foregroundStyle(.green)
+            }
         }
-        .padding(15).frame(maxWidth: .infinity, minHeight: 140, alignment: .topLeading)
-        .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 22))
+        .padding(18).frame(maxWidth: .infinity, minHeight: 158, alignment: .topLeading)
+        .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 24))
     }
 }
 

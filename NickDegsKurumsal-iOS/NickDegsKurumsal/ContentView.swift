@@ -28,7 +28,7 @@ struct SekmeView: View {
     @State private var belir = false
 
     private var kolonlar: [GridItem] {
-        Array(repeating: GridItem(.flexible(), spacing: 14), count: hsc == .regular ? 3 : 2)
+        Array(repeating: GridItem(.flexible(), spacing: 16), count: hsc == .regular ? 3 : 2)
     }
     private var urunler: [Urun] {
         let q = arama.trimmingCharacters(in: .whitespaces).lowercased()
@@ -37,6 +37,8 @@ struct SekmeView: View {
             (q.isEmpty || yerel.u($0.ad).lowercased().contains(q) || yerel.u($0.aciklama).lowercased().contains(q))
         }
     }
+    // Spotlight: bölümün ilk ürünü (öne çıkan)
+    private var oneCikanUrun: Urun? { urunler.first }
     private var kategoriler: [String] {
         let mevcut = Set(urunler.map { $0.g })
         return Katalog.kategoriSira.filter { mevcut.contains($0) }
@@ -58,17 +60,25 @@ struct SekmeView: View {
                 // Mercek yanması (lens flare) — yavaş, ultra yumuşak
                 LensFlare()
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 24) {
+                    VStack(alignment: .leading, spacing: 34) {
                         kahraman
                         aramaKutusu
+                        if arama.isEmpty, let one = oneCikanUrun {
+                            BasilabilirKart { secilenUrun = one } content: { SpotlightKart(urun: one) }
+                        }
                         ForEach(Array(kategoriler.enumerated()), id: \.element) { ki, g in
                             let liste = urunler.filter { $0.g == g }
-                            VStack(alignment: .leading, spacing: 14) {
-                                HStack(spacing: 8) {
-                                    Image(systemName: katIkon(g)).font(.subheadline).foregroundStyle(tema.c2)
-                                    Text(yerel.katAd(g)).font(.title3.bold()).foregroundStyle(.rvText)
+                            VStack(alignment: .leading, spacing: 18) {
+                                HStack(spacing: 10) {
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 9)
+                                            .fill(LinearGradient(colors: [tema.c1.opacity(0.30), tema.c2.opacity(0.16)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                                            .frame(width: 30, height: 30)
+                                        Image(systemName: katIkon(g)).font(.system(size: 14, weight: .semibold)).foregroundStyle(tema.grad)
+                                    }
+                                    Text(yerel.katAd(g)).font(.title2.bold()).foregroundStyle(.rvText)
                                 }
-                                LazyVGrid(columns: kolonlar, spacing: 14) {
+                                LazyVGrid(columns: kolonlar, spacing: 16) {
                                     ForEach(liste) { u in
                                         BasilabilirKart { secilenUrun = u } content: {
                                             UrunKart(urun: u)
@@ -78,7 +88,7 @@ struct SekmeView: View {
                             }
                         }
                     }
-                    .padding(.horizontal, 16).padding(.bottom, 30)
+                    .padding(.horizontal, 22).padding(.top, 4).padding(.bottom, 40)
                 }
                 .scrollIndicators(.hidden)
             }
@@ -121,23 +131,71 @@ struct SekmeView: View {
     }
 
     var kahraman: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(yerel.t("hero1")).font(.largeTitle.bold()).foregroundStyle(.rvText)
-            Text(yerel.t("hero2")).font(.largeTitle.bold()).foregroundStyle(tema.grad).fixedSize(horizontal: false, vertical: true)
-            Text(yerel.t("heroAlt")).font(.subheadline).foregroundStyle(.rvMut)
+        VStack(alignment: .leading, spacing: 8) {
+            Text(sekme == .guvenlik ? yerel.t("guvenlikEyebrow") : yerel.t("magazaEyebrow"))
+                .font(.subheadline.weight(.semibold)).foregroundStyle(.rvMut)
+            Text(yerel.t("hero1")).font(.system(size: 36, weight: .heavy)).foregroundStyle(.rvText)
                 .fixedSize(horizontal: false, vertical: true)
+            Text(yerel.t("hero2")).font(.system(size: 36, weight: .heavy)).foregroundStyle(tema.grad)
+                .fixedSize(horizontal: false, vertical: true)
+            Text(yerel.t("heroAlt")).font(.body).foregroundStyle(.rvMut)
+                .lineSpacing(3).fixedSize(horizontal: false, vertical: true).padding(.top, 4)
         }
-        .frame(maxWidth: .infinity, alignment: .leading).padding(.top, 6)
+        .frame(maxWidth: .infinity, alignment: .leading).padding(.top, 10)
     }
 
     var aramaKutusu: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "magnifyingglass").foregroundStyle(.rvMut)
+        HStack(spacing: 10) {
+            Image(systemName: "magnifyingglass").font(.body).foregroundStyle(.rvMut)
             TextField(yerel.t("ara"), text: $arama).foregroundStyle(.rvText).autocorrectionDisabled()
             if !arama.isEmpty { Button { arama = "" } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.rvMut) } }
         }
-        .padding(.horizontal, 16).padding(.vertical, 13)
-        .glassEffect(.regular, in: .rect(cornerRadius: 16))
+        .padding(.horizontal, 18).padding(.vertical, 16)
+        .glassEffect(.regular, in: .rect(cornerRadius: 18))
+    }
+}
+
+// MARK: - Spotlight (öne çıkan) — geniş, ferah feature kartı
+struct SpotlightKart: View {
+    let urun: Urun
+    @EnvironmentObject var tema: Tema
+    @EnvironmentObject var yerel: Yerel
+    var body: some View {
+        ZStack(alignment: .topTrailing) {
+            Text(urun.ic).font(.system(size: 64)).opacity(0.9)
+                .padding(22)
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 6) {
+                    Image(systemName: "star.fill").font(.system(size: 11, weight: .bold))
+                    Text(yerel.t("oneCikan")).font(.system(size: 12, weight: .bold))
+                }
+                .padding(.horizontal, 12).padding(.vertical, 6)
+                .background(.white.opacity(0.14), in: .capsule).foregroundStyle(.white)
+
+                Text(yerel.u(urun.ad)).font(.system(size: 25, weight: .heavy))
+                    .foregroundStyle(.white).fixedSize(horizontal: false, vertical: true)
+                Text(yerel.u(urun.aciklama)).font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.78)).lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+                HStack(spacing: 8) {
+                    Text(yerel.t("spotCta"))
+                    Image(systemName: "arrow.right")
+                }
+                .font(.system(size: 16, weight: .bold)).foregroundStyle(Color.rvBg)
+                .padding(.horizontal, 20).padding(.vertical, 13)
+                .background(tema.grad, in: .rect(cornerRadius: 15))
+                .padding(.top, 4)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(24)
+        }
+        .background(
+            LinearGradient(colors: [tema.c1.opacity(0.24), tema.c2.opacity(0.10)],
+                           startPoint: .topLeading, endPoint: .bottomTrailing),
+            in: .rect(cornerRadius: 28)
+        )
+        .overlay(RoundedRectangle(cornerRadius: 28).stroke(tema.c1.opacity(0.30), lineWidth: 1))
+        .shadow(color: tema.c1.opacity(0.22), radius: 24, y: 12)
     }
 }
 
@@ -157,22 +215,22 @@ struct UrunKart: View {
                     }
                 }
             }
-            .frame(maxWidth: .infinity).frame(height: 116).clipped()
-            VStack(alignment: .leading, spacing: 5) {
-                Text(yerel.u(urun.ad)).font(.subheadline.bold()).foregroundStyle(.rvText)
+            .frame(maxWidth: .infinity).frame(height: 132).clipped()
+            VStack(alignment: .leading, spacing: 7) {
+                Text(yerel.u(urun.ad)).font(.system(size: 16, weight: .bold)).foregroundStyle(.rvText)
                     .lineLimit(1)
-                Text(yerel.u(urun.aciklama)).font(.caption2).foregroundStyle(.rvMut)
-                    .lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                Text(yerel.u(urun.aciklama)).font(.caption).foregroundStyle(.rvMut)
+                    .lineLimit(2).lineSpacing(2).fixedSize(horizontal: false, vertical: true)
                 if !urun.pr.isEmpty {
-                    Text(urun.pr).font(.caption.bold()).foregroundStyle(tema.c2).padding(.top, 1)
+                    Text(urun.pr).font(.subheadline.bold()).foregroundStyle(tema.c2).padding(.top, 3)
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading).padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading).padding(16)
         }
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .background(Color.rvCard)
-        .clipShape(.rect(cornerRadius: 20))
-        .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.rvLine, lineWidth: 1))
-        .shadow(color: .black.opacity(0.18), radius: 10, y: 5)
+        .clipShape(.rect(cornerRadius: 24))
+        .overlay(RoundedRectangle(cornerRadius: 24).stroke(Color.rvLine, lineWidth: 1))
+        .shadow(color: .black.opacity(0.20), radius: 14, y: 7)
     }
 }

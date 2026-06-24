@@ -50,5 +50,10 @@ final class Yerel: ObservableObject {
         "dilSistem": ["tr":"Cihaz dili","en":"Device language"],
         "bitti": ["tr":"Bitti","en":"Done"],
         "nickdegsUrunu": ["tr":"Bir NickDegs ürünü","en":"A NickDegs product"],
+        "magazaEyebrow": ["tr":"İşletme Mağazası","en":"Business Store"],
+        "guvenlikEyebrow": ["tr":"Güvenlik Çözümleri","en":"Security Suite"],
+        "oneCikan": ["tr":"Öne çıkan","en":"Featured"],
+        "spotCta": ["tr":"Hemen başla","en":"Get started"],
+        "tumu": ["tr":"Tümü","en":"All"],
     ]
 }
