@@ -316,14 +316,14 @@ jobs:
                   "accent": (74, 134, 255),
                   "accent2": (255, 180, 60),
                   "bg": (8, 12, 22),
-                  "flux_prompt": "dark navy blue professional business background, golden amber gradient accents, premium bokeh, no text, abstract luxury",
+                  "flux_prompt": "dark navy blue professional background, golden amber gradient accents, premium bokeh, no text, abstract luxury",
                   "captions": {
-                      "01_isletme_katalog": {"tr": "İşletmenizi Büyütün",         "en": "Grow Your Business"},
-                      "02_katalog_scroll":  {"tr": "Her Sektöre Çözüm",           "en": "Solutions for Every Sector"},
-                      "03_urun_detay":      {"tr": "Detaylı Ürün Bilgisi",        "en": "Detailed Product Info"},
-                      "04_bireysel":        {"tr": "Bireysel Hizmetler",          "en": "Personal Services"},
-                      "05_dijital":         {"tr": "Dijital Çözümler",            "en": "Digital Solutions"},
-                      "06_hesabim_abonelik":{"tr": "Abonelik Yönetimi",           "en": "Subscription Management"},
+                      "01_hosgeldiniz":  {"tr": "Profesyonel Yönetim",      "en": "Professional Management"},
+                      "02_genel_gorunum":{"tr": "Her Şey Tek Yerden",       "en": "Everything in One Place"},
+                      "03_hesabim":      {"tr": "Abonelik Yönetimi",        "en": "Manage Your Plan"},
+                      "04_kesfet":       {"tr": "Keşfedin",                 "en": "Explore"},
+                      "05_ozellikler":   {"tr": "Güçlü Özellikler",         "en": "Powerful Features"},
+                      "06_ana_sayfa":    {"tr": "Kolayca Başlayın",         "en": "Get Started Easily"},
                   }
               },
               "panel": {
