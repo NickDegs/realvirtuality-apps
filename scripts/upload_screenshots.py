@@ -50,7 +50,6 @@ DIR_TO_LOCALE = {
 
 # Dizin adı → ASC displayType
 SIZE_TO_DISPLAY = {
-    "6.9":"APP_IPHONE_69",
     "6.7":"APP_IPHONE_67",
     "6.5":"APP_IPHONE_65",
     "5.5":"APP_IPHONE_55",

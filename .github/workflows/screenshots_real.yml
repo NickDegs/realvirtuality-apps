@@ -293,7 +293,7 @@ jobs:
           OUT_DIR  = Path("/tmp/final_ss")
           OUT_DIR.mkdir(exist_ok=True)
 
-          SIZES = {"6.9": (1320, 2868), "6.5": (1242, 2688)}
+          SIZES = {"6.7": (1290, 2796), "6.5": (1242, 2688)}
 
           APPS = {
               "rv": {
