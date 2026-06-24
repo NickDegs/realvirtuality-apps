@@ -81,6 +81,7 @@ struct AyarlarView: View {
             }
         }
         .tint(tema.c1)
+        .preferredColorScheme(tema.renkSemasi)   // ayar sheet'i de canlı açık/koyu/sistem geçer
         .sheet(isPresented: $inceleAcik) {
             if let u = vitrinUrun {
                 NavigationStack { UrunDetayView(urun: u) }

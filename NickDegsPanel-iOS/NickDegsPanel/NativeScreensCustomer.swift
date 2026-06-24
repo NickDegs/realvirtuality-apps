@@ -158,6 +158,7 @@ struct SitemNative: View {
 // MARK: - İşletme Ayarları
 struct AyarlarNative: View {
     @EnvironmentObject var oturum: Oturum
+    @EnvironmentObject var tema: Tema
     @State private var info: [String:Any] = [:]
     @State private var yukl = true
     @State private var kopyalandi = false
@@ -187,6 +188,24 @@ struct AyarlarNative: View {
                         .font(.caption).foregroundStyle(.secondary)
                         .multilineTextAlignment(.center).padding(.horizontal)
 
+                    // Görünüm: Sistem / Koyu / Açık
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Görünüm").font(.headline).padding(.horizontal)
+                        HStack(spacing: 10) {
+                            ForEach([("sistem","Sistem","circle.lefthalf.filled"),("koyu","Koyu","moon.fill"),("acik","Açık","sun.max.fill")], id: \.0) { m in
+                                Button { withAnimation(.snappy) { tema.mod = m.0 } } label: {
+                                    VStack(spacing: 6) {
+                                        Image(systemName: m.2).font(.title3)
+                                        Text(m.1).font(.caption.bold())
+                                    }
+                                    .frame(maxWidth: .infinity).padding(.vertical, 14)
+                                    .background(tema.mod == m.0 ? AnyShapeStyle(tema.grad) : AnyShapeStyle(Color.secondary.opacity(0.10)), in: .rect(cornerRadius: 14))
+                                    .foregroundStyle(tema.mod == m.0 ? Color.white : Color.primary)
+                                }.buttonStyle(.plain)
+                            }
+                        }.padding(.horizontal)
+                    }.padding(.top, 4)
+
                     Divider().padding(.horizontal)
 
                     HStack(spacing: 16) {
@@ -202,6 +221,7 @@ struct AyarlarNative: View {
         }
         .navigationTitle("Ayarlar")
         .navigationBarTitleDisplayMode(.inline)
+        .preferredColorScheme(tema.renkSemasi)   // ayar ekranı da canlı açık/koyu/sistem geçer
         .task { info = (await api.bizInfo()) ?? [:]; yukl = false }
     }
 

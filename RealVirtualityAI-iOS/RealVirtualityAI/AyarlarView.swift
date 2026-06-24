@@ -75,6 +75,7 @@ struct AyarlarView: View {
             }
         }
         .tint(tema.c1)
+        .preferredColorScheme(tema.renkSemasi)   // ayar sheet'i de canlı açık/koyu/sistem geçer
     }
 
     // Dil seçimi (otomatik cihaz dili + manuel)
