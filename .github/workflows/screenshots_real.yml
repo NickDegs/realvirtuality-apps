@@ -308,6 +308,8 @@ jobs:
                       "01_ana_ekran":    {"tr": "Yapay Zeka ile Yaratın",        "en": "Create with AI"},
                       "02_kategoriler":  {"tr": "Her Araç Elinizin Altında",     "en": "Every AI Tool At Hand"},
                       "03_arac_detay":   {"tr": "Güçlü AI Araçları",             "en": "Powerful AI Tools"},
+                      "02_scroll":       {"tr": "Her Araç Elinizin Altında",     "en": "Every AI Tool At Hand"},
+                      "03_detay":        {"tr": "Güçlü AI Araçları",             "en": "Powerful AI Tools"},
                       "04_kredi_iap":    {"tr": "Kredi Satın Alın",              "en": "Get Credits"},
                       "05_ayarlar":      {"tr": "Kişiselleştirin",               "en": "Personalize"},
                       "06_ana_tam":      {"tr": "Tam Deneyim",                   "en": "Full Experience"},
@@ -478,7 +480,7 @@ jobs:
                       out_dir.mkdir(parents=True, exist_ok=True)
                       for shot in pngs:
                           stem = shot.stem
-                          cap = cfg["captions"].get(stem, {"tr":stem,"en":stem})
+                          cap = cfg["captions"].get(stem, {"tr": cfg.get("name",""), "en": cfg.get("name","")})
                           print(f"  ⚙ {lang_asc}/{size_label}/{stem}", end="... ", flush=True)
                           try:
                               r = composite(bg_base.copy(), shot, tw, th, cfg, cap["tr"], cap["en"], lang)
