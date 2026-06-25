@@ -34,5 +34,8 @@ targets:
     settings:
       base:
         TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: app.realvirtuality.ai.uitests
+        CODE_SIGNING_ALLOWED: NO
     dependencies:
       - target: RealVirtualityAI
