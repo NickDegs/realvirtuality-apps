@@ -274,7 +274,10 @@ jobs:
       - name: Build + TestFlight'a yükle
         working-directory: ${{ matrix.app }}/ios/App
         run: |
-          pod install
+          # Firebase static linkage için temiz tek kurulum (dinamik→static yarım-durum fix)
+          pod deintegrate || true
+          rm -rf Pods Podfile.lock || true
+          pod install --repo-update
           cat > ExportOptions.plist << 'PLIST'
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
