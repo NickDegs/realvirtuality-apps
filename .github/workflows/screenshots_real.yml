@@ -281,6 +281,7 @@ jobs:
       - name: FLUX backgrounds üret + composite
         env:
           HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+          APPS_FILTER: ${{ github.event.inputs.apps }}
         run: |
           mkdir -p /tmp/final_ss
           python3 - << 'PYEOF'
@@ -289,6 +290,7 @@ jobs:
           from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
           HF_TOKEN = os.environ.get("HUGGINGFACE_TOKEN", "")
+          APPS_FILTER = os.environ.get("APPS_FILTER","all") or "all"
           RAW_DIR  = Path("/tmp/raw_ss")
           OUT_DIR  = Path("/tmp/final_ss")
           OUT_DIR.mkdir(exist_ok=True)
@@ -440,6 +442,8 @@ jobs:
           flux_cache = {}
 
           for app_key, cfg in APPS.items():
+              if APPS_FILTER not in ("all", app_key):
+                  print(f"⏭ {app_key} (filtre: {APPS_FILTER}) — atlandı"); continue
               raw_dir = None
               for candidate in [RAW_DIR/f"raw-screenshots-{app_key}", RAW_DIR/app_key]:
                   if candidate.exists():
