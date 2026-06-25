@@ -1511,7 +1511,7 @@ async function jFetch(url){
 // ===== TRANSLATION ENGINE =====
 const XLANG={en:'en',tr:'tr',es:'es',zh:'zh-CN',ru:'ru',de:'de',fr:'fr',it:'it',pt:'pt-BR',ja:'ja',ko:'ko',ar:'ar',hi:'hi',nl:'nl',pl:'pl',sv:'sv'};
 function _xhash(s){let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h)^s.charCodeAt(i);return(h>>>0).toString(36)}
-function _xkey(t,l){return'xl2_'+l+'_'+_xhash(t.substring(0,120))}
+function _xkey(t,l){return'xl3_'+l+'_'+_xhash(t.substring(0,120))}
 async function xlate(text,toLang){
   if(!text||!text.trim()||toLang==='en')return text;
   const key=_xkey(text,toLang);
@@ -1527,9 +1527,10 @@ async function xlate(text,toLang){
       if(buf.trim())chunks.push(buf.trim());
     }else chunks.push(text);
     const parts=await Promise.all(chunks.map(async ch=>{
-      const r=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(ch)+'&langpair=en|'+lc);
+      // Google bedava çeviri ucu — anahtarsız, MyMemory'den kat kat doğru (yemek isimleri için)
+      const r=await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl='+lc+'&dt=t&q='+encodeURIComponent(ch));
       const d=await r.json();
-      return d.responseData?.translatedText||ch;
+      return (Array.isArray(d)&&Array.isArray(d[0]))?d[0].map(seg=>(seg&&seg[0])||'').join(''):ch;
     }));
     const result=parts.join(' ');
     localStorage.setItem(key,result);
