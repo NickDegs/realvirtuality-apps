@@ -121,14 +121,14 @@ jobs:
           /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName Tarif Abi" ios/App/App/Info.plist 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Add :CFBundleDisplayName string Tarif Abi" ios/App/App/Info.plist || true
           /usr/libexec/PlistBuddy -c "Set :CFBundleName Tarif Abi" ios/App/App/Info.plist 2>/dev/null || true
-          # Sürüm 1.0.2 (gerçek AdMob reklamları) + benzersiz/artan build numarası (run_id)
+          # Sürüm 1.0.3 (gerçek AdMob reklamları) + benzersiz/artan build numarası (run_id)
           BUILD_NO=${{ github.run_id }}
-          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0.2" ios/App/App/Info.plist 2>/dev/null || \
-          /usr/libexec/PlistBuddy -c "Add :CFBundleShortVersionString string 1.0.2" ios/App/App/Info.plist || true
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0.3" ios/App/App/Info.plist 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Add :CFBundleShortVersionString string 1.0.3" ios/App/App/Info.plist || true
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NO" ios/App/App/Info.plist 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string $BUILD_NO" ios/App/App/Info.plist || true
           PBX2=ios/App/App.xcodeproj/project.pbxproj
-          sed -i '' -E "s/MARKETING_VERSION = [^;]+;/MARKETING_VERSION = 1.0.2;/g" "$PBX2" 2>/dev/null || true
+          sed -i '' -E "s/MARKETING_VERSION = [^;]+;/MARKETING_VERSION = 1.0.3;/g" "$PBX2" 2>/dev/null || true
           sed -i '' -E "s/CURRENT_PROJECT_VERSION = [^;]+;/CURRENT_PROJECT_VERSION = $BUILD_NO;/g" "$PBX2" 2>/dev/null || true
           # Şifreleme yok
           /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool false" ios/App/App/Info.plist 2>/dev/null || \
@@ -232,6 +232,33 @@ jobs:
           if changed:
               with open(pbx, "w") as f: f.write(content)
           print("iCloud KVS plugin OK")
+          PYEOF
+      - name: Firebase GoogleService-Info.plist bundle'a ekle (çökme önleme)
+        working-directory: ${{ matrix.app }}
+        run: |
+          cp ios-assets/GoogleService-Info.plist ios/App/App/GoogleService-Info.plist || true
+          python3 - << 'PYEOF'
+          import hashlib, re, os
+          def mk(seed): return hashlib.sha1(seed.encode()).hexdigest()[:24].upper()
+          pbx="ios/App/App.xcodeproj/project.pbxproj"
+          if not os.path.exists(pbx): print("pbxproj yok, atla"); raise SystemExit
+          c=open(pbx).read()
+          fname="GoogleService-Info.plist"
+          if (fname+" */") in c:
+              print("plist zaten projede"); raise SystemExit
+          ref=mk("ref_"+fname); bld=mk("bld_"+fname)
+          c=c.replace('/* End PBXFileReference section */',
+              f'\t\t{ref} /* {fname} */ = {{isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = {fname}; sourceTree = "<group>"; }};\n\t\t/* End PBXFileReference section */')
+          c=c.replace('/* End PBXBuildFile section */',
+              f'\t\t{bld} /* {fname} in Resources */ = {{isa = PBXBuildFile; fileRef = {ref} /* {fname} */; }};\n\t\t/* End PBXBuildFile section */')
+          # Resources build phase'in files listesine ekle (ilk PBXResourcesBuildPhase)
+          m=re.search(r'(isa = PBXResourcesBuildPhase;.*?files = \(\n)', c, re.S)
+          if not m: print("HATA: Resources build phase bulunamadı"); raise SystemExit
+          c=c[:m.end()] + f'\t\t\t\t{bld} /* {fname} in Resources */,\n' + c[m.end():]
+          # gruba ekle (Assets.xcassets'in yanına; bulunamazsa atla, build için şart değil)
+          c=re.sub(r'(/\* Assets\.xcassets \*/,)', rf'\1\n\t\t\t\t{ref} /* {fname} */,', c, count=1)
+          open(pbx,"w").write(c)
+          print("GoogleService-Info.plist Resources'a eklendi:", ref, bld)
           PYEOF
       - name: AdMob Consent stub (Xcode 26)
         working-directory: ${{ matrix.app }}

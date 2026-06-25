@@ -2954,6 +2954,29 @@ function initiOS26() {
 }
 
 // ===== INIT =====
+// ===== Firebase: Analytics + Crashlytics + Push (FCM) =====
+async function initFirebase(){
+  if(!window.Capacitor||!window.Capacitor.isNativePlatform())return;
+  const P=window.Capacitor.Plugins||{};
+  // Analytics
+  try{ await P.FirebaseAnalytics?.setEnabled?.({enabled:true}); }catch(e){}
+  try{ await P.FirebaseAnalytics?.logEvent?.({name:'app_open'}); }catch(e){}
+  // Crashlytics (native çökmeleri yakalar)
+  try{ await P.FirebaseCrashlytics?.setEnabled?.({enabled:true}); }catch(e){}
+  // Push (FCM) — launch'ta değil, app oturduktan sonra izin iste
+  try{
+    const FM=P.FirebaseMessaging; if(!FM)return;
+    await new Promise(r=>setTimeout(r,3500));
+    let perm; try{ perm=await FM.checkPermissions(); }catch(e){}
+    if(!perm || perm.receive==='prompt'){ try{ perm=await FM.requestPermissions(); }catch(e){} }
+    if(perm && perm.receive==='granted'){
+      try{ await FM.getToken(); }catch(e){}
+      try{ FM.addListener('notificationReceived',()=>{}); }catch(e){}
+      try{ FM.addListener('notificationActionPerformed',()=>{}); }catch(e){}
+    }
+  }catch(e){ console.warn('FCM init:',e); }
+}
+
 window.addEventListener('DOMContentLoaded',()=>{
   initTheme();
   document.documentElement.lang=lang;
@@ -2970,6 +2993,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   initIAP();
   initiOS26();
   initICloud();
+  initFirebase();
 });
 </script>
 </body>
