@@ -167,8 +167,10 @@ jobs:
               try: data = json.load(open(mf))
               except Exception as e: data = None; print("manifest parse hata:", e)
               n=0
+              import re as _re
               for a in (walk(data) if data is not None else []):
-                  ef = a.get("exportedFileName"); nm = a.get("suggestedHumanReadableName") or ef
+                  ef = a.get("exportedFileName"); nm = a.get("suggestedHumanReadableName") or ef or ""
+                  nm = _re.sub(r"_\d+_[0-9A-Fa-f-]{36}", "", nm)
                   src = os.path.join(out, ef) if ef else None
                   if src and os.path.exists(src):
                       nm = nm if nm.endswith(".png") else nm + ".png"
