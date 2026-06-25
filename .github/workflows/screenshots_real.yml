@@ -148,81 +148,36 @@ jobs:
 
           echo "Test exit: $TEST_EXIT"
 
-          # xcresult'tan attachment'ları çıkar (yeni sözdizimi: get object)
+          # xcresult'tan attachment'ları çıkar (Xcode 16: export attachments + manifest)
           if [ -d "$RESULT/test.xcresult" ]; then
-            python3 - "$RESULT/test.xcresult" "$OUT" << 'PYEOF'
-          import subprocess, json, sys, os
-
-          xcresult, outdir = sys.argv[1], sys.argv[2]
-
-          # Yeni xcresulttool sözdizimi: get object
-          try:
-              raw = subprocess.check_output(
-                  ["xcrun", "xcresulttool", "get", "object",
-                   "--path", xcresult, "--format", "json"],
-                  timeout=60, stderr=subprocess.DEVNULL
-              )
-          except subprocess.CalledProcessError:
-              # Eski sözdizimini dene
-              try:
-                  raw = subprocess.check_output(
-                      ["xcrun", "xcresulttool", "get",
-                       "--path", xcresult, "--format", "json"],
-                      timeout=60, stderr=subprocess.DEVNULL
-                  )
-              except Exception as e:
-                  print(f"xcresulttool hata: {e}"); sys.exit(0)
-
-          try:
-              data = json.loads(raw)
-          except Exception as e:
-              print(f"JSON parse hata: {e}"); sys.exit(0)
-
-          attachments = []
-          def find_att(obj, depth=0):
-              if depth > 15: return
-              if isinstance(obj, dict):
-                  t = obj.get("_type", {}).get("_name", "")
-                  if t == "ActionTestAttachment":
-                      name = obj.get("name", {})
-                      name = name.get("_value", "screen") if isinstance(name, dict) else str(name)
-                      ref = obj.get("payloadRef", {})
-                      if isinstance(ref, dict):
-                          ident = ref.get("id", {})
-                          ident = ident.get("_value", "") if isinstance(ident, dict) else str(ident)
-                      else:
-                          ident = ""
-                      if ident:
-                          attachments.append((name, ident))
-                  for v in obj.values():
-                      find_att(v, depth+1)
-              elif isinstance(obj, list):
-                  for v in obj:
-                      find_att(v, depth+1)
-
-          find_att(data)
-          print(f"Bulunan attachment sayısı: {len(attachments)}")
-
-          for name, ident in attachments:
-              try:
-                  img_data = subprocess.check_output(
-                      ["xcrun", "xcresulttool", "get", "attachment",
-                       "--path", xcresult, "--id", ident],
-                      timeout=30, stderr=subprocess.DEVNULL
-                  )
-              except subprocess.CalledProcessError:
-                  try:
-                      img_data = subprocess.check_output(
-                          ["xcrun", "xcresulttool", "get",
-                           "--path", xcresult, "--id", ident],
-                          timeout=30, stderr=subprocess.DEVNULL
-                      )
-                  except Exception as e:
-                      print(f"  ⚠ {name}: {e}"); continue
-              fname = f"{name}.png" if not name.endswith(".png") else name
-              with open(os.path.join(outdir, fname), "wb") as f:
-                  f.write(img_data)
-              print(f"  ✅ {fname} ({len(img_data):,} bytes)")
+            xcrun xcresulttool export attachments --path "$RESULT/test.xcresult" --output-path "$OUT" 2>/dev/null || true
+            python3 - "$OUT" << 'PYEOF'
+          import json, os, sys
+          out = sys.argv[1]
+          mf = os.path.join(out, "manifest.json")
+          def walk(d):
+              r=[]
+              if isinstance(d, list):
+                  for x in d: r += walk(x)
+              elif isinstance(d, dict):
+                  if "exportedFileName" in d: r.append(d)
+                  for v in d.values(): r += walk(v)
+              return r
+          if os.path.exists(mf):
+              try: data = json.load(open(mf))
+              except Exception as e: data = None; print("manifest parse hata:", e)
+              n=0
+              for a in (walk(data) if data is not None else []):
+                  ef = a.get("exportedFileName"); nm = a.get("suggestedHumanReadableName") or ef
+                  src = os.path.join(out, ef) if ef else None
+                  if src and os.path.exists(src):
+                      nm = nm if nm.endswith(".png") else nm + ".png"
+                      os.replace(src, os.path.join(out, nm)); n+=1
+                      print(f"  ✅ {nm}")
+              os.remove(mf)
+              print(f"export attachments: {n} görüntü")
+          else:
+              print("manifest yok — export attachments başarısız olmuş olabilir")
           PYEOF
           fi
 
@@ -306,6 +261,11 @@ jobs:
                   "flux_prompt": "dark cosmic space background with purple violet nebula glow, cyan light particles, premium gradient, no text, abstract, ultra detailed",
                   "captions": {
                       "01_ana_ekran":    {"tr": "Yapay Zeka ile Yaratın",        "en": "Create with AI"},
+                      "01_gorsel":       {"tr": "Görsellerini AI ile Üret",       "en": "Create Visuals with AI"},
+                      "02_yazi":         {"tr": "İçerik & Yazı Asistanı",         "en": "Content & Writing AI"},
+                      "03_studyo":       {"tr": "Ses, Video ve Analiz Stüdyosu",  "en": "Audio, Video & Analysis"},
+                      "04_urunler":      {"tr": "Hazır AI Ürünleri",              "en": "Ready AI Products"},
+                      "05_detay":        {"tr": "Güçlü AI Araçları",              "en": "Powerful AI Tools"},
                       "02_kategoriler":  {"tr": "Her Araç Elinizin Altında",     "en": "Every AI Tool At Hand"},
                       "03_arac_detay":   {"tr": "Güçlü AI Araçları",             "en": "Powerful AI Tools"},
                       "02_scroll":       {"tr": "Her Araç Elinizin Altında",     "en": "Every AI Tool At Hand"},
