@@ -105,12 +105,16 @@ struct RootView: View {
     @EnvironmentObject var yerel: Yerel
     var body: some View {
         TabView {
-            ContentView()
-                .tabItem { Label(yerel.p("araclarTab"), systemImage: "sparkles") }
-            UrunlerView()
-                .tabItem { Label(yerel.p("urunlerTab"), systemImage: "bag.fill") }
+            KategoriView(katlar: [.gorsel], baslik: yerel.t("kat_gorsel"), ikon: Kategori.gorsel.ikon)
+                .tabItem { Label(yerel.p("gorselTab"), systemImage: Kategori.gorsel.ikon) }
+            KategoriView(katlar: [.icerik], baslik: yerel.t("kat_icerik"), ikon: Kategori.icerik.ikon)
+                .tabItem { Label(yerel.p("yaziTab"), systemImage: Kategori.icerik.ikon) }
+            KategoriView(katlar: [.sesvideo, .analiz], baslik: yerel.p("studyoTab"), ikon: "waveform")
+                .tabItem { Label(yerel.p("studyoTab"), systemImage: "waveform") }
             KutuphaneView()
                 .tabItem { Label(yerel.p("kutuphaneTab"), systemImage: "books.vertical.fill") }
+            UrunlerView()
+                .tabItem { Label(yerel.p("urunlerTab"), systemImage: "bag.fill") }
         }
         .tint(tema.c1)
     }

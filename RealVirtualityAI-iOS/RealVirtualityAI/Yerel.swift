@@ -50,6 +50,9 @@ final class Yerel: ObservableObject {
     static let urunUI: [String:[String:String]] = [
         "araclarTab": ["tr":"AI Araçları","en":"AI Tools","de":"KI-Tools","fr":"Outils IA","es":"Herramientas IA","ar":"أدوات الذكاء","ru":"AI Инструменты"],
         "urunlerTab": ["tr":"Ürünler","en":"Products","de":"Produkte","fr":"Produits","es":"Productos","ar":"المنتجات","ru":"Товары"],
+        "studyoTab": ["tr":"Stüdyo","en":"Studio","de":"Studio","fr":"Studio","es":"Estudio","ar":"الاستوديو","ru":"Студия"],
+        "gorselTab": ["tr":"Görsel","en":"Visual","de":"Bild","fr":"Image","es":"Visual","ar":"صور","ru":"Графика"],
+        "yaziTab": ["tr":"Yazı","en":"Writing","de":"Text","fr":"Texte","es":"Texto","ar":"كتابة","ru":"Текст"],
         "urunHero1": ["tr":"Hazır dijital ürünler","en":"Ready digital products"],
         "urunHero2": ["tr":"& şablonlar","en":"& templates"],
         "urunAra": ["tr":"Ürün ara…","en":"Search products…"],

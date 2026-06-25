@@ -1,6 +1,11 @@
 import SwiftUI
 
-struct ContentView: View {
+// MARK: - Kategori sayfası (her alt sekme bir kategori = daha ferah)
+struct KategoriView: View {
+    let katlar: [Kategori]      // tek kategori ya da birleşik (ör. ses+video+analiz)
+    let baslik: String          // çağıran tarafça yerelleştirilmiş başlık
+    let ikon: String
+
     @EnvironmentObject var api: API
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
@@ -10,16 +15,16 @@ struct ContentView: View {
     @State private var ayarlarAcik = false
     @State private var arama = ""
 
-    // Responsive sütun sayısı — taşmayı tamamen önler (.flexible eşit böler)
     private var sutunSayisi: Int { hsc == .regular ? 3 : 2 }
     private var kolonlar: [GridItem] {
         Array(repeating: GridItem(.flexible(), spacing: 18), count: sutunSayisi)
     }
 
+    private var katAraclar: [Arac] { ARACLAR.filter { katlar.contains($0.kategori) } }
     private var sonuclar: [Arac] {
         let q = arama.trimmingCharacters(in: .whitespaces).lowercased()
         guard !q.isEmpty else { return [] }
-        return ARACLAR.filter {
+        return katAraclar.filter {
             yerel.aracMetin($0.id,"ad").lowercased().contains(q) ||
             yerel.aracMetin($0.id,"aciklama").lowercased().contains(q)
         }
@@ -30,23 +35,24 @@ struct ContentView: View {
             ZStack {
                 arkaplan
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 34) {
+                    VStack(alignment: .leading, spacing: 30) {
                         kahraman
                         aramaKutusu
-
                         if !arama.isEmpty {
                             grid(sonuclar)
+                        } else if katlar.count == 1 {
+                            grid(katAraclar)            // tek kategori → düz grid (ferah)
                         } else {
-                            ForEach(Kategori.allCases) { kat in
+                            ForEach(katlar) { kat in    // birleşik → alt başlıklı bölümler
                                 let liste = ARACLAR.filter { $0.kategori == kat }
                                 if !liste.isEmpty { bolum(kat, liste) }
                             }
-                            altBilgi
                         }
+                        altBilgi
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 8)
-                    .padding(.bottom, 48)
+                    .padding(.bottom, 44)
                 }
                 .scrollIndicators(.hidden)
             }
@@ -68,7 +74,7 @@ struct ContentView: View {
         }
     }
 
-    // MARK: üst bar (taşmaz)
+    // MARK: üst bar
     @ToolbarContentBuilder
     var ust: some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
@@ -103,28 +109,23 @@ struct ContentView: View {
         }
     }
 
-    // MARK: kahraman / hero
+    // MARK: kahraman / hero (kategoriye özel, ferah)
     var kahraman: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 7) {
-                Image(systemName: "sparkles").font(.subheadline).foregroundStyle(tema.grad)
+                Image(systemName: ikon).font(.subheadline).foregroundStyle(tema.grad)
                 Text(yerel.t("studyoEyebrow")).font(.subheadline.weight(.semibold)).foregroundStyle(.rvMut)
             }
-            Text(yerel.t("heroBaslik1"))
-                .font(.system(size: 36, weight: .heavy)).foregroundStyle(.rvText)
-                .fixedSize(horizontal: false, vertical: true)
-            Text(yerel.t("heroBaslik2"))
-                .font(.system(size: 36, weight: .heavy))
-                .foregroundStyle(tema.grad)
+            Text(baslik)
+                .font(.system(size: 34, weight: .heavy)).foregroundStyle(.rvText)
                 .fixedSize(horizontal: false, vertical: true)
             Text(yerel.t("heroAlt"))
                 .font(.body).foregroundStyle(.rvMut)
-                .lineSpacing(3)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.top, 4)
+                .lineSpacing(3).fixedSize(horizontal: false, vertical: true)
+                .padding(.top, 2)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.top, 12)
+        .padding(.top, 10)
     }
 
     // MARK: arama
@@ -141,7 +142,7 @@ struct ContentView: View {
         .glassEffect(.regular, in: .rect(cornerRadius: 18))
     }
 
-    // MARK: kategori bölümü
+    // MARK: alt başlıklı bölüm (birleşik sekmede)
     func bolum(_ kat: Kategori, _ liste: [Arac]) -> some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack(spacing: 10) {
@@ -151,7 +152,7 @@ struct ContentView: View {
                         .frame(width: 30, height: 30)
                     Image(systemName: kat.ikon).font(.system(size: 14, weight: .semibold)).foregroundStyle(tema.grad)
                 }
-                Text(yerel.t(kat.key)).font(.title2.bold()).foregroundStyle(.rvText)
+                Text(yerel.t(kat.key)).font(.title3.bold()).foregroundStyle(.rvText)
             }
             grid(liste)
         }
