@@ -173,14 +173,8 @@ jobs:
           sed -i '' -E 's/TARGETED_DEVICE_FAMILY = "?[12,]+"?;/TARGETED_DEVICE_FAMILY = "1";/g' "$PBX" || true
           # Pods imza devre dışı
           python3 - << 'PYEOF'
-          import re
           with open('ios/App/Podfile', 'r') as f:
               content = f.read()
-          # Firebase (Capacitor) static framework linkage — 'Unable to resolve module FirebaseAnalytics' fix
-          if 'use_frameworks!' in content:
-              content = re.sub(r'use_frameworks![^\n]*', 'use_frameworks! :linkage => :static', content, count=1)
-          else:
-              content = re.sub(r"(target 'App' do\n)", r"\1  use_frameworks! :linkage => :static\n", content, count=1)
           injection = "\n  installer.pods_project.targets.each do |target|\n    target.build_configurations.each do |config|\n      config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'\n      config.build_settings['CODE_SIGNING_REQUIRED'] = 'NO'\n    end\n  end"
           if 'post_install do |installer|' in content:
               content = content.replace('post_install do |installer|', 'post_install do |installer|' + injection, 1)
@@ -188,7 +182,7 @@ jobs:
               content += "\npost_install do |installer|" + injection + "\nend\n"
           with open('ios/App/Podfile', 'w') as f:
               f.write(content)
-          print("Podfile patched OK (use_frameworks static)")
+          print("Podfile patched OK")
           PYEOF
       - name: iCloud KVS entitlement + Swift plugin
         working-directory: ${{ matrix.app }}
