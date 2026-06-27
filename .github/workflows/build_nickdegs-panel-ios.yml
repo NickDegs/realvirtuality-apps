@@ -4,6 +4,11 @@ on:
     branches: [main]
     paths: ["NickDegsPanel-iOS/**", ".github/workflows/build_nickdegs-panel-ios.yml"]
   workflow_dispatch:
+    inputs:
+      media_internal:
+        description: "IPTV/Medya modülünü AÇ — SADECE TestFlight internal (App Store'a GÖNDERİLMEZ, ban önleme)"
+        type: boolean
+        default: false
   schedule:
     - cron: '0 6 1 * *'  # ayda 1 oto-rebuild → TestFlight süresi dolmasın
 jobs:
@@ -50,17 +55,22 @@ jobs:
             <key>uploadSymbols</key><true/>
           </dict></plist>
           PLIST
+          MEDIA_FLAG=""
+          if [ "${{ github.event.inputs.media_internal }}" = "true" ]; then
+            MEDIA_FLAG='SWIFT_ACTIVE_COMPILATION_CONDITIONS=IPTV_MODULE'
+            echo "⚠️ IPTV_MODULE AÇIK — bu build SADECE TestFlight internal; App Store gönderimi ATLANACAK."
+          fi
           xcodebuild -project NickDegsPanel.xcodeproj -scheme NickDegsPanel \
             -destination 'generic/platform=iOS' -configuration Release -archivePath ND.xcarchive \
             DEVELOPMENT_TEAM=SZF4T3P583 CURRENT_PROJECT_VERSION=$(date +%s) \
-            TARGETED_DEVICE_FAMILY=1 CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" ONLY_ACTIVE_ARCH=NO archive
+            TARGETED_DEVICE_FAMILY=1 CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" ONLY_ACTIVE_ARCH=NO $MEDIA_FLAG archive
           xcodebuild -exportArchive -archivePath ND.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./ipa-out \
             -allowProvisioningUpdates \
             -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_ASC_KEY_ID }}.p8 \
             -authenticationKeyID ${{ secrets.APPLE_ASC_KEY_ID }} \
             -authenticationKeyIssuerID ${{ secrets.APPLE_ASC_ISSUER_ID }}
       - name: Build'i beta gruplarına ata (TestFlight'ta görünsün)
-        if: success()
+        if: success() && github.event.inputs.media_internal != 'true'
         env:
           ASC_KEY_PATH: ${{ github.workspace }}/.asc_key.p8
           ASC_KEY_ID: ${{ secrets.APPLE_ASC_KEY_ID }}
@@ -71,7 +81,7 @@ jobs:
           python3 scripts/assign_beta.py
           rm -f "$ASC_KEY_PATH"
       - name: App Store incelemeye gönder
-        if: success()
+        if: success() && github.event.inputs.media_internal != 'true'
         env:
           ASC_KEY_PATH: ${{ github.workspace }}/.asc_key.p8
           ASC_KEY_ID: ${{ secrets.APPLE_ASC_KEY_ID }}
