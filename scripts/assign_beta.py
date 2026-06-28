@@ -38,7 +38,12 @@ if not bid:
     print("⚠️ build VALID olmadı, atama atlandı"); sys.exit(0)
 bg=api(f"/v1/apps/{APP}/betaGroups")
 for g in bg.get("data",[]):
-    gid=g["id"]; name=g["attributes"].get("name")
+    gid=g["id"]; attr=g["attributes"]; name=attr.get("name")
+    # SADECE İÇ (internal) gruplara ata. Harici (external) gruba atamak Apple Beta App Review
+    # tetikler → her push'ta Apple inceler (istenmiyor; spam-flag riskini de artırır). 2026-06-28.
+    if not attr.get("isInternalGroup"):
+        print(f"  ⏭ '{name}': HARİCİ grup — atlandı (beta-review tetiklememek için)")
+        continue
     r=api(f"/v1/betaGroups/{gid}/relationships/builds","POST",{"data":[{"type":"builds","id":bid}]})
-    print(f"  → '{name}': {r}")
-print("✅ build tüm gruplara atandı")
+    print(f"  → '{name}' (iç): {r}")
+print("✅ build sadece iç gruplara atandı (harici beta-review tetiklenmez)")
