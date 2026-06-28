@@ -1,1311 +1,1446 @@
 [
-  {
-    "id": "komisyonsuz",
-    "sekme": "isletme",
-    "g": "isletme",
-    "ic": "🍽️",
-    "ad": {
-      "tr": "Komisyonsuz Sipariş Sistemi",
-      "en": "Commission-Free Ordering"
-    },
-    "aciklama": {
-      "tr": "Aracı platformlara komisyon ödemeden kendi online sipariş sisteminiz: web + QR + WhatsApp, müşteri verisi sizde.",
-      "en": "Your own online ordering, no platform commissions: web + QR + WhatsApp."
-    },
-    "pr": "₺990",
-    "demo": "/komisyonsuz"
-  },
-  {
-    "id": "website",
-    "sekme": "isletme",
-    "g": "isletme",
-    "ic": "🌐",
-    "ad": {
-      "tr": "Web Sitesi Kurulumu",
-      "en": "Website Setup"
-    },
-    "aciklama": {
-      "tr": "Kurumsal/tanıtım sitesi, mobil uyumlu, SEO.",
-      "en": "Corporate/landing site, responsive, SEO."
-    },
-    "pr": "₺2.500"
-  },
-  {
-    "id": "ecom",
-    "sekme": "isletme",
-    "g": "isletme",
-    "ic": "🛒",
-    "ad": {
-      "tr": "E-Ticaret / Katalog",
-      "en": "E-Commerce / Catalog"
-    },
-    "aciklama": {
-      "tr": "Ürün kataloğu + ödeme + otomatik teslimat.",
-      "en": "Product catalog + payment + auto delivery."
-    },
-    "pr": "₺3.500"
-  },
-  {
-    "id": "bot",
-    "sekme": "isletme",
-    "g": "isletme",
-    "ic": "💬",
-    "ad": {
-      "tr": "WhatsApp / Telegram Bot",
-      "en": "WhatsApp / Telegram Bot"
-    },
-    "aciklama": {
-      "tr": "Sipariş, destek, bildirim botu kurulumu.",
-      "en": "Order, support, notification bot setup."
-    },
-    "pr": "₺1.500"
-  },
-  {
-    "id": "hosting",
-    "sekme": "isletme",
-    "g": "isletme",
-    "ic": "☁️",
-    "ad": {
-      "tr": "Domain + Hosting + SSL",
-      "en": "Domain + Hosting + SSL"
-    },
-    "aciklama": {
-      "tr": "Alan adı, barındırma, sertifika paketi.",
-      "en": "Domain, hosting, certificate bundle."
-    },
-    "pr": "₺1490"
-  },
-  {
-    "id": "teamcard",
-    "sekme": "isletme",
-    "g": "isletme",
-    "ic": "👥",
-    "ad": {
-      "tr": "Ekip Dijital Kartvizit",
-      "en": "Team Digital Cards"
-    },
-    "aciklama": {
-      "tr": "10 kişiye kadar markalı dijital kartvizit.",
-      "en": "Branded digital cards for up to 10 people."
-    },
-    "pr": "₺1490"
-  },
-  {
-    "id": "integ",
-    "sekme": "isletme",
-    "g": "isletme",
-    "ic": "🔗",
-    "ad": {
-      "tr": "Otomasyon Entegrasyonu",
-      "en": "Automation Integration"
-    },
-    "aciklama": {
-      "tr": "Sistemlerini bağla, süreçleri otomatikle.",
-      "en": "Connect your systems, automate processes."
-    },
-    "pr": "₺1.500"
-  },
-  {
-    "id": "custom",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "💻",
-    "ad": {
-      "tr": "Özel Yazılım / Uygulama",
-      "en": "Custom Software / App"
-    },
-    "aciklama": {
-      "tr": "İhtiyacına özel web/mobil uygulama.",
-      "en": "Custom web/mobile app development."
-    },
-    "pr": "₺14.990"
-  },
-  {
-    "id": "whitelabel",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "🏷️",
-    "ad": {
-      "tr": "White-Label Çözüm",
-      "en": "White-Label Solution"
-    },
-    "aciklama": {
-      "tr": "Kendi markanla sunabileceğin hazır platform.",
-      "en": "Ready platform to offer under your brand."
-    },
-    "pr": "₺9.990"
-  },
-  {
-    "id": "sysint",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "🔄",
-    "ad": {
-      "tr": "Sistem Entegrasyonu",
-      "en": "System Integration"
-    },
-    "aciklama": {
-      "tr": "ERP/CRM/ödeme/API entegrasyonları.",
-      "en": "ERP/CRM/payment/API integrations."
-    },
-    "pr": "₺7.990"
-  },
-  {
-    "id": "infra",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "🖥️",
-    "ad": {
-      "tr": "Sunucu / Altyapı Kurulumu",
-      "en": "Server / Infrastructure"
-    },
-    "aciklama": {
-      "tr": "Kendi sunucu altyapın, self-hosted çözümler.",
-      "en": "Your own server infra, self-hosted."
-    },
-    "pr": "₺4.990"
-  },
-  {
-    "id": "security",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "🛡️",
-    "ad": {
-      "tr": "Güvenlik & İzleme Paketi",
-      "en": "Security & Monitoring"
-    },
-    "aciklama": {
-      "tr": "Banka seviyesi güvenlik + 7/24 izleme.",
-      "en": "Bank-grade security, 24/7 monitoring."
-    },
-    "pr": "₺2.990"
-  },
-  {
-    "id": "sla",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "📞",
-    "ad": {
-      "tr": "SLA'lı 7/24 Destek",
-      "en": "24/7 SLA Support"
-    },
-    "aciklama": {
-      "tr": "Garantili yanıt süreli kurumsal destek.",
-      "en": "Guaranteed-response enterprise support."
-    },
-    "pr": "₺2.990"
-  },
-  {
-    "id": "brand",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "🎨",
-    "ad": {
-      "tr": "Kurumsal Marka Kimliği",
-      "en": "Corporate Brand Identity"
-    },
-    "aciklama": {
-      "tr": "Logo + kılavuz + kartvizit + sosyal kit.",
-      "en": "Logo + guidelines + cards + social kit."
-    },
-    "pr": "₺3.990"
-  },
-  {
-    "id": "cmail",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "📧",
-    "ad": {
-      "tr": "Kurumsal E-posta Kurulumu",
-      "en": "Business Email Setup"
-    },
-    "aciklama": {
-      "tr": "Alan adına özel e-posta + Workspace.",
-      "en": "Domain email + Workspace setup."
-    },
-    "pr": "₺990"
-  },
-  {
-    "id": "seo",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "🔍",
-    "ad": {
-      "tr": "SEO & Dijital Pazarlama",
-      "en": "SEO & Digital Marketing"
-    },
-    "aciklama": {
-      "tr": "Arama motoru optimizasyonu + içerik.",
-      "en": "Search optimization + content strategy."
-    },
-    "pr": "₺2.990"
-  },
-  {
-    "id": "chatbot",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "💬",
-    "ad": {
-      "tr": "AI Asistan / Chatbot Kurulumu",
-      "en": "AI Assistant / Chatbot Setup"
-    },
-    "aciklama": {
-      "tr": "Sitene/WhatsApp'a özel AI müşteri asistanı.",
-      "en": "Custom AI customer assistant for site/WhatsApp."
-    },
-    "pr": "₺4.990"
-  },
-  {
-    "id": "dashboard",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "📊",
-    "ad": {
-      "tr": "Veri Panosu (BI Dashboard)",
-      "en": "BI Dashboard"
-    },
-    "aciklama": {
-      "tr": "Canlı iş verisi izleme + raporlama.",
-      "en": "Live business data monitoring + reporting."
-    },
-    "pr": "₺3.990"
-  },
-  {
-    "id": "training",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "🎓",
-    "ad": {
-      "tr": "Kurumsal AI Eğitimi",
-      "en": "Corporate AI Training"
-    },
-    "aciklama": {
-      "tr": "Ekibine özel yapay zekâ & otomasyon workshop.",
-      "en": "AI & automation workshop for your team."
-    },
-    "pr": "₺4.990"
-  },
-  {
-    "id": "gbp",
-    "sekme": "isletme",
-    "g": "isletme",
-    "ic": "📍",
-    "ad": {
-      "tr": "Google İşletme Profili Kurulumu",
-      "en": "Google Business Profile Setup"
-    },
-    "aciklama": {
-      "tr": "Haritalarda çık, yorumları yönet, görünür ol.",
-      "en": "Appear on Maps, manage reviews, get found."
-    },
-    "pr": "₺790"
-  },
-  {
-    "id": "booking",
-    "sekme": "isletme",
-    "g": "isletme",
-    "ic": "📅",
-    "ad": {
-      "tr": "Online Randevu Sistemi",
-      "en": "Online Booking System"
-    },
-    "aciklama": {
-      "tr": "Müşteri online randevu alsın, otomatik hatırlatma.",
-      "en": "Let clients book online, auto reminders."
-    },
-    "pr": "₺1.500"
-  },
-  {
-    "id": "menu",
-    "sekme": "isletme",
-    "g": "isletme",
-    "ic": "🍽️",
-    "ad": {
-      "tr": "Restoran QR Menü Sistemi",
-      "en": "Restaurant QR Menu System"
-    },
-    "aciklama": {
-      "tr": "Çok dilli dijital menü + güncelleme paneli.",
-      "en": "Multilingual digital menu + admin panel."
-    },
-    "pr": "₺1.200"
-  },
-  {
-    "id": "mobileapp",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "📱",
-    "ad": {
-      "tr": "Mobil Uygulama Geliştirme",
-      "en": "Mobile App Development"
-    },
-    "aciklama": {
-      "tr": "App Store & Play yayını dahil özel uygulama.",
-      "en": "Custom app incl. App Store & Play release."
-    },
-    "pr": "₺24.990"
-  },
-  {
-    "id": "kvkk",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "📜",
-    "ad": {
-      "tr": "KVKK / Gizlilik Uyum Paketi",
-      "en": "Data Compliance Pack"
-    },
-    "aciklama": {
-      "tr": "Gizlilik politikası, çerez, aydınlatma metni.",
-      "en": "Privacy policy, cookie, disclosure texts."
-    },
-    "pr": "₺1.990"
-  },
-  {
-    "id": "backup",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "💾",
-    "ad": {
-      "tr": "Yedekleme & Felaket Kurtarma",
-      "en": "Backup & Disaster Recovery"
-    },
-    "aciklama": {
-      "tr": "Otomatik yedek + hızlı geri yükleme altyapısı.",
-      "en": "Automated backup + fast restore infrastructure."
-    },
-    "pr": "₺1.490"
-  },
-  {
-    "id": "productphoto",
-    "sekme": "isletme",
-    "g": "isletme",
-    "ic": "📷",
-    "ad": {
-      "tr": "Ürün Fotoğraf Düzenleme",
-      "en": "Product Photo Editing"
-    },
-    "aciklama": {
-      "tr": "Arka plan temizleme + pazaryeri uyumlu düzenleme.",
-      "en": "Background removal + marketplace-ready editing."
-    },
-    "pr": "₺299"
-  },
-  {
-    "id": "marketplace",
-    "sekme": "isletme",
-    "g": "isletme",
-    "ic": "🏬",
-    "ad": {
-      "tr": "Pazaryeri Mağaza Açılışı",
-      "en": "Marketplace Store Setup"
-    },
-    "aciklama": {
-      "tr": "Trendyol/Hepsiburada/Amazon mağaza + ürün girişi.",
-      "en": "Trendyol/Amazon store + product listing setup."
-    },
-    "pr": "₺1.500"
-  },
-  {
-    "id": "dropship",
-    "sekme": "isletme",
-    "g": "isletme",
-    "ic": "📦",
-    "ad": {
-      "tr": "Dropshipping Mağaza Kurulumu",
-      "en": "Dropshipping Store Setup"
-    },
-    "aciklama": {
-      "tr": "Tedarikçi entegre, hazır satış mağazası.",
-      "en": "Supplier-integrated, ready-to-sell store."
-    },
-    "pr": "₺2.500"
-  },
-  {
-    "id": "maintain",
-    "sekme": "isletme",
-    "g": "isletme",
-    "ic": "🔧",
-    "ad": {
-      "tr": "Site Bakım & Güncelleme",
-      "en": "Site Maintenance & Updates"
-    },
-    "aciklama": {
-      "tr": "Aylık güncelleme, yedek, güvenlik, destek.",
-      "en": "Monthly updates, backup, security, support."
-    },
-    "pr": "₺990"
-  },
-  {
-    "id": "crm",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "🗂️",
-    "ad": {
-      "tr": "CRM / ERP Kurulumu",
-      "en": "CRM / ERP Setup"
-    },
-    "aciklama": {
-      "tr": "Müşteri & süreç yönetim sistemi + eğitim.",
-      "en": "Customer & process management setup + training."
-    },
-    "pr": "₺5.990"
-  },
-  {
-    "id": "devops",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "⚙️",
-    "ad": {
-      "tr": "DevOps / CI-CD Kurulumu",
-      "en": "DevOps / CI-CD Setup"
-    },
-    "aciklama": {
-      "tr": "Otomatik derleme, test, dağıtım hattı.",
-      "en": "Automated build, test, deployment pipeline."
-    },
-    "pr": "₺4.990"
-  },
-  {
-    "id": "cloudmig",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "☁️",
-    "ad": {
-      "tr": "Bulut Göçü (Cloud Migration)",
-      "en": "Cloud Migration"
-    },
-    "aciklama": {
-      "tr": "Sistemlerini buluta taşı, ölçeklenebilir altyapı.",
-      "en": "Migrate to cloud, scalable infrastructure."
-    },
-    "pr": "₺7.990"
-  },
-  {
-    "id": "retainer",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "🤝",
-    "ad": {
-      "tr": "Aylık Teknik Danışmanlık",
-      "en": "Monthly Tech Retainer"
-    },
-    "aciklama": {
-      "tr": "Sürekli geliştirme + bakım + öncelikli destek.",
-      "en": "Ongoing development + maintenance + priority support."
-    },
-    "pr": "₺4.990"
-  },
-  {
-    "id": "hukuk",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "⚖️",
-    "ad": {
-      "tr": "Avukat / Hukuk Bürosu Sistemi",
-      "en": "Law Firm Management System"
-    },
-    "aciklama": {
-      "tr": "Dava, süre takibi, duruşma takvimi, şifreli belge kasası — banka seviyesi güvenlik, KVKK uyumlu.",
-      "en": "Cases, deadline tracking, hearings, encrypted document vault — bank-level security."
-    },
-    "pr": "",
-    "demo": "/hukuk"
-  },
-  {
-    "id": "qrorder",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🍽️",
-    "ad": {
-      "tr": "QR Masa Sipariş Sistemi",
-      "en": "QR Table Ordering System"
-    },
-    "aciklama": {
-      "tr": "Müşteri masadaki QR'ı okutur, siparişi seçer; sipariş anında mutfağa/kasaya düşer ve masaya getirilir. Garson çağırmaya, kalkmaya gerek yok.",
-      "en": "Guest scans the table QR, picks items; the order drops straight to the kitchen/POS and is brought to the table. No calling a waiter, no getting up."
-    },
-    "pr": "₺1.900",
-    "demo": "/demo/qr-masa/?masa=1"
-  },
-  {
-    "id": "waiter",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🛎️",
-    "ad": {
-      "tr": "Garson Çağırma & Masa Bildirim",
-      "en": "Waiter Call & Table Alerts"
-    },
-    "aciklama": {
-      "tr": "Masadan tek dokunuşla garson/hesap çağır; bildirim personele anında ulaşır.",
-      "en": "One tap from the table calls a waiter/bill; staff is alerted instantly."
-    },
-    "pr": "₺990",
-    "demo": "/demo/qr-masa/mutfak"
-  },
-  {
-    "id": "kds",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "👨‍🍳",
-    "ad": {
-      "tr": "Mutfak Ekran Sistemi (KDS)",
-      "en": "Kitchen Display System"
-    },
-    "aciklama": {
-      "tr": "Siparişler mutfak ekranında sıralanır, hazırlık süreleri takip edilir.",
-      "en": "Orders queue on the kitchen screen, prep times tracked."
-    },
-    "pr": "₺1.500",
-    "demo": "/demo/qr-masa/mutfak"
-  },
-  {
-    "id": "tablepay",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "💳",
-    "ad": {
-      "tr": "Masadan Hesap & Ödeme",
-      "en": "Pay at Table"
-    },
-    "aciklama": {
-      "tr": "Müşteri QR ile hesabı görür, masadan kalkmadan kartla öder.",
-      "en": "Guest sees the bill via QR and pays by card without leaving the table."
-    },
-    "pr": "₺1.500"
-  },
-  {
-    "id": "queue",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🔢",
-    "ad": {
-      "tr": "Sıra / Numaratör Sistemi",
-      "en": "Queue / Ticket System"
-    },
-    "aciklama": {
-      "tr": "Klinik, banka, mağaza için dijital sıra alma + ekran çağrı.",
-      "en": "Digital ticketing + screen call for clinics, banks, stores."
-    },
-    "pr": "₺1.200",
-    "demo": "/demo/sira/al"
-  },
-  {
-    "id": "reserve",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "📆",
-    "ad": {
-      "tr": "Rezervasyon & Masa Yönetimi",
-      "en": "Reservation & Table Management"
-    },
-    "aciklama": {
-      "tr": "Online masa rezervasyonu + salon yerleşim planı + doluluk.",
-      "en": "Online table booking + floor plan + occupancy."
-    },
-    "pr": "₺1.500",
-    "demo": "/demo/rezervasyon/"
-  },
-  {
-    "id": "hotelqr",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🏨",
-    "ad": {
-      "tr": "Otel Dijital Resepsiyon & Oda Servisi",
-      "en": "Hotel Digital Concierge"
-    },
-    "aciklama": {
-      "tr": "Odadan QR ile servis iste, check-in/out, rehber ve harita.",
-      "en": "Request service via in-room QR, check-in/out, guide and map."
-    },
-    "pr": "₺2.500",
-    "demo": "/demo/otel/?oda=101"
-  },
-  {
-    "id": "loyalty",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🎟️",
-    "ad": {
-      "tr": "Sadakat & Puan Kart Sistemi",
-      "en": "Loyalty & Points System"
-    },
-    "aciklama": {
-      "tr": "Dijital puan, kampanya, tekrar alışveriş için müşteri sadakati.",
-      "en": "Digital points, campaigns, repeat-purchase loyalty."
-    },
-    "pr": "₺1.200",
-    "demo": "/demo/sadakat/"
-  },
-  {
-    "id": "inventory",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "📦",
-    "ad": {
-      "tr": "Stok & Depo Takip Sistemi",
-      "en": "Stock & Warehouse Tracking"
-    },
-    "aciklama": {
-      "tr": "Barkodlu stok girişi-çıkışı, kritik seviye uyarısı.",
-      "en": "Barcode stock in/out, low-level alerts."
-    },
-    "pr": "₺1.900",
-    "demo": "/demo/stok/"
-  },
-  {
-    "id": "shift",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🕐",
-    "ad": {
-      "tr": "Personel & Vardiya Takip",
-      "en": "Staff & Shift Tracking"
-    },
-    "aciklama": {
-      "tr": "QR ile giriş-çıkış, vardiya planı, mesai raporu.",
-      "en": "QR clock in/out, shift planning, hours reports."
-    },
-    "pr": "₺1.200",
-    "demo": "/demo/vardiya/"
-  },
-  {
-    "id": "salon",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "💇",
-    "ad": {
-      "tr": "Kuaför / Güzellik Randevu Sistemi",
-      "en": "Salon / Beauty Booking"
-    },
-    "aciklama": {
-      "tr": "Online randevu, personel takvimi, otomatik hatırlatma.",
-      "en": "Online booking, staff calendar, auto reminders."
-    },
-    "pr": "₺1.500",
-    "demo": "/demo/randevu/"
-  },
-  {
-    "id": "clinic",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🩺",
-    "ad": {
-      "tr": "Klinik / Diş Hasta Takip",
-      "en": "Clinic / Patient Management"
-    },
-    "aciklama": {
-      "tr": "Hasta kaydı, randevu, tedavi geçmişi ve hatırlatma.",
-      "en": "Patient records, appointments, history and reminders."
-    },
-    "pr": "₺2.500",
-    "demo": "/demo/randevu/"
-  },
-  {
-    "id": "gym",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🏋️",
-    "ad": {
-      "tr": "Spor Salonu Üyelik & Giriş",
-      "en": "Gym Membership & Access"
-    },
-    "aciklama": {
-      "tr": "QR üyelik kartı, giriş kontrolü, aidat takibi.",
-      "en": "QR membership, access control, dues tracking."
-    },
-    "pr": "₺1.900",
-    "demo": "/demo/gym/"
-  },
-  {
-    "id": "eventqr",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🎫",
-    "ad": {
-      "tr": "Etkinlik Bilet & QR Giriş",
-      "en": "Event Ticketing & QR Check-in"
-    },
-    "aciklama": {
-      "tr": "Online bilet satışı + kapıda QR okutarak hızlı giriş.",
-      "en": "Online ticket sales + fast QR check-in at the door."
-    },
-    "pr": "₺990",
-    "demo": "/demo/etkinlik/"
-  },
-  {
-    "id": "feedback",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "⭐",
-    "ad": {
-      "tr": "QR Anket & Geri Bildirim",
-      "en": "QR Survey & Feedback"
-    },
-    "aciklama": {
-      "tr": "Masada/üründe QR ile anlık memnuniyet ve yorum toplama.",
-      "en": "Collect instant satisfaction and reviews via QR at the table/product."
-    },
-    "pr": "₺990",
-    "demo": "/demo/anket/"
-  },
-  {
-    "id": "tipqr",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "💝",
-    "ad": {
-      "tr": "Dijital Bahşiş (QR Tip)",
-      "en": "Digital Tipping (QR)"
-    },
-    "aciklama": {
-      "tr": "Personele QR ile kartlı bahşiş; nakit derdi yok.",
-      "en": "Card tips to staff via QR; no cash needed."
-    },
-    "pr": "₺590"
-  },
-  {
-    "id": "kiosk",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🖲️",
-    "ad": {
-      "tr": "Self-Servis Sipariş Kiosk",
-      "en": "Self-Service Ordering Kiosk"
-    },
-    "aciklama": {
-      "tr": "Dokunmatik ekrandan sipariş + ödeme, kuyruğu azaltır.",
-      "en": "Touchscreen order + pay, cuts the queue."
-    },
-    "pr": "₺3.500"
-  },
-  {
-    "id": "signage",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "📺",
-    "ad": {
-      "tr": "Dijital Tabela / Menü Ekranı",
-      "en": "Digital Signage / Menu Board"
-    },
-    "aciklama": {
-      "tr": "Ekranlarda uzaktan güncellenen menü, kampanya, duyuru.",
-      "en": "Remotely updated menu, promos, announcements on screens."
-    },
-    "pr": "₺1.500"
-  },
-  {
-    "id": "delivery",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🛵",
-    "ad": {
-      "tr": "Paket Servis & Kurye Takip",
-      "en": "Delivery & Courier Tracking"
-    },
-    "aciklama": {
-      "tr": "Sipariş durumu, kurye atama, müşteriye canlı takip linki.",
-      "en": "Order status, courier assignment, live tracking link for customers."
-    },
-    "pr": "₺1.900",
-    "demo": "/demo/kargo/"
-  },
-  {
-    "id": "valet",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🚗",
-    "ad": {
-      "tr": "Vale / Otopark Çağırma Sistemi",
-      "en": "Valet / Parking Call System"
-    },
-    "aciklama": {
-      "tr": "QR ile aracı çağır, vale bildirimi, bekleme süresini kısalt.",
-      "en": "Call your car via QR, valet alert, shorter wait."
-    },
-    "pr": "₺1.200"
-  },
-  {
-    "id": "parking",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🅿️",
-    "ad": {
-      "tr": "Otopark Doluluk & Plaka Okuma",
-      "en": "Parking Occupancy & Plate Reading"
-    },
-    "aciklama": {
-      "tr": "Boş yer takibi, plaka tanıma ile giriş-çıkış ve ücret.",
-      "en": "Free-spot tracking, plate-recognition entry/exit and fees."
-    },
-    "pr": "₺2.500"
-  },
-  {
-    "id": "intercom",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🔔",
-    "ad": {
-      "tr": "Akıllı Zil & Kapı İnterkom",
-      "en": "Smart Doorbell & Intercom"
-    },
-    "aciklama": {
-      "tr": "Telefondan kapı görüntüsü, uzaktan kapı açma.",
-      "en": "See the door from your phone, open remotely."
-    },
-    "pr": "₺1.500"
-  },
-  {
-    "id": "building",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🏢",
-    "ad": {
-      "tr": "Apartman / Site Yönetim Sistemi",
-      "en": "Building / HOA Management"
-    },
-    "aciklama": {
-      "tr": "Aidat takibi, duyuru, arıza bildirimi, karar defteri.",
-      "en": "Dues tracking, announcements, fault reports, decision log."
-    },
-    "pr": "₺1.900",
-    "demo": "/demo/apartman/"
-  },
-  {
-    "id": "carrental",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🚙",
-    "ad": {
-      "tr": "Araç Kiralama Yönetimi",
-      "en": "Car Rental Management"
-    },
-    "aciklama": {
-      "tr": "Müsaitlik, sözleşme, teslim-iade ve hasar takibi.",
-      "en": "Availability, contracts, handover-return and damage tracking."
-    },
-    "pr": "₺2.500"
-  },
-  {
-    "id": "realestate",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🏡",
-    "ad": {
-      "tr": "Emlak İlan & Portföy Yönetimi",
-      "en": "Real Estate Listings & CRM"
-    },
-    "aciklama": {
-      "tr": "Portföy, ilan yayını, müşteri eşleştirme ve randevu.",
-      "en": "Portfolio, listing publish, client matching and viewings."
-    },
-    "pr": "₺2.500"
-  },
-  {
-    "id": "vet",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🐾",
-    "ad": {
-      "tr": "Veteriner / Pet Klinik Takip",
-      "en": "Vet / Pet Clinic Management"
-    },
-    "aciklama": {
-      "tr": "Hasta kartı, aşı takvimi, randevu ve hatırlatma.",
-      "en": "Patient records, vaccine schedule, appointments and reminders."
-    },
-    "pr": "₺1.900"
-  },
-  {
-    "id": "school",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🏫",
-    "ad": {
-      "tr": "Okul / Kurs & Veli Bilgilendirme",
-      "en": "School / Course & Parent Portal"
-    },
-    "aciklama": {
-      "tr": "Yoklama, not, ödev, servis ve veli bildirimleri.",
-      "en": "Attendance, grades, homework, bus and parent alerts."
-    },
-    "pr": "₺2.500"
-  },
-  {
-    "id": "fieldservice",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🧰",
-    "ad": {
-      "tr": "Servis / Arıza Takip",
-      "en": "Field Service / Ticketing"
-    },
-    "aciklama": {
-      "tr": "Arıza kaydı, teknisyen atama, durum ve süre takibi.",
-      "en": "Fault logging, technician dispatch, status and SLA tracking."
-    },
-    "pr": "₺1.900"
-  },
-  {
-    "id": "helpdesk",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🎧",
-    "ad": {
-      "tr": "Destek Talebi / Çağrı Yönetimi",
-      "en": "Helpdesk / Support Tickets"
-    },
-    "aciklama": {
-      "tr": "Müşteri destek talepleri, öncelik, atama ve raporlama.",
-      "en": "Customer tickets, priority, assignment and reporting."
-    },
-    "pr": "₺1.500",
-    "demo": "/demo/destek/"
-  },
-  {
-    "id": "catalog",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "📒",
-    "ad": {
-      "tr": "Dijital B2B Kartela / Katalog",
-      "en": "Digital B2B Catalog"
-    },
-    "aciklama": {
-      "tr": "Bayilere özel fiyatlı, sipariş alabilen dijital katalog.",
-      "en": "Dealer-priced digital catalog that takes orders."
-    },
-    "pr": "₺1.500"
-  },
-  {
-    "id": "leadqr",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🧲",
-    "ad": {
-      "tr": "Fuar / Stand QR Lead Toplama",
-      "en": "Expo / Booth QR Lead Capture"
-    },
-    "aciklama": {
-      "tr": "Ziyaretçi QR ile bilgi bırakır, anlık CRM'e düşer.",
-      "en": "Visitors leave info via QR, instantly into your CRM."
-    },
-    "pr": "₺990"
-  },
-  {
-    "id": "warranty",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🧾",
-    "ad": {
-      "tr": "Garanti & Servis Kayıt",
-      "en": "Warranty & Service Registration"
-    },
-    "aciklama": {
-      "tr": "Ürün garanti kaydı, servis geçmişi, hatırlatma.",
-      "en": "Product warranty registration, service history, reminders."
-    },
-    "pr": "₺990"
-  },
-  {
-    "id": "subbox",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "📮",
-    "ad": {
-      "tr": "Abonelik Kutusu Yönetimi",
-      "en": "Subscription Box Management"
-    },
-    "aciklama": {
-      "tr": "Aylık abonelik, otomatik yenileme, sevkiyat takibi.",
-      "en": "Monthly subscriptions, auto-renewal, shipment tracking."
-    },
-    "pr": "₺1.900"
-  },
-  {
-    "id": "donate",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "❤️",
-    "ad": {
-      "tr": "Bağış & Kampanya Sayfası",
-      "en": "Donation & Fundraising Page"
-    },
-    "aciklama": {
-      "tr": "Dernek/STK için bağış toplama, hedef ve şeffaf rapor.",
-      "en": "Fundraising for NGOs, goals and transparent reporting."
-    },
-    "pr": "₺1.200"
-  },
-  {
-    "id": "fleet",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🚚",
-    "ad": {
-      "tr": "Filo / Araç Takip",
-      "en": "Fleet / Vehicle Tracking"
-    },
-    "aciklama": {
-      "tr": "Araç konumu, yakıt, bakım ve sürücü performansı.",
-      "en": "Vehicle location, fuel, maintenance and driver performance."
-    },
-    "pr": "₺2.500"
-  },
-  {
-    "id": "nursery",
-    "sekme": "isletme",
-    "g": "akilli",
-    "ic": "🧸",
-    "ad": {
-      "tr": "Kreş / Anaokulu Veli Uygulaması",
-      "en": "Nursery / Daycare Parent App"
-    },
-    "aciklama": {
-      "tr": "Günlük rapor, fotoğraf, menü, yoklama ve duyuru.",
-      "en": "Daily reports, photos, menu, attendance and notices."
-    },
-    "pr": "₺1.900"
-  },
-  {
-    "id": "brandedapp",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "📱",
-    "ad": {
-      "tr": "Markalı Mobil Uygulama",
-      "en": "Branded Mobile App"
-    },
-    "aciklama": {
-      "tr": "iOS + Android, kendi markanla App Store & Play.",
-      "en": "iOS + Android, your brand, App Store & Play release."
-    },
-    "pr": "₺29.990"
-  },
-  {
-    "id": "orderapp",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "🛍️",
-    "ad": {
-      "tr": "Sipariş / Mağaza Mobil Uygulaması",
-      "en": "Order / Store Mobile App"
-    },
-    "aciklama": {
-      "tr": "Ürün, sepet, ödeme, bildirimli satış uygulaması.",
-      "en": "Your own selling app with catalog, cart, payment and push."
-    },
-    "pr": "₺19.990"
-  },
-  {
-    "id": "loyaltyapp",
-    "sekme": "isletme",
-    "g": "kurumsal",
-    "ic": "🏅",
-    "ad": {
-      "tr": "Sadakat Mobil Uygulaması",
-      "en": "Loyalty Mobile App"
-    },
-    "aciklama": {
-      "tr": "Puan, kupon, push kampanya ile müşteri sadakati.",
-      "en": "Points, coupons, push campaigns to bring customers back."
-    },
-    "pr": "₺14.990"
-  },
-  {
-    "id": "guv-temel",
-    "sekme": "guvenlik",
-    "g": "guvenlik",
-    "ic": "🟢",
-    "ad": {
-      "tr": "Temel Koruma",
-      "en": "Basic Protection"
-    },
-    "aciklama": {
-      "tr": "Sitenizi temel saldırılara karşı koruyun.",
-      "en": "For 'just protect me': SSL/HTTPS, DDoS protection, basic firewall, bot blocking. Simple and safe."
-    },
-    "pr": "₺990"
-  },
-  {
-    "id": "guv-pro",
-    "sekme": "guvenlik",
-    "g": "guvenlik",
-    "ic": "🔵",
-    "ad": {
-      "tr": "Profesyonel Koruma",
-      "en": "Professional Protection"
-    },
-    "aciklama": {
-      "tr": "En çok tercih edilen kapsamlı koruma.",
-      "en": "Most popular: Basic + origin IP hiding (tunnel), full WAF, payment-page script shield, rate limiting, device lock, 24/7 monitoring."
-    },
-    "pr": "₺2.490"
-  },
-  {
-    "id": "guv-max",
-    "sekme": "guvenlik",
-    "g": "guvenlik",
-    "ic": "🔴",
-    "ad": {
-      "tr": "Maksimum · Banka Seviyesi",
-      "en": "Maximum · Bank-Grade"
-    },
-    "aciklama": {
-      "tr": "Banka seviyesi, en üst düzey koruma.",
-      "en": "For the paranoid: Pro + Zero Trust, mTLS, 2FA, aggressive attack/scan blocking (kernel ban), full audit log, instant alerts, custom rules."
-    },
-    "pr": "₺4.990"
-  },
-  {
-    "id": "guv-ssl",
-    "sekme": "guvenlik",
-    "g": "guvenlik",
-    "ic": "🔒",
-    "ad": {
-      "tr": "SSL & Şifreleme Kurulumu",
-      "en": "SSL & Encryption Setup"
-    },
-    "aciklama": {
-      "tr": "TLS 1.3 + güçlü şifreleme, HTTPS zorunlu.",
-      "en": "TLS 1.3 + strong encryption + forced HTTPS. Green padlock, secure connection."
-    },
-    "pr": "₺490"
-  },
-  {
-    "id": "guv-ddos",
-    "sekme": "guvenlik",
-    "g": "guvenlik",
-    "ic": "🌊",
-    "ad": {
-      "tr": "DDoS Koruması",
-      "en": "DDoS Protection"
-    },
-    "aciklama": {
-      "tr": "Saldırı seli sitenizi çökertemez.",
-      "en": "Attack floods can't take you down — global automatic DDoS defense."
-    },
-    "pr": "₺1.490"
-  },
-  {
-    "id": "guv-waf",
-    "sekme": "guvenlik",
-    "g": "guvenlik",
-    "ic": "🧱",
-    "ad": {
-      "tr": "Web Uygulama Güvenlik Duvarı (WAF)",
-      "en": "Web App Firewall (WAF)"
-    },
-    "aciklama": {
-      "tr": "SQL injection, XSS ve exploit'leri durdurur.",
-      "en": "Blocks SQL injection, XSS and exploits at the edge before they reach your server."
-    },
-    "pr": "₺1.990"
-  },
-  {
-    "id": "guv-gizle",
-    "sekme": "guvenlik",
-    "g": "guvenlik",
-    "ic": "🕵️",
-    "ad": {
-      "tr": "Sunucu / IP Gizleme",
-      "en": "Origin / IP Hiding"
-    },
-    "aciklama": {
-      "tr": "Sunucunuz internette görünmez olur.",
-      "en": "Your server is invisible online — no open ports, direct attacks impossible (tunnel)."
-    },
-    "pr": "₺990"
-  },
-  {
-    "id": "guv-bot",
-    "sekme": "guvenlik",
-    "g": "guvenlik",
-    "ic": "🤖",
-    "ad": {
-      "tr": "Bot & Scraper Engelleme",
-      "en": "Bot & Scraper Blocking"
-    },
-    "aciklama": {
-      "tr": "Kötü botları ve içerik çalanları engeller.",
-      "en": "Bad bots, scrapers and automated attacks blocked; real customers stay free."
-    },
-    "pr": "₺990"
-  },
-  {
-    "id": "guv-odeme",
-    "sekme": "guvenlik",
-    "g": "guvenlik",
-    "ic": "💳",
-    "ad": {
-      "tr": "Ödeme & Kart Güvenliği",
-      "en": "Payment & Card Security"
-    },
-    "aciklama": {
-      "tr": "Ödeme sayfası izlenir, kart bilgisi korunur.",
-      "en": "Payment-page scripts monitored; card-stealing code caught instantly."
-    },
-    "pr": "₺1.490"
-  },
-  {
-    "id": "guv-2fa",
-    "sekme": "guvenlik",
-    "g": "guvenlik",
-    "ic": "🔑",
-    "ad": {
-      "tr": "2FA / Çok Faktörlü Giriş",
-      "en": "2FA / Multi-Factor Login"
-    },
-    "aciklama": {
-      "tr": "Yönetici girişine çift doğrulama + cihaz kilidi.",
-      "en": "Device lock + 2FA on admin login; account safe even if password leaks."
-    },
-    "pr": "₺790"
-  },
-  {
-    "id": "guv-izleme",
-    "sekme": "guvenlik",
-    "g": "guvenlik",
-    "ic": "📡",
-    "ad": {
-      "tr": "7/24 İzleme & Anlık Alarm",
-      "en": "24/7 Monitoring & Alerts"
-    },
-    "aciklama": {
-      "tr": "Saldırı, anormallik, kesinti anında tespit.",
-      "en": "Attacks, anomalies and downtime detected instantly; you're alerted right away."
-    },
-    "pr": "₺1.990"
-  },
-  {
-    "id": "guv-audit",
-    "sekme": "guvenlik",
-    "g": "guvenlik",
-    "ic": "🔍",
-    "ad": {
-      "tr": "Güvenlik Denetimi & Sızma Testi",
-      "en": "Security Audit & Pentest"
-    },
-    "aciklama": {
-      "tr": "Sisteminiz baştan sona taranır, açıklar bulunur.",
-      "en": "Full system scan, vulnerabilities found and fixed — report included."
-    },
-    "pr": "₺3.990"
-  },
-  {
-    "id": "guv-yedek",
-    "sekme": "guvenlik",
-    "g": "guvenlik",
-    "ic": "💾",
-    "ad": {
-      "tr": "Yedekleme & Felaket Kurtarma",
-      "en": "Backup & Disaster Recovery"
-    },
-    "aciklama": {
-      "tr": "Otomatik yedek + hızlı geri yükleme.",
-      "en": "Automatic backups + fast restore. Your data is safe even in worst case."
-    },
-    "pr": "₺990"
-  }
+ {
+  "id": "komisyonsuz",
+  "sekme": "isletme",
+  "g": "isletme",
+  "ic": "🍽️",
+  "ad": {
+   "tr": "Komisyonsuz Sipariş Sistemi",
+   "en": "Commission-Free Ordering"
+  },
+  "aciklama": {
+   "tr": "Aracı platformlara komisyon ödemeden kendi online sipariş sisteminiz: web + QR + WhatsApp, müşteri verisi sizde.",
+   "en": "Your own online ordering, no platform commissions: web + QR + WhatsApp."
+  },
+  "pr": "₺990",
+  "demo": "/komisyonsuz"
+ },
+ {
+  "id": "website",
+  "sekme": "isletme",
+  "g": "isletme",
+  "ic": "🌐",
+  "ad": {
+   "tr": "Web Sitesi Kurulumu",
+   "en": "Website Setup"
+  },
+  "aciklama": {
+   "tr": "Kurumsal/tanıtım sitesi, mobil uyumlu, SEO.",
+   "en": "Corporate/landing site, responsive, SEO."
+  },
+  "pr": "₺2.500"
+ },
+ {
+  "id": "ecom",
+  "sekme": "isletme",
+  "g": "isletme",
+  "ic": "🛒",
+  "ad": {
+   "tr": "E-Ticaret / Katalog",
+   "en": "E-Commerce / Catalog"
+  },
+  "aciklama": {
+   "tr": "Ürün kataloğu + ödeme + otomatik teslimat.",
+   "en": "Product catalog + payment + auto delivery."
+  },
+  "pr": "₺3.500"
+ },
+ {
+  "id": "bot",
+  "sekme": "isletme",
+  "g": "isletme",
+  "ic": "💬",
+  "ad": {
+   "tr": "WhatsApp / Telegram Bot",
+   "en": "WhatsApp / Telegram Bot"
+  },
+  "aciklama": {
+   "tr": "Sipariş, destek, bildirim botu kurulumu.",
+   "en": "Order, support, notification bot setup."
+  },
+  "pr": "₺1.500"
+ },
+ {
+  "id": "hosting",
+  "sekme": "isletme",
+  "g": "isletme",
+  "ic": "☁️",
+  "ad": {
+   "tr": "Domain + Hosting + SSL",
+   "en": "Domain + Hosting + SSL"
+  },
+  "aciklama": {
+   "tr": "Alan adı, barındırma, sertifika paketi.",
+   "en": "Domain, hosting, certificate bundle."
+  },
+  "pr": "₺1490"
+ },
+ {
+  "id": "teamcard",
+  "sekme": "isletme",
+  "g": "isletme",
+  "ic": "👥",
+  "ad": {
+   "tr": "Ekip Dijital Kartvizit",
+   "en": "Team Digital Cards"
+  },
+  "aciklama": {
+   "tr": "10 kişiye kadar markalı dijital kartvizit.",
+   "en": "Branded digital cards for up to 10 people."
+  },
+  "pr": "₺1490"
+ },
+ {
+  "id": "integ",
+  "sekme": "isletme",
+  "g": "isletme",
+  "ic": "🔗",
+  "ad": {
+   "tr": "Otomasyon Entegrasyonu",
+   "en": "Automation Integration"
+  },
+  "aciklama": {
+   "tr": "Sistemlerini bağla, süreçleri otomatikle.",
+   "en": "Connect your systems, automate processes."
+  },
+  "pr": "₺1.500"
+ },
+ {
+  "id": "custom",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "💻",
+  "ad": {
+   "tr": "Özel Yazılım / Uygulama",
+   "en": "Custom Software / App"
+  },
+  "aciklama": {
+   "tr": "İhtiyacına özel web/mobil uygulama.",
+   "en": "Custom web/mobile app development."
+  },
+  "pr": "₺14.990"
+ },
+ {
+  "id": "whitelabel",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "🏷️",
+  "ad": {
+   "tr": "White-Label Çözüm",
+   "en": "White-Label Solution"
+  },
+  "aciklama": {
+   "tr": "Kendi markanla sunabileceğin hazır platform.",
+   "en": "Ready platform to offer under your brand."
+  },
+  "pr": "₺9.990"
+ },
+ {
+  "id": "sysint",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "🔄",
+  "ad": {
+   "tr": "Sistem Entegrasyonu",
+   "en": "System Integration"
+  },
+  "aciklama": {
+   "tr": "ERP/CRM/ödeme/API entegrasyonları.",
+   "en": "ERP/CRM/payment/API integrations."
+  },
+  "pr": "₺7.990"
+ },
+ {
+  "id": "infra",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "🖥️",
+  "ad": {
+   "tr": "Sunucu / Altyapı Kurulumu",
+   "en": "Server / Infrastructure"
+  },
+  "aciklama": {
+   "tr": "Kendi sunucu altyapın, self-hosted çözümler.",
+   "en": "Your own server infra, self-hosted."
+  },
+  "pr": "₺4.990"
+ },
+ {
+  "id": "security",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "🛡️",
+  "ad": {
+   "tr": "Güvenlik & İzleme Paketi",
+   "en": "Security & Monitoring"
+  },
+  "aciklama": {
+   "tr": "Banka seviyesi güvenlik + 7/24 izleme.",
+   "en": "Bank-grade security, 24/7 monitoring."
+  },
+  "pr": "₺2.990"
+ },
+ {
+  "id": "sla",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "📞",
+  "ad": {
+   "tr": "SLA'lı 7/24 Destek",
+   "en": "24/7 SLA Support"
+  },
+  "aciklama": {
+   "tr": "Garantili yanıt süreli kurumsal destek.",
+   "en": "Guaranteed-response enterprise support."
+  },
+  "pr": "₺2.990"
+ },
+ {
+  "id": "brand",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "🎨",
+  "ad": {
+   "tr": "Kurumsal Marka Kimliği",
+   "en": "Corporate Brand Identity"
+  },
+  "aciklama": {
+   "tr": "Logo + kılavuz + kartvizit + sosyal kit.",
+   "en": "Logo + guidelines + cards + social kit."
+  },
+  "pr": "₺3.990"
+ },
+ {
+  "id": "cmail",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "📧",
+  "ad": {
+   "tr": "Kurumsal E-posta Kurulumu",
+   "en": "Business Email Setup"
+  },
+  "aciklama": {
+   "tr": "Alan adına özel e-posta + Workspace.",
+   "en": "Domain email + Workspace setup."
+  },
+  "pr": "₺990"
+ },
+ {
+  "id": "seo",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "🔍",
+  "ad": {
+   "tr": "SEO & Dijital Pazarlama",
+   "en": "SEO & Digital Marketing"
+  },
+  "aciklama": {
+   "tr": "Arama motoru optimizasyonu + içerik.",
+   "en": "Search optimization + content strategy."
+  },
+  "pr": "₺2.990"
+ },
+ {
+  "id": "chatbot",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "💬",
+  "ad": {
+   "tr": "AI Asistan / Chatbot Kurulumu",
+   "en": "AI Assistant / Chatbot Setup"
+  },
+  "aciklama": {
+   "tr": "Sitene/WhatsApp'a özel AI müşteri asistanı.",
+   "en": "Custom AI customer assistant for site/WhatsApp."
+  },
+  "pr": "₺4.990"
+ },
+ {
+  "id": "dashboard",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "📊",
+  "ad": {
+   "tr": "Veri Panosu (BI Dashboard)",
+   "en": "BI Dashboard"
+  },
+  "aciklama": {
+   "tr": "Canlı iş verisi izleme + raporlama.",
+   "en": "Live business data monitoring + reporting."
+  },
+  "pr": "₺3.990"
+ },
+ {
+  "id": "training",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "🎓",
+  "ad": {
+   "tr": "Kurumsal AI Eğitimi",
+   "en": "Corporate AI Training"
+  },
+  "aciklama": {
+   "tr": "Ekibine özel yapay zekâ & otomasyon workshop.",
+   "en": "AI & automation workshop for your team."
+  },
+  "pr": "₺4.990"
+ },
+ {
+  "id": "gbp",
+  "sekme": "isletme",
+  "g": "isletme",
+  "ic": "📍",
+  "ad": {
+   "tr": "Google İşletme Profili Kurulumu",
+   "en": "Google Business Profile Setup"
+  },
+  "aciklama": {
+   "tr": "Haritalarda çık, yorumları yönet, görünür ol.",
+   "en": "Appear on Maps, manage reviews, get found."
+  },
+  "pr": "₺790"
+ },
+ {
+  "id": "booking",
+  "sekme": "isletme",
+  "g": "isletme",
+  "ic": "📅",
+  "ad": {
+   "tr": "Online Randevu Sistemi",
+   "en": "Online Booking System"
+  },
+  "aciklama": {
+   "tr": "Müşteri online randevu alsın, otomatik hatırlatma.",
+   "en": "Let clients book online, auto reminders."
+  },
+  "pr": "₺1.500"
+ },
+ {
+  "id": "menu",
+  "sekme": "isletme",
+  "g": "isletme",
+  "ic": "🍽️",
+  "ad": {
+   "tr": "Restoran QR Menü Sistemi",
+   "en": "Restaurant QR Menu System"
+  },
+  "aciklama": {
+   "tr": "Çok dilli dijital menü + güncelleme paneli.",
+   "en": "Multilingual digital menu + admin panel."
+  },
+  "pr": "₺1.200"
+ },
+ {
+  "id": "mobileapp",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "📱",
+  "ad": {
+   "tr": "Mobil Uygulama Geliştirme",
+   "en": "Mobile App Development"
+  },
+  "aciklama": {
+   "tr": "App Store & Play yayını dahil özel uygulama.",
+   "en": "Custom app incl. App Store & Play release."
+  },
+  "pr": "₺24.990"
+ },
+ {
+  "id": "kvkk",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "📜",
+  "ad": {
+   "tr": "KVKK / Gizlilik Uyum Paketi",
+   "en": "Data Compliance Pack"
+  },
+  "aciklama": {
+   "tr": "Gizlilik politikası, çerez, aydınlatma metni.",
+   "en": "Privacy policy, cookie, disclosure texts."
+  },
+  "pr": "₺1.990"
+ },
+ {
+  "id": "backup",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "💾",
+  "ad": {
+   "tr": "Yedekleme & Felaket Kurtarma",
+   "en": "Backup & Disaster Recovery"
+  },
+  "aciklama": {
+   "tr": "Otomatik yedek + hızlı geri yükleme altyapısı.",
+   "en": "Automated backup + fast restore infrastructure."
+  },
+  "pr": "₺1.490"
+ },
+ {
+  "id": "productphoto",
+  "sekme": "isletme",
+  "g": "isletme",
+  "ic": "📷",
+  "ad": {
+   "tr": "Ürün Fotoğraf Düzenleme",
+   "en": "Product Photo Editing"
+  },
+  "aciklama": {
+   "tr": "Arka plan temizleme + pazaryeri uyumlu düzenleme.",
+   "en": "Background removal + marketplace-ready editing."
+  },
+  "pr": "₺299"
+ },
+ {
+  "id": "marketplace",
+  "sekme": "isletme",
+  "g": "isletme",
+  "ic": "🏬",
+  "ad": {
+   "tr": "Pazaryeri Mağaza Açılışı",
+   "en": "Marketplace Store Setup"
+  },
+  "aciklama": {
+   "tr": "Trendyol/Hepsiburada/Amazon mağaza + ürün girişi.",
+   "en": "Trendyol/Amazon store + product listing setup."
+  },
+  "pr": "₺1.500"
+ },
+ {
+  "id": "dropship",
+  "sekme": "isletme",
+  "g": "isletme",
+  "ic": "📦",
+  "ad": {
+   "tr": "Dropshipping Mağaza Kurulumu",
+   "en": "Dropshipping Store Setup"
+  },
+  "aciklama": {
+   "tr": "Tedarikçi entegre, hazır satış mağazası.",
+   "en": "Supplier-integrated, ready-to-sell store."
+  },
+  "pr": "₺2.500"
+ },
+ {
+  "id": "maintain",
+  "sekme": "isletme",
+  "g": "isletme",
+  "ic": "🔧",
+  "ad": {
+   "tr": "Site Bakım & Güncelleme",
+   "en": "Site Maintenance & Updates"
+  },
+  "aciklama": {
+   "tr": "Aylık güncelleme, yedek, güvenlik, destek.",
+   "en": "Monthly updates, backup, security, support."
+  },
+  "pr": "₺990"
+ },
+ {
+  "id": "crm",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "🗂️",
+  "ad": {
+   "tr": "CRM / ERP Kurulumu",
+   "en": "CRM / ERP Setup"
+  },
+  "aciklama": {
+   "tr": "Müşteri & süreç yönetim sistemi + eğitim.",
+   "en": "Customer & process management setup + training."
+  },
+  "pr": "₺5.990"
+ },
+ {
+  "id": "devops",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "⚙️",
+  "ad": {
+   "tr": "DevOps / CI-CD Kurulumu",
+   "en": "DevOps / CI-CD Setup"
+  },
+  "aciklama": {
+   "tr": "Otomatik derleme, test, dağıtım hattı.",
+   "en": "Automated build, test, deployment pipeline."
+  },
+  "pr": "₺4.990"
+ },
+ {
+  "id": "cloudmig",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "☁️",
+  "ad": {
+   "tr": "Bulut Göçü (Cloud Migration)",
+   "en": "Cloud Migration"
+  },
+  "aciklama": {
+   "tr": "Sistemlerini buluta taşı, ölçeklenebilir altyapı.",
+   "en": "Migrate to cloud, scalable infrastructure."
+  },
+  "pr": "₺7.990"
+ },
+ {
+  "id": "retainer",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "🤝",
+  "ad": {
+   "tr": "Aylık Teknik Danışmanlık",
+   "en": "Monthly Tech Retainer"
+  },
+  "aciklama": {
+   "tr": "Sürekli geliştirme + bakım + öncelikli destek.",
+   "en": "Ongoing development + maintenance + priority support."
+  },
+  "pr": "₺4.990"
+ },
+ {
+  "id": "hukuk",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "⚖️",
+  "ad": {
+   "tr": "Avukat / Hukuk Bürosu Sistemi",
+   "en": "Law Firm Management System"
+  },
+  "aciklama": {
+   "tr": "Dava, süre takibi, duruşma takvimi, şifreli belge kasası — banka seviyesi güvenlik, KVKK uyumlu.",
+   "en": "Cases, deadline tracking, hearings, encrypted document vault — bank-level security."
+  },
+  "pr": "",
+  "demo": "/hukuk"
+ },
+ {
+  "id": "qrorder",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🍽️",
+  "ad": {
+   "tr": "QR Masa Sipariş Sistemi",
+   "en": "QR Table Ordering System"
+  },
+  "aciklama": {
+   "tr": "Müşteri masadaki QR'ı okutur, siparişi seçer; sipariş anında mutfağa/kasaya düşer ve masaya getirilir. Garson çağırmaya, kalkmaya gerek yok.",
+   "en": "Guest scans the table QR, picks items; the order drops straight to the kitchen/POS and is brought to the table. No calling a waiter, no getting up."
+  },
+  "pr": "₺1.900",
+  "demo": "/demo/qr-masa/?masa=1"
+ },
+ {
+  "id": "waiter",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🛎️",
+  "ad": {
+   "tr": "Garson Çağırma & Masa Bildirim",
+   "en": "Waiter Call & Table Alerts"
+  },
+  "aciklama": {
+   "tr": "Masadan tek dokunuşla garson/hesap çağır; bildirim personele anında ulaşır.",
+   "en": "One tap from the table calls a waiter/bill; staff is alerted instantly."
+  },
+  "pr": "₺990",
+  "demo": "/demo/qr-masa/mutfak"
+ },
+ {
+  "id": "kds",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "👨‍🍳",
+  "ad": {
+   "tr": "Mutfak Ekran Sistemi (KDS)",
+   "en": "Kitchen Display System"
+  },
+  "aciklama": {
+   "tr": "Siparişler mutfak ekranında sıralanır, hazırlık süreleri takip edilir.",
+   "en": "Orders queue on the kitchen screen, prep times tracked."
+  },
+  "pr": "₺1.500",
+  "demo": "/demo/qr-masa/mutfak"
+ },
+ {
+  "id": "tablepay",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "💳",
+  "ad": {
+   "tr": "Masadan Hesap & Ödeme",
+   "en": "Pay at Table"
+  },
+  "aciklama": {
+   "tr": "Müşteri QR ile hesabı görür, masadan kalkmadan kartla öder.",
+   "en": "Guest sees the bill via QR and pays by card without leaving the table."
+  },
+  "pr": "₺1.500"
+ },
+ {
+  "id": "queue",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🔢",
+  "ad": {
+   "tr": "Sıra / Numaratör Sistemi",
+   "en": "Queue / Ticket System"
+  },
+  "aciklama": {
+   "tr": "Klinik, banka, mağaza için dijital sıra alma + ekran çağrı.",
+   "en": "Digital ticketing + screen call for clinics, banks, stores."
+  },
+  "pr": "₺1.200",
+  "demo": "/demo/sira/al"
+ },
+ {
+  "id": "reserve",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "📆",
+  "ad": {
+   "tr": "Rezervasyon & Masa Yönetimi",
+   "en": "Reservation & Table Management"
+  },
+  "aciklama": {
+   "tr": "Online masa rezervasyonu + salon yerleşim planı + doluluk.",
+   "en": "Online table booking + floor plan + occupancy."
+  },
+  "pr": "₺1.500",
+  "demo": "/demo/rezervasyon/"
+ },
+ {
+  "id": "hotelqr",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🏨",
+  "ad": {
+   "tr": "Otel Dijital Resepsiyon & Oda Servisi",
+   "en": "Hotel Digital Concierge"
+  },
+  "aciklama": {
+   "tr": "Odadan QR ile servis iste, check-in/out, rehber ve harita.",
+   "en": "Request service via in-room QR, check-in/out, guide and map."
+  },
+  "pr": "₺2.500",
+  "demo": "/demo/otel/?oda=101"
+ },
+ {
+  "id": "loyalty",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🎟️",
+  "ad": {
+   "tr": "Sadakat & Puan Kart Sistemi",
+   "en": "Loyalty & Points System"
+  },
+  "aciklama": {
+   "tr": "Dijital puan, kampanya, tekrar alışveriş için müşteri sadakati.",
+   "en": "Digital points, campaigns, repeat-purchase loyalty."
+  },
+  "pr": "₺1.200",
+  "demo": "/demo/sadakat/"
+ },
+ {
+  "id": "inventory",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "📦",
+  "ad": {
+   "tr": "Stok & Depo Takip Sistemi",
+   "en": "Stock & Warehouse Tracking"
+  },
+  "aciklama": {
+   "tr": "Barkodlu stok girişi-çıkışı, kritik seviye uyarısı.",
+   "en": "Barcode stock in/out, low-level alerts."
+  },
+  "pr": "₺1.900",
+  "demo": "/demo/stok/"
+ },
+ {
+  "id": "shift",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🕐",
+  "ad": {
+   "tr": "Personel & Vardiya Takip",
+   "en": "Staff & Shift Tracking"
+  },
+  "aciklama": {
+   "tr": "QR ile giriş-çıkış, vardiya planı, mesai raporu.",
+   "en": "QR clock in/out, shift planning, hours reports."
+  },
+  "pr": "₺1.200",
+  "demo": "/demo/vardiya/"
+ },
+ {
+  "id": "salon",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "💇",
+  "ad": {
+   "tr": "Kuaför / Güzellik Randevu Sistemi",
+   "en": "Salon / Beauty Booking"
+  },
+  "aciklama": {
+   "tr": "Online randevu, personel takvimi, otomatik hatırlatma.",
+   "en": "Online booking, staff calendar, auto reminders."
+  },
+  "pr": "₺1.500",
+  "demo": "/demo/randevu/"
+ },
+ {
+  "id": "clinic",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🩺",
+  "ad": {
+   "tr": "Klinik / Diş Hasta Takip",
+   "en": "Clinic / Patient Management"
+  },
+  "aciklama": {
+   "tr": "Hasta kaydı, randevu, tedavi geçmişi ve hatırlatma.",
+   "en": "Patient records, appointments, history and reminders."
+  },
+  "pr": "₺2.500",
+  "demo": "/demo/randevu/"
+ },
+ {
+  "id": "gym",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🏋️",
+  "ad": {
+   "tr": "Spor Salonu Üyelik & Giriş",
+   "en": "Gym Membership & Access"
+  },
+  "aciklama": {
+   "tr": "QR üyelik kartı, giriş kontrolü, aidat takibi.",
+   "en": "QR membership, access control, dues tracking."
+  },
+  "pr": "₺1.900",
+  "demo": "/demo/gym/"
+ },
+ {
+  "id": "eventqr",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🎫",
+  "ad": {
+   "tr": "Etkinlik Bilet & QR Giriş",
+   "en": "Event Ticketing & QR Check-in"
+  },
+  "aciklama": {
+   "tr": "Online bilet satışı + kapıda QR okutarak hızlı giriş.",
+   "en": "Online ticket sales + fast QR check-in at the door."
+  },
+  "pr": "₺990",
+  "demo": "/demo/etkinlik/"
+ },
+ {
+  "id": "feedback",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "⭐",
+  "ad": {
+   "tr": "QR Anket & Geri Bildirim",
+   "en": "QR Survey & Feedback"
+  },
+  "aciklama": {
+   "tr": "Masada/üründe QR ile anlık memnuniyet ve yorum toplama.",
+   "en": "Collect instant satisfaction and reviews via QR at the table/product."
+  },
+  "pr": "₺990",
+  "demo": "/demo/anket/"
+ },
+ {
+  "id": "tipqr",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "💝",
+  "ad": {
+   "tr": "Dijital Bahşiş (QR Tip)",
+   "en": "Digital Tipping (QR)"
+  },
+  "aciklama": {
+   "tr": "Personele QR ile kartlı bahşiş; nakit derdi yok.",
+   "en": "Card tips to staff via QR; no cash needed."
+  },
+  "pr": "₺590"
+ },
+ {
+  "id": "kiosk",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🖲️",
+  "ad": {
+   "tr": "Self-Servis Sipariş Kiosk",
+   "en": "Self-Service Ordering Kiosk"
+  },
+  "aciklama": {
+   "tr": "Dokunmatik ekrandan sipariş + ödeme, kuyruğu azaltır.",
+   "en": "Touchscreen order + pay, cuts the queue."
+  },
+  "pr": "₺3.500"
+ },
+ {
+  "id": "signage",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "📺",
+  "ad": {
+   "tr": "Dijital Tabela / Menü Ekranı",
+   "en": "Digital Signage / Menu Board"
+  },
+  "aciklama": {
+   "tr": "Ekranlarda uzaktan güncellenen menü, kampanya, duyuru.",
+   "en": "Remotely updated menu, promos, announcements on screens."
+  },
+  "pr": "₺1.500"
+ },
+ {
+  "id": "delivery",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🛵",
+  "ad": {
+   "tr": "Paket Servis & Kurye Takip",
+   "en": "Delivery & Courier Tracking"
+  },
+  "aciklama": {
+   "tr": "Sipariş durumu, kurye atama, müşteriye canlı takip linki.",
+   "en": "Order status, courier assignment, live tracking link for customers."
+  },
+  "pr": "₺1.900",
+  "demo": "/demo/kargo/"
+ },
+ {
+  "id": "valet",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🚗",
+  "ad": {
+   "tr": "Vale / Otopark Çağırma Sistemi",
+   "en": "Valet / Parking Call System"
+  },
+  "aciklama": {
+   "tr": "QR ile aracı çağır, vale bildirimi, bekleme süresini kısalt.",
+   "en": "Call your car via QR, valet alert, shorter wait."
+  },
+  "pr": "₺1.200"
+ },
+ {
+  "id": "parking",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🅿️",
+  "ad": {
+   "tr": "Otopark Doluluk & Plaka Okuma",
+   "en": "Parking Occupancy & Plate Reading"
+  },
+  "aciklama": {
+   "tr": "Boş yer takibi, plaka tanıma ile giriş-çıkış ve ücret.",
+   "en": "Free-spot tracking, plate-recognition entry/exit and fees."
+  },
+  "pr": "₺2.500"
+ },
+ {
+  "id": "intercom",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🔔",
+  "ad": {
+   "tr": "Akıllı Zil & Kapı İnterkom",
+   "en": "Smart Doorbell & Intercom"
+  },
+  "aciklama": {
+   "tr": "Telefondan kapı görüntüsü, uzaktan kapı açma.",
+   "en": "See the door from your phone, open remotely."
+  },
+  "pr": "₺1.500"
+ },
+ {
+  "id": "building",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🏢",
+  "ad": {
+   "tr": "Apartman / Site Yönetim Sistemi",
+   "en": "Building / HOA Management"
+  },
+  "aciklama": {
+   "tr": "Aidat takibi, duyuru, arıza bildirimi, karar defteri.",
+   "en": "Dues tracking, announcements, fault reports, decision log."
+  },
+  "pr": "₺1.900",
+  "demo": "/demo/apartman/"
+ },
+ {
+  "id": "carrental",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🚙",
+  "ad": {
+   "tr": "Araç Kiralama Yönetimi",
+   "en": "Car Rental Management"
+  },
+  "aciklama": {
+   "tr": "Müsaitlik, sözleşme, teslim-iade ve hasar takibi.",
+   "en": "Availability, contracts, handover-return and damage tracking."
+  },
+  "pr": "₺2.500"
+ },
+ {
+  "id": "realestate",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🏡",
+  "ad": {
+   "tr": "Emlak İlan & Portföy Yönetimi",
+   "en": "Real Estate Listings & CRM"
+  },
+  "aciklama": {
+   "tr": "Portföy, ilan yayını, müşteri eşleştirme ve randevu.",
+   "en": "Portfolio, listing publish, client matching and viewings."
+  },
+  "pr": "₺2.500"
+ },
+ {
+  "id": "vet",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🐾",
+  "ad": {
+   "tr": "Veteriner / Pet Klinik Takip",
+   "en": "Vet / Pet Clinic Management"
+  },
+  "aciklama": {
+   "tr": "Hasta kartı, aşı takvimi, randevu ve hatırlatma.",
+   "en": "Patient records, vaccine schedule, appointments and reminders."
+  },
+  "pr": "₺1.900"
+ },
+ {
+  "id": "school",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🏫",
+  "ad": {
+   "tr": "Okul / Kurs & Veli Bilgilendirme",
+   "en": "School / Course & Parent Portal"
+  },
+  "aciklama": {
+   "tr": "Yoklama, not, ödev, servis ve veli bildirimleri.",
+   "en": "Attendance, grades, homework, bus and parent alerts."
+  },
+  "pr": "₺2.500"
+ },
+ {
+  "id": "fieldservice",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🧰",
+  "ad": {
+   "tr": "Servis / Arıza Takip",
+   "en": "Field Service / Ticketing"
+  },
+  "aciklama": {
+   "tr": "Arıza kaydı, teknisyen atama, durum ve süre takibi.",
+   "en": "Fault logging, technician dispatch, status and SLA tracking."
+  },
+  "pr": "₺1.900"
+ },
+ {
+  "id": "helpdesk",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🎧",
+  "ad": {
+   "tr": "Destek Talebi / Çağrı Yönetimi",
+   "en": "Helpdesk / Support Tickets"
+  },
+  "aciklama": {
+   "tr": "Müşteri destek talepleri, öncelik, atama ve raporlama.",
+   "en": "Customer tickets, priority, assignment and reporting."
+  },
+  "pr": "₺1.500",
+  "demo": "/demo/destek/"
+ },
+ {
+  "id": "catalog",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "📒",
+  "ad": {
+   "tr": "Dijital B2B Kartela / Katalog",
+   "en": "Digital B2B Catalog"
+  },
+  "aciklama": {
+   "tr": "Bayilere özel fiyatlı, sipariş alabilen dijital katalog.",
+   "en": "Dealer-priced digital catalog that takes orders."
+  },
+  "pr": "₺1.500"
+ },
+ {
+  "id": "leadqr",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🧲",
+  "ad": {
+   "tr": "Fuar / Stand QR Lead Toplama",
+   "en": "Expo / Booth QR Lead Capture"
+  },
+  "aciklama": {
+   "tr": "Ziyaretçi QR ile bilgi bırakır, anlık CRM'e düşer.",
+   "en": "Visitors leave info via QR, instantly into your CRM."
+  },
+  "pr": "₺990"
+ },
+ {
+  "id": "warranty",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🧾",
+  "ad": {
+   "tr": "Garanti & Servis Kayıt",
+   "en": "Warranty & Service Registration"
+  },
+  "aciklama": {
+   "tr": "Ürün garanti kaydı, servis geçmişi, hatırlatma.",
+   "en": "Product warranty registration, service history, reminders."
+  },
+  "pr": "₺990"
+ },
+ {
+  "id": "subbox",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "📮",
+  "ad": {
+   "tr": "Abonelik Kutusu Yönetimi",
+   "en": "Subscription Box Management"
+  },
+  "aciklama": {
+   "tr": "Aylık abonelik, otomatik yenileme, sevkiyat takibi.",
+   "en": "Monthly subscriptions, auto-renewal, shipment tracking."
+  },
+  "pr": "₺1.900"
+ },
+ {
+  "id": "donate",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "❤️",
+  "ad": {
+   "tr": "Bağış & Kampanya Sayfası",
+   "en": "Donation & Fundraising Page"
+  },
+  "aciklama": {
+   "tr": "Dernek/STK için bağış toplama, hedef ve şeffaf rapor.",
+   "en": "Fundraising for NGOs, goals and transparent reporting."
+  },
+  "pr": "₺1.200"
+ },
+ {
+  "id": "fleet",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🚚",
+  "ad": {
+   "tr": "Filo / Araç Takip",
+   "en": "Fleet / Vehicle Tracking"
+  },
+  "aciklama": {
+   "tr": "Araç konumu, yakıt, bakım ve sürücü performansı.",
+   "en": "Vehicle location, fuel, maintenance and driver performance."
+  },
+  "pr": "₺2.500"
+ },
+ {
+  "id": "nursery",
+  "sekme": "isletme",
+  "g": "akilli",
+  "ic": "🧸",
+  "ad": {
+   "tr": "Kreş / Anaokulu Veli Uygulaması",
+   "en": "Nursery / Daycare Parent App"
+  },
+  "aciklama": {
+   "tr": "Günlük rapor, fotoğraf, menü, yoklama ve duyuru.",
+   "en": "Daily reports, photos, menu, attendance and notices."
+  },
+  "pr": "₺1.900"
+ },
+ {
+  "id": "brandedapp",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "📱",
+  "ad": {
+   "tr": "Markalı Mobil Uygulama",
+   "en": "Branded Mobile App"
+  },
+  "aciklama": {
+   "tr": "iOS + Android, kendi markanla App Store & Play.",
+   "en": "iOS + Android, your brand, App Store & Play release."
+  },
+  "pr": "₺29.990"
+ },
+ {
+  "id": "orderapp",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "🛍️",
+  "ad": {
+   "tr": "Sipariş / Mağaza Mobil Uygulaması",
+   "en": "Order / Store Mobile App"
+  },
+  "aciklama": {
+   "tr": "Ürün, sepet, ödeme, bildirimli satış uygulaması.",
+   "en": "Your own selling app with catalog, cart, payment and push."
+  },
+  "pr": "₺19.990"
+ },
+ {
+  "id": "loyaltyapp",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "🏅",
+  "ad": {
+   "tr": "Sadakat Mobil Uygulaması",
+   "en": "Loyalty Mobile App"
+  },
+  "aciklama": {
+   "tr": "Puan, kupon, push kampanya ile müşteri sadakati.",
+   "en": "Points, coupons, push campaigns to bring customers back."
+  },
+  "pr": "₺14.990"
+ },
+ {
+  "id": "guv-temel",
+  "sekme": "guvenlik",
+  "g": "guvenlik",
+  "ic": "🟢",
+  "ad": {
+   "tr": "Temel Koruma",
+   "en": "Basic Protection"
+  },
+  "aciklama": {
+   "tr": "Sitenizi temel saldırılara karşı koruyun.",
+   "en": "For 'just protect me': SSL/HTTPS, DDoS protection, basic firewall, bot blocking. Simple and safe."
+  },
+  "pr": "₺990"
+ },
+ {
+  "id": "guv-pro",
+  "sekme": "guvenlik",
+  "g": "guvenlik",
+  "ic": "🔵",
+  "ad": {
+   "tr": "Profesyonel Koruma",
+   "en": "Professional Protection"
+  },
+  "aciklama": {
+   "tr": "En çok tercih edilen kapsamlı koruma.",
+   "en": "Most popular: Basic + origin IP hiding (tunnel), full WAF, payment-page script shield, rate limiting, device lock, 24/7 monitoring."
+  },
+  "pr": "₺2.490"
+ },
+ {
+  "id": "guv-max",
+  "sekme": "guvenlik",
+  "g": "guvenlik",
+  "ic": "🔴",
+  "ad": {
+   "tr": "Maksimum · Banka Seviyesi",
+   "en": "Maximum · Bank-Grade"
+  },
+  "aciklama": {
+   "tr": "Banka seviyesi, en üst düzey koruma.",
+   "en": "For the paranoid: Pro + Zero Trust, mTLS, 2FA, aggressive attack/scan blocking (kernel ban), full audit log, instant alerts, custom rules."
+  },
+  "pr": "₺4.990"
+ },
+ {
+  "id": "guv-ssl",
+  "sekme": "guvenlik",
+  "g": "guvenlik",
+  "ic": "🔒",
+  "ad": {
+   "tr": "SSL & Şifreleme Kurulumu",
+   "en": "SSL & Encryption Setup"
+  },
+  "aciklama": {
+   "tr": "TLS 1.3 + güçlü şifreleme, HTTPS zorunlu.",
+   "en": "TLS 1.3 + strong encryption + forced HTTPS. Green padlock, secure connection."
+  },
+  "pr": "₺490"
+ },
+ {
+  "id": "guv-ddos",
+  "sekme": "guvenlik",
+  "g": "guvenlik",
+  "ic": "🌊",
+  "ad": {
+   "tr": "DDoS Koruması",
+   "en": "DDoS Protection"
+  },
+  "aciklama": {
+   "tr": "Saldırı seli sitenizi çökertemez.",
+   "en": "Attack floods can't take you down — global automatic DDoS defense."
+  },
+  "pr": "₺1.490"
+ },
+ {
+  "id": "guv-waf",
+  "sekme": "guvenlik",
+  "g": "guvenlik",
+  "ic": "🧱",
+  "ad": {
+   "tr": "Web Uygulama Güvenlik Duvarı (WAF)",
+   "en": "Web App Firewall (WAF)"
+  },
+  "aciklama": {
+   "tr": "SQL injection, XSS ve exploit'leri durdurur.",
+   "en": "Blocks SQL injection, XSS and exploits at the edge before they reach your server."
+  },
+  "pr": "₺1.990"
+ },
+ {
+  "id": "guv-gizle",
+  "sekme": "guvenlik",
+  "g": "guvenlik",
+  "ic": "🕵️",
+  "ad": {
+   "tr": "Sunucu / IP Gizleme",
+   "en": "Origin / IP Hiding"
+  },
+  "aciklama": {
+   "tr": "Sunucunuz internette görünmez olur.",
+   "en": "Your server is invisible online — no open ports, direct attacks impossible (tunnel)."
+  },
+  "pr": "₺990"
+ },
+ {
+  "id": "guv-bot",
+  "sekme": "guvenlik",
+  "g": "guvenlik",
+  "ic": "🤖",
+  "ad": {
+   "tr": "Bot & Scraper Engelleme",
+   "en": "Bot & Scraper Blocking"
+  },
+  "aciklama": {
+   "tr": "Kötü botları ve içerik çalanları engeller.",
+   "en": "Bad bots, scrapers and automated attacks blocked; real customers stay free."
+  },
+  "pr": "₺990"
+ },
+ {
+  "id": "guv-odeme",
+  "sekme": "guvenlik",
+  "g": "guvenlik",
+  "ic": "💳",
+  "ad": {
+   "tr": "Ödeme & Kart Güvenliği",
+   "en": "Payment & Card Security"
+  },
+  "aciklama": {
+   "tr": "Ödeme sayfası izlenir, kart bilgisi korunur.",
+   "en": "Payment-page scripts monitored; card-stealing code caught instantly."
+  },
+  "pr": "₺1.490"
+ },
+ {
+  "id": "guv-2fa",
+  "sekme": "guvenlik",
+  "g": "guvenlik",
+  "ic": "🔑",
+  "ad": {
+   "tr": "2FA / Çok Faktörlü Giriş",
+   "en": "2FA / Multi-Factor Login"
+  },
+  "aciklama": {
+   "tr": "Yönetici girişine çift doğrulama + cihaz kilidi.",
+   "en": "Device lock + 2FA on admin login; account safe even if password leaks."
+  },
+  "pr": "₺790"
+ },
+ {
+  "id": "guv-izleme",
+  "sekme": "guvenlik",
+  "g": "guvenlik",
+  "ic": "📡",
+  "ad": {
+   "tr": "7/24 İzleme & Anlık Alarm",
+   "en": "24/7 Monitoring & Alerts"
+  },
+  "aciklama": {
+   "tr": "Saldırı, anormallik, kesinti anında tespit.",
+   "en": "Attacks, anomalies and downtime detected instantly; you're alerted right away."
+  },
+  "pr": "₺1.990"
+ },
+ {
+  "id": "guv-audit",
+  "sekme": "guvenlik",
+  "g": "guvenlik",
+  "ic": "🔍",
+  "ad": {
+   "tr": "Güvenlik Denetimi & Sızma Testi",
+   "en": "Security Audit & Pentest"
+  },
+  "aciklama": {
+   "tr": "Sisteminiz baştan sona taranır, açıklar bulunur.",
+   "en": "Full system scan, vulnerabilities found and fixed — report included."
+  },
+  "pr": "₺3.990"
+ },
+ {
+  "id": "guv-yedek",
+  "sekme": "guvenlik",
+  "g": "guvenlik",
+  "ic": "💾",
+  "ad": {
+   "tr": "Yedekleme & Felaket Kurtarma",
+   "en": "Backup & Disaster Recovery"
+  },
+  "aciklama": {
+   "tr": "Otomatik yedek + hızlı geri yükleme.",
+   "en": "Automatic backups + fast restore. Your data is safe even in worst case."
+  },
+  "pr": "₺990"
+ },
+ {
+  "id": "analytics",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "📊",
+  "ad": {
+   "tr": "Web Analitik",
+   "en": "Web Analytics"
+  },
+  "aciklama": {
+   "tr": "Ziyaretçi, dönüşüm ve davranış analizi; gizlilik dostu kendi paneliniz.",
+   "en": "Visitor, conversion and behavior analytics; your own privacy-friendly dashboard."
+  },
+  "pr": "₺2.990"
+ },
+ {
+  "id": "livechat",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "💬",
+  "ad": {
+   "tr": "Canlı Destek",
+   "en": "Live Chat"
+  },
+  "aciklama": {
+   "tr": "Sitenize canlı destek widget'ı; müşteriyle anlık sohbet + geçmiş kaydı.",
+   "en": "Live chat widget for your site; instant customer chat with history."
+  },
+  "pr": "₺2.490"
+ },
+ {
+  "id": "invoice",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "🧾",
+  "ad": {
+   "tr": "Fatura Sistemi",
+   "en": "Invoicing"
+  },
+  "aciklama": {
+   "tr": "Fatura & teklif oluştur, gönder, takip et; tahsilat hatırlatma.",
+   "en": "Create, send and track invoices & quotes; payment reminders."
+  },
+  "pr": "₺2.990"
+ },
+ {
+  "id": "kanban",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "📋",
+  "ad": {
+   "tr": "Kanban Yönetimi",
+   "en": "Kanban Boards"
+  },
+  "aciklama": {
+   "tr": "Ekip görev panosu; sürükle-bırak iş akışı, atama ve son tarih.",
+   "en": "Team task board; drag-drop workflow, assignments and due dates."
+  },
+  "pr": "₺1.990"
+ },
+ {
+  "id": "emailmkt",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "📧",
+  "ad": {
+   "tr": "E-posta Pazarlama",
+   "en": "Email Marketing"
+  },
+  "aciklama": {
+   "tr": "Liste, şablon ve otomasyonla toplu e-posta kampanyaları + raporlama.",
+   "en": "Bulk email campaigns with lists, templates, automation + reports."
+  },
+  "pr": "₺2.490"
+ },
+ {
+  "id": "wiki",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "📚",
+  "ad": {
+   "tr": "Şirket Wiki",
+   "en": "Company Wiki"
+  },
+  "aciklama": {
+   "tr": "Ekip bilgi tabanı; dokümanlar, prosedürler ve hızlı arama.",
+   "en": "Team knowledge base; documents, procedures and fast search."
+  },
+  "pr": "₺1.990"
+ },
+ {
+  "id": "forms",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "📝",
+  "ad": {
+   "tr": "Form & Anket",
+   "en": "Forms & Surveys"
+  },
+  "aciklama": {
+   "tr": "Sürükle-bırak form/anket oluştur; yanıt topla ve analiz et.",
+   "en": "Build forms/surveys with drag-drop; collect and analyze responses."
+  },
+  "pr": "₺1.490"
+ },
+ {
+  "id": "meet",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "📹",
+  "ad": {
+   "tr": "Video Konferans",
+   "en": "Video Meetings"
+  },
+  "aciklama": {
+   "tr": "Markalı görüntülü toplantı; ekran paylaşımı ve kayıt.",
+   "en": "Branded video meetings; screen sharing and recording."
+  },
+  "pr": "₺2.990"
+ },
+ {
+  "id": "codocs",
+  "sekme": "isletme",
+  "g": "kurumsal",
+  "ic": "📄",
+  "ad": {
+   "tr": "Ortak Düzenleme",
+   "en": "Collaborative Docs"
+  },
+  "aciklama": {
+   "tr": "Gerçek zamanlı ortak doküman ve tablo düzenleme.",
+   "en": "Real-time collaborative document and spreadsheet editing."
+  },
+  "pr": "₺1.990"
+ }
 ]
