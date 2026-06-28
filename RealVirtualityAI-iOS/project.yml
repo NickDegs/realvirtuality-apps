@@ -2,7 +2,7 @@ name: RealVirtualityAI
 options:
   bundleIdPrefix: com.nickdegs
   deploymentTarget:
-    iOS: "26.0"
+    iOS: "17.0"
 settings:
   base:
     MARKETING_VERSION: "1.0"
@@ -14,7 +14,7 @@ targets:
   RealVirtualityAI:
     type: application
     platform: iOS
-    deploymentTarget: "26.0"
+    deploymentTarget: "17.0"
     settings:
       base:
         TARGETED_DEVICE_FAMILY: "1"
@@ -29,7 +29,7 @@ targets:
   RealVirtualityAIUITests:
     type: bundle.ui-testing
     platform: iOS
-    deploymentTarget: "26.0"
+    deploymentTarget: "17.0"
     sources: [RealVirtualityAIUITests]
     settings:
       base:

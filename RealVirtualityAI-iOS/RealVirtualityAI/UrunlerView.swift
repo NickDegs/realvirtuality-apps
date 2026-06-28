@@ -78,7 +78,7 @@ struct UrunlerView: View {
             if !arama.isEmpty { Button { arama = "" } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.rvMut) } }
         }
         .padding(.horizontal, 16).padding(.vertical, 13)
-        .glassEffect(.regular, in: .rect(cornerRadius: 16))
+        .rvGlass(16)
     }
 }
 
@@ -153,14 +153,14 @@ struct RVUrunDetay: View {
                     if !urun.pr.isEmpty {
                         Text(urun.pr).font(.title3.bold()).foregroundStyle(tema.c2)
                             .padding(.horizontal, 16).padding(.vertical, 9)
-                            .glassEffect(.regular.tint(tema.c2.opacity(0.18)), in: .capsule)
+                            .rvGlass(capsule: true, tint: tema.c2.opacity(0.18))
                     }
 
                     // Açıklama
                     Text(yerel.u(urun.aciklama)).font(.callout).foregroundStyle(.rvText).opacity(0.95)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(18).frame(maxWidth: .infinity, alignment: .leading)
-                        .glassEffect(.regular, in: .rect(cornerRadius: 20))
+                        .rvGlass(20)
 
                     // Sipariş durumu
                     if let ok = siparisOk {
@@ -169,11 +169,11 @@ struct RVUrunDetay: View {
                             Text(ok).font(.subheadline).foregroundStyle(.rvText).multilineTextAlignment(.center)
                         }
                         .frame(maxWidth: .infinity).padding(20)
-                        .glassEffect(.regular.tint(Color.green.opacity(0.18)), in: .rect(cornerRadius: 20))
+                        .rvGlass(20, tint: Color.green.opacity(0.18))
                     } else if !siparisHata.isEmpty {
                         Text(siparisHata).font(.subheadline).foregroundStyle(.orange)
                             .padding(14).frame(maxWidth: .infinity, alignment: .leading)
-                            .glassEffect(.regular, in: .rect(cornerRadius: 16))
+                            .rvGlass(16)
                     }
 
                     Color.clear.frame(height: 80)

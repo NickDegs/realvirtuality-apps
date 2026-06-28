@@ -139,7 +139,7 @@ struct KategoriView: View {
             }
         }
         .padding(.horizontal, 18).padding(.vertical, 16)
-        .glassEffect(.regular, in: .rect(cornerRadius: 18))
+        .rvGlass(18)
     }
 
     // MARK: alt başlıklı bölüm (birleşik sekmede)

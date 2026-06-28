@@ -113,8 +113,13 @@ struct RootView: View {
                 .tabItem { Label(yerel.p("studyoTab"), systemImage: "waveform") }
             KutuphaneView()
                 .tabItem { Label(yerel.p("kutuphaneTab"), systemImage: "books.vertical.fill") }
+            // App Store Guideline 3.1.1: harici-ödemeli dijital ürün satışı YASAK.
+            // Ürünler sekmesi yalnızca URUNLER_TAB derleme bayrağı tanımlıysa görünür (App Store/TestFlight'ta KAPALI).
+            // Para kazanma kredi-IAP ile (ContentView başlık + ToolView) → 3.1.1 uyumlu.
+            #if URUNLER_TAB
             UrunlerView()
                 .tabItem { Label(yerel.p("urunlerTab"), systemImage: "bag.fill") }
+            #endif
         }
         .tint(tema.c1)
     }

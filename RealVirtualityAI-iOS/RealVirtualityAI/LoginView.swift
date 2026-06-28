@@ -24,7 +24,7 @@ struct LoginView: View {
                         Text("Oturum iCloud ile cihazların arasında senkron.").font(.caption2).foregroundStyle(.secondary).multilineTextAlignment(.center)
                         Button(yerel.t("cikisYap")) { Task { await api.cikis(); dismiss() } }
                             .padding().frame(maxWidth: .infinity)
-                            .glassEffect(.regular, in: .rect(cornerRadius: 14)).foregroundStyle(.rvText)
+                            .rvGlass(14).foregroundStyle(.rvText)
                     } else {
                         Image(systemName: "sparkles").font(.system(size: 46)).foregroundStyle(.linearGradient(colors: [.rvViolet, .rvCyan], startPoint: .leading, endPoint: .trailing))
                         Text(yerel.t("girisBaslik")).font(.title2.bold()).foregroundStyle(.rvText)
@@ -38,11 +38,11 @@ struct LoginView: View {
                                 TextField("5xx xxx xx xx", text: $tel).keyboardType(.phonePad)
                                     .foregroundStyle(.rvText).autocorrectionDisabled()
                             }
-                            .padding().glassEffect(.regular, in: .rect(cornerRadius: 14))
+                            .padding().rvGlass(14)
                         } else {
                             TextField(yerel.p("smsKodu"), text: $kod).keyboardType(.numberPad)
                                 .multilineTextAlignment(.center).font(.title3)
-                                .padding().glassEffect(.regular, in: .rect(cornerRadius: 14)).foregroundStyle(.rvText)
+                                .padding().rvGlass(14).foregroundStyle(.rvText)
                         }
 
                         if !bilgi.isEmpty { Text(bilgi).font(.caption).foregroundStyle(.rvCyan).multilineTextAlignment(.center) }

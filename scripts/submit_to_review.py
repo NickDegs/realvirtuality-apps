@@ -126,11 +126,61 @@ if WHATS_NEW:
         print(f"  What's New ({lang}): {r.get('_ok') or r.get('_err') or 'ok'}")
 
 # ── 6) İncelemeye gönder ─────────────────────────────────────────────────────
+# MODERN akış: reviewSubmissions + reviewSubmissionItems (app versiyonu + IAP'ler BİRLİKTE).
+# İlk gönderimde IAP'ler (krediler) app ile aynı review'a girmeli; yoksa onaylanmaz → satın alınamaz.
+def gonder_modern():
+    # submit edilebilir IAP'leri bul (READY_TO_SUBMIT)
+    iap_ids = []
+    d = api(f"/v1/apps/{APP}/inAppPurchasesV2?limit=50")
+    for it in (d.get("data") or []):
+        st = (it.get("attributes") or {}).get("state", "")
+        if st in ("READY_TO_SUBMIT", "DEVELOPER_ACTION_NEEDED", "REJECTED"):
+            iap_ids.append(it["id"])
+    print(f"  IAP (review'a eklenecek): {len(iap_ids)} adet")
+    # mevcut açık reviewSubmission var mı (yoksa oluştur)
+    rs_id = None
+    ex = api(f"/v1/apps/{APP}/reviewSubmissions?filter[state]=READY_FOR_REVIEW,WAITING_FOR_REVIEW,COMPLETING&limit=1")
+    if (ex.get("data") or []):
+        rs_id = ex["data"][0]["id"]
+    if not rs_id:
+        cr = api("/v1/reviewSubmissions", method="POST",
+                 body={"data": {"type": "reviewSubmissions", "attributes": {"platform": "IOS"},
+                                "relationships": {"app": {"data": {"type": "apps", "id": APP}}}}})
+        if not cr.get("data"):
+            print(f"  reviewSubmission oluşturulamadı: {cr}"); return False
+        rs_id = cr["data"]["id"]
+    print(f"  reviewSubmission: {rs_id}")
+    # app versiyonu item
+    api("/v1/reviewSubmissionItems", method="POST",
+        body={"data": {"type": "reviewSubmissionItems",
+                       "relationships": {"reviewSubmission": {"data": {"type": "reviewSubmissions", "id": rs_id}},
+                                         "appStoreVersion": {"data": {"type": "appStoreVersions", "id": ver_id}}}}})
+    # her IAP için item
+    for iid in iap_ids:
+        api("/v1/reviewSubmissionItems", method="POST",
+            body={"data": {"type": "reviewSubmissionItems",
+                           "relationships": {"reviewSubmission": {"data": {"type": "reviewSubmissions", "id": rs_id}},
+                                             "inAppPurchaseV2": {"data": {"type": "inAppPurchases", "id": iid}}}}})
+    # submit
+    sub = api(f"/v1/reviewSubmissions/{rs_id}", method="PATCH",
+              body={"data": {"type": "reviewSubmissions", "id": rs_id, "attributes": {"submitted": True}}})
+    if sub.get("data") or sub.get("_ok"):
+        print("✅ İncelemeye gönderildi (modern: app + IAP)!"); return True
+    print(f"  modern submit hata: {sub}"); return False
+
+def gonder_eski():
+    r = api("/v1/appStoreVersionSubmissions", method="POST",
+            body={"data": {"type": "appStoreVersionSubmissions",
+                           "relationships": {"appStoreVersion": {"data": {"type": "appStoreVersions", "id": ver_id}}}}})
+    if r.get("data") or r.get("_ok"):
+        print("✅ İncelemeye gönderildi (eski akış, IAP'siz)!"); return True
+    print(f"⚠️ Gönderme sonucu: {r}"); return False
+
 print("🚀 App Store incelemeye gönderiliyor…")
-r = api("/v1/appStoreVersionSubmissions", method="POST",
-        body={"data": {"type": "appStoreVersionSubmissions",
-                       "relationships": {"appStoreVersion": {"data": {"type": "appStoreVersions", "id": ver_id}}}}})
-if r.get("data") or r.get("_ok"):
-    print("✅ İncelemeye gönderildi!")
-else:
-    print(f"⚠️ Gönderme sonucu: {r}")
+try:
+    if not gonder_modern():
+        print("↩️ Modern akış başarısız → eski akışa düşülüyor (IAP'ler ASC UI'dan eklenmeli)…")
+        gonder_eski()
+except Exception as e:
+    print(f"modern akış istisna: {e} → eski akış")
+    gonder_eski()

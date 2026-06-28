@@ -34,7 +34,7 @@ struct KrediView: View {
                                     else { Text(p.displayPrice).font(.headline.bold()).foregroundStyle(.rvCyan) }
                                 }
                                 .padding().frame(maxWidth: .infinity)
-                                .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 16))
+                                .rvGlass(16, interactive: true)
                             }
                             .foregroundStyle(.white).disabled(store.aliniyor != nil)
                         }
