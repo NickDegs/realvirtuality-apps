@@ -1,6 +1,7 @@
 import SwiftUI
 import PhotosUI
 import AVFoundation
+import UniformTypeIdentifiers
 
 struct ToolView: View {
     let arac: Arac
@@ -16,6 +17,10 @@ struct ToolView: View {
     @State private var oran = "kare"
     @State private var secilenFoto: PhotosPickerItem?
     @State private var gorselData: Data?
+    @State private var secilenFoto2: PhotosPickerItem?
+    @State private var gorselData2: Data?
+    @State private var pdfData: Data?
+    @State private var pdfImport = false
     @State private var sonuc: UretimSonuc? = nil
     @State private var sesData: Data? = nil
     @State private var hata = ""
@@ -31,8 +36,12 @@ struct ToolView: View {
     let oranAraclar = ["gorsel","logo","icerik"]
 
     private var gorselGerek: Bool { arac.kind == .gorselYukle || arac.kind == .gorselArti || arac.kind == .urunfoto }
+    private var ikiGorsel: Bool { arac.kind == .faceswap }
+    private var pdfGerek: Bool { arac.kind == .pdf }
     private var metinGerek: Bool { arac.kind == .prompt || arac.kind == .metin || arac.kind == .ceviri || arac.kind == .gorselArti || arac.kind == .icerik || arac.kind == .url }
     private var hazir: Bool {
+        if ikiGorsel { return gorselData != nil && gorselData2 != nil }
+        if pdfGerek { return pdfData != nil }
         if gorselGerek && gorselData == nil { return false }
         if metinGerek && girdi.trimmingCharacters(in: .whitespaces).isEmpty { return false }
         return true
@@ -47,6 +56,8 @@ struct ToolView: View {
                         .fixedSize(horizontal: false, vertical: true)
 
                     if gorselGerek { gorselSecici }
+                    if ikiGorsel { ikiGorselSecici }
+                    if pdfGerek { pdfSecici }
                     if metinGerek { metinAlani }
                     if arac.kind == .ceviri { dilSecici }
                     if arac.kind == .urunfoto { secici(yerel.t("sahne"), sahneler, $sahne) }
@@ -69,6 +80,55 @@ struct ToolView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: secilenFoto) { _, yeni in
             Task { if let d = try? await yeni?.loadTransferable(type: Data.self) { gorselData = d } }
+        }
+        .onChange(of: secilenFoto2) { _, yeni in
+            Task { if let d = try? await yeni?.loadTransferable(type: Data.self) { gorselData2 = d } }
+        }
+    }
+
+    // MARK: faceswap — iki görsel (kaynak yüz + hedef)
+    var ikiGorselSecici: some View {
+        HStack(spacing: 12) {
+            tekGorsel(yerel.t("kaynakYuz"), $secilenFoto, gorselData)
+            tekGorsel(yerel.t("hedefGorsel"), $secilenFoto2, gorselData2)
+        }
+    }
+    func tekGorsel(_ baslik: String, _ sec: Binding<PhotosPickerItem?>, _ veri: Data?) -> some View {
+        VStack(spacing: 6) {
+            Text(baslik).font(.caption.bold()).foregroundStyle(.rvMut)
+            PhotosPicker(selection: sec, matching: .images) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 14).fill(Color.rvCard)
+                        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.rvLine, style: StrokeStyle(lineWidth: 1, dash: [6])))
+                    if let d = veri, let ui = UIImage(data: d) {
+                        Image(uiImage: ui).resizable().scaledToFit().frame(maxHeight: 150).clipShape(.rect(cornerRadius: 14))
+                    } else {
+                        Image(systemName: "photo.badge.plus").font(.system(size: 28)).foregroundStyle(tema.grad).padding(.vertical, 36)
+                    }
+                }
+                .frame(maxWidth: .infinity, minHeight: 120)
+            }
+        }
+    }
+
+    // MARK: pdf — dosya seçici
+    var pdfSecici: some View {
+        Button { pdfImport = true } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 16).fill(Color.rvCard)
+                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.rvLine, style: StrokeStyle(lineWidth: 1, dash: [6])))
+                VStack(spacing: 8) {
+                    Image(systemName: pdfData != nil ? "doc.fill" : "doc.badge.plus").font(.system(size: 34)).foregroundStyle(tema.grad)
+                    Text(pdfData != nil ? yerel.t("pdfSecildi") : yerel.t("pdfSec")).font(.subheadline.bold()).foregroundStyle(.rvText)
+                }.padding(.vertical, 30)
+            }
+            .frame(maxWidth: .infinity, minHeight: 130)
+        }
+        .fileImporter(isPresented: $pdfImport, allowedContentTypes: [.pdf]) { res in
+            if case .success(let url) = res, url.startAccessingSecurityScopedResource() {
+                pdfData = try? Data(contentsOf: url)
+                url.stopAccessingSecurityScopedResource()
+            }
         }
     }
 
@@ -223,6 +283,8 @@ struct ToolView: View {
         case .urunfoto: body["image"] = b64; body["sahne"] = sahne
         case .icerik: body["prompt"] = girdi; body["platform"] = platform
         case .ses: body["text"] = girdi
+        case .faceswap: body["source"] = gorselData?.base64EncodedString(); body["target"] = gorselData2?.base64EncodedString()
+        case .pdf: body["pdf"] = pdfData?.base64EncodedString()
         }
         if kaliteAraclar.contains(arac.id) { body["kalite"] = kalite }
         if oranAraclar.contains(arac.id) { body["oran"] = oran }

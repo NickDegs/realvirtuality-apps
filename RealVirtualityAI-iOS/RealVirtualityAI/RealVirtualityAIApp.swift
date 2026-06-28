@@ -47,7 +47,7 @@ extension LinearGradient {
 }
 
 // MARK: - Araç giriş türleri
-enum AracKind { case prompt, metin, ceviri, gorselYukle, gorselArti, urunfoto, icerik, url, ses }
+enum AracKind { case prompt, metin, ceviri, gorselYukle, gorselArti, urunfoto, icerik, url, ses, faceswap, pdf }
 
 // MARK: - Kategori
 enum Kategori: String, CaseIterable, Identifiable {
@@ -82,6 +82,7 @@ let ARACLAR: [Arac] = [
     Arac(id: "donustur", ikon: "wand.and.stars", kind: .gorselArti, kredi: 6, kategori: .gorsel),
     Arac(id: "upscale", ikon: "arrow.up.left.and.arrow.down.right", kind: .gorselYukle, kredi: 3, kategori: .gorsel),
     Arac(id: "bgremove", ikon: "scissors", kind: .gorselYukle, kredi: 2, kategori: .gorsel),
+    Arac(id: "faceswap", ikon: "person.2.crop.square.stack.fill", kind: .faceswap, kredi: 6, kategori: .gorsel, oneCikan: true),
     // İçerik & Yazı
     Arac(id: "icerik", ikon: "sparkles.rectangle.stack", kind: .icerik, kredi: 6, kategori: .icerik, oneCikan: true),
     Arac(id: "pro", ikon: "brain.head.profile", kind: .metin, kredi: 3, kategori: .icerik, oneCikan: true),
@@ -97,6 +98,7 @@ let ARACLAR: [Arac] = [
     Arac(id: "aciklama", ikon: "text.below.photo.fill", kind: .gorselYukle, kredi: 2, kategori: .analiz),
     Arac(id: "vsoru", ikon: "questionmark.bubble.fill", kind: .gorselArti, kredi: 2, kategori: .analiz),
     Arac(id: "ocr", ikon: "doc.text.viewfinder", kind: .gorselYukle, kredi: 2, kategori: .analiz),
+    Arac(id: "pdfozet", ikon: "doc.text.magnifyingglass", kind: .pdf, kredi: 3, kategori: .analiz),
 ]
 
 // MARK: - App
