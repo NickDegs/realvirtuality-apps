@@ -19,8 +19,12 @@ struct RestoranPanel: View {
 
     static let durumAd = ["🆕 Yeni", "👨‍🍳 Hazırlanıyor", "✅ Hazır", "📦 Teslim edildi"]
     static let durumRenk: [Color] = [.blue, .orange, .green, .gray]
-    let sekmeler = [("Özet", "chart.bar.fill"), ("Siparişler", "bag.fill"), ("Masalar", "tablecells"),
-                    ("Menü", "fork.knife"), ("Kupon", "tag.fill"), ("Personel", "person.2.fill"), ("Ayar", "gearshape.fill")]
+    var sekmeler: [(String, String)] {
+        var s = [("Özet", "chart.bar.fill"), ("Siparişler", "bag.fill")]
+        if api.sahip { s += [("Masalar", "tablecells"), ("Menü", "fork.knife"), ("Kupon", "tag.fill"),
+                             ("Personel", "person.2.fill"), ("Ayar", "gearshape.fill")] }
+        return s
+    }
 
     var body: some View {
         VStack(spacing: 0) {

@@ -36,8 +36,10 @@ struct RandevuPanel: View {
     var kisiAd: String { ogretmen ? "Öğrenci" : "Müşteri" }
 
     var sekmeler: [(String, String)] {
-        [("Özet", "chart.bar.fill"), (randevuAd, "calendar"), (hizmetAd, "list.bullet.rectangle"),
-         (musteriAd, "person.crop.circle"), ("Kupon", "tag.fill"), ("Personel", "person.2.fill"), ("Ayar", "gearshape.fill")]
+        var s = [("Özet", "chart.bar.fill"), (randevuAd, "calendar")]
+        if api.sahip { s += [(hizmetAd, "list.bullet.rectangle"), (musteriAd, "person.crop.circle"),
+                             ("Kupon", "tag.fill"), ("Personel", "person.2.fill"), ("Ayar", "gearshape.fill")] }
+        return s
     }
 
     var body: some View {

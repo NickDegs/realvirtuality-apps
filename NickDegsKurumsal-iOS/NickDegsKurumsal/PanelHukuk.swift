@@ -55,9 +55,13 @@ struct HukukPanel: View {
         switch s { case "kirmizi": return .red; case "turuncu": return .orange
         case "sari": return .yellow; case "yesil": return .green; default: return .gray }
     }
-    let sekmeler = [("Özet", "chart.bar.fill"), ("Davalar", "folder.fill"), ("Süreler", "alarm.fill"),
-                    ("Duruşmalar", "building.columns.fill"), ("Müvekkiller", "person.crop.circle"),
-                    ("Belgeler", "doc.fill"), ("Personel", "person.2.fill"), ("Ayar", "gearshape.fill")]
+    var sekmeler: [(String, String)] {
+        var s = [("Özet", "chart.bar.fill"), ("Davalar", "folder.fill"), ("Süreler", "alarm.fill"),
+                 ("Duruşmalar", "building.columns.fill")]
+        if api.sahip { s += [("Müvekkiller", "person.crop.circle"), ("Belgeler", "doc.fill"),
+                             ("Personel", "person.2.fill"), ("Ayar", "gearshape.fill")] }
+        return s
+    }
 
     var body: some View {
         VStack(spacing: 0) {
