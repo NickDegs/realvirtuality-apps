@@ -348,6 +348,7 @@ struct ToolView: View {
         if arac.id == "avatar" { return yerel.t("ip_avatar") }
         if arac.id == "duzenle" { return yerel.t("ip_duzenle") }
         if arac.id == "bgreplace" { return yerel.t("ip_bgreplace") }
+        if arac.id == "relight" { return yerel.t("ip_relight") }
         switch arac.kind {
         case .prompt: return yerel.t("ip_prompt")
         case .ceviri: return yerel.t("ip_ceviri")

@@ -51,14 +51,15 @@ enum AracKind { case prompt, metin, ceviri, gorselYukle, gorselArti, urunfoto, i
 
 // MARK: - Kategori
 enum Kategori: String, CaseIterable, Identifiable {
-    case gorsel, icerik, sesvideo, analiz
+    case gorsel, video, ses, icerik, analiz
     var id: String { rawValue }
     var key: String { "kat_" + rawValue }   // Yerel anahtarı
     var ikon: String {
         switch self {
         case .gorsel: return "paintbrush.pointed.fill"
+        case .video: return "film.fill"
+        case .ses: return "waveform"
         case .icerik: return "text.word.spacing"
-        case .sesvideo: return "waveform"
         case .analiz: return "doc.viewfinder"
         }
     }
@@ -87,6 +88,9 @@ let ARACLAR: [Arac] = [
     Arac(id: "duzenle", ikon: "wand.and.rays", kind: .gorselArti, kredi: 6, kategori: .gorsel, oneCikan: true),
     Arac(id: "bgreplace", ikon: "person.and.background.dotted", kind: .gorselArti, kredi: 5, kategori: .gorsel),
     Arac(id: "restore", ikon: "sparkle.magnifyingglass", kind: .gorselYukle, kredi: 4, kategori: .gorsel),
+    Arac(id: "superupscale", ikon: "arrow.up.backward.and.arrow.down.forward.circle.fill", kind: .gorselYukle, kredi: 5, kategori: .gorsel),
+    Arac(id: "relight", ikon: "lightbulb.max.fill", kind: .gorselArti, kredi: 5, kategori: .gorsel),
+    Arac(id: "anime", ikon: "theatermasks.fill", kind: .gorselYukle, kredi: 4, kategori: .gorsel),
     Arac(id: "sticker", ikon: "face.smiling.inverse", kind: .gorselYukle, kredi: 4, kategori: .gorsel),
     // İçerik & Yazı
     Arac(id: "icerik", ikon: "sparkles.rectangle.stack", kind: .icerik, kredi: 6, kategori: .icerik, oneCikan: true),
@@ -96,14 +100,15 @@ let ARACLAR: [Arac] = [
     Arac(id: "seo", ikon: "magnifyingglass", kind: .metin, kredi: 2, kategori: .icerik),
     Arac(id: "sohbet", ikon: "bubble.left.and.bubble.right.fill", kind: .metin, kredi: 1, kategori: .icerik),
     Arac(id: "kod", ikon: "chevron.left.forwardslash.chevron.right", kind: .metin, kredi: 2, kategori: .icerik),
-    // Ses & Video
-    Arac(id: "video", ikon: "film.fill", kind: .prompt, kredi: 12, kategori: .sesvideo, oneCikan: true),
-    Arac(id: "img2video", ikon: "photo.badge.arrow.down.fill", kind: .gorselYukle, kredi: 14, kategori: .sesvideo, oneCikan: true),
-    Arac(id: "avatar", ikon: "person.crop.rectangle.badge.plus", kind: .gorselArti, kredi: 15, kategori: .sesvideo, oneCikan: true),
-    Arac(id: "klip", ikon: "scissors.badge.ellipsis", kind: .video, kredi: 5, kategori: .sesvideo, oneCikan: true),
-    Arac(id: "muzik", ikon: "music.note", kind: .prompt, kredi: 8, kategori: .sesvideo),
-    Arac(id: "tts", ikon: "speaker.wave.3.fill", kind: .metin, kredi: 2, kategori: .sesvideo),
-    Arac(id: "transkript", ikon: "waveform.and.mic", kind: .url, kredi: 3, kategori: .sesvideo),
+    // Video
+    Arac(id: "video", ikon: "film.fill", kind: .prompt, kredi: 12, kategori: .video, oneCikan: true),
+    Arac(id: "img2video", ikon: "photo.badge.arrow.down.fill", kind: .gorselYukle, kredi: 14, kategori: .video, oneCikan: true),
+    Arac(id: "avatar", ikon: "person.crop.rectangle.badge.plus", kind: .gorselArti, kredi: 15, kategori: .video, oneCikan: true),
+    Arac(id: "klip", ikon: "scissors.badge.ellipsis", kind: .video, kredi: 5, kategori: .video, oneCikan: true),
+    // Ses
+    Arac(id: "muzik", ikon: "music.note", kind: .prompt, kredi: 8, kategori: .ses, oneCikan: true),
+    Arac(id: "tts", ikon: "speaker.wave.3.fill", kind: .metin, kredi: 2, kategori: .ses),
+    Arac(id: "transkript", ikon: "waveform.and.mic", kind: .url, kredi: 3, kategori: .ses),
     // Görsel Zekâ & Belge
     Arac(id: "aciklama", ikon: "text.below.photo.fill", kind: .gorselYukle, kredi: 2, kategori: .analiz),
     Arac(id: "vsoru", ikon: "questionmark.bubble.fill", kind: .gorselArti, kredi: 2, kategori: .analiz),
@@ -121,18 +126,20 @@ struct RootView: View {
         TabView(selection: $seciliTab) {
             KategoriView(katlar: [.gorsel], baslik: yerel.t("kat_gorsel"), ikon: Kategori.gorsel.ikon)
                 .tabItem { Label(yerel.p("gorselTab"), systemImage: Kategori.gorsel.ikon) }.tag(0)
-            KategoriView(katlar: [.icerik], baslik: yerel.t("kat_icerik"), ikon: Kategori.icerik.ikon)
-                .tabItem { Label(yerel.p("yaziTab"), systemImage: Kategori.icerik.ikon) }.tag(1)
-            KategoriView(katlar: [.sesvideo, .analiz], baslik: yerel.p("studyoTab"), ikon: "waveform")
-                .tabItem { Label(yerel.p("studyoTab"), systemImage: "waveform") }.tag(2)
+            KategoriView(katlar: [.video], baslik: yerel.t("kat_video"), ikon: Kategori.video.ikon)
+                .tabItem { Label(yerel.p("videoTab"), systemImage: Kategori.video.ikon) }.tag(1)
+            KategoriView(katlar: [.ses], baslik: yerel.t("kat_ses"), ikon: Kategori.ses.ikon)
+                .tabItem { Label(yerel.p("sesTab"), systemImage: Kategori.ses.ikon) }.tag(2)
+            KategoriView(katlar: [.icerik, .analiz], baslik: yerel.t("kat_icerik"), ikon: Kategori.icerik.ikon)
+                .tabItem { Label(yerel.p("yaziTab"), systemImage: Kategori.icerik.ikon) }.tag(3)
             KutuphaneView()
-                .tabItem { Label(yerel.p("kutuphaneTab"), systemImage: "books.vertical.fill") }.tag(3)
+                .tabItem { Label(yerel.p("kutuphaneTab"), systemImage: "books.vertical.fill") }.tag(4)
             // App Store Guideline 3.1.1: harici-ödemeli dijital ürün satışı YASAK.
             // Ürünler sekmesi yalnızca URUNLER_TAB derleme bayrağı tanımlıysa görünür (App Store/TestFlight'ta KAPALI).
             // Para kazanma kredi-IAP ile (ContentView başlık + ToolView) → 3.1.1 uyumlu.
             #if URUNLER_TAB
             UrunlerView()
-                .tabItem { Label(yerel.p("urunlerTab"), systemImage: "bag.fill") }.tag(4)
+                .tabItem { Label(yerel.p("urunlerTab"), systemImage: "bag.fill") }.tag(5)
             #endif
         }
         .tint(tema.c1)
@@ -145,9 +152,10 @@ struct RootView: View {
         .onOpenURL { url in
             switch url.host {
             case "gorsel": seciliTab = 0
-            case "icerik": seciliTab = 1
-            case "klip", "studyo", "ses", "seslendirme": seciliTab = 2
-            case "kutuphane": seciliTab = 3
+            case "video", "klip": seciliTab = 1
+            case "ses", "studyo", "seslendirme", "muzik": seciliTab = 2
+            case "icerik": seciliTab = 3
+            case "kutuphane": seciliTab = 4
             default: break
             }
         }

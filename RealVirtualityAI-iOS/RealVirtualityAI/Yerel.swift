@@ -52,6 +52,8 @@ final class Yerel: ObservableObject {
         "urunlerTab": ["tr":"Ürünler","en":"Products","de":"Produkte","fr":"Produits","es":"Productos","ar":"المنتجات","ru":"Товары"],
         "studyoTab": ["tr":"Stüdyo","en":"Studio","de":"Studio","fr":"Studio","es":"Estudio","ar":"الاستوديو","ru":"Студия"],
         "gorselTab": ["tr":"Görsel","en":"Visual","de":"Bild","fr":"Image","es":"Visual","ar":"صور","ru":"Графика"],
+        "videoTab": ["tr":"Video","en":"Video","de":"Video","fr":"Vidéo","es":"Vídeo","ar":"فيديو","ru":"Видео"],
+        "sesTab": ["tr":"Ses","en":"Audio","de":"Audio","fr":"Audio","es":"Audio","ar":"صوت","ru":"Аудио"],
         "yaziTab": ["tr":"Yazı","en":"Writing","de":"Text","fr":"Texte","es":"Texto","ar":"كتابة","ru":"Текст"],
         "urunHero1": ["tr":"Hazır dijital ürünler","en":"Ready digital products"],
         "urunHero2": ["tr":"& şablonlar","en":"& templates"],

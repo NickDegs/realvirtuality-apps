@@ -700,5 +700,32 @@
   "es": "¿Qué fondo?",
   "ar": "أي خلفية؟",
   "ru": "Какой фон?"
+ },
+ "kat_video": {
+  "tr": "Video",
+  "en": "Video",
+  "de": "Video",
+  "fr": "Vidéo",
+  "es": "Vídeo",
+  "ar": "فيديو",
+  "ru": "Видео"
+ },
+ "kat_ses": {
+  "tr": "Ses & Müzik",
+  "en": "Audio & Music",
+  "de": "Audio & Musik",
+  "fr": "Audio & Musique",
+  "es": "Audio y Música",
+  "ar": "الصوت والموسيقى",
+  "ru": "Аудио и музыка"
+ },
+ "ip_relight": {
+  "tr": "Nasıl ışık? (ör. yumuşak stüdyo, gün batımı)",
+  "en": "What lighting? (e.g. soft studio)",
+  "de": "Welches Licht?",
+  "fr": "Quel éclairage ?",
+  "es": "¿Qué iluminación?",
+  "ar": "أي إضاءة؟",
+  "ru": "Какое освещение?"
  }
 }

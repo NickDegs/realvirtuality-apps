@@ -2642,5 +2642,83 @@
     "Detail boost"
    ]
   }
+ },
+ "anime": {
+  "tr": {
+   "ad": "Anime / Çizgi Film",
+   "aciklama": "Fotoğrafı anime tarzına çevir",
+   "slogan": "Bir fotoğraf yükle — AI onu anime/çizgi film tarzına dönüştürür.",
+   "detay": "Fotoğrafını yükle; yapay zekâ onu anime/çizgi film stiline çevirir. Profil, avatar, eğlence için ideal.",
+   "ozellikler": [
+    "Foto → anime",
+    "Çizgi film stili",
+    "Profil/avatar için",
+    "Saniyeler içinde"
+   ]
+  },
+  "en": {
+   "ad": "Anime / Cartoon",
+   "aciklama": "Turn a photo into anime",
+   "slogan": "Upload a photo — AI turns it into anime/cartoon style.",
+   "detay": "Upload your photo; AI converts it to anime/cartoon style. Great for profiles, avatars, fun.",
+   "ozellikler": [
+    "Photo to anime",
+    "Cartoon style",
+    "For profiles/avatars",
+    "In seconds"
+   ]
+  }
+ },
+ "superupscale": {
+  "tr": {
+   "ad": "Süper Netleştir",
+   "aciklama": "Görseli 4x büyüt ve netleştir",
+   "slogan": "Bir görsel yükle — AI çözünürlüğü 4x artırıp detayları keskinleştirir.",
+   "detay": "Düşük çözünürlüklü görselini yükle; yapay zekâ (clarity) onu 4x büyütüp keskin, net hale getirir.",
+   "ozellikler": [
+    "4x büyütme",
+    "Detay keskinleştirme",
+    "Baskıya hazır",
+    "AI clarity"
+   ]
+  },
+  "en": {
+   "ad": "Super Upscale",
+   "aciklama": "Upscale 4x and sharpen",
+   "slogan": "Upload an image — AI boosts resolution 4x and sharpens details.",
+   "detay": "Upload a low-res image; AI (clarity) upscales it 4x with crisp, sharp detail.",
+   "ozellikler": [
+    "4x upscale",
+    "Detail sharpening",
+    "Print-ready",
+    "AI clarity"
+   ]
+  }
+ },
+ "relight": {
+  "tr": {
+   "ad": "Yeniden Işıklandır",
+   "aciklama": "Görselin ışığını değiştir",
+   "slogan": "Bir fotoğraf yükle ve istediğin ışığı tarif et — AI sahneyi yeniden ışıklandırır.",
+   "detay": "Fotoğrafını yükle ve ışık tarzını yaz (ör. 'yumuşak stüdyo ışığı', 'gün batımı'); yapay zekâ sahneyi profesyonelce yeniden ışıklandırır.",
+   "ozellikler": [
+    "Profesyonel ışıklandırma",
+    "Ürün fotoğrafı için ideal",
+    "Sahne ışığı değiştir",
+    "AI iclight"
+   ]
+  },
+  "en": {
+   "ad": "Relight",
+   "aciklama": "Change the lighting",
+   "slogan": "Upload a photo and describe the lighting — AI relights the scene.",
+   "detay": "Upload your photo and describe the lighting (e.g. 'soft studio', 'sunset'); AI relights professionally.",
+   "ozellikler": [
+    "Professional lighting",
+    "Great for product shots",
+    "Change scene light",
+    "AI iclight"
+   ]
+  }
  }
 }

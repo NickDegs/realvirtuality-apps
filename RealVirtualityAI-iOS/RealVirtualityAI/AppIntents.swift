@@ -5,7 +5,7 @@ import SwiftUI
 // "RealVirtuality'de görsel üret" gibi komutlar uygulamayı ilgili sekmeye açar.
 
 enum RVHedef: Int {
-    case gorsel = 0, icerik = 1, studyo = 2, kutuphane = 3
+    case gorsel = 0, video = 1, studyo = 2, icerik = 3, kutuphane = 4
 }
 
 // Intent (gerekirse arka plan/cold-launch süreci) → app süreci köprüsü: UserDefaults (aynı sandbox)
