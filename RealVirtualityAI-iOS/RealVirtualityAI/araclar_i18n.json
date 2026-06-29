@@ -2824,5 +2824,31 @@
     "One tap"
    ]
   }
+ },
+ "hdvideo": {
+  "tr": {
+   "ad": "HD Video (Pro)",
+   "aciklama": "Yüksek kalite metin→video",
+   "slogan": "Premium kalitede, sinematik AI video — yazdığın sahneyi canlandırır.",
+   "detay": "İstediğin sahneyi yaz (örn. 'sahilde koşan altın renkli köpek, sinematik'); AI bunu yüksek kaliteli, akıcı bir videoya çevirir. Üretim biraz uzun sürebilir.",
+   "ozellikler": [
+    "Premium kalite video",
+    "Sinematik hareket",
+    "Metinden video",
+    "Reels/TikTok/YouTube"
+   ]
+  },
+  "en": {
+   "ad": "HD Video (Pro)",
+   "aciklama": "High-quality text→video",
+   "slogan": "Premium, cinematic AI video — brings your described scene to life.",
+   "detay": "Describe your scene (e.g. 'a golden dog running on the beach, cinematic'); the AI turns it into a high-quality, smooth video. Generation may take a little longer.",
+   "ozellikler": [
+    "Premium quality video",
+    "Cinematic motion",
+    "Text to video",
+    "Reels/TikTok/YouTube"
+   ]
+  }
  }
 }

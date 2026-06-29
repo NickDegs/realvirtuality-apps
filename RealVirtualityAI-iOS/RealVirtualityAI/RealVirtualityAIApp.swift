@@ -108,6 +108,7 @@ let ARACLAR: [Arac] = [
     Arac(id: "kod", ikon: "chevron.left.forwardslash.chevron.right", kind: .metin, kredi: 2, kategori: .icerik),
     // Video
     Arac(id: "video", ikon: "film.fill", kind: .prompt, kredi: 12, kategori: .video, oneCikan: true),
+    Arac(id: "hdvideo", ikon: "film.stack.fill", kind: .prompt, kredi: 18, kategori: .video, oneCikan: true),
     Arac(id: "img2video", ikon: "photo.badge.arrow.down.fill", kind: .gorselYukle, kredi: 14, kategori: .video, oneCikan: true),
     Arac(id: "avatar", ikon: "person.crop.rectangle.badge.plus", kind: .gorselArti, kredi: 15, kategori: .video, oneCikan: true),
     Arac(id: "klip", ikon: "scissors.badge.ellipsis", kind: .video, kredi: 5, kategori: .video, oneCikan: true),
