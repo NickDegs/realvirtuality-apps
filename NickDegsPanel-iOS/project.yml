@@ -18,6 +18,7 @@ targets:
       base:
         TARGETED_DEVICE_FAMILY: "1"
         PRODUCT_BUNDLE_IDENTIFIER: com.nickdegs.dashboard
+        CODE_SIGN_ENTITLEMENTS: NickDegsPanel/NickDegsPanel.entitlements
     sources: [NickDegsPanel]
     info:
       path: NickDegsPanel/Info.plist
