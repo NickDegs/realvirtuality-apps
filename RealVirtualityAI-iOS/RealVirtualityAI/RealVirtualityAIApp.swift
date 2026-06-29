@@ -167,12 +167,14 @@ struct RealVirtualityAIApp: App {
     @StateObject private var api = API()
     @StateObject private var tema = Tema()
     @StateObject private var yerel = Yerel()
+    @StateObject private var tercih = RVTercih()
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environmentObject(api)
                 .environmentObject(tema)
                 .environmentObject(yerel)
+                .environmentObject(tercih)
                 .environment(\.layoutDirection, yerel.yon)
                 .preferredColorScheme(tema.renkSemasi)
                 .tint(tema.c1)

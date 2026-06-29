@@ -5,6 +5,7 @@ struct AracDetayView: View {
     @EnvironmentObject var api: API
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
+    @EnvironmentObject var tercih: RVTercih
     @State private var aracAcik = false
     @State private var girisAcik = false
 
@@ -41,14 +42,21 @@ struct AracDetayView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                HStack(spacing: 4) {
-                    Image(systemName: "bolt.fill").font(.caption2).foregroundStyle(.yellow)
-                    Text("\(api.girisli ? api.kredi : api.freeKalan)").font(.subheadline.bold()).foregroundStyle(.rvText)
+                HStack(spacing: 10) {
+                    Button { withAnimation(.snappy) { tercih.favoriDegis(arac.id) } } label: {
+                        Image(systemName: tercih.favoriMi(arac.id) ? "star.fill" : "star")
+                            .foregroundStyle(tercih.favoriMi(arac.id) ? .yellow : .rvMut)
+                    }
+                    HStack(spacing: 4) {
+                        Image(systemName: "bolt.fill").font(.caption2).foregroundStyle(.yellow)
+                        Text("\(api.girisli ? api.kredi : api.freeKalan)").font(.subheadline.bold()).foregroundStyle(.rvText)
+                    }
                 }
             }
         }
         .navigationDestination(isPresented: $aracAcik) { ToolView(arac: arac) }
         .sheet(isPresented: $girisAcik) { LoginView() }
+        .onAppear { tercih.kullanildi(arac.id) }
     }
 
     var baslik: some View {

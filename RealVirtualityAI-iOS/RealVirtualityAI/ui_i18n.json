@@ -727,5 +727,23 @@
   "es": "¿Qué iluminación?",
   "ar": "أي إضاءة؟",
   "ru": "Какое освещение?"
+ },
+ "favoriler": {
+  "tr": "Favoriler",
+  "en": "Favorites",
+  "de": "Favoriten",
+  "fr": "Favoris",
+  "es": "Favoritos",
+  "ar": "المفضلة",
+  "ru": "Избранное"
+ },
+ "sonKullanilan": {
+  "tr": "Son Kullanılanlar",
+  "en": "Recently Used",
+  "de": "Zuletzt verwendet",
+  "fr": "Récemment utilisés",
+  "es": "Usados recientemente",
+  "ar": "المستخدمة مؤخراً",
+  "ru": "Недавние"
  }
 }

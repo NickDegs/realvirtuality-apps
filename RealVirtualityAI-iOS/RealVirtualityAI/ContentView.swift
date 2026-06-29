@@ -9,6 +9,7 @@ struct KategoriView: View {
     @EnvironmentObject var api: API
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
+    @EnvironmentObject var tercih: RVTercih
     @Environment(\.horizontalSizeClass) var hsc
     @State private var girisAcik = false
     @State private var krediAcik = false
@@ -40,13 +41,12 @@ struct KategoriView: View {
                         aramaKutusu
                         if !arama.isEmpty {
                             grid(sonuclar)
-                        } else if katlar.count == 1 {
-                            grid(katAraclar)            // tek kategori → düz grid (ferah)
                         } else {
-                            ForEach(katlar) { kat in    // birleşik → alt başlıklı bölümler
-                                let liste = ARACLAR.filter { $0.kategori == kat }
-                                if !liste.isEmpty { bolum(kat, liste) }
-                            }
+                          let favList = katAraclar.filter { tercih.favoriMi($0.id) }
+                          let sonList = tercih.sonlar.compactMap { id in katAraclar.first { $0.id == id } }
+                          if !favList.isEmpty { miniSatir(yerel.t("favoriler"), "star.fill", favList) }
+                          if !sonList.isEmpty { miniSatir(yerel.t("sonKullanilan"), "clock.arrow.circlepath", sonList) }
+                          anaListe
                         }
                         altBilgi
                     }
@@ -63,6 +63,47 @@ struct KategoriView: View {
             .sheet(isPresented: $ayarlarAcik) { AyarlarView().environmentObject(api).environmentObject(tema).environmentObject(yerel) }
         }
         .tint(tema.c1)
+    }
+
+    // Ana araç listesi (kategori grid / bölümler)
+    @ViewBuilder var anaListe: some View {
+        if katlar.count == 1 {
+            grid(katAraclar)            // tek kategori → düz grid (ferah)
+        } else {
+            ForEach(katlar) { kat in    // birleşik → alt başlıklı bölümler
+                let liste = ARACLAR.filter { $0.kategori == kat }
+                if !liste.isEmpty { bolum(kat, liste) }
+            }
+        }
+    }
+
+    // MARK: favori / son — yatay mini kart şeridi
+    func miniSatir(_ baslik: String, _ ikon: String, _ liste: [Arac]) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 7) {
+                Image(systemName: ikon).font(.subheadline).foregroundStyle(tema.c1)
+                Text(baslik).font(.headline.bold()).foregroundStyle(.rvText)
+            }
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(liste) { a in
+                        NavigationLink { AracDetayView(arac: a) } label: { miniKart(a) }.buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+    }
+
+    func miniKart(_ a: Arac) -> some View {
+        VStack(spacing: 8) {
+            ZStack {
+                LinearGradient(colors: [tema.c1.opacity(0.28), tema.c2.opacity(0.16)], startPoint: .topLeading, endPoint: .bottomTrailing)
+                Image(systemName: a.ikon).font(.system(size: 22, weight: .semibold)).foregroundStyle(tema.grad)
+            }
+            .frame(width: 104, height: 64).clipShape(.rect(cornerRadius: 16))
+            Text(yerel.aracMetin(a.id,"ad")).font(.caption2.bold()).foregroundStyle(.rvText)
+                .lineLimit(1).frame(width: 104)
+        }
     }
 
     // MARK: arka plan
@@ -181,6 +222,7 @@ struct AracKart: View {
     let arac: Arac
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
+    @EnvironmentObject var tercih: RVTercih
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             AsyncImage(url: URL(string: "https://nickdegs.com/arac-gorsel/\(arac.id).webp")) { phase in
@@ -193,6 +235,12 @@ struct AracKart: View {
                 }
             }
             .frame(maxWidth: .infinity).frame(height: 138).clipped()
+            .overlay(alignment: .topTrailing) {
+                if tercih.favoriMi(arac.id) {
+                    Image(systemName: "star.fill").font(.caption2).foregroundStyle(.yellow)
+                        .padding(6).background(.ultraThinMaterial, in: .circle).padding(8)
+                }
+            }
             VStack(alignment: .leading, spacing: 7) {
                 Text(yerel.aracMetin(arac.id,"ad")).font(.subheadline.bold()).foregroundStyle(.rvText).lineLimit(1)
                 Text(yerel.aracMetin(arac.id,"aciklama")).font(.caption).foregroundStyle(.rvMut)
