@@ -58,6 +58,11 @@ final class PanelAPI {
 #endif  // IPTV_MODULE
     // İşletme
     func bizVeri(_ kind: String) async -> [[String:Any]] { await getArr("/dash/biz/\(kind)") }
+    // İşletme yönetim aksiyonu (sektör proxy GET+POST) — sipariş ilerlet, menü toggle, randevu vb.
+    @discardableResult
+    func bizAksiyon(_ yol: String, _ body: [String:Any] = [:]) async -> Bool {
+        (await post("/dash/biz/\(yol)", body))?["ok"] as? Bool ?? false
+    }
     // Güvenlik
     func guvenlik(_ tip: String) async -> [String:Any]? { await get("/api/panel/guvenlik", ["tip":tip]) }
     // İşletme ekle (süper)

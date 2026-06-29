@@ -425,8 +425,8 @@ struct BaglanNative: View {
         VStack(spacing: 18) {
             Spacer()
             Image(systemName: "link.badge.plus").font(.system(size: 52)).foregroundStyle(.cyan)
-            Text("Panel Bağlantısı").font(.title2.bold())
-            Text("Bu özellik üzerinde çalışılıyor.\nYöneticinizden davet bağlantısı talep edebilirsiniz.")
+            Text("Çalışan Girişi").font(.title2.bold())
+            Text("Çalışanlarını “Personel” ekranından ekle — her birine kullanıcı adı ve şifre otomatik oluşur. Çalışan bu uygulamayı indirip kendi bilgileriyle giriş yapar ve sadece kendi sınırlı panelini (sipariş/randevu) görür.")
                 .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center).padding(.horizontal)
 
             if !link.isEmpty {
@@ -1069,9 +1069,43 @@ struct BizPanelSectionView: View {
                     .font(.caption2).foregroundStyle(.rvMut).lineLimit(2)
             } else if let c = it["category"] as? String { Text(c).font(.caption2).foregroundStyle(.rvMut) }
             if let cr = it["created"] as? String { Text(cr).font(.caption2).foregroundStyle(.rvMut) }
+            aksiyonSatiri(it)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14).glassEffect(.regular, in: .rect(cornerRadius: 14))
+    }
+
+    // Sektör yönetim aksiyonları (Dashboard'ı Business app'e alternatif tam-kontrol paneli yapar)
+    @ViewBuilder
+    func aksiyonSatiri(_ it: [String:Any]) -> some View {
+        let id = it["id"] as? Int ?? 0
+        let durum = it["status"] as? Int ?? 0
+        switch kart.s {
+        case "siparis":
+            if durum < 3 {
+                aksiyonBtn("Sonraki aşamaya geçir →", .blue) { await api.bizAksiyon("order/\(id)/advance"); await yukle() }
+            }
+        case "stok":
+            let aktif = (it["available"] as? Int ?? 1) == 1
+            aksiyonBtn(aktif ? "Satışta · tükendi yap" : "Tükendi · satışa aç", aktif ? .green : .orange) {
+                await api.bizAksiyon("menu/\(id)/toggle"); await yukle()
+            }
+        case "randevu":
+            if durum < 3 {
+                HStack(spacing: 8) {
+                    aksiyonBtn("İlerlet →", .blue) { await api.bizAksiyon("appt/\(id)/advance"); await yukle() }
+                    aksiyonBtn("İptal", .red) { await api.bizAksiyon("appt/\(id)/cancel"); await yukle() }
+                }
+            }
+        default: EmptyView()
+        }
+    }
+    func aksiyonBtn(_ t: String, _ renk: Color, _ act: @escaping () async -> Void) -> some View {
+        Button { Task { await act() } } label: {
+            Text(t).font(.caption.bold()).foregroundStyle(.white)
+                .frame(maxWidth: .infinity).padding(.vertical, 8)
+                .background(renk.opacity(0.85), in: .capsule)
+        }.padding(.top, 4)
     }
 
     func yukle() async {
