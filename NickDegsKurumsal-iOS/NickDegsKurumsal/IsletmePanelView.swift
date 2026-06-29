@@ -332,6 +332,10 @@ struct AyarSekmesi: View {
     @State private var c2 = "#5B4BE8"
     @State private var bilgi = ""
     @State private var logoItem: PhotosPickerItem?
+    @State private var bTel = ""
+    @State private var bAdres = ""
+    @State private var bSaat = ""
+    @State private var bAciklama = ""
 
     var musteriURL: String {
         switch api.aile {
@@ -386,6 +390,17 @@ struct AyarSekmesi: View {
                     }.disabled(marka.isEmpty)
                 }
                 panelKart {
+                    Text("İşletme Bilgileri").font(.subheadline.bold()).foregroundStyle(.rvText)
+                    TextField("Telefon", text: $bTel).keyboardType(.phonePad).padding(10).background(Color.rvBg, in: .rect(cornerRadius: 10))
+                    TextField("Adres", text: $bAdres, axis: .vertical).lineLimit(1...3).padding(10).background(Color.rvBg, in: .rect(cornerRadius: 10))
+                    TextField("Çalışma saatleri (ör. 09:00-22:00)", text: $bSaat).padding(10).background(Color.rvBg, in: .rect(cornerRadius: 10))
+                    TextField("Kısa açıklama", text: $bAciklama, axis: .vertical).lineLimit(1...3).padding(10).background(Color.rvBg, in: .rect(cornerRadius: 10))
+                    Button { Task { let j = await api.post("info", ["tel": bTel, "adres": bAdres, "saat": bSaat, "aciklama": bAciklama]); bilgi = j["ok"] as? Bool == true ? "Bilgiler kaydedildi ✓" : "Hata" } } label: {
+                        Text("Bilgileri Kaydet").font(.caption.bold()).foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 9)
+                            .background(tema.grad, in: .rect(cornerRadius: 10))
+                    }
+                }
+                panelKart {
                     Text("Tema Renkleri (hex)").font(.subheadline.bold()).foregroundStyle(.rvText)
                     HStack {
                         TextField("#7C5CF6", text: $c1).autocorrectionDisabled().textInputAutocapitalization(.never)
@@ -410,6 +425,11 @@ struct AyarSekmesi: View {
                 let j = await api.upload("logo", field: "logo", filename: "logo.jpg", mime: "image/jpeg", fileData: d)
                 bilgi = (j["ok"] as? Bool == true) ? "Logo yüklendi ✓" : "Logo yüklenemedi"
             }
+        }
+        .task {
+            let j = await api.getObj("info")
+            bTel = j["tel"] as? String ?? ""; bAdres = j["adres"] as? String ?? ""
+            bSaat = j["saat"] as? String ?? ""; bAciklama = j["aciklama"] as? String ?? ""
         }
     }
 }
