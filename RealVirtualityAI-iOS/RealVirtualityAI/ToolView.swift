@@ -6,6 +6,10 @@ import UniformTypeIdentifiers
 
 struct ToolView: View {
     let arac: Arac
+    init(arac: Arac, baslangicGorsel: Data? = nil) {
+        self.arac = arac
+        _gorselData = State(initialValue: baslangicGorsel)
+    }
     @EnvironmentObject var api: API
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
@@ -30,6 +34,9 @@ struct ToolView: View {
     @State private var klipMuzik = ""
     @State private var sonuc: UretimSonuc? = nil
     @State private var sesData: Data? = nil
+    @State private var zincirHedef: Arac? = nil
+    @State private var zincirGorsel: Data? = nil
+    @State private var zincirYukleniyor = false
     @State private var hata = ""
     @State private var kotaUyari = false
     @State private var calar: AVAudioPlayer?
@@ -93,6 +100,9 @@ struct ToolView: View {
         }
         .navigationTitle(yerel.aracMetin(arac.id,"ad"))
         .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(item: $zincirHedef) { h in
+            ToolView(arac: h, baslangicGorsel: zincirGorsel)
+        }
         .onChange(of: secilenFoto) { _, yeni in
             Task { if let d = try? await yeni?.loadTransferable(type: Data.self) { gorselData = d } }
         }
@@ -316,7 +326,56 @@ struct ToolView: View {
             Button { Task { await uret() } } label: {
                 paylasEtiket(yerel.t("tekrarUret"), "arrow.triangle.2.circlepath")
             }.disabled(api.yukleniyor)
+
+            // Bu sonuçla devam et — üretilen görseli başka araca girdi olarak zincirle
+            if s.gorselData != nil || s.gorselURL != nil {
+                zincirSatiri(s)
+            }
         }
+    }
+
+    // Zincir hedefleri (görsel→görsel araçlar) + ikon
+    private var zincirAraclar: [(String, String)] {
+        [("superupscale","arrow.up.backward.and.arrow.down.forward.circle.fill"),
+         ("duzenle","wand.and.rays"), ("bgreplace","person.and.background.dotted"),
+         ("restore","sparkle.magnifyingglass")].filter { id, _ in id != arac.id }
+    }
+
+    @ViewBuilder
+    func zincirSatiri(_ s: UretimSonuc) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(yerel.t("bununlaDevam")).font(.caption.bold()).foregroundStyle(.rvMut)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    ForEach(zincirAraclar, id: \.0) { id, ikon in
+                        if let hedef = ARACLAR.first(where: { $0.id == id }) {
+                            Button { Task { await zincirle(s, hedef) } } label: {
+                                VStack(spacing: 6) {
+                                    Image(systemName: ikon).font(.title3).foregroundStyle(tema.grad)
+                                    Text(yerel.aracMetin(id,"ad")).font(.caption2).foregroundStyle(.rvText).lineLimit(1)
+                                }
+                                .frame(width: 92).padding(.vertical, 12)
+                                .background(Color.rvCard, in: .rect(cornerRadius: 14))
+                                .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.rvLine, lineWidth: 1))
+                            }.disabled(zincirYukleniyor)
+                        }
+                    }
+                }
+            }
+            if zincirYukleniyor { ProgressView().tint(tema.c1) }
+        }.padding(.top, 4)
+    }
+
+    // Sonucun görselini al (gorselData ya da gorselURL indir) → hedef araca geçir
+    func zincirle(_ s: UretimSonuc, _ hedef: Arac) async {
+        zincirYukleniyor = true; defer { zincirYukleniyor = false }
+        var d = s.gorselData
+        if d == nil, let g = s.gorselURL, let u = URL(string: g) {
+            d = try? await URLSession.shared.data(from: u).0
+        }
+        guard let img = d else { return }
+        zincirGorsel = img
+        zincirHedef = hedef
     }
 
     func klipKart(_ k: Klip) -> some View {
