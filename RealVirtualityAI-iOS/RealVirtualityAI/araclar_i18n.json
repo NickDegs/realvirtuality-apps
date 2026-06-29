@@ -2564,5 +2564,83 @@
     "In seconds"
    ]
   }
+ },
+ "duzenle": {
+  "tr": {
+   "ad": "Sihirli Düzenle",
+   "aciklama": "Doğal dille fotoğraf düzenle",
+   "slogan": "Bir fotoğraf yükle ve ne yapılacağını yaz — 'gözlüğü kaldır', 'arka planı gece yap' gibi.",
+   "detay": "Fotoğrafını yükle ve istediğin değişikliği yaz; yapay zekâ (Gemini) komutu uygular. Nesne ekle/çıkar, renk değiştir, sahneyi değiştir.",
+   "ozellikler": [
+    "Doğal dille düzenleme",
+    "Nesne ekle/çıkar",
+    "Renk/sahne değiştir",
+    "Hızlı sonuç"
+   ]
+  },
+  "en": {
+   "ad": "Magic Edit",
+   "aciklama": "Edit photos with words",
+   "slogan": "Upload a photo and describe the change — like 'remove glasses', 'make it night'.",
+   "detay": "Upload your photo and describe the edit; AI (Gemini) applies it. Add/remove objects, change colors or scene.",
+   "ozellikler": [
+    "Natural-language edit",
+    "Add/remove objects",
+    "Change color/scene",
+    "Fast"
+   ]
+  }
+ },
+ "bgreplace": {
+  "tr": {
+   "ad": "Arka Plan Değiştir",
+   "aciklama": "Ürün/portre arka planını değiştir",
+   "slogan": "Bir fotoğraf yükle, yeni arka planı tarif et — AI gerçekçi şekilde değiştirir.",
+   "detay": "Ürün veya portre fotoğrafını yükle ve istediğin arka planı yaz; yapay zekâ konuyu koruyup arka planı profesyonelce değiştirir. E-ticaret için ideal.",
+   "ozellikler": [
+    "Profesyonel arka plan",
+    "E-ticaret için ideal",
+    "Konu korunur",
+    "Saniyeler içinde"
+   ]
+  },
+  "en": {
+   "ad": "Replace Background",
+   "aciklama": "Swap product/portrait background",
+   "slogan": "Upload a photo, describe the new background — AI swaps it realistically.",
+   "detay": "Upload a product or portrait and describe the background; AI keeps the subject and replaces the background professionally. Great for e-commerce.",
+   "ozellikler": [
+    "Professional background",
+    "Great for e-commerce",
+    "Subject preserved",
+    "In seconds"
+   ]
+  }
+ },
+ "restore": {
+  "tr": {
+   "ad": "Foto Restore",
+   "aciklama": "Eski/bulanık fotoğrafı netleştir",
+   "slogan": "Eski veya bulanık bir fotoğraf yükle — AI yüzü ve detayları onarıp netleştirir.",
+   "detay": "Bulanık, eski veya düşük kaliteli fotoğrafını yükle; yapay zekâ yüz ve detayları onarıp netleştirir.",
+   "ozellikler": [
+    "Yüz onarımı",
+    "Netleştirme",
+    "Eski foto kurtarma",
+    "Detay artırma"
+   ]
+  },
+  "en": {
+   "ad": "Photo Restore",
+   "aciklama": "Restore old/blurry photos",
+   "slogan": "Upload an old or blurry photo — AI restores faces and details.",
+   "detay": "Upload a blurry, old or low-quality photo; AI repairs faces and details.",
+   "ozellikler": [
+    "Face restoration",
+    "Sharpening",
+    "Old photo recovery",
+    "Detail boost"
+   ]
+  }
  }
 }
