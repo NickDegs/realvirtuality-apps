@@ -231,18 +231,19 @@ struct SatinAlinanlar {
 
     init(from j: [String: Any]) {
         if let d = j["isletme"] as? [String: Any], !(d["panel_url"] as? String ?? "").isEmpty {
-            isletme = .init(
-                aktif: d["aktif"] as? Bool ?? false,
-                tenant: d["tenant"] as? String ?? "",
-                panel_url: d["panel_url"] as? String ?? "",
-                kadi: d["kadi"] as? String ?? "",
-                sifre: d["sifre"] as? String ?? "",
-                bitis: d["bitis"] as? Int ?? 0,
-                apiBase: d["api_base"] as? String ?? "",
-                did: d["did"] as? String ?? "",
-                aile: d["aile"] as? String ?? "",
-                sektor: d["sektor"] as? String ?? "",
-                panelToken: d["panel_token"] as? String ?? "")
+            let aktif = d["aktif"] as? Bool ?? false
+            let tenant = d["tenant"] as? String ?? ""
+            let purl = d["panel_url"] as? String ?? ""
+            let kadi = d["kadi"] as? String ?? ""
+            let sifre = d["sifre"] as? String ?? ""
+            let bitis = d["bitis"] as? Int ?? 0
+            let apiBase = d["api_base"] as? String ?? ""
+            let did = d["did"] as? String ?? ""
+            let aile = d["aile"] as? String ?? ""
+            let sektor = d["sektor"] as? String ?? ""
+            let pt = d["panel_token"] as? String ?? ""
+            isletme = .init(aktif: aktif, tenant: tenant, panel_url: purl, kadi: kadi, sifre: sifre,
+                            bitis: bitis, apiBase: apiBase, did: did, aile: aile, sektor: sektor, panelToken: pt)
         } else { isletme = nil }
 
         if let d = j["guvenlik"] as? [String: Any], !(d["guvenlik_url"] as? String ?? "").isEmpty {
