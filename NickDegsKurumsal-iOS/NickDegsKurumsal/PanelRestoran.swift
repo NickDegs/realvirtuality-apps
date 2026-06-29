@@ -6,11 +6,16 @@ struct RestoranPanel: View {
     @EnvironmentObject var tema: Tema
     @State private var sekme = 0
 
-    @State private var gelir = 0, adet = 0, aktif = 0
+    @State private var gelir = 0
+    @State private var adet = 0
+    @State private var aktif = 0
     @State private var siparisler: [[String: Any]] = []
     @State private var menu: [[String: Any]] = []
     @State private var masalar: [[String: Any]] = []
-    @State private var yeniMasa = "", mAd = "", mKat = "", mFiyat = ""
+    @State private var yeniMasa = ""
+    @State private var mAd = ""
+    @State private var mKat = ""
+    @State private var mFiyat = ""
 
     static let durumAd = ["🆕 Yeni", "👨‍🍳 Hazırlanıyor", "✅ Hazır", "📦 Teslim edildi"]
     static let durumRenk: [Color] = [.blue, .orange, .green, .gray]

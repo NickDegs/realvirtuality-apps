@@ -6,17 +6,28 @@ struct HukukPanel: View {
     @EnvironmentObject var tema: Tema
     @State private var sekme = 0
 
-    @State private var sDava = 0, sMuvekkil = 0, sAcil = 0, sDurusma = 0
+    @State private var sDava = 0
+    @State private var sMuvekkil = 0
+    @State private var sAcil = 0
+    @State private var sDurusma = 0
     @State private var davalar: [[String: Any]] = []
     @State private var sureler: [[String: Any]] = []
     @State private var durusmalar: [[String: Any]] = []
     @State private var muvekkiller: [[String: Any]] = []
     @State private var belgeler: [[String: Any]] = []
     // formlar
-    @State private var dBaslik = "", dKarsi = "", dMahkeme = "", dTur = ""
-    @State private var suTur = "", suSon = ""
-    @State private var duTarih = "", duSaat = "", duSalon = ""
-    @State private var mvAd = "", mvTel = "", mvEmail = ""
+    @State private var dBaslik = ""
+    @State private var dKarsi = ""
+    @State private var dMahkeme = ""
+    @State private var dTur = ""
+    @State private var suTur = ""
+    @State private var suSon = ""
+    @State private var duTarih = ""
+    @State private var duSaat = ""
+    @State private var duSalon = ""
+    @State private var mvAd = ""
+    @State private var mvTel = ""
+    @State private var mvEmail = ""
 
     static let asamalar = ["Açıldı", "Devam ediyor", "Karar aşaması", "Kapandı"]
     static func seviyeRenk(_ s: String) -> Color {

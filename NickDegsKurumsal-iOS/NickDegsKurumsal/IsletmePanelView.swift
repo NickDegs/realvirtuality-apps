@@ -100,7 +100,10 @@ struct IsletmePanelView: View {
     @EnvironmentObject var tema: Tema
     @StateObject private var api: PanelAPI
     let onKadi: String, onSifre: String
-    @State private var u = "", p = "", kod = "", denendi = false
+    @State private var u = ""
+    @State private var p = ""
+    @State private var kod = ""
+    @State private var denendi = false
 
     init(apiBase: String, did: String, aile: String, sektor: String, kadi: String, sifre: String) {
         _api = StateObject(wrappedValue: PanelAPI(apiBase: apiBase, did: did, aile: aile, sektor: sektor))
@@ -116,8 +119,8 @@ struct IsletmePanelView: View {
                 case .hukuk: HukukPanel(api: api)
                 case .bilinmiyor: bilinmeyen
                 }
-            } else if api.otpGerek { PanelAuth.otp(api: api, kod: $kod, tema: tema) }
-            else { PanelAuth.giris(api: api, u: $u, p: $p, tema: tema) }
+            } else if api.otpGerek { PanelOtp(api: api, kod: $kod) }
+            else { PanelGiris(api: api, u: $u, p: $p) }
         }
         .navigationTitle("İşletme Paneli").navigationBarTitleDisplayMode(.inline)
         .task {
@@ -137,37 +140,47 @@ struct IsletmePanelView: View {
 }
 
 // MARK: - Ortak: Giriş & OTP ekranları
-enum PanelAuth {
-    static func giris(api: PanelAPI, u: Binding<String>, p: Binding<String>, tema: Tema) -> some View {
+struct PanelGiris: View {
+    @ObservedObject var api: PanelAPI
+    @EnvironmentObject var tema: Tema
+    @Binding var u: String
+    @Binding var p: String
+    var body: some View {
         ScrollView {
             VStack(spacing: 16) {
                 Image(systemName: "building.2.crop.circle.fill").font(.system(size: 46)).foregroundStyle(tema.grad).padding(.top, 28)
                 Text("İşletme Girişi").font(.title2.bold()).foregroundStyle(.rvText)
-                TextField("Kullanıcı adı", text: u).textInputAutocapitalization(.never).autocorrectionDisabled()
+                TextField("Kullanıcı adı", text: $u).textInputAutocapitalization(.never).autocorrectionDisabled()
                     .padding().background(Color.rvCard, in: .rect(cornerRadius: 14))
-                SecureField("Şifre", text: p).padding().background(Color.rvCard, in: .rect(cornerRadius: 14))
+                SecureField("Şifre", text: $p).padding().background(Color.rvCard, in: .rect(cornerRadius: 14))
                 if !api.hata.isEmpty { Text(api.hata).font(.caption).foregroundStyle(.orange) }
-                Button { Task { await api.giris(u.wrappedValue, p.wrappedValue) } } label: {
+                Button { Task { await api.giris(u, p) } } label: {
                     HStack { if api.yukleniyor { ProgressView().tint(.white) }; Text("Giriş Yap").bold() }
                         .foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 14)
                         .background(tema.grad, in: .rect(cornerRadius: 14))
-                }.disabled(api.yukleniyor || u.wrappedValue.isEmpty || p.wrappedValue.isEmpty)
+                }.disabled(api.yukleniyor || u.isEmpty || p.isEmpty)
             }.padding()
         }
     }
-    static func otp(api: PanelAPI, kod: Binding<String>, tema: Tema) -> some View {
+}
+
+struct PanelOtp: View {
+    @ObservedObject var api: PanelAPI
+    @EnvironmentObject var tema: Tema
+    @Binding var kod: String
+    var body: some View {
         ScrollView {
             VStack(spacing: 16) {
                 Image(systemName: "lock.shield.fill").font(.system(size: 46)).foregroundStyle(tema.grad).padding(.top, 28)
                 Text("Yeni Cihaz Doğrulaması").font(.title3.bold()).foregroundStyle(.rvText)
                 Text("Telefonuna (***\(api.otpHint)) gelen kodu gir.").font(.caption).foregroundStyle(.rvMut)
-                TextField("SMS kodu", text: kod).keyboardType(.numberPad)
+                TextField("SMS kodu", text: $kod).keyboardType(.numberPad)
                     .padding().background(Color.rvCard, in: .rect(cornerRadius: 14))
                 if !api.hata.isEmpty { Text(api.hata).font(.caption).foregroundStyle(.orange) }
-                Button { Task { await api.otpDogrula(kod.wrappedValue) } } label: {
+                Button { Task { await api.otpDogrula(kod) } } label: {
                     Text("Doğrula").bold().foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 14)
                         .background(tema.grad, in: .rect(cornerRadius: 14))
-                }.disabled(api.yukleniyor || kod.wrappedValue.count < 4)
+                }.disabled(api.yukleniyor || kod.count < 4)
             }.padding()
         }
     }
@@ -214,9 +227,12 @@ func panelKart<C: View>(@ViewBuilder _ icerik: () -> C) -> some View {
 struct PersonelSekmesi: View {
     @ObservedObject var api: PanelAPI
     let tema: Tema
-    @State private var me = "", devlock = false
+    @State private var me = ""
+    @State private var devlock = false
     @State private var admins: [[String: Any]] = []
-    @State private var yeniU = "", yeniP = "", hata = ""
+    @State private var yeniU = ""
+    @State private var yeniP = ""
+    @State private var hata = ""
 
     var body: some View {
         ScrollView {
@@ -281,7 +297,10 @@ struct PersonelSekmesi: View {
 struct AyarSekmesi: View {
     @ObservedObject var api: PanelAPI
     let tema: Tema
-    @State private var marka = "", c1 = "#7C5CF6", c2 = "#5B4BE8", bilgi = ""
+    @State private var marka = ""
+    @State private var c1 = "#7C5CF6"
+    @State private var c2 = "#5B4BE8"
+    @State private var bilgi = ""
 
     var body: some View {
         ScrollView {

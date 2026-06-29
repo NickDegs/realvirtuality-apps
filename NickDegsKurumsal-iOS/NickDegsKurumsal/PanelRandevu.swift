@@ -7,14 +7,23 @@ struct RandevuPanel: View {
     @EnvironmentObject var tema: Tema
     @State private var sekme = 0
 
-    @State private var adet = 0, gelir = 0, doluluk = 0
+    @State private var adet = 0
+    @State private var gelir = 0
+    @State private var doluluk = 0
     @State private var randevular: [[String: Any]] = []
     @State private var hizmetler: [[String: Any]] = []
     @State private var musteriler: [[String: Any]] = []
     // yeni randevu
-    @State private var rAd = "", rTel = "", rHizmet = "", rFiyat = "", rGun = "", rSaat = ""
+    @State private var rAd = ""
+    @State private var rTel = ""
+    @State private var rHizmet = ""
+    @State private var rFiyat = ""
+    @State private var rGun = ""
+    @State private var rSaat = ""
     // yeni hizmet
-    @State private var hAd = "", hSure = "", hFiyat = ""
+    @State private var hAd = ""
+    @State private var hSure = ""
+    @State private var hFiyat = ""
 
     static let durumAd = ["⏳ Bekliyor", "✅ Onaylandı", "🚶 Geldi", "✔️ Tamamlandı"]
     static let durumRenk: [Color] = [.orange, .blue, .purple, .green]
