@@ -18,6 +18,7 @@ targets:
       base:
         TARGETED_DEVICE_FAMILY: "1"
         PRODUCT_BUNDLE_IDENTIFIER: com.nickdegs.business
+        CODE_SIGN_ENTITLEMENTS: NickDegsKurumsal/NickDegsKurumsal.entitlements
     sources: [NickDegsKurumsal]
     info:
       path: NickDegsKurumsal/Info.plist

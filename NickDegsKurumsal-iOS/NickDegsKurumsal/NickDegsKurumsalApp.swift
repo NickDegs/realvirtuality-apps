@@ -1,5 +1,27 @@
 import SwiftUI
 import StoreKit
+import UserNotifications
+
+// MARK: - APNs Push (işletme sahibine yeni sipariş/randevu bildirimi)
+final class PushDelegate: NSObject, UIApplicationDelegate {
+    func application(_ app: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let hex = deviceToken.map { String(format: "%02x", $0) }.joined()
+        let tok = UserDefaults.standard.string(forKey: "biz_panel_token") ?? ""
+        guard !tok.isEmpty, let url = URL(string: "https://nickdegs.com/api/push/register") else { return }
+        var r = URLRequest(url: url); r.httpMethod = "POST"
+        r.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        r.httpBody = try? JSONSerialization.data(withJSONObject:
+            ["t": tok, "device_token": hex, "bundle": "com.nickdegs.business"])
+        URLSession.shared.dataTask(with: r).resume()
+    }
+    func application(_ app: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {}
+}
+
+func pushKaydet() {
+    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, _ in
+        if granted { DispatchQueue.main.async { UIApplication.shared.registerForRemoteNotifications() } }
+    }
+}
 
 // MARK: - Marka renkleri (Dark + Light adaptif)
 extension Color {
@@ -74,6 +96,7 @@ enum Katalog {
 
 @main
 struct NickDegsKurumsalApp: App {
+    @UIApplicationDelegateAdaptor(PushDelegate.self) var pushDelegate
     @StateObject private var tema = Tema()
     @StateObject private var yerel = Yerel()
     var body: some Scene {

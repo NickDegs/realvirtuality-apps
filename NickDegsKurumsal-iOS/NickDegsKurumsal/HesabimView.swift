@@ -202,6 +202,11 @@ struct HesabimView: View {
         if j["ok"] as? Bool == true {
             let s = SatinAlinanlar(from: j)
             satinaldiklarim = s
+            // İşletme sahibiyse APNs push'a kaydol (yeni sipariş/randevu bildirimi)
+            if let isl = s.isletme, !isl.panelToken.isEmpty {
+                UserDefaults.standard.set(isl.panelToken, forKey: "biz_panel_token")
+                pushKaydet()
+            }
         } else {
             hata = (j["mesaj"] as? String) ?? "Kod doğrulanamadı."
         }
@@ -215,6 +220,7 @@ struct SatinAlinanlar {
         let aktif: Bool; let tenant: String; let panel_url: String
         let kadi: String; let sifre: String; let bitis: Int
         let apiBase: String; let did: String; let aile: String; let sektor: String
+        let panelToken: String
     }
     struct GuvPaketi { let aktif: Bool; let guvenlik_url: String; let bitis: Int }
     struct HushPaketi { let aktif: Bool; let hush_url: String; let hush_uid: String; let sifre: String; let bitis: Int }
@@ -235,7 +241,8 @@ struct SatinAlinanlar {
                 apiBase: d["api_base"] as? String ?? "",
                 did: d["did"] as? String ?? "",
                 aile: d["aile"] as? String ?? "",
-                sektor: d["sektor"] as? String ?? "")
+                sektor: d["sektor"] as? String ?? "",
+                panelToken: d["panel_token"] as? String ?? "")
         } else { isletme = nil }
 
         if let d = j["guvenlik"] as? [String: Any], !(d["guvenlik_url"] as? String ?? "").isEmpty {
