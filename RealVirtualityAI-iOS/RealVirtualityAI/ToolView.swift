@@ -33,6 +33,7 @@ struct ToolView: View {
     @State private var hata = ""
     @State private var kotaUyari = false
     @State private var calar: AVAudioPlayer?
+    @State private var urlCalar: AVPlayer?
 
     let diller = ["tr":"Türkçe","en":"English","de":"Deutsch","fr":"Français","es":"Español","ar":"العربية","ru":"Русский"]
     let sahneler = [("beyaz","Beyaz stüdyo"),("mermer","Mermer (lüks)"),("ahsap","Ahşap masa"),("yaprak","Doğal yaprak"),("gradyan","Renkli gradyan"),("mutfak","Mutfak tezgâhı"),("siyah","Siyah (dramatik)"),("pastel","Pastel minimal")]
@@ -144,8 +145,8 @@ struct ToolView: View {
     // MARK: faceswap — iki görsel (kaynak yüz + hedef)
     var ikiGorselSecici: some View {
         HStack(spacing: 12) {
-            tekGorsel(yerel.t("kaynakYuz"), $secilenFoto, gorselData)
-            tekGorsel(yerel.t("hedefGorsel"), $secilenFoto2, gorselData2)
+            tekGorsel(arac.id == "tryon" ? yerel.t("tryonKisi") : yerel.t("kaynakYuz"), $secilenFoto, gorselData)
+            tekGorsel(arac.id == "tryon" ? yerel.t("tryonKiyafet") : yerel.t("hedefGorsel"), $secilenFoto2, gorselData2)
         }
     }
     func tekGorsel(_ baslik: String, _ sec: Binding<PhotosPickerItem?>, _ veri: Data?) -> some View {
@@ -282,6 +283,22 @@ struct ToolView: View {
                 Text(yerel.t("klipHazir")).font(.headline.bold()).foregroundStyle(.rvText)
                 ForEach(klipler) { k in klipKart(k) }
             }
+            // fal.ai video (text→video / image→video)
+            if let v = s.videoURL, let u = URL(string: v) {
+                VideoPlayer(player: AVPlayer(url: u)).frame(height: 280).clipShape(.rect(cornerRadius: 18))
+                ShareLink(item: u) { paylasEtiket(yerel.t("paylasKaydet"), "square.and.arrow.up") }
+            }
+            // fal.ai müzik (text→music)
+            if let a = s.audioURL, let u = URL(string: a) {
+                Button { calar?.stop(); urlSesOynat(u) } label: { paylasEtiket(yerel.t("sesiOynat"), "play.circle.fill") }
+                ShareLink(item: u) { paylasEtiket(yerel.t("paylasKaydet"), "square.and.arrow.up") }
+            }
+            // fal.ai try-on (URL görsel)
+            if let g = s.gorselURL, let u = URL(string: g) {
+                AsyncImage(url: u) { img in img.resizable().scaledToFit() } placeholder: { ProgressView() }
+                    .clipShape(.rect(cornerRadius: 18))
+                ShareLink(item: u) { paylasEtiket(yerel.t("paylasKaydet"), "square.and.arrow.up") }
+            }
             if let d = s.gorselData, let ui = UIImage(data: d) {
                 Image(uiImage: ui).resizable().scaledToFit().clipShape(.rect(cornerRadius: 18))
                 ShareLink(item: Image(uiImage: ui), preview: SharePreview("RealVirtuality AI", image: Image(uiImage: ui))) {
@@ -383,5 +400,10 @@ struct ToolView: View {
         try? AVAudioSession.sharedInstance().setCategory(.playback)
         try? AVAudioSession.sharedInstance().setActive(true)
         calar = try? AVAudioPlayer(data: d); calar?.play()
+    }
+    func urlSesOynat(_ u: URL) {
+        try? AVAudioSession.sharedInstance().setCategory(.playback)
+        try? AVAudioSession.sharedInstance().setActive(true)
+        urlCalar = AVPlayer(url: u); urlCalar?.play()
     }
 }

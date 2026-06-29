@@ -83,6 +83,7 @@ let ARACLAR: [Arac] = [
     Arac(id: "upscale", ikon: "arrow.up.left.and.arrow.down.right", kind: .gorselYukle, kredi: 3, kategori: .gorsel),
     Arac(id: "bgremove", ikon: "scissors", kind: .gorselYukle, kredi: 2, kategori: .gorsel),
     Arac(id: "faceswap", ikon: "person.2.crop.square.stack.fill", kind: .faceswap, kredi: 6, kategori: .gorsel, oneCikan: true),
+    Arac(id: "tryon", ikon: "tshirt.fill", kind: .faceswap, kredi: 8, kategori: .gorsel, oneCikan: true),
     // İçerik & Yazı
     Arac(id: "icerik", ikon: "sparkles.rectangle.stack", kind: .icerik, kredi: 6, kategori: .icerik, oneCikan: true),
     Arac(id: "pro", ikon: "brain.head.profile", kind: .metin, kredi: 3, kategori: .icerik, oneCikan: true),
@@ -92,7 +93,10 @@ let ARACLAR: [Arac] = [
     Arac(id: "sohbet", ikon: "bubble.left.and.bubble.right.fill", kind: .metin, kredi: 1, kategori: .icerik),
     Arac(id: "kod", ikon: "chevron.left.forwardslash.chevron.right", kind: .metin, kredi: 2, kategori: .icerik),
     // Ses & Video
+    Arac(id: "video", ikon: "film.fill", kind: .prompt, kredi: 12, kategori: .sesvideo, oneCikan: true),
+    Arac(id: "img2video", ikon: "photo.badge.arrow.down.fill", kind: .gorselYukle, kredi: 14, kategori: .sesvideo, oneCikan: true),
     Arac(id: "klip", ikon: "scissors.badge.ellipsis", kind: .video, kredi: 5, kategori: .sesvideo, oneCikan: true),
+    Arac(id: "muzik", ikon: "music.note", kind: .prompt, kredi: 8, kategori: .sesvideo),
     Arac(id: "tts", ikon: "speaker.wave.3.fill", kind: .metin, kredi: 2, kategori: .sesvideo),
     Arac(id: "transkript", ikon: "waveform.and.mic", kind: .url, kredi: 3, kategori: .sesvideo),
     // Görsel Zekâ & Belge

@@ -655,5 +655,23 @@
   "es": "Clips listos 🎬",
   "ar": "المقاطع جاهزة 🎬",
   "ru": "Клипы готовы 🎬"
+ },
+ "tryonKisi": {
+  "tr": "Kişi (model)",
+  "en": "Person (model)",
+  "de": "Person (Modell)",
+  "fr": "Personne (modèle)",
+  "es": "Persona (modelo)",
+  "ar": "الشخص (موديل)",
+  "ru": "Человек (модель)"
+ },
+ "tryonKiyafet": {
+  "tr": "Kıyafet",
+  "en": "Garment",
+  "de": "Kleidung",
+  "fr": "Vêtement",
+  "es": "Prenda",
+  "ar": "الملابس",
+  "ru": "Одежда"
  }
 }

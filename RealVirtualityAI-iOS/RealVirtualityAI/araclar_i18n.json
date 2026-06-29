@@ -2408,5 +2408,109 @@
     "Ready for Reels/TikTok/Shorts"
    ]
   }
+ },
+ "video": {
+  "tr": {
+   "ad": "Yazıdan Video",
+   "aciklama": "Metinden kısa video üret",
+   "slogan": "Hayalindeki sahneyi yaz — AI saniyeler içinde kısa bir video üretir.",
+   "detay": "Bir sahne/konsept yaz; yapay zekâ (fal.ai LTX) onu hareketli kısa videoya çevirir. Sosyal medya, reklam, intro için ideal.",
+   "ozellikler": [
+    "Metinden video üretimi",
+    "Hızlı (saniyeler içinde)",
+    "Sosyal medyaya hazır",
+    "Sinematik hareket"
+   ]
+  },
+  "en": {
+   "ad": "Text to Video",
+   "aciklama": "Generate short video from text",
+   "slogan": "Describe a scene — AI turns it into a short video in seconds.",
+   "detay": "Write a scene/concept and AI (fal.ai LTX) turns it into a short motion video. Great for social, ads, intros.",
+   "ozellikler": [
+    "Text-to-video",
+    "Fast (seconds)",
+    "Social-ready",
+    "Cinematic motion"
+   ]
+  }
+ },
+ "img2video": {
+  "tr": {
+   "ad": "Fotoğrafı Canlandır",
+   "aciklama": "Fotoğrafı hareketli videoya çevir",
+   "slogan": "Bir fotoğraf yükle — AI ona doğal hareket katıp kısa video yapar.",
+   "detay": "Fotoğrafını yükle; yapay zekâ kamera/özne hareketi ekleyerek canlı kısa video üretir.",
+   "ozellikler": [
+    "Fotoğraftan video",
+    "Doğal hareket",
+    "Sinematik",
+    "Sosyal medyaya hazır"
+   ]
+  },
+  "en": {
+   "ad": "Animate Photo",
+   "aciklama": "Turn a photo into video",
+   "slogan": "Upload a photo — AI adds natural motion and makes a short video.",
+   "detay": "Upload your photo; AI adds camera/subject motion to create a living short clip.",
+   "ozellikler": [
+    "Image-to-video",
+    "Natural motion",
+    "Cinematic",
+    "Social-ready"
+   ]
+  }
+ },
+ "tryon": {
+  "tr": {
+   "ad": "Sanal Giyinme",
+   "aciklama": "Kıyafeti kişinin üzerinde dene",
+   "slogan": "Bir kişi + bir kıyafet fotoğrafı yükle — AI kıyafeti gerçekçi şekilde giydirir.",
+   "detay": "Model fotoğrafı ve kıyafet fotoğrafı yükle; yapay zekâ kıyafeti kişinin üzerine gerçekçi şekilde yerleştirir. E-ticaret ve moda için ideal.",
+   "ozellikler": [
+    "Gerçekçi kıyafet deneme",
+    "E-ticaret için ideal",
+    "Kişi + kıyafet",
+    "Saniyeler içinde"
+   ]
+  },
+  "en": {
+   "ad": "Virtual Try-On",
+   "aciklama": "Try clothing on a person",
+   "slogan": "Upload a person + a garment — AI dresses them realistically.",
+   "detay": "Upload a model photo and a garment photo; AI fits the garment onto the person realistically. Great for e-commerce and fashion.",
+   "ozellikler": [
+    "Realistic try-on",
+    "Great for e-commerce",
+    "Person + garment",
+    "In seconds"
+   ]
+  }
+ },
+ "muzik": {
+  "tr": {
+   "ad": "Yapay Zekâ Müzik",
+   "aciklama": "Metinden müzik/melodi üret",
+   "slogan": "Tarzı yaz — AI sana özgün bir müzik parçası üretir.",
+   "detay": "İstediğin türü/ruh halini yaz (ör. 'sakin piyano, lo-fi'); yapay zekâ özgün bir müzik klibi üretir.",
+   "ozellikler": [
+    "Metinden müzik",
+    "Özgün/telifsiz",
+    "Tür & ruh hali seçimi",
+    "İndirilebilir"
+   ]
+  },
+  "en": {
+   "ad": "AI Music",
+   "aciklama": "Generate music from text",
+   "slogan": "Describe a style — AI creates an original music track for you.",
+   "detay": "Describe the genre/mood (e.g. 'calm piano, lo-fi') and AI generates an original music clip.",
+   "ozellikler": [
+    "Text-to-music",
+    "Original/royalty-free",
+    "Genre & mood",
+    "Downloadable"
+   ]
+  }
  }
 }

@@ -21,6 +21,9 @@ struct UretimSonuc {
     var metin: String?
     var gorselData: Data?
     var klipler: [Klip]? = nil
+    var videoURL: String? = nil
+    var audioURL: String? = nil
+    var gorselURL: String? = nil
 }
 
 struct KutuphaneItem: Identifiable {
@@ -187,21 +190,26 @@ final class API: ObservableObject {
     // Genel çağrı — görsel ve/veya metin döndüren tüm araçlar için
     func calistir(_ yol: String, _ govde: [String: Any]) async -> (UretimSonuc?, String?) {
         yukleniyor = true; defer { yukleniyor = false }
-        let j = (try? await istek(yol, govde, timeout: 260)) ?? [:]
+        let j = (try? await istek(yol, govde, timeout: 300)) ?? [:]
         if j["ok"] as? Bool == true {
             if let k = j["kredi"] as? Int { kredi = k }
-            var data: Data? = nil
             let p = (govde["prompt"] as? String) ?? (govde["metin"] as? String) ?? ""
-            if let s = j["image"] as? String, let c = s.range(of: ","),
-               let d = Data(base64Encoded: String(s[c.upperBound...])) {
-                data = d
-                await ciktiKaydet(arac: aracAdi(yol), tip: "gorsel", baslik: p, prompt: p, dataB64: s)
+            // fal.ai medya çıktıları (URL): video / müzik / try-on görseli
+            if let v = j["video"] as? String, v.hasPrefix("http") { return (UretimSonuc(videoURL: v), nil) }
+            if let a = j["audio"] as? String, a.hasPrefix("http") { return (UretimSonuc(audioURL: a), nil) }
+            var data: Data? = nil; var gURL: String? = nil
+            if let s = j["image"] as? String {
+                if s.hasPrefix("http") { gURL = s }
+                else if let c = s.range(of: ","), let d = Data(base64Encoded: String(s[c.upperBound...])) {
+                    data = d
+                    await ciktiKaydet(arac: aracAdi(yol), tip: "gorsel", baslik: p, prompt: p, dataB64: s)
+                }
             }
             let m = j["metin"] as? String
             if let m = m, data == nil {
                 await ciktiKaydet(arac: aracAdi(yol), tip: "metin", baslik: String(m.prefix(60)), prompt: p, metin: m)
             }
-            return (UretimSonuc(metin: m, gorselData: data), nil)
+            return (UretimSonuc(metin: m, gorselData: data, gorselURL: gURL), nil)
         }
         if (j["err"] as? String) == "kota_doldu" { return (nil, "kota_doldu") }
         return (nil, (j["mesaj"] as? String) ?? (j["err"] as? String) ?? "Üretilemedi")
