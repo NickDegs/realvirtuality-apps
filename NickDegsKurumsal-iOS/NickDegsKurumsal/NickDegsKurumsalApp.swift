@@ -3,7 +3,17 @@ import StoreKit
 import UserNotifications
 
 // MARK: - APNs Push (işletme sahibine yeni sipariş/randevu bildirimi)
-final class PushDelegate: NSObject, UIApplicationDelegate {
+final class PushDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    func application(_ app: UIApplication, didFinishLaunchingWithOptions o: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        UNUserNotificationCenter.current().delegate = self
+        return true
+    }
+    func userNotificationCenter(_ c: UNUserNotificationCenter, willPresent n: UNNotification,
+                                withCompletionHandler h: @escaping (UNNotificationPresentationOptions) -> Void) {
+        h([.banner, .sound, .badge])
+    }
+    func userNotificationCenter(_ c: UNUserNotificationCenter, didReceive r: UNNotificationResponse,
+                                withCompletionHandler h: @escaping () -> Void) { h() }
     func application(_ app: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let hex = deviceToken.map { String(format: "%02x", $0) }.joined()
         let tok = UserDefaults.standard.string(forKey: "biz_panel_token") ?? ""
