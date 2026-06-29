@@ -745,5 +745,14 @@
   "es": "Usados recientemente",
   "ar": "المستخدمة مؤخراً",
   "ru": "Недавние"
+ },
+ "tekrarUret": {
+  "tr": "Tekrar Üret",
+  "en": "Generate Again",
+  "de": "Erneut erstellen",
+  "fr": "Régénérer",
+  "es": "Generar de nuevo",
+  "ar": "إنشاء مرة أخرى",
+  "ru": "Сгенерировать снова"
  }
 }

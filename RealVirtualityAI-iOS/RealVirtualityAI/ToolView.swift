@@ -312,6 +312,10 @@ struct ToolView: View {
                     .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.rvLine, lineWidth: 1))
                 ShareLink(item: m) { paylasEtiket(yerel.t("kopyalaPaylas"), "doc.on.doc") }
             }
+            // Tekrar üret — aynı girdiyle yeni varyasyon
+            Button { Task { await uret() } } label: {
+                paylasEtiket(yerel.t("tekrarUret"), "arrow.triangle.2.circlepath")
+            }.disabled(api.yukleniyor)
         }
     }
 
