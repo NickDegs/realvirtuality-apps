@@ -4,6 +4,10 @@ on:
     branches: [main]
     paths: ["NickDegsKurumsal-iOS/**", ".github/workflows/build_nickdegs-business-ios.yml"]
   workflow_dispatch:
+    inputs:
+      submit_review:
+        description: "App Store incelemeye gönder? (yalnızca 'true' yazınca gönderir)"
+        default: "false"
   schedule:
     - cron: '0 6 1 * *'  # ayda 1 oto-rebuild → TestFlight süresi dolmasın
 
@@ -80,7 +84,7 @@ jobs:
           python3 scripts/assign_beta.py
           rm -f "$ASC_KEY_PATH"
       - name: App Store incelemeye gönder
-        if: success()
+        if: success() && github.event_name == 'workflow_dispatch' && github.event.inputs.submit_review == 'true'
         env:
           ASC_KEY_PATH: ${{ github.workspace }}/.asc_key.p8
           ASC_KEY_ID: ${{ secrets.APPLE_ASC_KEY_ID }}

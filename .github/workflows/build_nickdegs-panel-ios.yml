@@ -9,6 +9,9 @@ on:
         description: "IPTV/Medya modülünü AÇ — SADECE TestFlight internal (App Store'a GÖNDERİLMEZ, ban önleme)"
         type: boolean
         default: false
+      submit_review:
+        description: "App Store incelemeye gönder? (yalnızca 'true' yazınca gönderir)"
+        default: "false"
   schedule:
     - cron: '0 6 1 * *'  # ayda 1 oto-rebuild → TestFlight süresi dolmasın
 jobs:
@@ -81,7 +84,7 @@ jobs:
           python3 scripts/assign_beta.py
           rm -f "$ASC_KEY_PATH"
       - name: App Store incelemeye gönder
-        if: success() && github.event.inputs.media_internal != 'true'
+        if: success() && github.event_name == 'workflow_dispatch' && github.event.inputs.submit_review == 'true' && github.event.inputs.media_internal != 'true'
         env:
           ASC_KEY_PATH: ${{ github.workspace }}/.asc_key.p8
           ASC_KEY_ID: ${{ secrets.APPLE_ASC_KEY_ID }}
