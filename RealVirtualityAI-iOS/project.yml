@@ -19,6 +19,9 @@ targets:
       base:
         TARGETED_DEVICE_FAMILY: "1"
     sources: [RealVirtualityAI]
+    dependencies:
+      - target: RVWidgetExtension
+        embed: true
     info:
       path: RealVirtualityAI/Info.plist
       properties:
@@ -26,6 +29,24 @@ targets:
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         ITSAppUsesNonExemptEncryption: false
+        CFBundleURLTypes:
+          - CFBundleURLSchemes: [rvai]
+  RVWidgetExtension:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources: [RVWidget]
+    settings:
+      base:
+        TARGETED_DEVICE_FAMILY: "1"
+        PRODUCT_BUNDLE_IDENTIFIER: com.nickdegs.realvirtualityai.widget
+        INFOPLIST_KEY_CFBundleDisplayName: RV Araçları
+    info:
+      path: RVWidget/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+
   RealVirtualityAIUITests:
     type: bundle.ui-testing
     platform: iOS

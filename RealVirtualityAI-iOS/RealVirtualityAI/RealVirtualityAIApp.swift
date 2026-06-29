@@ -132,6 +132,16 @@ struct RootView: View {
         .onChange(of: scenePhase) { _, yeni in
             if yeni == .active, let t = RVNav.bekleyen() { seciliTab = t }
         }
+        // Widget / deep-link (rvai://…) → ilgili sekme
+        .onOpenURL { url in
+            switch url.host {
+            case "gorsel": seciliTab = 0
+            case "icerik": seciliTab = 1
+            case "klip", "studyo", "ses", "seslendirme": seciliTab = 2
+            case "kutuphane": seciliTab = 3
+            default: break
+            }
+        }
     }
 }
 
