@@ -53,6 +53,7 @@ struct RestoranPanel: View {
                     panelKpi("Bugün Sipariş", "\(adet)", "bag.fill", .blue)
                 }
                 panelKpi("Aktif Sipariş", "\(aktif)", "flame.fill", .orange)
+                RaporKart(api: api, tema: tema)
             }.padding()
         }.refreshable { await yenile() }
     }

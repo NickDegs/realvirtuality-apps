@@ -70,6 +70,7 @@ struct RandevuPanel: View {
                     panelKpi("Bugün Ciro", "₺\(gelir)", "turkishlirasign.circle.fill", .green)
                 }
                 panelKpi("Doluluk", "%\(doluluk)", "gauge.medium", .orange)
+                RaporKart(api: api, tema: tema)
             }.padding()
         }.refreshable { await yenile() }
     }

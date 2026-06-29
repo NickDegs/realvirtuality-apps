@@ -1,5 +1,6 @@
 import SwiftUI
 import PhotosUI
+import Charts
 
 // MARK: - Native İşletme Paneli (TÜM SEKTÖRLER) — webteki sektör panellerinin native karşılığı
 // Aile: restoran(sipariş/menü/masa) · randevu+öğretmen(randevu/hizmet/müşteri) · hukuk(dava/süre/duruşma/müvekkil/belge)
@@ -376,6 +377,49 @@ struct AyarSekmesi: View {
                 let j = await api.upload("logo", field: "logo", filename: "logo.jpg", mime: "image/jpeg", fileData: d)
                 bilgi = (j["ok"] as? Bool == true) ? "Logo yüklendi ✓" : "Logo yüklenemedi"
             }
+        }
+    }
+}
+
+// MARK: - Rapor (7 gün ciro grafiği + en çok satan) — tüm sektörlerde özet'te
+struct RaporKart: View {
+    @ObservedObject var api: PanelAPI
+    let tema: Tema
+    @State private var gunluk: [[String: Any]] = []
+    @State private var top: [[String: Any]] = []
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Son 7 Gün Ciro").font(.subheadline.bold()).foregroundStyle(.rvText)
+            if gunluk.isEmpty {
+                Text("Henüz veri yok").font(.caption).foregroundStyle(.rvMut).frame(height: 120)
+            } else {
+                Chart {
+                    ForEach(Array(gunluk.enumerated()), id: \.offset) { _, g in
+                        BarMark(x: .value("Gün", String((g["gun"] as? String ?? "").suffix(5))),
+                                y: .value("Ciro", g["gelir"] as? Int ?? 0))
+                        .foregroundStyle(tema.grad)
+                    }
+                }.frame(height: 150)
+            }
+            if !top.isEmpty {
+                Text("En Çok Satan").font(.subheadline.bold()).foregroundStyle(.rvText).padding(.top, 6)
+                ForEach(Array(top.enumerated()), id: \.offset) { i, t in
+                    HStack {
+                        Text("\(i + 1).").foregroundStyle(.rvMut)
+                        Text(t["ad"] as? String ?? "-").foregroundStyle(.rvText).lineLimit(1)
+                        Spacer()
+                        Text("\(t["adet"] as? Int ?? 0)x").font(.caption.bold()).foregroundStyle(tema.c2)
+                    }.font(.caption)
+                }
+            }
+        }
+        .padding(14).frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.rvCard, in: .rect(cornerRadius: 16))
+        .task {
+            let j = await api.getObj("stats-range")
+            gunluk = j["gunluk"] as? [[String: Any]] ?? []
+            top = j["top"] as? [[String: Any]] ?? []
         }
     }
 }
