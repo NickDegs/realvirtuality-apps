@@ -2720,5 +2720,109 @@
     "AI iclight"
    ]
   }
+ },
+ "ideogram": {
+  "tr": {
+   "ad": "Yazılı Poster",
+   "aciklama": "Metinli afiş/poster üret",
+   "slogan": "Üzerinde yazı OKUNAN görseller — afiş, kapak, sosyal medya.",
+   "detay": "Ne istediğini yaz (örn. 'SEZON SONU %50 İNDİRİM yazan modern poster'). AI, üzerindeki yazıyı düzgün ve okunabilir şekilde görsele basar.",
+   "ozellikler": [
+    "Okunabilir metinli görsel",
+    "Afiş / poster / kapak",
+    "Sosyal medya görselleri",
+    "Birden çok stil"
+   ]
+  },
+  "en": {
+   "ad": "Text Poster",
+   "aciklama": "Posters with readable text",
+   "slogan": "Images with text that actually reads — posters, covers, social.",
+   "detay": "Describe what you want (e.g. 'a modern poster that says 50% OFF'). The AI renders the text clearly and legibly inside the image.",
+   "ozellikler": [
+    "Readable text in image",
+    "Poster / flyer / cover",
+    "Social media graphics",
+    "Multiple styles"
+   ]
+  }
+ },
+ "fluxpro": {
+  "tr": {
+   "ad": "HD Görsel (Pro)",
+   "aciklama": "Foto-gerçekçi yüksek kalite",
+   "slogan": "Stüdyo kalitesinde, foto-gerçekçi görseller — en güçlü model.",
+   "detay": "Hayalindeki sahneyi yaz; FLUX Pro en yüksek detay ve gerçekçilikle üretir. Ürün, manzara, portre, konsept — her şey.",
+   "ozellikler": [
+    "Foto-gerçekçi kalite",
+    "Yüksek detay",
+    "Profesyonel kullanım",
+    "Her konu"
+   ]
+  },
+  "en": {
+   "ad": "HD Image (Pro)",
+   "aciklama": "Photorealistic high quality",
+   "slogan": "Studio-grade, photorealistic images — the most powerful model.",
+   "detay": "Describe your scene; FLUX Pro generates it with the highest detail and realism. Products, landscapes, portraits, concepts — anything.",
+   "ozellikler": [
+    "Photorealistic quality",
+    "High detail",
+    "Professional use",
+    "Any subject"
+   ]
+  }
+ },
+ "recraft": {
+  "tr": {
+   "ad": "Logo & Tasarım",
+   "aciklama": "Marka logosu / vektör tasarım",
+   "slogan": "Marka kalitesinde logo, ikon ve tasarımlar.",
+   "detay": "İşletmen/markan için açıklama yaz; AI temiz, profesyonel logo ve tasarım üretir (vektör/illüstrasyon tarzı dahil).",
+   "ozellikler": [
+    "Logo & ikon",
+    "Vektör/illüstrasyon stili",
+    "Marka tasarımı",
+    "Net & profesyonel"
+   ]
+  },
+  "en": {
+   "ad": "Logo & Design",
+   "aciklama": "Brand logo / vector design",
+   "slogan": "Brand-quality logos, icons and designs.",
+   "detay": "Describe your brand/business; the AI creates clean, professional logos and designs (vector/illustration styles included).",
+   "ozellikler": [
+    "Logo & icon",
+    "Vector/illustration style",
+    "Brand design",
+    "Clean & professional"
+   ]
+  }
+ },
+ "renklendir": {
+  "tr": {
+   "ad": "Renklendir",
+   "aciklama": "Siyah-beyaz fotoğrafı renklendir",
+   "slogan": "Eski siyah-beyaz fotoğraflarına gerçekçi renk ver.",
+   "detay": "Siyah-beyaz bir fotoğraf yükle; yapay zekâ doğal, gerçekçi renklerle yeniden canlandırır. Aile fotoğrafları, tarihî kareler için ideal.",
+   "ozellikler": [
+    "S/B → renkli",
+    "Gerçekçi renkler",
+    "Eski fotoğrafları canlandır",
+    "Tek dokunuş"
+   ]
+  },
+  "en": {
+   "ad": "Colorize",
+   "aciklama": "Colorize black & white photos",
+   "slogan": "Bring old black-and-white photos to life with realistic color.",
+   "detay": "Upload a black-and-white photo; the AI restores it with natural, realistic colors. Perfect for family and historical photos.",
+   "ozellikler": [
+    "B&W → color",
+    "Realistic colors",
+    "Revive old photos",
+    "One tap"
+   ]
+  }
  }
 }

@@ -92,6 +92,10 @@ let ARACLAR: [Arac] = [
     Arac(id: "relight", ikon: "lightbulb.max.fill", kind: .gorselArti, kredi: 5, kategori: .gorsel),
     Arac(id: "anime", ikon: "theatermasks.fill", kind: .gorselYukle, kredi: 4, kategori: .gorsel),
     Arac(id: "sticker", ikon: "face.smiling.inverse", kind: .gorselYukle, kredi: 4, kategori: .gorsel),
+    Arac(id: "ideogram", ikon: "textformat.abc.dottedunderline", kind: .prompt, kredi: 6, kategori: .gorsel, oneCikan: true),
+    Arac(id: "fluxpro", ikon: "sparkles.tv.fill", kind: .prompt, kredi: 7, kategori: .gorsel, oneCikan: true),
+    Arac(id: "recraft", ikon: "pencil.and.ruler.fill", kind: .prompt, kredi: 6, kategori: .gorsel),
+    Arac(id: "renklendir", ikon: "paintpalette.fill", kind: .gorselYukle, kredi: 4, kategori: .gorsel),
     // İçerik & Yazı
     Arac(id: "icerik", ikon: "sparkles.rectangle.stack", kind: .icerik, kredi: 6, kategori: .icerik, oneCikan: true),
     Arac(id: "pro", ikon: "brain.head.profile", kind: .metin, kredi: 3, kategori: .icerik, oneCikan: true),
