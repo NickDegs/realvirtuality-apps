@@ -10,9 +10,17 @@ struct Durum: Decodable {
     var davet_sayi: Int?
 }
 
+struct Klip: Identifiable {
+    let id: String
+    let url: String
+    let baslik: String
+    let emoji: String
+}
+
 struct UretimSonuc {
     var metin: String?
     var gorselData: Data?
+    var klipler: [Klip]? = nil
 }
 
 struct KutuphaneItem: Identifiable {
@@ -193,6 +201,62 @@ final class API: ObservableObject {
         }
         if (j["err"] as? String) == "kota_doldu" { return (nil, "kota_doldu") }
         return (nil, (j["mesaj"] as? String) ?? (j["err"] as? String) ?? "Üretilemedi")
+    }
+
+    // Video oto-klip — multipart video upload + iş kuyruğu polling. (UretimSonuc.klipler döner)
+    func klipUret(_ videoURL: URL, adet: Int, format: String, altyazi: String, muzik: String) async -> (UretimSonuc?, String?) {
+        yukleniyor = true; defer { yukleniyor = false }
+        guard let veri = try? Data(contentsOf: videoURL) else { return (nil, "Video okunamadı") }
+
+        let boundary = "rvb-\(UUID().uuidString)"
+        var r = URLRequest(url: URL(string: API.base + "/api/klip")!)
+        r.httpMethod = "POST"; r.timeoutInterval = 120
+        r.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        var govde = Data()
+        func alan(_ ad: String, _ deger: String) {
+            govde.append("--\(boundary)\r\n".data(using: .utf8)!)
+            govde.append("Content-Disposition: form-data; name=\"\(ad)\"\r\n\r\n".data(using: .utf8)!)
+            govde.append("\(deger)\r\n".data(using: .utf8)!)
+        }
+        let lang = Locale.current.language.languageCode?.identifier ?? "tr"
+        alan("lang", lang); alan("adet", String(adet)); alan("format", format); alan("altyazi", altyazi)
+        if !muzik.isEmpty { alan("muzik", muzik) }
+        govde.append("--\(boundary)\r\n".data(using: .utf8)!)
+        govde.append("Content-Disposition: form-data; name=\"video\"; filename=\"video.mp4\"\r\n".data(using: .utf8)!)
+        govde.append("Content-Type: video/mp4\r\n\r\n".data(using: .utf8)!)
+        govde.append(veri)
+        govde.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+        r.httpBody = govde
+
+        guard let (d, resp) = try? await session.upload(for: r, from: govde) else { return (nil, "Yüklenemedi") }
+        guard let j = try? JSONSerialization.jsonObject(with: d) as? [String: Any] else { return (nil, "Yüklenemedi") }
+        if j["ok"] as? Bool != true {
+            if (j["err"] as? String) == "kota_doldu" { return (nil, "kota_doldu") }
+            _ = resp
+            return (nil, (j["mesaj"] as? String) ?? (j["err"] as? String) ?? "Yüklenemedi")
+        }
+        guard let jid = j["job"] as? String else { return (nil, "İş başlatılamadı") }
+
+        // İş kuyruğu polling (max ~5 dk) — klip işleme whisper+ffmpeg uzun sürebilir
+        for _ in 0..<100 {
+            try? await Task.sleep(nanoseconds: 3_000_000_000)
+            let p = (try? await istek("/api/klip-durum/\(jid)", nil, method: "GET", timeout: 30)) ?? [:]
+            if let k = p["kredi"] as? Int { kredi = k }
+            let durum = p["durum"] as? String ?? ""
+            if durum == "bitti" {
+                let ham = p["klipler"] as? [[String: Any]] ?? []
+                let klipler = ham.map { k in
+                    Klip(id: k["id"] as? String ?? UUID().uuidString,
+                         url: k["url"] as? String ?? "",
+                         baslik: k["baslik"] as? String ?? "Klip",
+                         emoji: k["emoji"] as? String ?? "🎬")
+                }
+                if klipler.isEmpty { return (nil, (p["mesaj"] as? String) ?? "Klip çıkarılamadı") }
+                return (UretimSonuc(metin: nil, gorselData: nil, klipler: klipler), nil)
+            }
+            if durum == "hata" { return (nil, (p["mesaj"] as? String) ?? "İşleme hatası") }
+        }
+        return (nil, "İşlem zaman aşımına uğradı, kütüphaneden kontrol et")
     }
 
     // Katalog ürün siparişi — native akış, SMS ile ödeme linki gönderilir

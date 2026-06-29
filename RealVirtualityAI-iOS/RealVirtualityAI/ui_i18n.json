@@ -583,5 +583,77 @@
   "es": "PDF seleccionado ✓",
   "ar": "تم اختيار PDF ✓",
   "ru": "PDF выбран ✓"
+ },
+ "videoSec": {
+  "tr": "Video seç",
+  "en": "Select Video",
+  "de": "Video auswählen",
+  "fr": "Choisir une vidéo",
+  "es": "Seleccionar vídeo",
+  "ar": "اختر فيديو",
+  "ru": "Выбрать видео"
+ },
+ "videoSecildi": {
+  "tr": "Video seçildi ✓",
+  "en": "Video selected ✓",
+  "de": "Video ausgewählt ✓",
+  "fr": "Vidéo sélectionnée ✓",
+  "es": "Vídeo seleccionado ✓",
+  "ar": "تم اختيار الفيديو ✓",
+  "ru": "Видео выбрано ✓"
+ },
+ "videoSecAlt": {
+  "tr": "En fazla 25 dk · mp4/mov",
+  "en": "Up to 25 min · mp4/mov",
+  "de": "Bis 25 Min · mp4/mov",
+  "fr": "Jusqu'à 25 min · mp4/mov",
+  "es": "Hasta 25 min · mp4/mov",
+  "ar": "حتى ٢٥ دقيقة · mp4/mov",
+  "ru": "До 25 мин · mp4/mov"
+ },
+ "klipAdet": {
+  "tr": "Klip sayısı",
+  "en": "Number of clips",
+  "de": "Anzahl Clips",
+  "fr": "Nombre de clips",
+  "es": "Número de clips",
+  "ar": "عدد المقاطع",
+  "ru": "Кол-во клипов"
+ },
+ "klipFormat": {
+  "tr": "Format",
+  "en": "Format",
+  "de": "Format",
+  "fr": "Format",
+  "es": "Formato",
+  "ar": "التنسيق",
+  "ru": "Формат"
+ },
+ "klipAltyazi": {
+  "tr": "Altyazı",
+  "en": "Subtitles",
+  "de": "Untertitel",
+  "fr": "Sous-titres",
+  "es": "Subtítulos",
+  "ar": "الترجمة",
+  "ru": "Субтитры"
+ },
+ "klipMuzik": {
+  "tr": "Müzik",
+  "en": "Music",
+  "de": "Musik",
+  "fr": "Musique",
+  "es": "Música",
+  "ar": "الموسيقى",
+  "ru": "Музыка"
+ },
+ "klipHazir": {
+  "tr": "Klipler hazır 🎬",
+  "en": "Clips ready 🎬",
+  "de": "Clips fertig 🎬",
+  "fr": "Clips prêts 🎬",
+  "es": "Clips listos 🎬",
+  "ar": "المقاطع جاهزة 🎬",
+  "ru": "Клипы готовы 🎬"
  }
 }

@@ -2378,5 +2378,35 @@
     "Research"
    ]
   }
+ },
+ "klip": {
+  "tr": {
+   "ad": "Video Klipleyici",
+   "aciklama": "Uzun videodan viral kısa klipler çıkar",
+   "slogan": "Uzun videonu yükle — AI konuşmayı dinleyip en çarpıcı anları otomatik kısa klipler hâline getirir.",
+   "detay": "Videonu yükle; yapay zekâ sesi yazıya döker, en ilgi çekici bölümleri seçer ve Reels/TikTok/Shorts için hazır dikey veya yatay klipler üretir. İstersen altyazı (klasik/karaoke), arka plan müziği ve klip adedini seçebilirsin.",
+   "ozellikler": [
+    "Otomatik en iyi an seçimi",
+    "Dikey 9:16 veya yatay 16:9",
+    "Klasik/karaoke altyazı",
+    "Yüz-takipli akıllı kırpma",
+    "Arka plan müziği ekleme",
+    "Reels/TikTok/Shorts'a hazır"
+   ]
+  },
+  "en": {
+   "ad": "Video Clipper",
+   "aciklama": "Turn long videos into viral short clips",
+   "slogan": "Upload your long video — AI listens to the speech and automatically turns the best moments into short clips.",
+   "detay": "Upload your video; the AI transcribes the audio, picks the most engaging parts and produces ready vertical or horizontal clips for Reels/TikTok/Shorts. Optionally choose subtitles (classic/karaoke), background music and the number of clips.",
+   "ozellikler": [
+    "Automatic best-moment selection",
+    "Vertical 9:16 or horizontal 16:9",
+    "Classic/karaoke subtitles",
+    "Face-tracking smart crop",
+    "Add background music",
+    "Ready for Reels/TikTok/Shorts"
+   ]
+  }
  }
 }

@@ -47,7 +47,7 @@ extension LinearGradient {
 }
 
 // MARK: - Araç giriş türleri
-enum AracKind { case prompt, metin, ceviri, gorselYukle, gorselArti, urunfoto, icerik, url, ses, faceswap, pdf }
+enum AracKind { case prompt, metin, ceviri, gorselYukle, gorselArti, urunfoto, icerik, url, ses, faceswap, pdf, video }
 
 // MARK: - Kategori
 enum Kategori: String, CaseIterable, Identifiable {
@@ -92,6 +92,7 @@ let ARACLAR: [Arac] = [
     Arac(id: "sohbet", ikon: "bubble.left.and.bubble.right.fill", kind: .metin, kredi: 1, kategori: .icerik),
     Arac(id: "kod", ikon: "chevron.left.forwardslash.chevron.right", kind: .metin, kredi: 2, kategori: .icerik),
     // Ses & Video
+    Arac(id: "klip", ikon: "scissors.badge.ellipsis", kind: .video, kredi: 5, kategori: .sesvideo, oneCikan: true),
     Arac(id: "tts", ikon: "speaker.wave.3.fill", kind: .metin, kredi: 2, kategori: .sesvideo),
     Arac(id: "transkript", ikon: "waveform.and.mic", kind: .url, kredi: 3, kategori: .sesvideo),
     // Görsel Zekâ & Belge
