@@ -16,6 +16,8 @@ struct RestoranPanel: View {
     @State private var mAd = ""
     @State private var mKat = ""
     @State private var mFiyat = ""
+    @State private var arama = ""
+    @State private var durumFiltre = -1   // -1 = hepsi
 
     static let durumAd = ["🆕 Yeni", "👨‍🍳 Hazırlanıyor", "✅ Hazır", "📦 Teslim edildi"]
     static let durumRenk: [Color] = [.blue, .orange, .green, .gray]
@@ -63,11 +65,35 @@ struct RestoranPanel: View {
         }.refreshable { await yenile() }
     }
 
+    var filtreliSiparisler: [[String: Any]] {
+        siparisler.filter { s in
+            let durum = s["status"] as? Int ?? 0
+            if durumFiltre >= 0 && durum != durumFiltre { return false }
+            if arama.isEmpty { return true }
+            let q = arama.lowercased()
+            let masa = (s["table_no"] as? String ?? "").lowercased()
+            let id = "\(s["id"] as? Int ?? 0)"
+            let not = (s["note"] as? String ?? "").lowercased()
+            return masa.contains(q) || id.contains(q) || not.contains(q)
+        }
+    }
+
     var siparisTab: some View {
         ScrollView {
             LazyVStack(spacing: 10) {
-                if siparisler.isEmpty { Text("Henüz sipariş yok").foregroundStyle(.rvMut).padding(.top, 40) }
-                ForEach(Array(siparisler.enumerated()), id: \.offset) { _, s in
+                HStack {
+                    Image(systemName: "magnifyingglass").foregroundStyle(.rvMut)
+                    TextField("Masa / no / not ara", text: $arama).foregroundStyle(.rvText)
+                    if !arama.isEmpty { Button { arama = "" } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.rvMut) } }
+                }.padding(10).background(Color.rvCard, in: .rect(cornerRadius: 12))
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        durumChip("Hepsi", -1)
+                        ForEach(0..<4, id: \.self) { d in durumChip(Self.durumAd[d], d) }
+                    }
+                }
+                if filtreliSiparisler.isEmpty { Text(siparisler.isEmpty ? "Henüz sipariş yok" : "Eşleşen sipariş yok").foregroundStyle(.rvMut).padding(.top, 40) }
+                ForEach(Array(filtreliSiparisler.enumerated()), id: \.offset) { _, s in
                     let id = s["id"] as? Int ?? 0
                     let durum = s["status"] as? Int ?? 0
                     let masa = s["table_no"] as? String ?? ""
@@ -98,6 +124,16 @@ struct RestoranPanel: View {
                 }
             }.padding()
         }.refreshable { await yenile() }
+    }
+
+    func durumChip(_ ad: String, _ d: Int) -> some View {
+        let secili = durumFiltre == d
+        return Button { durumFiltre = secili ? -1 : d } label: {
+            Text(ad).font(.caption.bold())
+                .padding(.horizontal, 12).padding(.vertical, 7)
+                .background(secili ? AnyShapeStyle(tema.grad) : AnyShapeStyle(Color.rvCard), in: .capsule)
+                .foregroundStyle(secili ? Color.white : Color.rvMut)
+        }
     }
 
     var masaTab: some View {

@@ -25,6 +25,8 @@ struct RandevuPanel: View {
     @State private var hAd = ""
     @State private var hSure = ""
     @State private var hFiyat = ""
+    @State private var arama = ""
+    @State private var durumFiltre = -1
 
     static let durumAd = ["⏳ Bekliyor", "✅ Onaylandı", "🚶 Geldi", "✔️ Tamamlandı"]
     static let durumRenk: [Color] = [.orange, .blue, .purple, .green]
@@ -78,6 +80,29 @@ struct RandevuPanel: View {
         }.refreshable { await yenile() }
     }
 
+    var filtreliRandevular: [[String: Any]] {
+        randevular.filter { r in
+            let durum = r["status"] as? Int ?? 0
+            if durumFiltre >= 0 && durum != durumFiltre { return false }
+            if arama.isEmpty { return true }
+            let q = arama.lowercased()
+            let ad = (r["cust"] as? String ?? "").lowercased()
+            let tel = (r["phone"] as? String ?? "").lowercased()
+            let hiz = (r["service"] as? String ?? "").lowercased()
+            return ad.contains(q) || tel.contains(q) || hiz.contains(q)
+        }
+    }
+
+    func durumChip(_ ad: String, _ d: Int) -> some View {
+        let secili = durumFiltre == d
+        return Button { durumFiltre = secili ? -1 : d } label: {
+            Text(ad).font(.caption.bold())
+                .padding(.horizontal, 12).padding(.vertical, 7)
+                .background(secili ? AnyShapeStyle(tema.grad) : AnyShapeStyle(Color.rvCard), in: .capsule)
+                .foregroundStyle(secili ? Color.white : Color.rvMut)
+        }
+    }
+
     var randevuTab: some View {
         ScrollView {
             VStack(spacing: 10) {
@@ -118,8 +143,19 @@ struct RandevuPanel: View {
                     }.disabled(rAd.isEmpty || seciliSaat.isEmpty)
                 }
                 .task { await slotYukle() }
-                if randevular.isEmpty { Text(ogretmen ? "Ders yok" : "Randevu yok").foregroundStyle(.rvMut).padding(.top, 20) }
-                ForEach(Array(randevular.enumerated()), id: \.offset) { _, r in
+                HStack {
+                    Image(systemName: "magnifyingglass").foregroundStyle(.rvMut)
+                    TextField("\(kisiAd) / hizmet ara", text: $arama).foregroundStyle(.rvText)
+                    if !arama.isEmpty { Button { arama = "" } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.rvMut) } }
+                }.padding(10).background(Color.rvCard, in: .rect(cornerRadius: 12))
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        durumChip("Hepsi", -1)
+                        ForEach(0..<4, id: \.self) { d in durumChip(Self.durumAd[d], d) }
+                    }
+                }
+                if filtreliRandevular.isEmpty { Text(randevular.isEmpty ? (ogretmen ? "Ders yok" : "Randevu yok") : "Eşleşen kayıt yok").foregroundStyle(.rvMut).padding(.top, 20) }
+                ForEach(Array(filtreliRandevular.enumerated()), id: \.offset) { _, r in
                     let id = r["id"] as? Int ?? 0
                     let durum = r["status"] as? Int ?? 0
                     panelKart {
