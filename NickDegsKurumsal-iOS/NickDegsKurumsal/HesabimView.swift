@@ -134,7 +134,11 @@ struct HesabimView: View {
                     BilgiSatiriK(etiket: "Şifre", deger: isl.sifre, gizle: true)
                     BilgiSatiriK(etiket: "Dashboard Kodu", deger: isl.tenant)
                     NavigationLink {
-                        IsletmePanelView(panelUrl: isl.panel_url, tenant: isl.tenant, kadi: isl.kadi, sifre: isl.sifre)
+                        IsletmePanelView(
+                            apiBase: isl.apiBase.isEmpty ? isl.panel_url : isl.apiBase,
+                            did: isl.did.isEmpty ? isl.tenant : isl.did,
+                            aile: isl.aile, sektor: isl.sektor,
+                            kadi: isl.kadi, sifre: isl.sifre)
                     } label: {
                         Label("İşletmeyi Yönet (Canlı Panel)", systemImage: "chart.bar.doc.horizontal")
                             .font(.subheadline.bold()).foregroundStyle(.white)
@@ -210,6 +214,7 @@ struct SatinAlinanlar {
     struct IslPaketi {
         let aktif: Bool; let tenant: String; let panel_url: String
         let kadi: String; let sifre: String; let bitis: Int
+        let apiBase: String; let did: String; let aile: String; let sektor: String
     }
     struct GuvPaketi { let aktif: Bool; let guvenlik_url: String; let bitis: Int }
     struct HushPaketi { let aktif: Bool; let hush_url: String; let hush_uid: String; let sifre: String; let bitis: Int }
@@ -226,7 +231,11 @@ struct SatinAlinanlar {
                 panel_url: d["panel_url"] as? String ?? "",
                 kadi: d["kadi"] as? String ?? "",
                 sifre: d["sifre"] as? String ?? "",
-                bitis: d["bitis"] as? Int ?? 0)
+                bitis: d["bitis"] as? Int ?? 0,
+                apiBase: d["api_base"] as? String ?? "",
+                did: d["did"] as? String ?? "",
+                aile: d["aile"] as? String ?? "",
+                sektor: d["sektor"] as? String ?? "")
         } else { isletme = nil }
 
         if let d = j["guvenlik"] as? [String: Any], !(d["guvenlik_url"] as? String ?? "").isEmpty {
