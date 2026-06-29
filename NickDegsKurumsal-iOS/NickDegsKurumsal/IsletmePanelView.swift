@@ -1,4 +1,5 @@
 import SwiftUI
+import PhotosUI
 
 // MARK: - Native İşletme Paneli (TÜM SEKTÖRLER) — webteki sektör panellerinin native karşılığı
 // Aile: restoran(sipariş/menü/masa) · randevu+öğretmen(randevu/hizmet/müşteri) · hukuk(dava/süre/duruşma/müvekkil/belge)
@@ -65,6 +66,33 @@ enum PanelAile: String {
         guard let (d, _) = try? await session.data(for: r),
               let j = try? JSONSerialization.jsonObject(with: d) as? [String: Any] else { return [:] }
         return j
+    }
+
+    // Multipart dosya yükleme (logo / belge) — opsiyonel metin alanlarıyla
+    func upload(_ ep: String, field: String, filename: String, mime: String,
+                fileData: Data, extra: [String: String] = [:]) async -> [String: Any] {
+        let boundary = "ndg-\(UUID().uuidString)"
+        var r = URLRequest(url: url(ep)); r.httpMethod = "POST"; r.timeoutInterval = 90
+        r.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        var b = Data()
+        func add(_ s: String) { b.append(s.data(using: .utf8)!) }
+        for (k, v) in extra {
+            add("--\(boundary)\r\nContent-Disposition: form-data; name=\"\(k)\"\r\n\r\n\(v)\r\n")
+        }
+        add("--\(boundary)\r\nContent-Disposition: form-data; name=\"\(field)\"; filename=\"\(filename)\"\r\nContent-Type: \(mime)\r\n\r\n")
+        b.append(fileData)
+        add("\r\n--\(boundary)--\r\n")
+        guard let (d, _) = try? await session.upload(for: r, from: b),
+              let j = try? JSONSerialization.jsonObject(with: d) as? [String: Any] else { return [:] }
+        return j
+    }
+
+    // Dosya indirme (şifreli belge kasası → geçici dosya URL'i, paylaşım sayfasına)
+    func indir(_ ep: String, adKaydet: String) async -> URL? {
+        guard let (d, _) = try? await session.data(from: url(ep)) else { return nil }
+        let u = FileManager.default.temporaryDirectory.appendingPathComponent(adKaydet)
+        try? d.write(to: u)
+        return u
     }
 
     func getArr(_ ep: String) async -> [[String: Any]] {
@@ -301,10 +329,20 @@ struct AyarSekmesi: View {
     @State private var c1 = "#7C5CF6"
     @State private var c2 = "#5B4BE8"
     @State private var bilgi = ""
+    @State private var logoItem: PhotosPickerItem?
 
     var body: some View {
         ScrollView {
             VStack(spacing: 12) {
+                panelKart {
+                    Text("Logo").font(.subheadline.bold()).foregroundStyle(.rvText)
+                    PhotosPicker(selection: $logoItem, matching: .images) {
+                        Label("Logo Yükle / Değiştir", systemImage: "photo.badge.plus")
+                            .font(.caption.bold()).foregroundStyle(.white)
+                            .frame(maxWidth: .infinity).padding(.vertical, 10)
+                            .background(tema.grad, in: .rect(cornerRadius: 10))
+                    }
+                }
                 panelKart {
                     Text("İşletme Adı").font(.subheadline.bold()).foregroundStyle(.rvText)
                     TextField("İşletme adı", text: $marka).padding(10).background(Color.rvBg, in: .rect(cornerRadius: 10))
@@ -331,6 +369,13 @@ struct AyarSekmesi: View {
                     Text("Çıkış Yap").font(.caption.bold()).foregroundStyle(.red).frame(maxWidth: .infinity).padding(.vertical, 10)
                 }
             }.padding()
+        }
+        .onChange(of: logoItem) { _, yeni in
+            Task {
+                guard let d = try? await yeni?.loadTransferable(type: Data.self) else { return }
+                let j = await api.upload("logo", field: "logo", filename: "logo.jpg", mime: "image/jpeg", fileData: d)
+                bilgi = (j["ok"] as? Bool == true) ? "Logo yüklendi ✓" : "Logo yüklenemedi"
+            }
         }
     }
 }

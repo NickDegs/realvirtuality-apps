@@ -18,8 +18,9 @@ struct RandevuPanel: View {
     @State private var rTel = ""
     @State private var rHizmet = ""
     @State private var rFiyat = ""
-    @State private var rGun = ""
-    @State private var rSaat = ""
+    @State private var rTarih = Date()
+    @State private var seciliSaat = ""
+    @State private var slots: [[String: Any]] = []
     // yeni hizmet
     @State private var hAd = ""
     @State private var hSure = ""
@@ -83,15 +84,36 @@ struct RandevuPanel: View {
                         TextField("Telefon", text: $rTel).keyboardType(.phonePad).padding(8).background(Color.rvBg, in: .rect(cornerRadius: 9))
                         TextField(ogretmen ? "Ders" : "Hizmet", text: $rHizmet).padding(8).background(Color.rvBg, in: .rect(cornerRadius: 9))
                     }
-                    HStack {
-                        TextField("Fiyat ₺", text: $rFiyat).keyboardType(.numberPad).padding(8).background(Color.rvBg, in: .rect(cornerRadius: 9))
-                        TextField("GG-AA-YYYY → 2026-07-01", text: $rGun).padding(8).background(Color.rvBg, in: .rect(cornerRadius: 9))
-                        TextField("10:00", text: $rSaat).padding(8).background(Color.rvBg, in: .rect(cornerRadius: 9))
+                    TextField("Fiyat ₺", text: $rFiyat).keyboardType(.numberPad).padding(8).background(Color.rvBg, in: .rect(cornerRadius: 9))
+                    DatePicker("Gün", selection: $rTarih, in: Date()..., displayedComponents: .date)
+                        .datePickerStyle(.compact).tint(tema.c1)
+                        .onChange(of: rTarih) { _, _ in seciliSaat = ""; Task { await slotYukle() } }
+                    if slots.contains(where: { ($0["free"] as? Bool ?? false) }) {
+                        Text("Uygun saat seç").font(.caption2).foregroundStyle(.rvMut)
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 6) {
+                                ForEach(Array(slots.enumerated()), id: \.offset) { _, s in
+                                    let t = s["t"] as? String ?? ""
+                                    let bos = s["free"] as? Bool ?? false
+                                    if bos {
+                                        Button { seciliSaat = t } label: {
+                                            Text(t).font(.caption.bold())
+                                                .padding(.horizontal, 10).padding(.vertical, 6)
+                                                .background(seciliSaat == t ? AnyShapeStyle(tema.grad) : AnyShapeStyle(Color.rvBg), in: .capsule)
+                                                .foregroundStyle(seciliSaat == t ? Color.white : Color.rvText)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        Text("Bu gün için uygun saat yok").font(.caption2).foregroundStyle(.orange)
                     }
                     Button { Task { await randevuEkle() } } label: {
                         Text("Ekle").font(.caption.bold()).foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 9).background(tema.grad, in: .rect(cornerRadius: 10))
-                    }.disabled(rAd.isEmpty || rSaat.isEmpty)
+                    }.disabled(rAd.isEmpty || seciliSaat.isEmpty)
                 }
+                .task { await slotYukle() }
                 if randevular.isEmpty { Text(ogretmen ? "Ders yok" : "Randevu yok").foregroundStyle(.rvMut).padding(.top, 20) }
                 ForEach(Array(randevular.enumerated()), id: \.offset) { _, r in
                     let id = r["id"] as? Int ?? 0
@@ -123,12 +145,18 @@ struct RandevuPanel: View {
         }.refreshable { await yenile() }
     }
 
+    func gunStr(_ d: Date) -> String {
+        let f = DateFormatter(); f.locale = Locale(identifier: "en_US_POSIX"); f.dateFormat = "yyyy-MM-dd"
+        return f.string(from: d)
+    }
+    func slotYukle() async { slots = await api.getArr("slots?day=\(gunStr(rTarih))") }
+
     func randevuEkle() async {
-        var body: [String: Any] = ["name": rAd, "phone": rTel, "service": rHizmet, "price": Int(rFiyat) ?? 0, "time": rSaat]
-        if !rGun.isEmpty { body["day"] = rGun }
+        let body: [String: Any] = ["name": rAd, "phone": rTel, "service": rHizmet,
+                                   "price": Int(rFiyat) ?? 0, "time": seciliSaat, "day": gunStr(rTarih)]
         _ = await api.post("appt", body)
-        rAd = ""; rTel = ""; rHizmet = ""; rFiyat = ""; rGun = ""; rSaat = ""
-        await yenile()
+        rAd = ""; rTel = ""; rHizmet = ""; rFiyat = ""; seciliSaat = ""
+        await yenile(); await slotYukle()
     }
 
     var hizmetTab: some View {

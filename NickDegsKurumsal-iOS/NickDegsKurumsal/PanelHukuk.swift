@@ -1,4 +1,14 @@
 import SwiftUI
+import UniformTypeIdentifiers
+
+struct PaylasURL: Identifiable { let id = UUID(); let url: URL }
+struct ActivityView: UIViewControllerRepresentable {
+    let items: [Any]
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
+    }
+    func updateUIViewController(_ vc: UIActivityViewController, context: Context) {}
+}
 
 // MARK: - Hukuk Bürosu paneli (hukuk-sistem) — dava/süre/duruşma/müvekkil/belge
 struct HukukPanel: View {
@@ -28,6 +38,17 @@ struct HukukPanel: View {
     @State private var mvAd = ""
     @State private var mvTel = ""
     @State private var mvEmail = ""
+    // bağlama seçimleri
+    @State private var dMuvekkilId = 0
+    @State private var dMuvekkilAd = ""
+    @State private var suDavaId = 0
+    @State private var suDavaAd = ""
+    @State private var duDavaId = 0
+    @State private var duDavaAd = ""
+    @State private var bDavaId = 0
+    @State private var bDavaAd = ""
+    @State private var belgeImport = false
+    @State private var paylas: PaylasURL?
 
     static let asamalar = ["Açıldı", "Devam ediyor", "Karar aşaması", "Kapandı"]
     static func seviyeRenk(_ s: String) -> Color {
@@ -65,6 +86,29 @@ struct HukukPanel: View {
         belgeler = await api.getArr("belgeler")
     }
 
+    func muvekkilSecici(_ secId: Binding<Int>, _ secAd: Binding<String>) -> some View {
+        Menu {
+            Button("(Müvekkil bağlama yok)") { secId.wrappedValue = 0; secAd.wrappedValue = "" }
+            ForEach(Array(muvekkiller.enumerated()), id: \.offset) { _, m in
+                Button(m["ad"] as? String ?? "-") { secId.wrappedValue = m["id"] as? Int ?? 0; secAd.wrappedValue = m["ad"] as? String ?? "" }
+            }
+        } label: { secLabel(secAd.wrappedValue, "Müvekkil bağla (ops.)") }
+    }
+    func davaSecici(_ secId: Binding<Int>, _ secAd: Binding<String>) -> some View {
+        Menu {
+            Button("(Dava bağlama yok)") { secId.wrappedValue = 0; secAd.wrappedValue = "" }
+            ForEach(Array(davalar.enumerated()), id: \.offset) { _, d in
+                Button(d["baslik"] as? String ?? "-") { secId.wrappedValue = d["id"] as? Int ?? 0; secAd.wrappedValue = d["baslik"] as? String ?? "" }
+            }
+        } label: { secLabel(secAd.wrappedValue, "Dava bağla (ops.)") }
+    }
+    func secLabel(_ ad: String, _ bos: String) -> some View {
+        HStack {
+            Image(systemName: "link"); Text(ad.isEmpty ? bos : ad).lineLimit(1)
+            Spacer(); Image(systemName: "chevron.down")
+        }.font(.caption).foregroundStyle(.rvMut).padding(8).frame(maxWidth: .infinity).background(Color.rvBg, in: .rect(cornerRadius: 9))
+    }
+
     var ozet: some View {
         ScrollView {
             VStack(spacing: 12) {
@@ -91,7 +135,8 @@ struct HukukPanel: View {
                         TextField("Tür", text: $dTur).padding(8).background(Color.rvBg, in: .rect(cornerRadius: 9))
                     }
                     TextField("Mahkeme", text: $dMahkeme).padding(8).background(Color.rvBg, in: .rect(cornerRadius: 9))
-                    Button { Task { _ = await api.post("dava", ["baslik": dBaslik, "karsi": dKarsi, "mahkeme": dMahkeme, "tur": dTur]); dBaslik = ""; dKarsi = ""; dMahkeme = ""; dTur = ""; await yenile() } } label: {
+                    muvekkilSecici($dMuvekkilId, $dMuvekkilAd)
+                    Button { Task { await davaEkle() } } label: {
                         Text("Ekle").font(.caption.bold()).foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 9).background(tema.grad, in: .rect(cornerRadius: 10))
                     }.disabled(dBaslik.isEmpty)
                 }
@@ -130,7 +175,8 @@ struct HukukPanel: View {
                         TextField("Tür (ör. Cevap Dilekçesi)", text: $suTur).padding(8).background(Color.rvBg, in: .rect(cornerRadius: 9))
                         TextField("2026-07-15", text: $suSon).padding(8).background(Color.rvBg, in: .rect(cornerRadius: 9))
                     }
-                    Button { Task { _ = await api.post("sure", ["tur": suTur, "son": suSon]); suTur = ""; suSon = ""; await yenile() } } label: {
+                    davaSecici($suDavaId, $suDavaAd)
+                    Button { Task { await sureEkle() } } label: {
                         Text("Ekle").font(.caption.bold()).foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 9).background(tema.grad, in: .rect(cornerRadius: 10))
                     }.disabled(suTur.isEmpty || suSon.isEmpty)
                 }
@@ -176,7 +222,8 @@ struct HukukPanel: View {
                         TextField("10:30", text: $duSaat).padding(8).background(Color.rvBg, in: .rect(cornerRadius: 9))
                     }
                     TextField("Salon / mahkeme", text: $duSalon).padding(8).background(Color.rvBg, in: .rect(cornerRadius: 9))
-                    Button { Task { _ = await api.post("durusma", ["tarih": duTarih, "saat": duSaat, "salon": duSalon]); duTarih = ""; duSaat = ""; duSalon = ""; await yenile() } } label: {
+                    davaSecici($duDavaId, $duDavaAd)
+                    Button { Task { await durusmaEkle() } } label: {
                         Text("Ekle").font(.caption.bold()).foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 9).background(tema.grad, in: .rect(cornerRadius: 10))
                     }.disabled(duTarih.isEmpty)
                 }
@@ -235,21 +282,72 @@ struct HukukPanel: View {
     var belgeTab: some View {
         ScrollView {
             VStack(spacing: 10) {
-                Text("Şifreli belge kasası — yüklemek için web panelini kullanın.").font(.caption2).foregroundStyle(.rvMut).padding(.top, 4)
-                if belgeler.isEmpty { Text("Belge yok").foregroundStyle(.rvMut).padding(.top, 30) }
+                panelKart {
+                    Text("Belge Yükle (şifreli kasa)").font(.subheadline.bold()).foregroundStyle(.rvText)
+                    davaSecici($bDavaId, $bDavaAd)
+                    Button { belgeImport = true } label: {
+                        Label("Dosya Seç & Yükle", systemImage: "doc.badge.plus").font(.caption.bold()).foregroundStyle(.white)
+                            .frame(maxWidth: .infinity).padding(.vertical, 9).background(tema.grad, in: .rect(cornerRadius: 10))
+                    }
+                    Text("Dosyalar AES ile şifreli saklanır. Dokununca indirip paylaşabilirsin.").font(.caption2).foregroundStyle(.rvMut)
+                }
+                if belgeler.isEmpty { Text("Belge yok").foregroundStyle(.rvMut).padding(.top, 20) }
                 ForEach(Array(belgeler.enumerated()), id: \.offset) { _, b in
-                    panelKart {
-                        HStack {
-                            Image(systemName: "doc.fill").foregroundStyle(tema.c1)
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(b["ad"] as? String ?? "-").font(.subheadline.bold()).foregroundStyle(.rvText)
-                                Text("\(b["tur"] as? String ?? "") · \(b["dava"] as? String ?? "")").font(.caption2).foregroundStyle(.rvMut)
+                    let id = b["id"] as? Int ?? 0
+                    let ad = b["ad"] as? String ?? "belge"
+                    Button { Task { if let u = await api.indir("belge/\(id)/indir", adKaydet: ad) { paylas = PaylasURL(url: u) } } } label: {
+                        panelKart {
+                            HStack {
+                                Image(systemName: "doc.fill").foregroundStyle(tema.c1)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(ad).font(.subheadline.bold()).foregroundStyle(.rvText)
+                                    Text("\(b["tur"] as? String ?? "") · \(b["dava"] as? String ?? "")").font(.caption2).foregroundStyle(.rvMut)
+                                }
+                                Spacer()
+                                Image(systemName: "square.and.arrow.down").foregroundStyle(.rvMut)
                             }
-                            Spacer()
                         }
                     }
                 }
             }.padding()
-        }.refreshable { await yenile() }
+        }
+        .refreshable { await yenile() }
+        .fileImporter(isPresented: $belgeImport, allowedContentTypes: [.pdf, .image, .plainText, .data]) { res in
+            if case .success(let url) = res { Task { await belgeYukle(url) } }
+        }
+        .sheet(item: $paylas) { p in ActivityView(items: [p.url]) }
+    }
+
+    func davaEkle() async {
+        var body: [String: Any] = ["baslik": dBaslik, "karsi": dKarsi, "mahkeme": dMahkeme, "tur": dTur]
+        if dMuvekkilId > 0 { body["muvekkil_id"] = dMuvekkilId }
+        _ = await api.post("dava", body)
+        dBaslik = ""; dKarsi = ""; dMahkeme = ""; dTur = ""; dMuvekkilId = 0; dMuvekkilAd = ""
+        await yenile()
+    }
+    func sureEkle() async {
+        var body: [String: Any] = ["tur": suTur, "son": suSon]
+        if suDavaId > 0 { body["dava_id"] = suDavaId }
+        _ = await api.post("sure", body)
+        suTur = ""; suSon = ""; suDavaId = 0; suDavaAd = ""
+        await yenile()
+    }
+    func durusmaEkle() async {
+        var body: [String: Any] = ["tarih": duTarih, "saat": duSaat, "salon": duSalon]
+        if duDavaId > 0 { body["dava_id"] = duDavaId }
+        _ = await api.post("durusma", body)
+        duTarih = ""; duSaat = ""; duSalon = ""; duDavaId = 0; duDavaAd = ""
+        await yenile()
+    }
+    func belgeYukle(_ url: URL) async {
+        guard url.startAccessingSecurityScopedResource() else { return }
+        defer { url.stopAccessingSecurityScopedResource() }
+        guard let d = try? Data(contentsOf: url) else { return }
+        var extra: [String: String] = ["tur": "Belge"]
+        if bDavaId > 0 { extra["dava_id"] = String(bDavaId) }
+        let mime = url.pathExtension.lowercased() == "pdf" ? "application/pdf" : "application/octet-stream"
+        _ = await api.upload("belge", field: "file", filename: url.lastPathComponent, mime: mime, fileData: d, extra: extra)
+        bDavaId = 0; bDavaAd = ""
+        await yenile()
     }
 }
