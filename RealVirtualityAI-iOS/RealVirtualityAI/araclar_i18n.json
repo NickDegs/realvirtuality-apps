@@ -2512,5 +2512,57 @@
     "Downloadable"
    ]
   }
+ },
+ "avatar": {
+  "tr": {
+   "ad": "Konuşan Avatar",
+   "aciklama": "Fotoğrafı konuştur",
+   "slogan": "Bir yüz fotoğrafı yükle, ne diyeceğini yaz — AI konuşan bir video üretir.",
+   "detay": "Bir portre fotoğrafı yükle ve söylemesini istediğin metni gir; yapay zekâ dudak senkronlu konuşan bir video üretir. Tanıtım, karşılama, eğitim için ideal.",
+   "ozellikler": [
+    "Fotoğraftan konuşan video",
+    "Dudak senkronu",
+    "Türkçe seslendirme",
+    "Tanıtım/karşılama için ideal"
+   ]
+  },
+  "en": {
+   "ad": "Talking Avatar",
+   "aciklama": "Make a photo talk",
+   "slogan": "Upload a face photo and type what to say — AI makes a talking video.",
+   "detay": "Upload a portrait and enter the text to speak; AI creates a lip-synced talking video. Great for intros, greetings, training.",
+   "ozellikler": [
+    "Photo to talking video",
+    "Lip-sync",
+    "Voice-over",
+    "Great for intros"
+   ]
+  }
+ },
+ "sticker": {
+  "tr": {
+   "ad": "Sticker Yap",
+   "aciklama": "Fotoğraftan çıkartma üret",
+   "slogan": "Bir fotoğraf yükle — AI onu eğlenceli bir sticker'a çevirir.",
+   "detay": "Yüz fotoğrafını yükle; yapay zekâ onu WhatsApp/Telegram için çıkartma (sticker) tarzına dönüştürür.",
+   "ozellikler": [
+    "Fotoğraftan sticker",
+    "Eğlenceli stil",
+    "Sohbet uygulamalarına uygun",
+    "Saniyeler içinde"
+   ]
+  },
+  "en": {
+   "ad": "Make Sticker",
+   "aciklama": "Turn a photo into a sticker",
+   "slogan": "Upload a photo — AI turns it into a fun sticker.",
+   "detay": "Upload a face photo; AI converts it into a sticker style for WhatsApp/Telegram.",
+   "ozellikler": [
+    "Photo to sticker",
+    "Fun style",
+    "Chat-app ready",
+    "In seconds"
+   ]
+  }
  }
 }

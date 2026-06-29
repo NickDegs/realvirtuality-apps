@@ -673,5 +673,14 @@
   "es": "Prenda",
   "ar": "الملابس",
   "ru": "Одежда"
+ },
+ "ip_avatar": {
+  "tr": "Avatarın ne söylesin? (konuşma metni)",
+  "en": "What should the avatar say?",
+  "de": "Was soll der Avatar sagen?",
+  "fr": "Que doit dire l'avatar ?",
+  "es": "¿Qué debe decir el avatar?",
+  "ar": "ماذا يقول الأفاتار؟",
+  "ru": "Что должен сказать аватар?"
  }
 }

@@ -345,6 +345,7 @@ struct ToolView: View {
     }
 
     var ipucu: String {
+        if arac.id == "avatar" { return yerel.t("ip_avatar") }
         switch arac.kind {
         case .prompt: return yerel.t("ip_prompt")
         case .ceviri: return yerel.t("ip_ceviri")
