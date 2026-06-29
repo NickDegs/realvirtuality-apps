@@ -1233,6 +1233,8 @@ struct DashRaporView: View {
     @State private var aktif = 0
     @State private var gunluk: [[String: Any]] = []
     @State private var top: [[String: Any]] = []
+    @State private var ayGelir = 0
+    @State private var ayAdet = 0
     private var api: PanelAPI { PanelAPI(host: host, token: bizToken) }
 
     var body: some View {
@@ -1242,6 +1244,10 @@ struct DashRaporView: View {
                     kpi("Bugün Ciro", "\(gelir)₺", "turkishlirasign.circle.fill", .green)
                     kpi("Bugün", "\(adet)", "bag.fill", tema.c1)
                     kpi("Aktif", "\(aktif)", "flame.fill", .orange)
+                }
+                HStack(spacing: 12) {
+                    kpi("Bu Ay Ciro", "\(ayGelir)₺", "calendar", .purple)
+                    kpi("Bu Ay İşlem", "\(ayAdet)", "chart.line.uptrend.xyaxis", .blue)
                 }
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Son 7 Gün Ciro").font(.subheadline.bold()).foregroundStyle(.rvText)
@@ -1294,6 +1300,8 @@ struct DashRaporView: View {
         if let r = await api.get("/dash/biz/stats-range") {
             gunluk = r["gunluk"] as? [[String: Any]] ?? []
             top = r["top"] as? [[String: Any]] ?? []
+            ayGelir = r["ay_gelir"] as? Int ?? 0
+            ayAdet = r["ay_adet"] as? Int ?? 0
         }
     }
 }

@@ -387,9 +387,18 @@ struct RaporKart: View {
     let tema: Tema
     @State private var gunluk: [[String: Any]] = []
     @State private var top: [[String: Any]] = []
+    @State private var ayGelir = 0
+    @State private var ayAdet = 0
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Image(systemName: "calendar").foregroundStyle(tema.c2)
+                Text("Bu Ay").font(.subheadline.bold()).foregroundStyle(.rvText)
+                Spacer()
+                Text("₺\(ayGelir) · \(ayAdet) işlem").font(.subheadline.bold()).foregroundStyle(tema.c1)
+            }
+            Divider().overlay(Color.rvLine)
             Text("Son 7 Gün Ciro").font(.subheadline.bold()).foregroundStyle(.rvText)
             if gunluk.isEmpty {
                 Text("Henüz veri yok").font(.caption).foregroundStyle(.rvMut).frame(height: 120)
@@ -420,6 +429,8 @@ struct RaporKart: View {
             let j = await api.getObj("stats-range")
             gunluk = j["gunluk"] as? [[String: Any]] ?? []
             top = j["top"] as? [[String: Any]] ?? []
+            ayGelir = j["ay_gelir"] as? Int ?? 0
+            ayAdet = j["ay_adet"] as? Int ?? 0
         }
     }
 }
