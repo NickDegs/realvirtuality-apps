@@ -79,6 +79,7 @@ let SEKTORLER: [Sektor] = [
     Sektor(id: "spor",       ad: "Spor Salonu",            ikon: "figure.run"),
     Sektor(id: "estetik",    ad: "Estetik / Spa",          ikon: "sparkles"),
     Sektor(id: "hukuk",      ad: "Hukuk Bürosu",           ikon: "building.columns.fill"),
+    Sektor(id: "ogretmen",   ad: "Öğretmen / Eğitim",      ikon: "graduationcap.fill"),
     Sektor(id: "diger",      ad: "Diğer İşletme",          ikon: "briefcase.fill"),
 ]
 

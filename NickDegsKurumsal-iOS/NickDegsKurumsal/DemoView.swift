@@ -22,7 +22,7 @@ struct DemoView: View {
         ("diger","🏢 Genel"),("lokanta","🍽️ Lokanta/Kafe"),("kafe","☕ Kafe"),
         ("otel","🏨 Otel"),("kuafor","💇 Kuaför/Berber"),("klinik","🩺 Klinik"),
         ("estetik","💆 Estetik"),("veteriner","🐾 Veteriner"),("spor","🏋️ Spor Salonu"),
-        ("market","🛒 Market/Dükkan")
+        ("market","🛒 Market/Dükkan"),("hukuk","⚖️ Hukuk Bürosu"),("ogretmen","👨‍🏫 Öğretmen/Eğitim")
     ]
 
     var body: some View {
