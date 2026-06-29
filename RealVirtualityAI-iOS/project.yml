@@ -22,6 +22,8 @@ targets:
     dependencies:
       - target: RVWidgetExtension
         embed: true
+      - target: RVShareExtension
+        embed: true
     info:
       path: RealVirtualityAI/Info.plist
       properties:
@@ -40,6 +42,7 @@ targets:
       base:
         TARGETED_DEVICE_FAMILY: "1"
         PRODUCT_BUNDLE_IDENTIFIER: com.nickdegs.realvirtualityai.widget
+        CODE_SIGN_ENTITLEMENTS: RVWidget/RVWidget.entitlements
     info:
       path: RVWidget/Info.plist
       properties:
@@ -47,6 +50,28 @@ targets:
         CFBundleName: RV Araçları
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
+
+  RVShareExtension:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources: [RVShare]
+    settings:
+      base:
+        TARGETED_DEVICE_FAMILY: "1"
+        PRODUCT_BUNDLE_IDENTIFIER: com.nickdegs.realvirtualityai.share
+        CODE_SIGN_ENTITLEMENTS: RVShare/RVShare.entitlements
+    info:
+      path: RVShare/Info.plist
+      properties:
+        CFBundleDisplayName: RealVirtuality AI
+        CFBundleName: RVShare
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.share-services
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShareViewController
+          NSExtensionAttributes:
+            NSExtensionActivationRule:
+              NSExtensionActivationSupportsImageWithMaxCount: 1
 
   RealVirtualityAIUITests:
     type: bundle.ui-testing

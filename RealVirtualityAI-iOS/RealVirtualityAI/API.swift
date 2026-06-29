@@ -61,7 +61,11 @@ final class API: ObservableObject {
         HTTPCookieStorage.shared.cookies(for: siteURL)?.first { $0.name == "sid" }?.value
     }
     func iCloudTokenKaydet() {
-        if let v = aktifSid(), !v.isEmpty { kv.set(v, forKey: "rv_sid"); kv.synchronize() }
+        if let v = aktifSid(), !v.isEmpty {
+            kv.set(v, forKey: "rv_sid"); kv.synchronize()
+            // Share Extension'ın kullanıcı oturumuyla çalışması için App Group'a da yaz
+            UserDefaults(suiteName: "group.com.nickdegs.realvirtualityai")?.set(v, forKey: "rv_sid")
+        }
     }
     func iCloudTokenYukle() {
         kv.synchronize()
