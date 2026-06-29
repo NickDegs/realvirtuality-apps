@@ -1,6 +1,7 @@
 import SwiftUI
 import CoreImage
 import CoreImage.CIFilterBuiltins
+import Charts
 
 // MARK: - QR Kod Üretici (CoreImage — ağ bağlantısı yok)
 struct QRNative: View {
@@ -1033,10 +1034,13 @@ struct BizPanelSectionView: View {
     private var api: PanelAPI { PanelAPI(host: host, token: bizToken) }
     private var eklenebilir: Bool { ["stok","randevu","davalar","sureler"].contains(kart.s) }
 
+    private var raporMu: Bool { ["ozet", "raporlar"].contains(kart.s) }
+
     var body: some View {
         ZStack {
             AnimatedArka(c1: tema.c1, c2: tema.c2)
-            if yukleniyor { ProgressView().tint(tema.c1).scaleEffect(1.3) }
+            if raporMu { DashRaporView(host: host, bizToken: bizToken).environmentObject(tema) }
+            else if yukleniyor { ProgressView().tint(tema.c1).scaleEffect(1.3) }
             else if liste.isEmpty {
                 VStack(spacing: 12) {
                     Image(systemName: kart.ic).font(.system(size: 40)).foregroundStyle(tema.c2)
@@ -1215,6 +1219,81 @@ struct BizEkleForm: View {
         case "davalar": return ("dava", ["baslik": f1, "karsi": f2, "mahkeme": f3, "tur": f4])
         case "sureler": return ("sure", ["tur": f1, "son": f2])
         default:        return ("", [:])
+        }
+    }
+}
+
+// MARK: - Dashboard işletme raporu (KPI + 7 gün ciro grafiği + en çok satan)
+struct DashRaporView: View {
+    let host: String
+    let bizToken: String
+    @EnvironmentObject var tema: Tema
+    @State private var gelir = 0
+    @State private var adet = 0
+    @State private var aktif = 0
+    @State private var gunluk: [[String: Any]] = []
+    @State private var top: [[String: Any]] = []
+    private var api: PanelAPI { PanelAPI(host: host, token: bizToken) }
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 12) {
+                HStack(spacing: 12) {
+                    kpi("Bugün Ciro", "\(gelir)₺", "turkishlirasign.circle.fill", .green)
+                    kpi("Bugün", "\(adet)", "bag.fill", tema.c1)
+                    kpi("Aktif", "\(aktif)", "flame.fill", .orange)
+                }
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Son 7 Gün Ciro").font(.subheadline.bold()).foregroundStyle(.rvText)
+                    if gunluk.isEmpty {
+                        Text("Henüz veri yok").font(.caption).foregroundStyle(.rvMut).frame(height: 120)
+                    } else {
+                        Chart {
+                            ForEach(Array(gunluk.enumerated()), id: \.offset) { _, g in
+                                BarMark(x: .value("Gün", String((g["gun"] as? String ?? "").suffix(5))),
+                                        y: .value("Ciro", g["gelir"] as? Int ?? 0))
+                                .foregroundStyle(tema.c1)
+                            }
+                        }.frame(height: 160)
+                    }
+                }
+                .padding(14).frame(maxWidth: .infinity, alignment: .leading)
+                .glassEffect(.regular, in: .rect(cornerRadius: 16))
+                if !top.isEmpty {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("En Çok Satan").font(.subheadline.bold()).foregroundStyle(.rvText)
+                        ForEach(Array(top.enumerated()), id: \.offset) { i, t in
+                            HStack {
+                                Text("\(i + 1).").foregroundStyle(.rvMut)
+                                Text(t["ad"] as? String ?? "-").foregroundStyle(.rvText).lineLimit(1)
+                                Spacer()
+                                Text("\(t["adet"] as? Int ?? 0)x").font(.caption.bold()).foregroundStyle(tema.c2)
+                            }.font(.caption)
+                        }
+                    }
+                    .padding(14).frame(maxWidth: .infinity, alignment: .leading)
+                    .glassEffect(.regular, in: .rect(cornerRadius: 16))
+                }
+            }.padding(16)
+        }
+        .task { await yukle() }
+    }
+
+    func kpi(_ t: String, _ v: String, _ ik: String, _ renk: Color) -> some View {
+        VStack(spacing: 4) {
+            Image(systemName: ik).foregroundStyle(renk)
+            Text(v).font(.headline.bold()).foregroundStyle(.rvText)
+            Text(t).font(.caption2).foregroundStyle(.rvMut)
+        }.frame(maxWidth: .infinity).padding(.vertical, 12).glassEffect(.regular, in: .rect(cornerRadius: 14))
+    }
+
+    func yukle() async {
+        if let s = await api.get("/dash/biz/stats") {
+            gelir = s["revenue"] as? Int ?? 0; adet = s["count"] as? Int ?? 0; aktif = s["active"] as? Int ?? 0
+        }
+        if let r = await api.get("/dash/biz/stats-range") {
+            gunluk = r["gunluk"] as? [[String: Any]] ?? []
+            top = r["top"] as? [[String: Any]] ?? []
         }
     }
 }
