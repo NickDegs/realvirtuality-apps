@@ -51,7 +51,7 @@ struct RandevuPanel: View {
             case 4: PersonelSekmesi(api: api, tema: tema)
             default: AyarSekmesi(api: api, tema: tema)
             }
-        }.task { await yenile() }
+        }.task { await yenile(); while !Task.isCancelled { try? await Task.sleep(nanoseconds: 25_000_000_000); await yenile() } }
     }
 
     func yenile() async {
