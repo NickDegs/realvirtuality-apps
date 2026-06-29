@@ -113,6 +113,18 @@ struct RestoranPanel: View {
                             Spacer()
                             Text("\((s["items"] as? [Any])?.count ?? 0) ürün").font(.caption2).foregroundStyle(.rvMut)
                         }
+                        if let items = s["items"] as? [[String: Any]], !items.isEmpty {
+                            VStack(alignment: .leading, spacing: 2) {
+                                ForEach(Array(items.enumerated()), id: \.offset) { _, it in
+                                    HStack(spacing: 6) {
+                                        Text("\(it["qty"] as? Int ?? 1)×").font(.caption2.bold()).foregroundStyle(tema.c2)
+                                        Text(it["name"] as? String ?? "-").font(.caption2).foregroundStyle(.rvText).lineLimit(1)
+                                        Spacer()
+                                        Text("₺\((it["price"] as? Int ?? 0) * (it["qty"] as? Int ?? 1))").font(.caption2).foregroundStyle(.rvMut)
+                                    }
+                                }
+                            }.padding(8).background(Color.rvBg, in: .rect(cornerRadius: 8))
+                        }
                         if let n = s["note"] as? String, !n.isEmpty { Text("📝 \(n)").font(.caption2).foregroundStyle(.rvMut) }
                         if durum < 3 {
                             Button { Task { _ = await api.post("order/\(id)/advance"); await yenile() } } label: {

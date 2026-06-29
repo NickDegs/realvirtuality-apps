@@ -242,14 +242,22 @@ struct RandevuPanel: View {
             VStack(spacing: 10) {
                 if musteriler.isEmpty { Text("\(kisiAd) yok").foregroundStyle(.rvMut).padding(.top, 40) }
                 ForEach(Array(musteriler.enumerated()), id: \.offset) { _, c in
+                    let cnt = c["cnt"] as? Int ?? 0
+                    let tel = c["phone"] as? String ?? ""
                     panelKart {
                         HStack {
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(c["cust"] as? String ?? "-").font(.subheadline.bold()).foregroundStyle(.rvText)
-                                Text(c["phone"] as? String ?? "").font(.caption2).foregroundStyle(.rvMut)
+                                HStack(spacing: 5) {
+                                    Text(c["cust"] as? String ?? "-").font(.subheadline.bold()).foregroundStyle(.rvText)
+                                    if cnt >= 3 { Text("⭐ Sadık").font(.caption2.bold()).foregroundStyle(.orange).padding(.horizontal, 6).padding(.vertical, 2).background(Color.orange.opacity(0.15), in: .capsule) }
+                                }
+                                Text(tel).font(.caption2).foregroundStyle(.rvMut)
                             }
                             Spacer()
-                            Text("\(c["cnt"] as? Int ?? 0) \(ogretmen ? "ders" : "ziyaret")").font(.caption2).foregroundStyle(.rvMut)
+                            if !tel.isEmpty, let u = URL(string: "tel:\(tel.filter { $0.isNumber || $0 == "+" })") {
+                                Link(destination: u) { Image(systemName: "phone.circle.fill").font(.title2).foregroundStyle(.green) }
+                            }
+                            Text("\(cnt) \(ogretmen ? "ders" : "ziyaret")").font(.caption2).foregroundStyle(.rvMut)
                         }
                     }
                 }
