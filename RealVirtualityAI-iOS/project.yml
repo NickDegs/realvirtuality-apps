@@ -40,10 +40,11 @@ targets:
       base:
         TARGETED_DEVICE_FAMILY: "1"
         PRODUCT_BUNDLE_IDENTIFIER: com.nickdegs.realvirtualityai.widget
-        INFOPLIST_KEY_CFBundleDisplayName: RV Araçları
     info:
       path: RVWidget/Info.plist
       properties:
+        CFBundleDisplayName: RV Araçları
+        CFBundleName: RV Araçları
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
 
