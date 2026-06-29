@@ -66,13 +66,15 @@ enum Kategori: String, CaseIterable, Identifiable {
 }
 
 // MARK: - Araç tanımı (yapısal; metinler Yerel'den çok dilli gelir)
-struct Arac: Identifiable {
+struct Arac: Identifiable, Hashable {
     let id: String
     let ikon: String
     let kind: AracKind
     let kredi: Int
     let kategori: Kategori
     var oneCikan: Bool = false
+    static func == (l: Arac, r: Arac) -> Bool { l.id == r.id }
+    func hash(into h: inout Hasher) { h.combine(id) }
 }
 
 let ARACLAR: [Arac] = [
