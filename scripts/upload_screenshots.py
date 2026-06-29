@@ -46,10 +46,12 @@ APPS = {
 DIR_TO_LOCALE = {
     "tr-TR":"tr", "en-US":"en-US", "de-DE":"de-DE",
     "fr-FR":"fr-FR", "es-ES":"es-ES", "ar-SA":"ar-SA", "ru":"ru",
+    "it":"it", "pt-BR":"pt-BR", "ja":"ja", "zh-Hans":"zh-Hans", "hi":"hi",
 }
 
 # Dizin adı → ASC displayType
 SIZE_TO_DISPLAY = {
+    "6.9":"APP_IPHONE_67",  # 6.9" (1320x2868) Apple API APP_IPHONE_67 slotu altında kabul ediyor (APP_IPHONE_69 enum geçersiz/409)
     "6.7":"APP_IPHONE_67",
     "6.5":"APP_IPHONE_65",
     "5.5":"APP_IPHONE_55",
@@ -140,8 +142,9 @@ def upload_file(upload_url, file_path):
         return e.code
 
 def md5b64(file_path):
-    import hashlib, base64
-    return base64.b64encode(hashlib.md5(file_path.read_bytes()).digest()).decode()
+    import hashlib
+    # Apple sourceFileChecksum = MD5 HEX digest (base64 değil — base64 FAILED veriyordu)
+    return hashlib.md5(file_path.read_bytes()).hexdigest()
 
 # ─── ASC helpers ──────────────────────────────────────────────────────────────
 

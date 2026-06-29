@@ -173,22 +173,21 @@ def draw_icon_circle(draw, cx, cy, r, icon_char, font, bg, fg=TEXT_WHITE):
 
 PANEL_SCREENS = [
     # (dosya_adi, başlık_tr, başlık_en, alt_tr, alt_en)
-    # İŞLETME-SAHİBİ GÖRÜNÜMÜ (admin/sunucu YOK — demo restoran). Bkz memory project_ios_pivot.
-    ("01_ozet", "İşletmenizin\nGünlük Özeti", "Your Business\nAt a Glance",
-     "Ciro, sipariş ve müşteri sayınız\ntek ekranda, anlık güncellenir.",
-     "Revenue, orders and customers\nin one live dashboard."),
-    ("02_siparis", "Siparişleri\nAnında Yönetin", "Manage Orders\nIn Real Time",
-     "Masa ve paket siparişlerini takip edin,\ntek dokunuşla durumu güncelleyin.",
-     "Track dine-in and delivery orders,\nupdate status with a single tap."),
-    ("03_urun", "Ürün ve Stok\nKontrolü", "Products &\nStock Control",
-     "Menü ve ürünlerinizi düzenleyin,\nstok azalınca uyarı alın.",
-     "Edit your menu and products,\nget alerts when stock runs low."),
-    ("04_rapor", "Satış\nRaporları", "Sales\nReports",
-     "Günlük ve haftalık ciro grafikleri,\nen çok satan ürünleriniz.",
-     "Daily and weekly revenue charts,\nyour best-selling products."),
-    ("05_musteri", "Müşteri ve\nSadakat", "Customers &\nLoyalty",
-     "Müşterilerinizi tanıyın, sadakat\npuanlarıyla geri kazanın.",
-     "Know your customers, bring them\nback with loyalty points."),
+    ("01_dashboard", "Sunucunuzun\nTam Kontrolü", "Full Control\nOf Your Server",
+     "Anlık sistem izleme, servis durumları\nve alarm bildirimleri bir arada.",
+     "Real-time system monitoring, service\nhealth and alerts in one place."),
+    ("02_isletmeler", "Tüm Müşterileriniz\nBir Ekranda", "All Your Customers\nIn One View",
+     "Sektöre göre gruplandırılmış işletmeler,\nanında erişim ve kontrol.",
+     "Businesses grouped by sector,\ninstant access and full control."),
+    ("03_sistem", "Anlık\nSistem İzleme", "Real-time\nSystem Monitoring",
+     "CPU, bellek, disk ve ağ kullanımını\ncanlı takip edin.",
+     "Monitor CPU, memory, disk and\nnetwork usage live."),
+    ("04_guvenlik", "Banka Seviyesi\nGüvenlik", "Bank-Level\nSecurity",
+     "2FA ve passkey korumalı giriş,\nher işlem kayıt altında.",
+     "2FA and passkey protected login,\nevery action fully audited."),
+    ("05_bildirim", "Hiçbir Uyarıyı\nKaçırmayın", "Never Miss\nAn Alert",
+     "Kritik olaylar anında Telegram\nve ntfy bildirimiyle size ulaşır.",
+     "Critical events reach you instantly\nvia Telegram and push notifications."),
 ]
 
 BUSINESS_SCREENS = {
@@ -295,182 +294,107 @@ RV_SCREENS = {
 
 # ─── Ekran içerik çizicileri ─────────────────────────────────────────────────
 
-def _fit_rh(sh, sy, y, n, s, lo=80, hi=168):
-    """Liste satır yüksekliğini kalan alana göre hesapla — boşluğu doldurur, taşmaz."""
-    content_bottom = sy + sh - int(110*s)   # tab bar üstü güvenli sınır
-    avail = max(int(lo*s), content_bottom - y)
-    return int(max(int(lo*s), min(int(hi*s), avail / max(n, 1))))
-
-
 def draw_panel_screen(draw, sx, sy, sw, sh, screen_idx, accent, scale=1.0):
-    """Panel app içerikleri — İŞLETME-SAHİBİ görünümü (demo restoran 'Lezzet Durağı').
-    Admin/sunucu/multi-tenant ASLA gösterilmez (Barış kuralı)."""
+    """Panel app içerikleri."""
     s = scale
     font_m = load_font(int(28*s)); font_s = load_font(int(22*s)); font_xs = load_font(int(18*s))
     font_mb = load_font(int(30*s)); font_sm = load_font(int(24*s), bold=False)
-    GREEN = (80,200,120); AMBER = (255,180,60); RED = (230,100,90)
 
     y = sy + int(60*s)
     cx = sx + sw//2
 
-    if screen_idx == 0:  # İşletme Özeti — KPI + haftalık ciro
-        t = load_font(int(34*s))
-        text_center(draw, "Lezzet Durağı", sx, y, sw, t, PANEL_ACCENT); y += int(40*s)
-        text_center(draw, "Bugünün Özeti", sx, y, sw, font_xs, TEXT_GRAY); y += int(48*s)
-        # 3 KPI kart: Ciro / Sipariş / Müşteri
-        metrics = [("Bugünkü Ciro", "₺4.850", PANEL_ACCENT), ("Sipariş", "37", GREEN), ("Müşteri", "28", (140,170,255))]
+    if screen_idx == 0:  # Dashboard
+        # App başlığı
+        t = load_font(int(36*s))
+        text_center(draw, "⚡ NickDegs Panel", sx, y, sw, t, PANEL_ACCENT); y += int(55*s)
+        # Metrik kartlar (3 col)
+        metrics = [("CPU", "23%", PANEL_ACCENT), ("RAM", "8.2G", (100,180,100)), ("Disk", "64%", (255,160,50))]
         card_w = int((sw - int(50*s)) // 3)
         for i, (lbl, val, col) in enumerate(metrics):
             cx2 = sx + int(16*s) + i * (card_w + int(8*s))
-            draw_card(draw, cx2, y, card_w, int(96*s), fill=BG_CARD)
-            draw.text((cx2+int(12*s), y+int(12*s)), lbl, font=load_font(int(15*s)), fill=TEXT_GRAY)
-            draw.text((cx2+int(12*s), y+int(40*s)), val, font=load_font(int(30*s)), fill=col)
-        y += int(112*s)
-        # Haftalık ciro mini bar grafiği
-        draw_card(draw, sx+int(8*s), y, sw-int(16*s), int(180*s))
-        draw.text((sx+int(22*s), y+int(14*s)), "Bu Hafta — Ciro", font=font_xs, fill=TEXT_GRAY)
-        days = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"]
-        vals = [0.45,0.55,0.40,0.62,0.85,1.0,0.78]
-        bw = int((sw-int(70*s)) / 7); base_y = y+int(150*s); max_h = int(95*s)
-        for i,(d_,v) in enumerate(zip(days,vals)):
-            bx = sx+int(28*s)+i*bw
-            bh = int(max_h*v)
-            draw.rounded_rectangle([bx, base_y-bh, bx+int(bw*0.6), base_y], radius=int(5*s), fill=PANEL_ACCENT if i==5 else (70,110,180))
-            draw.text((bx+int(2*s), base_y+int(6*s)), d_, font=load_font(int(13*s)), fill=TEXT_GRAY)
-        y += int(196*s)
-        # Aktif masa/paket özet pill satırı
-        draw_card(draw, sx+int(8*s), y, sw-int(16*s), int(58*s), fill=(24,40,66))
-        draw.text((sx+int(22*s), y+int(16*s)), "8 aktif masa", font=font_s, fill=TEXT_WHITE)
-        draw.text((sx+sw-int(170*s), y+int(16*s)), "5 paket sipariş", font=font_xs, fill=PANEL_ACCENT)
-        y += int(80*s)
-        # Son siparişler mini liste (kalan alanı doldurur)
-        draw.text((sx+int(16*s), y), "Son Siparişler", font=font_s, fill=TEXT_GRAY); y += int(44*s)
-        recents = [
-            ("Masa 4 · Adana, Ayran", "12:40", "₺320", (255,180,60)),
-            ("Paket #1042 · Lahmacun x3", "12:36", "₺185", PANEL_ACCENT),
-            ("Masa 9 · Karışık Izgara", "12:28", "₺640", (80,200,120)),
-            ("Masa 7 · Pide, Şalgam", "12:18", "₺410", (255,180,60)),
-            ("Masa 2 · Çorba, Künefe", "12:05", "₺140", TEXT_GRAY),
-            ("Paket #1039 · Lahmacun x5", "11:58", "₺260", (80,200,120)),
-        ]
-        rh = _fit_rh(sh, sy, y, len(recents), s, hi=120)
-        for desc, tm, amt, col in recents:
-            draw_card(draw, sx+int(8*s), y, sw-int(16*s), rh-int(10*s))
-            cyr = y+rh//2
-            draw.ellipse([sx+int(22*s), cyr-int(7*s), sx+int(36*s), cyr+int(7*s)], fill=col)
-            draw.text((sx+int(50*s), cyr-int(24*s)), desc, font=load_font(int(19*s)), fill=TEXT_WHITE)
-            draw.text((sx+int(50*s), cyr+int(4*s)), tm, font=load_font(int(15*s)), fill=TEXT_GRAY)
-            draw.text((sx+sw-int(110*s), cyr-int(14*s)), amt, font=font_s, fill=TEXT_WHITE)
-            y += rh
+            draw_card(draw, cx2, y, card_w, int(90*s), fill=BG_CARD)
+            draw.text((cx2+int(12*s), y+int(10*s)), lbl, font=font_xs, fill=TEXT_GRAY)
+            draw.text((cx2+int(12*s), y+int(32*s)), val, font=font_mb, fill=col)
+        y += int(105*s)
+        # Servis listesi
+        services = [("nginx",True),("payment-service",True),("panel-auth",True),("n8n",True),("nickdegs-e2e",False)]
+        for svc, up in services:
+            col = (80,200,120) if up else (220,80,80)
+            draw_card(draw, sx+int(8*s), y, sw-int(16*s), int(54*s))
+            draw.ellipse([sx+int(24*s), y+int(18*s), sx+int(38*s), y+int(36*s)], fill=col)
+            draw.text((sx+int(50*s), y+int(15*s)), svc, font=font_s, fill=TEXT_WHITE)
+            status = "Çalışıyor" if up else "Durduruldu"
+            draw.text((sx+sw-int(120*s), y+int(15*s)), status, font=font_xs, fill=TEXT_GRAY)
+            y += int(62*s)
+        # Grafik placeholder
+        draw_card(draw, sx+int(8*s), y, sw-int(16*s), int(130*s)); y += int(145*s)
+        draw.text((sx+int(20*s), y-int(110*s)), "Son 24 Saat — Sistem Yükü", font=font_xs, fill=TEXT_GRAY)
 
-    elif screen_idx == 1:  # Siparişler
+    elif screen_idx == 1:  # İşletmeler
         t = load_font(int(32*s))
-        text_center(draw, "Siparişler", sx, y, sw, t, TEXT_WHITE); y += int(55*s)
-        orders = [
-            ("Masa 4", "2 kişi · 12:40", "₺320", "Hazırlanıyor", AMBER),
-            ("Paket #1042", "Moto kurye", "₺185", "Yeni", PANEL_ACCENT),
-            ("Masa 9", "4 kişi · 12:28", "₺640", "Hazır", GREEN),
-            ("Paket #1041", "Adres: Merkez", "₺95", "Yolda", (140,170,255)),
-            ("Masa 7", "3 kişi · 12:18", "₺410", "Hazırlanıyor", AMBER),
-            ("Masa 2", "1 kişi · 12:05", "₺140", "Teslim", TEXT_GRAY),
-            ("Paket #1039", "Gel-al", "₺260", "Hazır", GREEN),
-            ("Masa 12", "6 kişi · 11:52", "₺980", "Teslim", TEXT_GRAY),
-        ]
-        rh = _fit_rh(sh, sy, y, len(orders), s)
-        for name, sub, amt, status, col in orders:
-            draw_card(draw, sx+int(8*s), y, sw-int(16*s), rh-int(10*s))
-            cyr = y + rh//2
-            # sol renkli tip-göstergesi
-            draw.rounded_rectangle([sx+int(16*s), cyr-int(18*s), sx+int(22*s), cyr+int(18*s)], radius=int(3*s), fill=col)
-            draw.text((sx+int(38*s), cyr-int(28*s)), name, font=font_s, fill=TEXT_WHITE)
-            draw.text((sx+int(38*s), cyr+int(4*s)), sub, font=load_font(int(15*s)), fill=TEXT_GRAY)
-            draw.text((sx+sw-int(110*s), cyr-int(28*s)), amt, font=font_s, fill=TEXT_WHITE)
-            draw_pill(draw, sx+sw-int(150*s), cyr+int(4*s), status, load_font(int(14*s)), col, pad_x=10, pad_h=4)
-            y += rh
+        text_center(draw, "👥 Müşteriler", sx, y, sw, t, TEXT_WHITE); y += int(55*s)
+        sectors = [("🍽 Restoran", 3),("☕ Kafe", 2),("✂ Kuaför", 4),("⚖ Hukuk", 1),("🏥 Klinik", 2)]
+        for sector, count in sectors:
+            draw_card(draw, sx+int(8*s), y, sw-int(16*s), int(72*s))
+            draw.text((sx+int(24*s), y+int(18*s)), sector, font=font_mb, fill=TEXT_WHITE)
+            draw.text((sx+sw-int(90*s), y+int(22*s)), f"{count} işletme", font=font_xs, fill=TEXT_GRAY)
+            y += int(80*s)
+        # Toplam
+        draw_card(draw, sx+int(8*s), y, sw-int(16*s), int(60*s), fill=(20,40,70))
+        draw.text((sx+int(24*s), y+int(15*s)), "Toplam: 12 aktif işletme", font=font_s, fill=PANEL_ACCENT)
 
-    elif screen_idx == 2:  # Ürün & Stok
-        t = load_font(int(32*s))
-        text_center(draw, "Ürünler & Stok", sx, y, sw, t, TEXT_WHITE); y += int(55*s)
-        prods = [
-            ("Adana Kebap", "₺180", "Stok 24", GREEN),
-            ("Urfa Kebap", "₺175", "Stok 18", GREEN),
-            ("Lahmacun", "₺55", "Stok 60", GREEN),
-            ("Pide (Kıymalı)", "₺120", "Stok 32", GREEN),
-            ("Künefe", "₺90", "Az kaldı · 4", AMBER),
-            ("Ayran", "₺20", "Stok 120", GREEN),
-            ("Şalgam", "₺25", "Az kaldı · 6", AMBER),
-            ("Mercimek Çorba", "₺45", "Tükendi", RED),
-        ]
-        rh = _fit_rh(sh, sy, y, len(prods), s)
-        for name, price, stock, col in prods:
-            draw_card(draw, sx+int(8*s), y, sw-int(16*s), rh-int(10*s))
-            cyr = y + rh//2
-            # ürün küçük görsel kutusu
-            draw.rounded_rectangle([sx+int(18*s), cyr-int(20*s), sx+int(58*s), cyr+int(20*s)], radius=int(8*s), fill=blend(BG_CARD, PANEL_ACCENT, 0.18))
-            draw.text((sx+int(74*s), cyr-int(26*s)), name, font=font_s, fill=TEXT_WHITE)
-            draw.text((sx+int(74*s), cyr+int(6*s)), price, font=load_font(int(16*s)), fill=PANEL_ACCENT)
-            draw_pill(draw, sx+sw-int(170*s), cyr-int(16*s), stock, load_font(int(15*s)), col, pad_x=12, pad_h=5)
-            y += rh
+    elif screen_idx == 2:  # Sistem
+        t = load_font(int(30*s))
+        text_center(draw, "📊 Sistem İzleme", sx, y, sw, t, TEXT_WHITE); y += int(55*s)
+        # Büyük daire gösterge (CPU)
+        r = int(80*s); cc = (cx, y+r+int(10*s))
+        draw.ellipse([cc[0]-r, cc[1]-r, cc[0]+r, cc[1]+r], fill=BG_CARD, outline=BORDER, width=3)
+        draw.arc([cc[0]-r, cc[1]-r, cc[0]+r, cc[1]+r], start=135, end=135+int(0.23*270), fill=PANEL_ACCENT, width=8)
+        draw.text((cc[0]-int(25*s), cc[1]-int(20*s)), "23%", font=load_font(int(40*s)), fill=TEXT_WHITE)
+        draw.text((cc[0]-int(15*s), cc[1]+int(18*s)), "CPU", font=font_xs, fill=TEXT_GRAY)
+        y += int(200*s)
+        # İstatistik satırları
+        stats = [("Uptime","99.8%","15 gün 4 saat"),("RAM","8.2/14GB","59%"),("Ağ","↑234 MB/s","↓89 MB/s")]
+        for lbl,val,sub in stats:
+            draw_card(draw, sx+int(8*s), y, sw-int(16*s), int(64*s))
+            draw.text((sx+int(20*s), y+int(10*s)), lbl, font=font_xs, fill=TEXT_GRAY)
+            draw.text((sx+int(20*s), y+int(30*s)), val, font=font_m, fill=TEXT_WHITE)
+            draw.text((sx+sw-int(140*s), y+int(26*s)), sub, font=font_xs, fill=TEXT_GRAY)
+            y += int(72*s)
 
-    elif screen_idx == 3:  # Satış Raporu
-        t = load_font(int(32*s))
-        text_center(draw, "Satış Raporu", sx, y, sw, t, TEXT_WHITE); y += int(55*s)
-        # Büyük haftalık bar grafiği
-        draw_card(draw, sx+int(8*s), y, sw-int(16*s), int(300*s))
-        draw.text((sx+int(22*s), y+int(18*s)), "Haftalık Ciro (₺)", font=font_xs, fill=TEXT_GRAY)
-        days = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"]
-        vals = [3.2,3.9,2.8,4.4,6.1,7.2,5.6]; mx = 7.2
-        bw = int((sw-int(80*s)) / 7); base_y = y+int(262*s); max_h = int(195*s)
-        for i,(d_,v) in enumerate(zip(days,vals)):
-            bx = sx+int(34*s)+i*bw
-            bh = int(max_h*(v/mx))
-            draw.rounded_rectangle([bx, base_y-bh, bx+int(bw*0.62), base_y], radius=int(6*s), fill=PANEL_ACCENT if v==mx else (70,110,180))
-            draw.text((bx, base_y+int(8*s)), d_, font=load_font(int(14*s)), fill=TEXT_GRAY)
-        y += int(318*s)
-        # Haftalık toplam
-        draw_card(draw, sx+int(8*s), y, sw-int(16*s), int(64*s), fill=(24,40,66))
-        draw.text((sx+int(20*s), y+int(18*s)), "Bu Hafta Toplam", font=font_s, fill=TEXT_WHITE)
-        draw.text((sx+sw-int(150*s), y+int(14*s)), "₺28.400", font=load_font(int(26*s)), fill=PANEL_ACCENT)
-        y += int(84*s)
-        # Çok satan ürünler — oransal bar (kalan alanı doldurur)
-        draw.text((sx+int(16*s), y), "Çok Satan Ürünler", font=font_s, fill=TEXT_GRAY); y += int(48*s)
-        tops = [("Adana Kebap", 1.0, "142"), ("Lahmacun", 0.78, "111"), ("Pide (Kıymalı)", 0.61, "87"),
-                ("Künefe", 0.54, "77"), ("Ayran", 0.46, "65"), ("Mercimek Çorba", 0.32, "45")]
-        bar_max = sw - int(220*s)
-        rh = _fit_rh(sh, sy, y, len(tops), s, hi=110)
-        for name, frac, cnt in tops:
-            draw_card(draw, sx+int(8*s), y, sw-int(16*s), rh-int(8*s))
-            cyr = y+rh//2
-            draw.text((sx+int(20*s), cyr-int(24*s)), name, font=load_font(int(18*s)), fill=TEXT_WHITE)
-            draw.rounded_rectangle([sx+int(20*s), cyr+int(8*s), sx+int(20*s)+bar_max, cyr+int(16*s)], radius=int(4*s), fill=BORDER)
-            draw.rounded_rectangle([sx+int(20*s), cyr+int(8*s), sx+int(20*s)+int(bar_max*frac), cyr+int(16*s)], radius=int(4*s), fill=PANEL_ACCENT)
-            draw.text((sx+sw-int(90*s), cyr-int(16*s)), cnt+" adet", font=load_font(int(16*s)), fill=TEXT_GRAY)
-            y += rh
-
-    elif screen_idx == 4:  # Müşteri & Sadakat
-        t = load_font(int(32*s))
-        text_center(draw, "Müşteriler", sx, y, sw, t, TEXT_WHITE); y += int(55*s)
-        custs = [
-            ("Ayşe K.", "12 ziyaret", "240 puan", (235,120,140)),
-            ("Mehmet T.", "8 ziyaret", "160 puan", (90,150,235)),
-            ("Zeynep A.", "21 ziyaret", "420 puan", (120,200,150)),
-            ("Can D.", "3 ziyaret", "60 puan", (240,180,80)),
-            ("Elif S.", "15 ziyaret", "300 puan", (180,140,235)),
-            ("Burak Y.", "9 ziyaret", "180 puan", (110,200,210)),
-            ("Deniz A.", "27 ziyaret", "540 puan", (235,160,90)),
-            ("Sema T.", "6 ziyaret", "120 puan", (160,150,235)),
+    elif screen_idx == 3:  # Güvenlik
+        t = load_font(int(30*s))
+        text_center(draw, "🔒 Güvenlik", sx, y, sw, t, TEXT_WHITE); y += int(55*s)
+        items = [
+            ("🛡 CrowdSec", "1.2K+ ban", (80,200,120)),
+            ("🔑 2FA Aktif", "Tüm girişler", (80,200,120)),
+            ("🌐 CF WAF", "87 engelleme/gün", (80,200,120)),
+            ("📋 Audit Log", "Her işlem kayıtlı", PANEL_ACCENT),
+            ("🚨 Son Olay", "3 saat önce", (255,200,50)),
         ]
-        rh = _fit_rh(sh, sy, y, len(custs), s)
-        for name, visits, pts, col in custs:
-            draw_card(draw, sx+int(8*s), y, sw-int(16*s), rh-int(8*s))
-            # Avatar daire (baş harf)
-            r = int(24*s); ccx = sx+int(42*s); ccy = y+rh//2-int(4*s)
-            draw.ellipse([ccx-r, ccy-r, ccx+r, ccy+r], fill=col)
-            text_center(draw, name[0], ccx-r, ccy-int(14*s), 2*r, font_s, TEXT_WHITE)
-            draw.text((sx+int(84*s), y+int(14*s)), name, font=font_s, fill=TEXT_WHITE)
-            draw.text((sx+int(84*s), y+int(43*s)), visits, font=load_font(int(15*s)), fill=TEXT_GRAY)
-            draw_pill(draw, sx+sw-int(130*s), y+rh//2-int(18*s), pts, load_font(int(15*s)), PANEL_ACCENT, pad_x=12, pad_h=5)
-            y += rh
+        for icon_lbl, val, col in items:
+            draw_card(draw, sx+int(8*s), y, sw-int(16*s), int(64*s))
+            draw.text((sx+int(20*s), y+int(18*s)), icon_lbl, font=font_s, fill=TEXT_WHITE)
+            draw.text((sx+sw-int(200*s), y+int(20*s)), val, font=font_xs, fill=col)
+            y += int(72*s)
+
+    elif screen_idx == 4:  # Bildirim
+        t = load_font(int(30*s))
+        text_center(draw, "🔔 Bildirimler", sx, y, sw, t, TEXT_WHITE); y += int(55*s)
+        notifs = [
+            ("✅","payment-service yeniden başlatıldı","12:03","INFO"),
+            ("⚠️","Disk kullanımı %78","11:45","UYARI"),
+            ("🚨","3 başarısız giriş denemesi","09:22","ALERT"),
+            ("✅","SSL sertifikası yenilendi","08:00","INFO"),
+            ("💰","Yeni abonelik: Pro Plan","07:55","SATIŞ"),
+        ]
+        for ico, msg, time_s, tag in notifs:
+            draw_card(draw, sx+int(8*s), y, sw-int(16*s), int(74*s))
+            draw.text((sx+int(16*s), y+int(14*s)), ico + " " + msg[:35], font=font_xs, fill=TEXT_WHITE)
+            col = (80,200,120) if tag=="INFO" else (255,200,50) if tag=="UYARI" else (220,80,80) if tag=="ALERT" else PANEL_ACCENT
+            _, ph = draw_pill(draw, sx+int(16*s), y+int(42*s), tag, font_xs, col, pad_x=8, pad_h=4)
+            draw.text((sx+sw-int(90*s), y+int(20*s)), time_s, font=font_xs, fill=TEXT_GRAY)
+            y += int(82*s)
 
 
 def draw_business_screen(draw, sx, sy, sw, sh, screen_idx, title, subtitle, accent, scale=1.0):
@@ -731,40 +655,15 @@ def draw_rv_screen(draw, sx, sy, sw, sh, screen_idx, accent, scale=1.0, arabic=F
 
 # ─── Ana üretim fonksiyonu ───────────────────────────────────────────────────
 
-def _paste_flux_bg(img, w, h, bg_path):
-    """FLUX premium arka planı koy + okunabilirlik için koyu degrade overlay."""
-    bg = Image.open(bg_path).convert("RGB")
-    # cover-fit (oranı koru, kırp)
-    bw, bh = bg.size
-    scale = max(w / bw, h / bh)
-    nb = bg.resize((int(bw*scale)+1, int(bh*scale)+1), Image.LANCZOS)
-    nx = (nb.width - w)//2; ny = (nb.height - h)//2
-    nb = nb.crop((nx, ny, nx+w, ny+h))
-    img.paste(nb, (0, 0))
-    # Üst ve alt koyu degrade (başlık + alt şerit okunsun) + genel hafif karartma
-    ov = Image.new("RGBA", (w, h), (0,0,0,0))
-    od = ImageDraw.Draw(ov)
-    for yy in range(h):
-        # üstte daha koyu (caption alanı), ortada hafif, altta hafif koyu
-        top = max(0, 1 - yy/(h*0.34))
-        bot = max(0, (yy-(h*0.80))/(h*0.20))
-        a = int(205*top + 70 + 90*bot)
-        od.line([(0, yy), (w, yy)], fill=(4, 7, 16, min(a, 235)))
-    img.paste(Image.alpha_composite(img.convert("RGBA"), ov).convert("RGB"), (0,0))
-
-
-def make_screenshot(w, h, title, subtitle, screen_fn, accent, arabic=False, caption_bottom=True, bg_path=None, tabbar=None):
+def make_screenshot(w, h, title, subtitle, screen_fn, accent, arabic=False, caption_bottom=True):
     img = Image.new("RGB", (w, h))
     draw = ImageDraw.Draw(img)
     draw_bg(img, w, h, accent)
-    if bg_path:
-        _paste_flux_bg(img, w, h, bg_path)
-        draw = ImageDraw.Draw(img)
 
     s = w / 1290.0  # ölçek faktörü
 
-    # Caption - üst bölge (kompakt — telefon kahraman olsun)
-    cap_h = int(300 * s)
+    # Caption - üst bölge
+    cap_h = int(360 * s)
     font_title = load_font(int(76*s), arabic=arabic)
     font_sub   = load_font(int(36*s), bold=False, arabic=arabic)
 
@@ -785,16 +684,11 @@ def make_screenshot(w, h, title, subtitle, screen_fn, accent, arabic=False, capt
         text_center(draw, sl, 0, ty, w, font_sub, TEXT_GRAY)
         ty += int(48*s)
 
-    # Telefon çerçevesi — GERÇEK iPhone oranı (~2.16:1), kanvası dolduran büyük mockup
-    fy = max(cap_h + int(16*s), ty + int(26*s))
-    bottom_margin = int(40*s)
-    fh = h - fy - bottom_margin
-    fw = int(fh / 2.16)
-    # genişlik kanvasa sığmazsa genişliğe göre küçült
-    max_fw = int(w * 0.82)
-    if fw > max_fw:
-        fw = max_fw; fh = int(fw * 2.16); fy = max(fy, h - bottom_margin - fh)
+    # Telefon çerçevesi
+    fw = int(w * 0.72)
+    fh = int(h * 0.58)
     fx = (w - fw) // 2
+    fy = cap_h + int(20*s)
 
     # Basit iPhone frame
     fr = int(fw * 0.09)
@@ -819,65 +713,15 @@ def make_screenshot(w, h, title, subtitle, screen_fn, accent, arabic=False, capt
     ni_x = sx_s + (sw_s - ni_w) // 2; ni_y = sy_s + int(18*s)
     draw.rounded_rectangle([ni_x, ni_y, ni_x+ni_w, ni_y+ni_h], radius=int(13*s), fill=(8, 12, 22))
 
-    # Durum çubuğu (saat + çizilmiş sinyal/wifi/batarya — unicode tofu yok)
+    # Durum çubuğu
     st_font = load_font(int(20*s))
     st_y = ni_y + ni_h + int(10*s)
     draw.text((sx_s + int(20*s), st_y), "9:41", font=st_font, fill=TEXT_LIGHT)
-    icx = sx_s + sw_s - int(96*s); icy = st_y + int(14*s)
-    # Hücresel sinyal (4 artan bar)
-    for bi in range(4):
-        bh = int((5 + bi*4)*s); bx = icx + bi*int(8*s)
-        draw.rounded_rectangle([bx, icy-bh, bx+int(5*s), icy], radius=int(1*s), fill=TEXT_LIGHT)
-    # Wifi (3 yay yaklaşık — noktalar)
-    wx = icx + int(40*s)
-    draw.pieslice([wx, icy-int(14*s), wx+int(22*s), icy+int(8*s)], 210, 330, fill=TEXT_LIGHT)
-    draw.pieslice([wx+int(6*s), icy-int(8*s), wx+int(16*s), icy+int(8*s)], 210, 330, fill=(8,12,22))
-    draw.ellipse([wx+int(9*s), icy-int(2*s), wx+int(13*s), icy+int(2*s)], fill=TEXT_LIGHT)
-    # Batarya
-    btx = icx + int(70*s)
-    draw.rounded_rectangle([btx, icy-int(11*s), btx+int(22*s), icy+int(1*s)], radius=int(3*s), outline=TEXT_LIGHT, width=int(2*s))
-    draw.rectangle([btx+int(2*s), icy-int(9*s), btx+int(17*s), icy-int(1*s)], fill=TEXT_LIGHT)
-    draw.rounded_rectangle([btx+int(23*s), icy-int(7*s), btx+int(26*s), icy-int(3*s)], radius=int(1*s), fill=TEXT_LIGHT)
+    draw.text((sx_s + sw_s - int(80*s), st_y), "●●◌", font=st_font, fill=TEXT_LIGHT)
 
-    # Alt sekme çubuğu yüksekliği (içerik buranın üstünde kalsın)
-    tab_h = int(108*s) if tabbar else 0
-
-    # Ekran içeriği (tab bar varsa alanı kısalt)
+    # Ekran içeriği
     content_y = st_y + int(35*s)
-    screen_fn(draw, sx_s, content_y, sw_s, sh_s - tab_h, s)
-
-    # Alt sekme çubuğu (gerçek app hissi + boş alanı doldurur)
-    if tabbar:
-        labels, active = tabbar
-        tb_top = sy_s + sh_s - tab_h
-        draw.rectangle([sx_s, tb_top, sx_s+sw_s, sy_s+sh_s], fill=(14, 21, 36))
-        draw.line([(sx_s, tb_top), (sx_s+sw_s, tb_top)], fill=BORDER, width=int(1*s))
-        n = len(labels); tw = sw_s / n
-        tf = load_font(int(17*s))
-        for i, lab in enumerate(labels):
-            col = accent if i == active else (110, 126, 156)
-            cx_i = int(sx_s + tw*i + tw/2); iy = tb_top + int(30*s)
-            r = int(15*s)
-            if i == 0:    # Özet — grid
-                for dx in (-1,1):
-                    for dy in (-1,1):
-                        draw.rounded_rectangle([cx_i+dx*int(11*s)-int(7*s), iy+dy*int(11*s)-int(7*s),
-                                                cx_i+dx*int(11*s)+int(7*s), iy+dy*int(11*s)+int(7*s)], radius=int(2*s), fill=col)
-            elif i == 1:  # Sipariş — fiş
-                draw.rounded_rectangle([cx_i-int(11*s), iy-int(14*s), cx_i+int(11*s), iy+int(14*s)], radius=int(3*s), outline=col, width=int(2*s))
-                for ly in (-6,0,6):
-                    draw.line([(cx_i-int(6*s), iy+int(ly*s)), (cx_i+int(6*s), iy+int(ly*s))], fill=col, width=int(2*s))
-            elif i == 2:  # Ürün — kutu
-                draw.rounded_rectangle([cx_i-int(13*s), iy-int(11*s), cx_i+int(13*s), iy+int(13*s)], radius=int(3*s), outline=col, width=int(2*s))
-                draw.line([(cx_i-int(13*s), iy-int(2*s)), (cx_i+int(13*s), iy-int(2*s))], fill=col, width=int(2*s))
-            elif i == 3:  # Rapor — bar grafik
-                for bi,bh in enumerate((8,15,11)):
-                    bx = cx_i-int(12*s)+bi*int(9*s)
-                    draw.rounded_rectangle([bx, iy+int(13*s)-int(bh*s), bx+int(6*s), iy+int(13*s)], radius=int(1*s), fill=col)
-            else:         # Müşteri — kişi
-                draw.ellipse([cx_i-int(7*s), iy-int(14*s), cx_i+int(7*s), iy], fill=col)
-                draw.pieslice([cx_i-int(13*s), iy+int(2*s), cx_i+int(13*s), iy+int(28*s)], 180, 360, fill=col)
-            text_center(draw, lab, int(sx_s+tw*i), tb_top+int(58*s), int(tw), tf, col)
+    screen_fn(draw, sx_s, content_y, sw_s, sh_s, s)
 
     # Home indicator (alt çizgi)
     hi_w = int(sw_s * 0.35)
@@ -904,9 +748,6 @@ def generate_all(app_name, out_dir):
     out_dir = Path(out_dir)
 
     if app_name in ("panel", "all"):
-        # FLUX premium arka planları (varsa) — ekran başına döndür
-        flux_dir = Path("/tmp/flux_bg")
-        flux_bgs = sorted(str(p) for p in flux_dir.glob("bg_*.png")) if flux_dir.exists() else []
         for size_label, (w, h) in SIZES.items():
             if size_label not in PRIMARY_SIZES: continue
             for lang in ("tr", "en"):
@@ -916,15 +757,12 @@ def generate_all(app_name, out_dir):
                 for idx, (fname, title_tr, title_en, sub_tr, sub_en) in enumerate(PANEL_SCREENS):
                     title = title_tr if lang == "tr" else title_en
                     subtitle = sub_tr if lang == "tr" else sub_en
-                    bg = flux_bgs[idx % len(flux_bgs)] if flux_bgs else None
-                    tabs = (["Özet","Sipariş","Ürün","Rapor","Müşteri"] if lang=="tr"
-                            else ["Summary","Orders","Items","Reports","Guests"])
                     def content_fn(draw, sx, sy, sw, sh, s, _idx=idx):
                         draw_panel_screen(draw, sx, sy, sw, sh, _idx, PANEL_ACCENT, s)
-                    img = make_screenshot(w, h, title, subtitle, content_fn, PANEL_ACCENT, bg_path=bg, tabbar=(tabs, idx))
+                    img = make_screenshot(w, h, title, subtitle, content_fn, PANEL_ACCENT)
                     out = d / f"{fname}.png"
                     img.save(str(out), "PNG", optimize=True)
-                    print(f"  panel/{lang_asc}/{size_label}/{fname}.png" + (" [flux]" if bg else ""))
+                    print(f"  panel/{lang_asc}/{size_label}/{fname}.png")
 
     if app_name in ("business", "all"):
         langs_b = list(BUSINESS_SCREENS.keys())

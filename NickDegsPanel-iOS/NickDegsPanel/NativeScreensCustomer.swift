@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 import CoreImage
 import CoreImage.CIFilterBuiltins
 import Charts
@@ -1235,6 +1236,7 @@ struct DashRaporView: View {
     @State private var top: [[String: Any]] = []
     @State private var ayGelir = 0
     @State private var ayAdet = 0
+    @State private var paylasImg: UIImage?
     private var api: PanelAPI { PanelAPI(host: host, token: bizToken) }
 
     var body: some View {
@@ -1248,6 +1250,12 @@ struct DashRaporView: View {
                 HStack(spacing: 12) {
                     kpi("Bu Ay Ciro", "\(ayGelir)₺", "calendar", .purple)
                     kpi("Bu Ay İşlem", "\(ayAdet)", "chart.line.uptrend.xyaxis", .blue)
+                }
+                Button { paylasImg = gorselUret() } label: {
+                    Label("Raporu Paylaş", systemImage: "square.and.arrow.up")
+                        .font(.subheadline.bold()).foregroundStyle(tema.c1)
+                        .frame(maxWidth: .infinity).padding(.vertical, 11)
+                        .glassEffect(.regular, in: .rect(cornerRadius: 14))
                 }
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Son 7 Gün Ciro").font(.subheadline.bold()).foregroundStyle(.rvText)
@@ -1282,6 +1290,9 @@ struct DashRaporView: View {
                 }
             }.padding(16)
         }
+        .sheet(isPresented: Binding(get: { paylasImg != nil }, set: { if !$0 { paylasImg = nil } })) {
+            if let img = paylasImg { ShareSheet(items: [img]) }
+        }
         .task { await yukle() }
     }
 
@@ -1291,6 +1302,42 @@ struct DashRaporView: View {
             Text(v).font(.headline.bold()).foregroundStyle(.rvText)
             Text(t).font(.caption2).foregroundStyle(.rvMut)
         }.frame(maxWidth: .infinity).padding(.vertical, 12).glassEffect(.regular, in: .rect(cornerRadius: 14))
+    }
+
+    @MainActor func gorselUret() -> UIImage? {
+        let bugun: String = { let f = DateFormatter(); f.dateFormat = "d MMM yyyy"; f.locale = Locale(identifier: "tr_TR"); return f.string(from: Date()) }()
+        let kart = VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Text("İşletme Raporu").font(.title3.bold()).foregroundStyle(.white)
+                Spacer()
+                Text(bugun).font(.caption).foregroundStyle(.white.opacity(0.7))
+            }
+            HStack(spacing: 10) {
+                kpi("Bugün Ciro", "\(gelir)₺", "turkishlirasign.circle.fill", .green)
+                kpi("Bugün", "\(adet)", "bag.fill", tema.c1)
+                kpi("Bu Ay", "\(ayGelir)₺", "calendar", .purple)
+            }
+            if !gunluk.isEmpty {
+                Text("Son 7 Gün Ciro").font(.subheadline.bold()).foregroundStyle(.white)
+                Chart {
+                    ForEach(Array(gunluk.enumerated()), id: \.offset) { _, g in
+                        BarMark(x: .value("Gün", String((g["gun"] as? String ?? "").suffix(5))),
+                                y: .value("Ciro", g["gelir"] as? Int ?? 0))
+                        .foregroundStyle(tema.c1)
+                    }
+                }.frame(height: 150)
+            }
+            HStack(spacing: 6) {
+                Image(systemName: "shield.fill").font(.caption2)
+                Text("NickDegs ile yönetiliyor").font(.caption2)
+            }.foregroundStyle(.white.opacity(0.55))
+        }
+        .padding(22).frame(width: 380, alignment: .leading)
+        .background(Color.rvBg)
+        .environment(\.colorScheme, .dark)
+        let r = ImageRenderer(content: kart)
+        r.scale = 3
+        return r.uiImage
     }
 
     func yukle() async {

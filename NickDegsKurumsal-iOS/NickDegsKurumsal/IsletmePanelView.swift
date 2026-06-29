@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 import PhotosUI
 import Charts
 import CoreImage.CIFilterBuiltins
@@ -496,8 +497,10 @@ struct RaporKart: View {
     @State private var top: [[String: Any]] = []
     @State private var ayGelir = 0
     @State private var ayAdet = 0
+    @State private var brand = ""
+    @State private var paylasImg: PaylasGorsel?
 
-    var body: some View {
+    var icerik: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Image(systemName: "calendar").foregroundStyle(tema.c2)
@@ -530,14 +533,62 @@ struct RaporKart: View {
                 }
             }
         }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            icerik
+            Button { paylasImg = gorselUret() } label: {
+                Label("Raporu Paylaş", systemImage: "square.and.arrow.up")
+                    .font(.caption.bold()).foregroundStyle(tema.c1)
+                    .frame(maxWidth: .infinity).padding(.vertical, 9)
+                    .background(tema.c1.opacity(0.12), in: .rect(cornerRadius: 10))
+            }.padding(.top, 4)
+        }
         .padding(14).frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.rvCard, in: .rect(cornerRadius: 16))
+        .sheet(item: $paylasImg) { p in PaylasSheet(image: p.img) }
         .task {
             let j = await api.getObj("stats-range")
             gunluk = j["gunluk"] as? [[String: Any]] ?? []
             top = j["top"] as? [[String: Any]] ?? []
             ayGelir = j["ay_gelir"] as? Int ?? 0
             ayAdet = j["ay_adet"] as? Int ?? 0
+            let info = await api.getObj("info")
+            brand = info["brand"] as? String ?? ""
         }
     }
+
+    @MainActor func gorselUret() -> PaylasGorsel? {
+        let bugun: String = { let f = DateFormatter(); f.dateFormat = "d MMM yyyy"; f.locale = Locale(identifier: "tr_TR"); return f.string(from: Date()) }()
+        let kart = VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text(brand.isEmpty ? "İşletmem" : brand).font(.title3.bold()).foregroundStyle(.white)
+                Spacer()
+                Text(bugun).font(.caption).foregroundStyle(.white.opacity(0.7))
+            }
+            icerik
+            HStack(spacing: 6) {
+                Image(systemName: "shield.fill").font(.caption2)
+                Text("NickDegs ile yönetiliyor").font(.caption2)
+            }.foregroundStyle(.white.opacity(0.55))
+        }
+        .padding(22).frame(width: 380, alignment: .leading)
+        .background(Color.rvBg)
+        .environment(\.colorScheme, .dark)
+        let r = ImageRenderer(content: kart)
+        r.scale = 3
+        guard let img = r.uiImage else { return nil }
+        return PaylasGorsel(img: img)
+    }
+}
+
+struct PaylasGorsel: Identifiable { let id = UUID(); let img: UIImage }
+
+struct PaylasSheet: UIViewControllerRepresentable {
+    let image: UIImage
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: [image], applicationActivities: nil)
+    }
+    func updateUIViewController(_ vc: UIActivityViewController, context: Context) {}
 }

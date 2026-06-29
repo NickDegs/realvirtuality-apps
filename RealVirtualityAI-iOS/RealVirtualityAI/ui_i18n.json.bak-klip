@@ -1,0 +1,587 @@
+{
+ "heroBaslik1": {
+  "tr": "Yapay zekânın tüm gücü",
+  "en": "The Power of AI",
+  "de": "Die ganze Kraft der künstlichen Intelligenz",
+  "fr": "Tout le pouvoir de l'intelligence artificielle",
+  "es": "Todo el poder de la inteligencia artificial",
+  "ar": "قوة الذكاء الاصطناعي الكاملة",
+  "ru": "Вся сила искусственного интеллекта"
+ },
+ "heroBaslik2": {
+  "tr": "tek uygulamada",
+  "en": "in one app",
+  "de": "in einer App",
+  "fr": "dans une seule application",
+  "es": "en una sola aplicación",
+  "ar": "في تطبيق واحد",
+  "ru": "в одном приложении"
+ },
+ "heroAlt": {
+  "tr": "Görsel, içerik, ses, kod ve daha fazlası — içerik üreticileri için tek yerde.",
+  "en": "Visual, content, audio, code, and more — all in one place for content creators.",
+  "de": "Bild, Inhalt, Ton, Code und mehr — alles an einem Ort für Content-Ersteller.",
+  "fr": "Visuel, contenu, son, code et plus — tout en un seul endroit pour les créateurs de contenu.",
+  "es": "Imágenes, contenido, audio, código y más — todo en un solo lugar para productores de contenido.",
+  "ar": "المرئية والمحتوى والصوت والكود والمزيد — جميعها في مكان واحد لمصنعي المحتوى.",
+  "ru": "Графика, контент, звук, код и многое другое — всё для создателей контента в одном месте."
+ },
+ "aramaIpucu": {
+  "tr": "Araç ara…",
+  "en": "Search for tools…",
+  "de": "Suche nach einem Tool…",
+  "fr": "Rechercher un outil…",
+  "es": "Buscar herramienta…",
+  "ar": "ابحث عن أداة…",
+  "ru": "Поиск инструментов…"
+ },
+ "kat_gorsel": {
+  "tr": "Görsel & Tasarım",
+  "en": "Visual & Design",
+  "de": "Bild & Design",
+  "fr": "Visuel & Design",
+  "es": "Imágenes & Diseño",
+  "ar": "المرئية والتصميم",
+  "ru": "Графика & Дизайн"
+ },
+ "kat_icerik": {
+  "tr": "İçerik & Yazı",
+  "en": "Content & Writing",
+  "de": "Inhalt & Text",
+  "fr": "Contenu & Écriture",
+  "es": "Contenido & Escritura",
+  "ar": "المحتوى والكتابة",
+  "ru": "Контент & Текст"
+ },
+ "kat_sesvideo": {
+  "tr": "Ses & Video",
+  "en": "Audio & Video",
+  "de": "Ton & Video",
+  "fr": "Son & Vidéo",
+  "es": "Audio & Video",
+  "ar": "الصوت والفيديو",
+  "ru": "Звук & Видео"
+ },
+ "kat_analiz": {
+  "tr": "Görsel Zekâ & Belge",
+  "en": "Visual Intelligence & Document",
+  "de": "Bildintelligenz & Dokument",
+  "fr": "Intelligence visuelle & Document",
+  "es": "Inteligencia Visual & Documentos",
+  "ar": "الذكاء المرئي والوثائق",
+  "ru": "Графический интеллект & Документ"
+ },
+ "hemenKullan": {
+  "tr": "Hemen Kullan",
+  "en": "Use Now",
+  "de": "Jetzt nutzen",
+  "fr": "Utiliser maintenant",
+  "es": "Usar ahora",
+  "ar": "استخدم الآن",
+  "ru": "Начать использовать"
+ },
+ "uret": {
+  "tr": "Üret",
+  "en": "Create",
+  "de": "Erstellen",
+  "fr": "Créer",
+  "es": "Crear",
+  "ar": "أنشئ",
+  "ru": "Создать"
+ },
+ "uretiliyor": {
+  "tr": "Üretiliyor…",
+  "en": "Creating…",
+  "de": "Wird erstellt…",
+  "fr": "En cours de création…",
+  "es": "Creando…",
+  "ar": "جاري الإنشاء…",
+  "ru": "Идёт создание…"
+ },
+ "ozellikler": {
+  "tr": "Özellikler",
+  "en": "Features",
+  "de": "Funktionen",
+  "fr": "Fonctionnalités",
+  "es": "Características",
+  "ar": "الميزات",
+  "ru": "Функции"
+ },
+ "kullanimAlanlari": {
+  "tr": "Kullanım Alanları",
+  "en": "Use Cases",
+  "de": "Anwendungsbereiche",
+  "fr": "Domaines d'utilisation",
+  "es": "Áreas de uso",
+  "ar": "مناطق الاستخدام",
+  "ru": "Области применения"
+ },
+ "gorunumTema": {
+  "tr": "Görünüm & Tema",
+  "en": "Appearance & Theme",
+  "de": "Aussehen & Thema",
+  "fr": "Apparence & Thème",
+  "es": "Apariencia & Tema",
+  "ar": "المظهر والسمة",
+  "ru": "Внешний вид & Тема"
+ },
+ "gorunum": {
+  "tr": "Görünüm",
+  "en": "Appearance",
+  "de": "Aussehen",
+  "fr": "Apparence",
+  "es": "Apariencia",
+  "ar": "المظهر",
+  "ru": "Внешний вид"
+ },
+ "renkTema": {
+  "tr": "Renk Teması",
+  "en": "Color Theme",
+  "de": "Farbthema",
+  "fr": "Thème de couleur",
+  "es": "Tema de color",
+  "ar": "سمة اللون",
+  "ru": "Цветовая тема"
+ },
+ "platformTema": {
+  "tr": "Platform Teması",
+  "en": "Platform Theme",
+  "de": "Plattformthema",
+  "fr": "Thème de plateforme",
+  "es": "Tema de plataforma",
+  "ar": "سمة المنصة",
+  "ru": "Тема платформы"
+ },
+ "platformTemaAlt": {
+  "tr": "İçerik ürettiğin platformun rengini seç",
+  "en": "Select the color of the platform you create content on",
+  "de": "Wähle die Farbe der Plattform, auf der du Inhalte erstellst",
+  "fr": "Sélectionnez la couleur de la plateforme sur laquelle vous créez du contenu",
+  "es": "Selecciona el color de la plataforma en la que creas contenido",
+  "ar": "اختر لون المنصة التي أنتجت فيها المحتوى",
+  "ru": "Выберите цвет платформы, на которой вы создаёте контент"
+ },
+ "sistem": {
+  "tr": "Sistem",
+  "en": "System",
+  "de": "System",
+  "fr": "Système",
+  "es": "Sistema",
+  "ar": "النظام",
+  "ru": "Система"
+ },
+ "koyu": {
+  "tr": "Koyu",
+  "en": "Dark",
+  "de": "Dunkel",
+  "fr": "Sombre",
+  "es": "Oscuro",
+  "ar": "داكن",
+  "ru": "Тёмный"
+ },
+ "acik": {
+  "tr": "Açık",
+  "en": "Light",
+  "de": "Hell",
+  "fr": "Clair",
+  "es": "Claro",
+  "ar": "فاتح",
+  "ru": "Светлый"
+ },
+ "dil": {
+  "tr": "Dil",
+  "en": "Language",
+  "de": "Sprache",
+  "fr": "Langue",
+  "es": "Idioma",
+  "ar": "اللغة",
+  "ru": "Язык"
+ },
+ "dilAlt": {
+  "tr": "Uygulama dilini seç",
+  "en": "Select the app language",
+  "de": "Wähle die App-Sprache",
+  "fr": "Sélectionnez la langue de l'application",
+  "es": "Selecciona el idioma de la aplicación",
+  "ar": "اختر لغة التطبيق",
+  "ru": "Выберите язык приложения"
+ },
+ "dilSistem": {
+  "tr": "Cihaz dili",
+  "en": "System Language",
+  "de": "Gerätesprache",
+  "fr": "Langue du dispositif",
+  "es": "Idioma del dispositivo",
+  "ar": "لغة الجهاز",
+  "ru": "Язык устройства"
+ },
+ "girisYap": {
+  "tr": "Giriş yap",
+  "en": "Log In",
+  "de": "Anmelden",
+  "fr": "Se connecter",
+  "es": "Iniciar sesión",
+  "ar": "سجل الدخول",
+  "ru": "Войти"
+ },
+ "hesabim": {
+  "tr": "Hesabım",
+  "en": "My Account",
+  "de": "Mein Konto",
+  "fr": "Mon compte",
+  "es": "Mi cuenta",
+  "ar": "حسابي",
+  "ru": "Мой аккаунт"
+ },
+ "krediAl": {
+  "tr": "Kredi Al",
+  "en": "Buy Credits",
+  "de": "Guthaben kaufen",
+  "fr": "Acheter des crédits",
+  "es": "Comprar créditos",
+  "ar": "اشتر رصيد",
+  "ru": "Купить кредит"
+ },
+ "bitti": {
+  "tr": "Bitti",
+  "en": "Done",
+  "de": "Fertig",
+  "fr": "Terminé",
+  "es": "Listo",
+  "ar": "انتهى",
+  "ru": "Готово"
+ },
+ "paylasKaydet": {
+  "tr": "Paylaş / Kaydet",
+  "en": "Share / Save",
+  "de": "Teilen / Speichern",
+  "fr": "Partager / Enregistrer",
+  "es": "Compartir / Guardar",
+  "ar": "شارك / احفظ",
+  "ru": "Поделиться / Сохранить"
+ },
+ "kopyalaPaylas": {
+  "tr": "Kopyala / Paylaş",
+  "en": "Copy / Share",
+  "de": "Kopieren / Teilen",
+  "fr": "Copier / Partager",
+  "es": "Copiar / Compartir",
+  "ar": "انسخ / شارك",
+  "ru": "Скопировать / Поделиться"
+ },
+ "sesiOynat": {
+  "tr": "Sesi Oynat",
+  "en": "Play Audio",
+  "de": "Ton abspielen",
+  "fr": "Lire le son",
+  "es": "Reproducir audio",
+  "ar": "تشغيل الصوت",
+  "ru": "Воспроизвести звук"
+ },
+ "gorselSec": {
+  "tr": "Görsel seç",
+  "en": "Select Image",
+  "de": "Bild auswählen",
+  "fr": "Sélectionner une image",
+  "es": "Seleccionar imagen",
+  "ar": "اختر صورة",
+  "ru": "Выбрать графику"
+ },
+ "gorselSecAlt": {
+  "tr": "Galeriden bir görsel yükle",
+  "en": "Upload an image from your gallery",
+  "de": "Lade ein Bild aus der Galerie hoch",
+  "fr": "Télécharger une image depuis la galerie",
+  "es": "Cargar una imagen desde la galería",
+  "ar": "تحميل صورة من معرض الصور",
+  "ru": "Загрузить графику из галереи"
+ },
+ "hedefDil": {
+  "tr": "Hedef dil",
+  "en": "Target Language",
+  "de": "Zielsprache",
+  "fr": "Langue cible",
+  "es": "Idioma de destino",
+  "ar": "اللغة المستهدفة",
+  "ru": "Целевой язык"
+ },
+ "sahne": {
+  "tr": "Sahne",
+  "en": "Scene",
+  "de": "Szene",
+  "fr": "Scène",
+  "es": "Escenario",
+  "ar": "المشهد",
+  "ru": "Сцена"
+ },
+ "platform": {
+  "tr": "Platform",
+  "en": "Platform",
+  "de": "Plattform",
+  "fr": "Plateforme",
+  "es": "Plataforma",
+  "ar": "المنصة",
+  "ru": "Платформа"
+ },
+ "kotaBitti": {
+  "tr": "Ücretsiz hakkın bitti",
+  "en": "Your free limit is up",
+  "de": "Dein kostenloses Kontingent ist aufgebraucht",
+  "fr": "Votre droit gratuit est épuisé",
+  "es": "Se agotó tu derecho gratuito",
+  "ar": "انتهت حقيبة الحساب المجانية",
+  "ru": "Бесплатный лимит исчерпан"
+ },
+ "kotaAlt": {
+  "tr": "Devam etmek için kredi al — saniyede yüklenir.",
+  "en": "Buy credits to continue — loads in seconds.",
+  "de": "Kaufen Sie Guthaben, um fortzufahren — lädt sich in Sekundenschnelle.",
+  "fr": "Achetez des crédits pour continuer — chargement instantané.",
+  "es": "Comprar créditos para continuar — se carga en segundos.",
+  "ar": "اشتر رصيد لمواصلة الاستخدام — يتم التحميل في ثوان.",
+  "ru": "Купите кредит, чтобы продолжить — загружается за секунды."
+ },
+ "populer": {
+  "tr": "POPÜLER",
+  "en": "POPULAR",
+  "de": "BELIEBT",
+  "fr": "POPULAIRE",
+  "es": "POPULAR",
+  "ar": "الشائع",
+  "ru": "ПОПУЛЯРНО"
+ },
+ "nickdegsUrunu": {
+  "tr": "Bir NickDegs ürünü",
+  "en": "A NickDegs product",
+  "de": "Ein NickDegs-Produkt",
+  "fr": "Un produit NickDegs",
+  "es": "Un producto de NickDegs",
+  "ar": "منتج NickDegs",
+  "ru": "Продукт NickDegs"
+ },
+ "ucretsiz": {
+  "tr": "ücretsiz",
+  "en": "free",
+  "de": "kostenlos",
+  "fr": "gratuit",
+  "es": "gratuito",
+  "ar": "مجانًا",
+  "ru": "бесплатно"
+ },
+ "girisBaslik": {
+  "tr": "Giriş Yap",
+  "en": "Log In",
+  "de": "Anmelden",
+  "fr": "Se connecter",
+  "es": "Iniciar sesión",
+  "ar": "سجل الدخول",
+  "ru": "Войти"
+ },
+ "girisAlt": {
+  "tr": "E-postanı gir, sana giriş kodu gönderelim.",
+  "en": "Enter your email, and we'll send you a login code.",
+  "de": "Gib deine E-Mail-Adresse ein, wir senden dir einen Anmeldecode.",
+  "fr": "Entrez votre adresse e-mail, nous vous enverrons un code de connexion.",
+  "es": "Ingresa tu correo electrónico y te enviaremos un código de inicio de sesión.",
+  "ar": "أدخل بريدك الإلكتروني وسنرسل لك رمز الدخول.",
+  "ru": "Введите свой адрес электронной почты, и мы отправим вам код для входа."
+ },
+ "epostaIpucu": {
+  "tr": "E-posta adresin",
+  "en": "Your email address",
+  "de": "Deine E-Mail-Adresse",
+  "fr": "Adresse e-mail",
+  "es": "Dirección de correo electrónico",
+  "ar": "عنوان البريد الإلكتروني",
+  "ru": "Адрес электронной почты"
+ },
+ "kodGonder": {
+  "tr": "Kod Gönder",
+  "en": "Send Code",
+  "de": "Code senden",
+  "fr": "Envoyer le code",
+  "es": "Enviar código",
+  "ar": "أرسل الرمز",
+  "ru": "Отправить код"
+ },
+ "kodIpucu": {
+  "tr": "6 haneli kod",
+  "en": "6-digit code",
+  "de": "6-stelliger Code",
+  "fr": "Code à 6 chiffres",
+  "es": "Código de 6 dígitos",
+  "ar": "رمز مكون من 6 أرقام",
+  "ru": "6-значный код"
+ },
+ "dogrula": {
+  "tr": "Doğrula",
+  "en": "Verify",
+  "de": "Überprüfen",
+  "fr": "Valider",
+  "es": "Verificar",
+  "ar": "تحقق",
+  "ru": "Подтвердить"
+ },
+ "appleIle": {
+  "tr": "Apple ile Giriş Yap",
+  "en": "Log In with Apple",
+  "de": "Mit Apple anmelden",
+  "fr": "Se connecter avec Apple",
+  "es": "Iniciar sesión con Apple",
+  "ar": "سجل الدخول بواسطة Apple",
+  "ru": "Войти через Apple"
+ },
+ "cikisYap": {
+  "tr": "Çıkış Yap",
+  "en": "Log Out",
+  "de": "Abmelden",
+  "fr": "Se déconnecter",
+  "es": "Cerrar sesión",
+  "ar": "خروج",
+  "ru": "Выйти"
+ },
+ "krediBaslik": {
+  "tr": "Kredi Al",
+  "en": "Buy Credits",
+  "de": "Guthaben kaufen",
+  "fr": "Acheter des crédits",
+  "es": "Comprar créditos",
+  "ar": "اشتر رصيد",
+  "ru": "Купить кредит"
+ },
+ "krediNotu": {
+  "tr": "Ödeme App Store üzerinden güvenli. Krediler hesabına anında yüklenir.",
+  "en": "Payment is secure through the App Store. Credits are loaded instantly into your account.",
+  "de": "Sichere Zahlung über den App Store. Guthaben wird sofort auf das Konto geladen.",
+  "fr": "Paiement sécurisé via l'App Store. Les crédits sont chargés instantanément sur votre compte.",
+  "es": "El pago es seguro a través de la App Store. Los créditos se cargan en tu cuenta de inmediato.",
+  "ar": "الدفع عبر متجر التطبيقات بأمان. يتم تحميل الرصيد على الفور إلى حسابك.",
+  "ru": "Оплата производится через App Store безопасно. Кредиты мгновенно зачисляются на счёт."
+ },
+ "krediVar": {
+  "tr": "kredin var",
+  "en": "credits you have",
+  "de": "Guthaben verfügbar",
+  "fr": "crédits disponibles",
+  "es": "créditos disponibles",
+  "ar": "رصيدك",
+  "ru": "у вас есть кредит"
+ },
+ "uretilemedi": {
+  "tr": "Üretilemedi",
+  "en": "Failed to Create",
+  "de": "Konnte nicht erstellt werden",
+  "fr": "Impossible de créer",
+  "es": "No se pudo crear",
+  "ar": "لم يتم الإنشاء",
+  "ru": "Не удалось создать"
+ },
+ "hata": {
+  "tr": "Bir hata oluştu",
+  "en": "An error occurred",
+  "de": "Ein Fehler ist aufgetreten",
+  "fr": "Une erreur est survenue",
+  "es": "Ocurrió un error",
+  "ar": "حصل خطأ",
+  "ru": "Произошла ошибка"
+ },
+ "ip_prompt": {
+  "tr": "Ne üretmek istersin? (örn: minimal kahve logosu)",
+  "en": "What do you want to create? (e.g., minimal coffee logo)",
+  "de": "Was möchtest du erstellen? (z.B. Minimal-Logo für Kaffee)",
+  "fr": "Que voulez-vous créer ? (par exemple, un logo de café minimaliste)",
+  "es": "¿Qué deseas crear? (por ejemplo, un logotipo de café minimalista)",
+  "ar": "ماذا تريد إنشائه؟ (مثال: شعار قهوة معماري)",
+  "ru": "Что вы хотите создать? (например, минимальный логотип кофе)"
+ },
+ "ip_ceviri": {
+  "tr": "Çevrilecek metni yaz",
+  "en": "Enter the text to translate",
+  "de": "Gib den Text ein, der übersetzt werden soll",
+  "fr": "Entrez le texte à traduire",
+  "es": "Escribe el texto a traducir",
+  "ar": "اكتب النص الذي تريد ترجمته",
+  "ru": "Введите текст для перевода"
+ },
+ "ip_gorselArti": {
+  "tr": "Ne yapmak istersin? (örn: suluboya stiline çevir)",
+  "en": "What do you want to do? (e.g., convert to watercolor style)",
+  "de": "Was möchtest du tun? (z.B. in Aquarell-Stil umwandeln)",
+  "fr": "Que voulez-vous faire ? (par exemple, convertir en style aquarelle)",
+  "es": "¿Qué deseas hacer? (por ejemplo, convertir a estilo de acuarela)",
+  "ar": "ماذا تريد القيام به؟ (مثال: تحويل إلى نمط مائي)",
+  "ru": "Что вы хотите сделать? (например, перевести в акварельный стиль)"
+ },
+ "ip_icerik": {
+  "tr": "İşletme/konu (örn: el yapımı doğal sabun satan butik)",
+  "en": "Business/subject (e.g., handmade natural soap boutique)",
+  "de": "Unternehmen/Thema (z.B. Boutique für handgemachte natürliche Seifen)",
+  "fr": "Entreprise/sujet (par exemple, boutique en ligne de savon naturel artisanal)",
+  "es": "Negocio/tema (por ejemplo, una tienda de jabones naturales hechos a mano)",
+  "ar": "العمل/الموضوع (مثال: متجر صغير لبيع الصابون الطبيعي المصنوع يدويا)",
+  "ru": "Бизнес/тема (например, бутик, продающий ручные натуральные мыла)"
+ },
+ "ip_url": {
+  "tr": "https://… (ses/video bağlantısı)",
+  "en": "https://… (audio/video link)",
+  "de": "https://… (Ton/Video-Link)",
+  "fr": "https://… (lien de son/vidéo)",
+  "es": "https://… (enlace de audio o video)",
+  "ar": "https://… (رابط الصوت/الفيديو)",
+  "ru": "https://… (ссылка на звук/видео)"
+ },
+ "ip_default": {
+  "tr": "Ne yapmamı istersin?",
+  "en": "What do you want me to do?",
+  "de": "Was soll ich für dich tun?",
+  "fr": "Que voulez-vous que je fasse ?",
+  "es": "¿Qué deseas que haga?",
+  "ar": "ماذا تريدني أن أفعل؟",
+  "ru": "Что вы хотите, чтобы я сделал?"
+ },
+ "studyoEyebrow": {
+  "tr": "AI Stüdyo",
+  "en": "AI Studio",
+  "de": "KI-Studio",
+  "fr": "Studio IA",
+  "es": "Estudio IA",
+  "ar": "استوديو الذكاء الاصطناعي",
+  "ru": "AI-студия"
+ },
+ "kaynakYuz": {
+  "tr": "Kaynak yüz",
+  "en": "Source face",
+  "de": "Quellgesicht",
+  "fr": "Visage source",
+  "es": "Cara origen",
+  "ar": "وجه المصدر",
+  "ru": "Исходное лицо"
+ },
+ "hedefGorsel": {
+  "tr": "Hedef görsel",
+  "en": "Target image",
+  "de": "Zielbild",
+  "fr": "Image cible",
+  "es": "Imagen destino",
+  "ar": "الصورة الهدف",
+  "ru": "Целевое фото"
+ },
+ "pdfSec": {
+  "tr": "PDF seç",
+  "en": "Select PDF",
+  "de": "PDF wählen",
+  "fr": "Choisir un PDF",
+  "es": "Elegir PDF",
+  "ar": "اختر PDF",
+  "ru": "Выбрать PDF"
+ },
+ "pdfSecildi": {
+  "tr": "PDF seçildi ✓",
+  "en": "PDF selected ✓",
+  "de": "PDF ausgewählt ✓",
+  "fr": "PDF sélectionné ✓",
+  "es": "PDF seleccionado ✓",
+  "ar": "تم اختيار PDF ✓",
+  "ru": "PDF выбран ✓"
+ }
+}

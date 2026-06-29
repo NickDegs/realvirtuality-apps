@@ -1,0 +1,2382 @@
+{
+ "urunfoto": {
+  "tr": {
+   "ad": "Ürün Fotoğrafı Stüdyosu",
+   "aciklama": "Telefon fotoğrafı → pro stüdyo çekimi",
+   "slogan": "Sıradan ürün fotoğrafını saniyede profesyonel stüdyo çekimine dönüştür.",
+   "detay": "Ürününün fotoğrafını yükle; yapay zekâ arka planı temizleyip ürünü mermer, ahşap, beyaz stüdyo, doğal yaprak gibi profesyonel sahnelere yerleştirsin. Ürün birebir aynı kalır, sadece sahne ve ışık pro olur. Shopier, Instagram ve web mağazan için stüdyo masrafı olmadan vitrin kalitesi.",
+   "ozellikler": [
+    "Otomatik arka plan temizleme",
+    "8 profesyonel stüdyo sahnesi",
+    "Ürün birebir korunur",
+    "Vitrin/katalog kalitesi"
+   ],
+   "kullanim": [
+    "E-ticaret & pazaryeri",
+    "Instagram & sosyal medya",
+    "Katalog & menü görseli",
+    "Reklam görseli"
+   ]
+  },
+  "en": {
+   "ad": "Product Photography Studio",
+   "aciklama": "Phone photo → pro studio shot",
+   "slogan": "Turn ordinary product photo into professional studio shot in seconds.",
+   "detay": "Upload a photo of your product; Let the artificial intelligence clean the background and place the product in professional scenes such as marble, wood, white studio, natural leaves. The product remains exactly the same, only the stage and lighting become pro. Showcase quality for your Shopier, Instagram and web store without the cost of a studio.",
+   "ozellikler": [
+    "Automatic background cleaning",
+    "8 professional studio scenes",
+    "The product is protected exactly",
+    "Showcase/catalogue quality"
+   ],
+   "kullanim": [
+    "E-commerce & marketplace",
+    "Instagram & social media",
+    "Catalog & menu image",
+    "advertising image"
+   ]
+  },
+  "de": {
+   "ad": "Produktfotografiestudio",
+   "aciklama": "Telefonfoto → professionelle Studioaufnahme",
+   "slogan": "Verwandeln Sie ein gewöhnliches Produktfoto in Sekundenschnelle in eine professionelle Studioaufnahme.",
+   "detay": "Laden Sie ein Foto Ihres Produkts hoch; Lassen Sie die künstliche Intelligenz den Hintergrund reinigen und platzieren Sie das Produkt in professionellen Szenen wie Marmor, Holz, weißem Studio, natürlichen Blättern. Das Produkt bleibt genau das gleiche, nur die Bühne und die Beleuchtung werden professionell. Präsentieren Sie Qualität für Ihren Shopier, Instagram und Webshop, ohne die Kosten eines Studios.",
+   "ozellikler": [
+    "Automatische Hintergrundreinigung",
+    "8 professionelle Studioszenen",
+    "Das Produkt ist genau geschützt",
+    "Vitrinen-/Katalogqualität"
+   ],
+   "kullanim": [
+    "E-Commerce & Marktplatz",
+    "Instagram und soziale Medien",
+    "Katalog- und Menübild",
+    "Werbebild"
+   ]
+  },
+  "fr": {
+   "ad": "Studio de photographie de produits",
+   "aciklama": "Photo de téléphone → prise de vue en studio professionnel",
+   "slogan": "Transformez une photo de produit ordinaire en une prise de vue professionnelle en studio en quelques secondes.",
+   "detay": "Téléchargez une photo de votre produit ; Laissez l'intelligence artificielle nettoyer l'arrière-plan et placez le produit dans des scènes professionnelles telles que le marbre, le bois, le studio blanc, les feuilles naturelles. Le produit reste exactement le même, seuls la scène et l'éclairage deviennent pro. Présentez la qualité pour votre Shopier, Instagram et votre boutique en ligne sans le coût d'un studio.",
+   "ozellikler": [
+    "Nettoyage automatique de l'arrière-plan",
+    "8 scènes de studio professionnelles",
+    "Le produit est protégé exactement",
+    "Qualité vitrine/catalogue"
+   ],
+   "kullanim": [
+    "E-commerce et place de marché",
+    "Instagram et réseaux sociaux",
+    "Image du catalogue et du menu",
+    "image publicitaire"
+   ]
+  },
+  "es": {
+   "ad": "Estudio de fotografía de producto",
+   "aciklama": "Foto de teléfono → toma de estudio profesional",
+   "slogan": "Convierta una fotografía de producto normal en una fotografía de estudio profesional en cuestión de segundos.",
+   "detay": "Sube una foto de tu producto; Deje que la inteligencia artificial limpie el fondo y coloque el producto en escenas profesionales como mármol, madera, estudio blanco, hojas naturales. El producto sigue siendo exactamente el mismo, sólo el escenario y la iluminación se vuelven profesionales. Muestra calidad para tu Shopier, Instagram y tienda web sin el costo de un estudio.",
+   "ozellikler": [
+    "Limpieza automática de fondo",
+    "8 escenas de estudio profesionales",
+    "El producto está protegido exactamente.",
+    "Calidad de escaparate/catálogo"
+   ],
+   "kullanim": [
+    "Comercio electrónico y mercado",
+    "Instagram y redes sociales",
+    "Imagen de catálogo y menú",
+    "imagen publicitaria"
+   ]
+  },
+  "ar": {
+   "ad": "استوديو تصوير المنتجات",
+   "aciklama": "صورة الهاتف → لقطة استوديو احترافية",
+   "slogan": "تحويل صورة المنتج العادية إلى لقطة استوديو احترافية في ثوانٍ.",
+   "detay": "قم بتحميل صورة لمنتجك؛ دع الذكاء الاصطناعي ينظف الخلفية ويضع المنتج في مشاهد احترافية مثل الرخام والخشب والاستوديو الأبيض والأوراق الطبيعية. يظل المنتج كما هو تمامًا، فقط المسرح والإضاءة يصبحان محترفين. اعرض الجودة لمتجرك على Shopier وInstagram ومتجر الويب دون تكلفة الاستوديو.",
+   "ozellikler": [
+    "التنظيف التلقائي للخلفية",
+    "8 مشاهد استوديو احترافية",
+    "المنتج محمي تمامًا",
+    "جودة العرض/الكتالوج"
+   ],
+   "kullanim": [
+    "التجارة الإلكترونية والسوق",
+    "الانستغرام ووسائل التواصل الاجتماعي",
+    "صورة الكتالوج والقائمة",
+    "صورة إعلانية"
+   ]
+  },
+  "ru": {
+   "ad": "Студия фотографии продуктов",
+   "aciklama": "Фото с телефона → профессиональный студийный снимок",
+   "slogan": "Превратите обычную фотографию товара в профессиональный студийный снимок за считанные секунды.",
+   "detay": "Загрузите фотографию вашего товара; Позвольте искусственному интеллекту очистить фон и разместить продукт в профессиональных сценах, таких как мрамор, дерево, белая студия, натуральные листья. Продукт остался точно таким же, только сцена и освещение стали профессиональными. Продемонстрируйте качество для своего Shopier, Instagram и интернет-магазина без затрат на студию.",
+   "ozellikler": [
+    "Автоматическая очистка фона",
+    "8 профессиональных студийных сцен",
+    "Продукт защищен именно",
+    "Качество витрины/каталога"
+   ],
+   "kullanim": [
+    "Электронная коммерция и торговая площадка",
+    "Инстаграм и социальные сети",
+    "Изображение каталога и меню",
+    "рекламное изображение"
+   ]
+  }
+ },
+ "gorsel": {
+  "tr": {
+   "ad": "AI Görsel Üret",
+   "aciklama": "Yazdığını profesyonel görsele çevir",
+   "slogan": "Aklındaki her şeyi saniyede yüksek kaliteli görsele dönüştür.",
+   "detay": "FLUX.1-dev ile metinden 1024px profesyonel görseller üret. Sosyal medya görseli, ürün konsepti, illüstrasyon, afiş — ne istersen yaz, saniyeler içinde gelsin.",
+   "ozellikler": [
+    "FLUX.1-dev en kaliteli açık model",
+    "1024px yüksek çözünürlük",
+    "~10 saniyede sonuç",
+    "Sınırsız stil"
+   ],
+   "kullanim": [
+    "Sosyal medya görselleri",
+    "Ürün/konsept görselleri",
+    "Afiş & kapak",
+    "İllüstrasyon"
+   ]
+  },
+  "en": {
+   "ad": "AI Visual Generate",
+   "aciklama": "Turn your writing into a professional visual",
+   "slogan": "Turn whatever is in your mind into a high-quality visual in seconds.",
+   "detay": "Produce 1024px professional images from text with FLUX.1-dev. Social media visual, product concept, illustration, poster — write whatever you want and it will arrive in seconds.",
+   "ozellikler": [
+    "FLUX.1-dev top quality open model",
+    "1024px high resolution",
+    "Results in ~10 seconds",
+    "Unlimited style"
+   ],
+   "kullanim": [
+    "Social media images",
+    "Product/concept images",
+    "Poster & cover",
+    "illustration"
+   ]
+  },
+  "de": {
+   "ad": "KI-visuelle Generierung",
+   "aciklama": "Verwandeln Sie Ihr Schreiben in ein professionelles Bild",
+   "slogan": "Verwandeln Sie alles, was Ihnen durch den Kopf geht, in Sekundenschnelle in ein hochwertiges Bild.",
+   "detay": "Erstellen Sie mit FLUX.1-dev professionelle 1024px-Bilder aus Text. Social-Media-Visual, Produktkonzept, Illustration, Poster – schreiben Sie, was Sie wollen, und es wird in Sekundenschnelle ankommen.",
+   "ozellikler": [
+    "FLUX.1-dev, offenes Modell in Spitzenqualität",
+    "1024px hohe Auflösung",
+    "Ergebnisse in ca. 10 Sekunden",
+    "Grenzenloser Stil"
+   ],
+   "kullanim": [
+    "Social-Media-Bilder",
+    "Produkt-/Konzeptbilder",
+    "Poster und Cover",
+    "Illustration"
+   ]
+  },
+  "fr": {
+   "ad": "Génération visuelle IA",
+   "aciklama": "Transformez votre écriture en un visuel professionnel",
+   "slogan": "Transformez tout ce que vous avez en tête en un visuel de haute qualité en quelques secondes.",
+   "detay": "Produisez des images professionnelles de 1 024 px à partir de texte avec FLUX.1-dev. Visuel pour réseaux sociaux, concept de produit, illustration, affiche : écrivez ce que vous voulez et cela arrivera en quelques secondes.",
+   "ozellikler": [
+    "Modèle ouvert de qualité supérieure FLUX.1-dev",
+    "1024px haute résolution",
+    "Résultats en ~ 10 secondes",
+    "Style illimité"
+   ],
+   "kullanim": [
+    "Images des réseaux sociaux",
+    "Images de produits/concepts",
+    "Affiche et couverture",
+    "illustration"
+   ]
+  },
+  "es": {
+   "ad": "Generación visual de IA",
+   "aciklama": "Convierte tu escritura en una imagen profesional",
+   "slogan": "Convierta lo que tenga en mente en una imagen de alta calidad en segundos.",
+   "detay": "Produzca imágenes profesionales de 1024 px a partir de texto con FLUX.1-dev. Imagen de redes sociales, concepto de producto, ilustración, póster: escribe lo que quieras y te llegará en segundos.",
+   "ozellikler": [
+    "FLUX.1-dev modelo abierto de alta calidad",
+    "1024px de alta resolución",
+    "Resultados en ~10 segundos",
+    "Estilo ilimitado"
+   ],
+   "kullanim": [
+    "Imágenes de redes sociales",
+    "Imágenes de producto/concepto",
+    "Póster y portada",
+    "ilustración"
+   ]
+  },
+  "ar": {
+   "ad": "إنشاء مرئي بالذكاء الاصطناعي",
+   "aciklama": "حول كتابتك إلى صورة احترافية",
+   "slogan": "حول كل ما يدور في ذهنك إلى صورة مرئية عالية الجودة في ثوانٍ.",
+   "detay": "أنتج صورًا احترافية بدقة 1024 بكسل من النص باستخدام FLUX.1-dev. وسائل التواصل الاجتماعي المرئية، ومفهوم المنتج، والتوضيح، والملصق - اكتب ما تريد وسيصلك في ثوانٍ.",
+   "ozellikler": [
+    "FLUX.1-dev نموذج مفتوح عالي الجودة",
+    "دقة عالية 1024 بكسل",
+    "النتائج في ~ 10 ثانية",
+    "أسلوب غير محدود"
+   ],
+   "kullanim": [
+    "صور وسائل التواصل الاجتماعي",
+    "صور المنتج/المفهوم",
+    "الملصق والغلاف",
+    "توضيح"
+   ]
+  },
+  "ru": {
+   "ad": "Визуальная генерация искусственного интеллекта",
+   "aciklama": "Превратите свой текст в профессиональное визуальное изображение",
+   "slogan": "Превратите все, что у вас в голове, в высококачественную картинку за считанные секунды.",
+   "detay": "Создавайте профессиональные изображения размером 1024 пикселя из текста с помощью FLUX.1-dev. Визуализация для социальных сетей, концепция продукта, иллюстрация, плакат — напишите все, что хотите, и это придет в считанные секунды.",
+   "ozellikler": [
+    "Открытая модель высочайшего качества FLUX.1-dev",
+    "Высокое разрешение 1024 пикселей",
+    "Результаты через ~10 секунд",
+    "Неограниченный стиль"
+   ],
+   "kullanim": [
+    "Изображения в социальных сетях",
+    "Изображения продукта/концепции",
+    "Плакат и обложка",
+    "иллюстрация"
+   ]
+  }
+ },
+ "logo": {
+  "tr": {
+   "ad": "AI Logo Üreteci",
+   "aciklama": "Markana profesyonel logo",
+   "slogan": "Markana saniyede modern, profesyonel logo üret.",
+   "detay": "Marka adını ve konseptini yaz; modern, minimal, profesyonel logo/ikon üretsin. Kafe, marka, uygulama, işletme için — sınırsız dene, beğendiğini indir.",
+   "ozellikler": [
+    "Modern minimal tasarım",
+    "Marka kimliği",
+    "Sınırsız varyasyon",
+    "Yüksek çözünürlük"
+   ],
+   "kullanim": [
+    "İşletme/marka logosu",
+    "Uygulama ikonu",
+    "Sosyal avatar",
+    "Sticker & rozet"
+   ]
+  },
+  "en": {
+   "ad": "AI Logo Generator",
+   "aciklama": "Professional logo for your brand",
+   "slogan": "Create a modern, professional logo for your brand in seconds.",
+   "detay": "Write the brand name and concept; Let it produce a modern, minimal, professional logo/icon. For cafe, brand, application, business - try unlimited, download what you like.",
+   "ozellikler": [
+    "Modern minimal design",
+    "Brand identity",
+    "Unlimited variations",
+    "high resolution"
+   ],
+   "kullanim": [
+    "Business/brand logo",
+    "application icon",
+    "social avatar",
+    "Sticker & badge"
+   ]
+  },
+  "de": {
+   "ad": "AI-Logo-Generator",
+   "aciklama": "Professionelles Logo für Ihre Marke",
+   "slogan": "Erstellen Sie in Sekundenschnelle ein modernes, professionelles Logo für Ihre Marke.",
+   "detay": "Schreiben Sie den Markennamen und das Konzept; Lassen Sie ein modernes, minimalistisches und professionelles Logo/Symbol erstellen. Für Café, Marke, Anwendung, Unternehmen – testen Sie unbegrenzt und laden Sie herunter, was Ihnen gefällt.",
+   "ozellikler": [
+    "Modernes minimalistisches Design",
+    "Markenidentität",
+    "Unbegrenzte Variationen",
+    "hohe Auflösung"
+   ],
+   "kullanim": [
+    "Firmen-/Markenlogo",
+    "Anwendungssymbol",
+    "sozialer Avatar",
+    "Aufkleber und Abzeichen"
+   ]
+  },
+  "fr": {
+   "ad": "Générateur de logos IA",
+   "aciklama": "Logo professionnel pour votre marque",
+   "slogan": "Créez un logo moderne et professionnel pour votre marque en quelques secondes.",
+   "detay": "Écrivez le nom de la marque et le concept ; Laissez-le produire un logo/icône moderne, minimal et professionnel. Pour un café, une marque, une application, une entreprise - essayez en illimité, téléchargez ce que vous aimez.",
+   "ozellikler": [
+    "Design minimaliste moderne",
+    "Identité de marque",
+    "Variations illimitées",
+    "haute résolution"
+   ],
+   "kullanim": [
+    "Logo d'entreprise/marque",
+    "icône d'application",
+    "avatar social",
+    "Autocollant et insigne"
+   ]
+  },
+  "es": {
+   "ad": "Generador de logotipos de IA",
+   "aciklama": "Logotipo profesional para tu marca.",
+   "slogan": "Crea un logotipo moderno y profesional para tu marca en segundos.",
+   "detay": "Escriba el nombre de la marca y el concepto; Deje que produzca un logotipo/icono moderno, minimalista y profesional. Para cafetería, marca, aplicación, negocio: pruebe de forma ilimitada, descargue lo que quiera.",
+   "ozellikler": [
+    "Diseño minimalista moderno",
+    "Identidad de marca",
+    "Variaciones ilimitadas",
+    "resolución alta"
+   ],
+   "kullanim": [
+    "Logotipo de empresa/marca",
+    "icono de aplicación",
+    "avatar social",
+    "Etiqueta y placa"
+   ]
+  },
+  "ar": {
+   "ad": "مولد شعار الذكاء الاصطناعي",
+   "aciklama": "شعار احترافي لعلامتك التجارية",
+   "slogan": "أنشئ شعارًا عصريًا واحترافيًا لعلامتك التجارية في ثوانٍ.",
+   "detay": "اكتب اسم العلامة التجارية والمفهوم؛ اسمح لها بإنتاج شعار/أيقونة حديثة ومبسطة واحترافية. للمقهى، والعلامة التجارية، والتطبيقات، والأعمال التجارية - جرب عددًا غير محدود، وقم بتنزيل ما تريد.",
+   "ozellikler": [
+    "تصميم الحد الأدنى الحديث",
+    "هوية العلامة التجارية",
+    "اختلافات غير محدودة",
+    "دقة عالية"
+   ],
+   "kullanim": [
+    "شعار العمل/العلامة التجارية",
+    "رمز التطبيق",
+    "الصورة الرمزية الاجتماعية",
+    "ملصق وشارة"
+   ]
+  },
+  "ru": {
+   "ad": "Генератор логотипов с искусственным интеллектом",
+   "aciklama": "Профессиональный логотип для вашего бренда",
+   "slogan": "Создайте современный профессиональный логотип для своего бренда за считанные секунды.",
+   "detay": "Напишите название бренда и концепцию; Пусть он создаст современный, минималистичный, профессиональный логотип/значок. Для кафе, бренда, приложения, бизнеса - пробуйте безлимит, скачивайте то, что вам нравится.",
+   "ozellikler": [
+    "Современный минималистичный дизайн",
+    "Фирменный стиль",
+    "Неограниченные вариации",
+    "высокое разрешение"
+   ],
+   "kullanim": [
+    "Логотип компании/бренда",
+    "значок приложения",
+    "социальный аватар",
+    "Наклейка и значок"
+   ]
+  }
+ },
+ "donustur": {
+  "tr": {
+   "ad": "Görsel Stil Dönüştür",
+   "aciklama": "Görseli yeni stile çevir",
+   "slogan": "Bir görseli yükle, tarif ettiğin yeni stile dönüştür.",
+   "detay": "Mevcut görselini referans alıp tarif ettiğin stile dönüştür (FLUX img2img). Eskiz→render, fotoğraf→sanat, ürün→konsept varyasyonu için.",
+   "ozellikler": [
+    "FLUX img2img",
+    "Referansı korur",
+    "Stil/konsept değişimi",
+    "1024px çıktı"
+   ],
+   "kullanim": [
+    "Eskiz → render",
+    "Fotoğraf → sanat",
+    "Konsept varyasyonu",
+    "Stil aktarımı"
+   ]
+  },
+  "en": {
+   "ad": "Convert Visual Style",
+   "aciklama": "Convert image to new style",
+   "slogan": "Upload an image and transform it into the new style you describe.",
+   "detay": "Take your existing image as a reference and convert it to the style you describe (FLUX img2img). For sketch→render, photography→art, product→concept variation.",
+   "ozellikler": [
+    "FLUX img2img",
+    "Preserves reference",
+    "Style/concept change",
+    "1024px output"
+   ],
+   "kullanim": [
+    "Sketch → render",
+    "Photography → art",
+    "Concept variation",
+    "Style transfer"
+   ]
+  },
+  "de": {
+   "ad": "Konvertieren Sie den visuellen Stil",
+   "aciklama": "Bild in neuen Stil konvertieren",
+   "slogan": "Laden Sie ein Bild hoch und verwandeln Sie es in den neuen Stil, den Sie beschreiben.",
+   "detay": "Nehmen Sie Ihr vorhandenes Bild als Referenz und konvertieren Sie es in den von Ihnen beschriebenen Stil (FLUX img2img). Für Skizze→Rendering, Fotografie→Kunst, Produkt→Konzeptvariation.",
+   "ozellikler": [
+    "FLUX img2img",
+    "Bewahrt die Referenz",
+    "Stil-/Konzeptänderung",
+    "1024px-Ausgabe"
+   ],
+   "kullanim": [
+    "Skizzieren → Rendern",
+    "Fotografie → Kunst",
+    "Konzeptvariation",
+    "Stilübertragung"
+   ]
+  },
+  "fr": {
+   "ad": "Convertir le style visuel",
+   "aciklama": "Convertir l'image en un nouveau style",
+   "slogan": "Téléchargez une image et transformez-la dans le nouveau style que vous décrivez.",
+   "detay": "Prenez votre image existante comme référence et convertissez-la dans le style que vous décrivez (FLUX img2img). Pour croquis → rendu, photographie → art, produit → variation de concept.",
+   "ozellikler": [
+    "FLUX img2img",
+    "Préserve la référence",
+    "Changement de style/concept",
+    "Sortie 1024px"
+   ],
+   "kullanim": [
+    "Esquisse → rendu",
+    "Photographie → art",
+    "Variation conceptuelle",
+    "Transfert de style"
+   ]
+  },
+  "es": {
+   "ad": "Convertir estilo visual",
+   "aciklama": "Convertir imagen a nuevo estilo",
+   "slogan": "Sube una imagen y transfórmala en el nuevo estilo que describas.",
+   "detay": "Tome su imagen existente como referencia y conviértala al estilo que describe (FLUX img2img). Para bocetos→renderizado, fotografía→arte, producto→variación de concepto.",
+   "ozellikler": [
+    "FLUJO img2img",
+    "Conserva la referencia",
+    "Cambio de estilo/concepto",
+    "Salida de 1024px"
+   ],
+   "kullanim": [
+    "Boceto → renderizar",
+    "Fotografía → arte",
+    "Variación del concepto",
+    "Transferencia de estilo"
+   ]
+  },
+  "ar": {
+   "ad": "تحويل النمط المرئي",
+   "aciklama": "تحويل الصورة إلى نمط جديد",
+   "slogan": "قم بتحميل صورة وتحويلها إلى النمط الجديد الذي تصفه.",
+   "detay": "خذ صورتك الحالية كمرجع وقم بتحويلها إلى النمط الذي تصفه (FLUX img2img). للرسم → التقديم، التصوير الفوتوغرافي → الفن، المنتج → اختلاف المفهوم.",
+   "ozellikler": [
+    "فلوكس img2img",
+    "يحفظ المرجع",
+    "تغيير النمط/المفهوم",
+    "إخراج 1024 بكسل"
+   ],
+   "kullanim": [
+    "رسم → تقديم",
+    "التصوير الفوتوغرافي → الفن",
+    "اختلاف المفهوم",
+    "نقل النمط"
+   ]
+  },
+  "ru": {
+   "ad": "Преобразование визуального стиля",
+   "aciklama": "Преобразовать изображение в новый стиль",
+   "slogan": "Загрузите изображение и преобразуйте его в новый стиль, который вы описываете.",
+   "detay": "Возьмите существующее изображение в качестве образца и преобразуйте его в описанный вами стиль (FLUX img2img). Для эскиза→рендеринга, фотографии→искусства, продукта→вариации концепции.",
+   "ozellikler": [
+    "ФЛЮКС img2img",
+    "Сохраняет ссылку",
+    "Изменение стиля/концепции",
+    "Выходное разрешение 1024 пикселей"
+   ],
+   "kullanim": [
+    "Эскиз → рендеринг",
+    "Фотография → искусство",
+    "Вариант концепции",
+    "Перенос стиля"
+   ]
+  }
+ },
+ "upscale": {
+  "tr": {
+   "ad": "Görsel Büyüt (Upscale)",
+   "aciklama": "Bulanık görseli 4x netleştir",
+   "slogan": "Küçük/bulanık görselleri 4x büyüt, netleştir.",
+   "detay": "Real-ESRGAN ile düşük çözünürlüklü görselleri kalite kaybı olmadan 4 katına çıkar. Eski fotoğraflar, ürün görselleri, ekran görüntüleri için ideal.",
+   "ozellikler": [
+    "Real-ESRGAN AI",
+    "4x büyütme",
+    "Detay & keskinlik",
+    "Saniyeler içinde"
+   ],
+   "kullanim": [
+    "Eski/düşük çözünürlük foto",
+    "Ürün görseli iyileştirme",
+    "Baskı için büyütme",
+    "Logo netleştirme"
+   ]
+  },
+  "en": {
+   "ad": "Visual Enlargement (Upscale)",
+   "aciklama": "Sharpen blurry image 4x",
+   "slogan": "Enlarge and sharpen small/blurry images by 4x.",
+   "detay": "With Real-ESRGAN, low resolution images are quadrupled without losing quality. Ideal for old photos, product images, screenshots.",
+   "ozellikler": [
+    "Real-ESRGAN AI",
+    "4x magnification",
+    "Detail & sharpness",
+    "in seconds"
+   ],
+   "kullanim": [
+    "Old/low resolution photo",
+    "Product image improvement",
+    "Enlargement for printing",
+    "logo sharpening"
+   ]
+  },
+  "de": {
+   "ad": "Visuelle Vergrößerung (Upscale)",
+   "aciklama": "Verschwommenes Bild 4x schärfen",
+   "slogan": "Vergrößern und schärfen Sie kleine/unscharfe Bilder um das Vierfache.",
+   "detay": "Mit Real-ESRGAN werden Bilder mit niedriger Auflösung vervierfacht, ohne an Qualität zu verlieren. Ideal für alte Fotos, Produktbilder, Screenshots.",
+   "ozellikler": [
+    "Echte ESRGAN-KI",
+    "4-fache Vergrößerung",
+    "Detailreichtum und Schärfe",
+    "in Sekunden"
+   ],
+   "kullanim": [
+    "Altes/niedrigaufgelöstes Foto",
+    "Verbesserung des Produktimages",
+    "Vergrößerung zum Ausdrucken",
+    "Logo-Schärfung"
+   ]
+  },
+  "fr": {
+   "ad": "Agrandissement visuel (haut de gamme)",
+   "aciklama": "Affiner l'image floue 4x",
+   "slogan": "Agrandissez et accentuez les images petites/floues de 4x.",
+   "detay": "Avec Real-ESRGAN, les images basse résolution sont quadruplées sans perte de qualité. Idéal pour les vieilles photos, images de produits, captures d'écran.",
+   "ozellikler": [
+    "IA réelle-ESRGAN",
+    "Grossissement 4x",
+    "Détail et netteté",
+    "en secondes"
+   ],
+   "kullanim": [
+    "Photo ancienne/basse résolution",
+    "Amélioration de l'image du produit",
+    "Agrandissement pour impression",
+    "affutage du logo"
+   ]
+  },
+  "es": {
+   "ad": "Ampliación visual (exclusiva)",
+   "aciklama": "Enfocar imagen borrosa 4x",
+   "slogan": "Amplíe y enfoque imágenes pequeñas/borrosas en 4x.",
+   "detay": "Con Real-ESRGAN las imágenes de baja resolución se cuadriplican sin perder calidad. Ideal para fotografías antiguas, imágenes de productos, capturas de pantalla.",
+   "ozellikler": [
+    "IA real-ESRGAN",
+    "aumento 4x",
+    "Detalle y nitidez",
+    "en segundos"
+   ],
+   "kullanim": [
+    "Foto antigua/de baja resolución",
+    "Mejora de la imagen del producto",
+    "Ampliación para impresión",
+    "afilado de logotipos"
+   ]
+  },
+  "ar": {
+   "ad": "التكبير البصري (الراقي)",
+   "aciklama": "شحذ الصورة الباهتة 4x",
+   "slogan": "تكبير وتوضيح الصور الصغيرة/الضبابية بمقدار 4x.",
+   "detay": "مع Real-ESRGAN، يتم مضاعفة الصور ذات الدقة المنخفضة أربع مرات دون فقدان الجودة. مثالي للصور القديمة وصور المنتجات ولقطات الشاشة.",
+   "ozellikler": [
+    "ريال ESRGAN AI",
+    "تكبير 4x",
+    "التفاصيل والحدة",
+    "في ثواني"
+   ],
+   "kullanim": [
+    "صورة قديمة/منخفضة الدقة",
+    "تحسين صورة المنتج",
+    "تكبير للطباعة",
+    "شحذ الشعار"
+   ]
+  },
+  "ru": {
+   "ad": "Визуальное увеличение (высококлассное)",
+   "aciklama": "Повышение резкости размытого изображения в 4 раза",
+   "slogan": "Увеличьте и увеличьте резкость маленьких/размытых изображений в 4 раза.",
+   "detay": "Благодаря Real-ESRGAN изображения с низким разрешением увеличиваются в четыре раза без потери качества. Идеально подходит для старых фотографий, изображений продуктов, скриншотов.",
+   "ozellikler": [
+    "Реал-ESRGAN AI",
+    "4-кратное увеличение",
+    "Детализация и резкость",
+    "в секундах"
+   ],
+   "kullanim": [
+    "Старая фотография/фото низкого разрешения",
+    "Улучшение имиджа продукта",
+    "Увеличение для печати",
+    "заточка логотипа"
+   ]
+  }
+ },
+ "bgremove": {
+  "tr": {
+   "ad": "Arka Plan Sil",
+   "aciklama": "Tek tıkla şeffaf PNG",
+   "slogan": "Arka planı tek tıkla sil, şeffaf PNG indir.",
+   "detay": "Görselin arka planını yapay zekâ ile saniyede temizle, şeffaf PNG olarak al. Ürün fotoğrafı, profil, logo için ideal — remove.bg alternatifi.",
+   "ozellikler": [
+    "AI nesne/insan algılama",
+    "Şeffaf PNG",
+    "~1 saniyede",
+    "Temiz kenarlar"
+   ],
+   "kullanim": [
+    "E-ticaret ürün foto",
+    "Profil/vesikalık",
+    "Logo & sticker",
+    "Tasarım kesme"
+   ]
+  },
+  "en": {
+   "ad": "Erase Background",
+   "aciklama": "One-click transparent PNG",
+   "slogan": "Erase background with one click, download transparent PNG.",
+   "detay": "Clean the background of the image with artificial intelligence in seconds and get it as a transparent PNG. Ideal for product photo, profile, logo — alternative to remove.bg.",
+   "ozellikler": [
+    "AI object/person detection",
+    "Transparent PNG",
+    "~1 second",
+    "clean edges"
+   ],
+   "kullanim": [
+    "E-commerce product photo",
+    "Profile/headshot",
+    "logo & sticker",
+    "design cutting"
+   ]
+  },
+  "de": {
+   "ad": "Hintergrund löschen",
+   "aciklama": "Transparentes PNG mit einem Klick",
+   "slogan": "Löschen Sie den Hintergrund mit einem Klick und laden Sie transparentes PNG herunter.",
+   "detay": "Bereinigen Sie den Hintergrund des Bildes mit künstlicher Intelligenz in Sekundenschnelle und erhalten Sie es als transparentes PNG. Ideal für Produktfoto, Profil, Logo – Alternative zu Remove.bg.",
+   "ozellikler": [
+    "KI-Objekt-/Personenerkennung",
+    "Transparentes PNG",
+    "~1 Sekunde",
+    "saubere Kanten"
+   ],
+   "kullanim": [
+    "E-Commerce-Produktfoto",
+    "Profil/Kopfschuss",
+    "Logo und Aufkleber",
+    "Designschneiden"
+   ]
+  },
+  "fr": {
+   "ad": "Effacer l'arrière-plan",
+   "aciklama": "PNG transparent en un clic",
+   "slogan": "Effacez l’arrière-plan en un seul clic, téléchargez le PNG transparent.",
+   "detay": "Nettoyez l'arrière-plan de l'image avec l'intelligence artificielle en quelques secondes et obtenez-la sous forme de PNG transparent. Idéal pour la photo du produit, le profil, le logo — alternative à Remove.bg.",
+   "ozellikler": [
+    "Détection d'objets/personnes IA",
+    "PNG transparent",
+    "~1 seconde",
+    "bords nets"
+   ],
+   "kullanim": [
+    "Photo de produit e-commerce",
+    "Profil/photo du visage",
+    "logo et autocollant",
+    "découpe de conception"
+   ]
+  },
+  "es": {
+   "ad": "Borrar fondo",
+   "aciklama": "PNG transparente con un clic",
+   "slogan": "Borre el fondo con un clic, descargue PNG transparente.",
+   "detay": "Limpia el fondo de la imagen con inteligencia artificial en segundos y consíguelo como un PNG transparente. Ideal para fotografías de productos, perfiles y logotipos: alternativa a remove.bg.",
+   "ozellikler": [
+    "Detección de objetos/personas por IA",
+    "PNG transparente",
+    "~1 segundo",
+    "bordes limpios"
+   ],
+   "kullanim": [
+    "Foto del producto de comercio electrónico.",
+    "Perfil/foto en la cabeza",
+    "logotipo y pegatina",
+    "corte de diseño"
+   ]
+  },
+  "ar": {
+   "ad": "محو الخلفية",
+   "aciklama": "بنقرة واحدة شفافة PNG",
+   "slogan": "مسح الخلفية بنقرة واحدة وتحميل PNG شفافة.",
+   "detay": "قم بتنظيف خلفية الصورة بالذكاء الاصطناعي في ثوانٍ واحصل عليها بصيغة PNG شفافة. مثالي لصورة المنتج والملف الشخصي والشعار - بديل لـ Remove.bg.",
+   "ozellikler": [
+    "كشف الكائن / الشخص بالذكاء الاصطناعي",
+    "شفافة بابوا نيو غينيا",
+    "~1 ثانية",
+    "حواف نظيفة"
+   ],
+   "kullanim": [
+    "صورة منتج التجارة الإلكترونية",
+    "الملف الشخصي/صورة الرأس",
+    "الشعار والملصق",
+    "قطع التصميم"
+   ]
+  },
+  "ru": {
+   "ad": "Стереть фон",
+   "aciklama": "Прозрачный PNG в один клик",
+   "slogan": "Сотрите фон одним кликом, скачайте PNG в прозрачном формате.",
+   "detay": "Очистите фон изображения с помощью искусственного интеллекта за считанные секунды и получите его в виде прозрачного PNG. Идеально подходит для фото продукта, профиля, логотипа — альтернатива Remove.bg.",
+   "ozellikler": [
+    "Обнаружение объекта/человека с помощью ИИ",
+    "Прозрачный PNG",
+    "~1 секунда",
+    "чистые края"
+   ],
+   "kullanim": [
+    "Фотография продукта электронной коммерции",
+    "Профиль/снимок головы",
+    "логотип и наклейка",
+    "дизайнерская резка"
+   ]
+  }
+ },
+ "icerik": {
+  "tr": {
+   "ad": "Sosyal Medya İçerik Paketi",
+   "aciklama": "Görsel + caption + hashtag tek tıkla",
+   "slogan": "İşletmeni yaz; paylaşıma hazır görsel + metin + hashtag tek tıkla gelsin.",
+   "detay": "İşletmeni/konunu yaz, platformu seç; yapay zekâ dikkat çeken bir görsel + güçlü açılışlı caption + ilgili hashtag'leri kendi dilinde tek seferde üretsin. Her gün ne paylaşacağını düşünme, ajans parası verme. Aylık içerik aboneliği için ideal.",
+   "ozellikler": [
+    "Görsel + caption + hashtag",
+    "5 platforma uygun ton",
+    "Çok dilli",
+    "Abonelik dostu"
+   ],
+   "kullanim": [
+    "Günlük sosyal medya",
+    "Kampanya & duyuru",
+    "Ürün tanıtımı",
+    "Ajansa alternatif"
+   ]
+  },
+  "en": {
+   "ad": "Social Media Content Package",
+   "aciklama": "Image + caption + hashtag in one click",
+   "slogan": "Write your business; Get ready-to-share image + text + hashtag in one click.",
+   "detay": "Write your business/topic, choose the platform; Let the artificial intelligence produce an eye-catching visual + strong opening caption + relevant hashtags in its own language, all at once. Don't think about what you will share every day, don't give agency money. Ideal for monthly content subscription.",
+   "ozellikler": [
+    "Image + caption + hashtag",
+    "5 platform-friendly tones",
+    "Multilingual",
+    "Subscription friendly"
+   ],
+   "kullanim": [
+    "Daily social media",
+    "Campaign & announcement",
+    "Product introduction",
+    "alternative to agency"
+   ]
+  },
+  "de": {
+   "ad": "Social-Media-Inhaltspaket",
+   "aciklama": "Bild + Bildunterschrift + Hashtag mit einem Klick",
+   "slogan": "Schreiben Sie Ihr Unternehmen; Machen Sie sich bereit, Bild, Text und Hashtag mit einem Klick zu teilen.",
+   "detay": "Schreiben Sie Ihr Unternehmen/Thema, wählen Sie die Plattform; Lassen Sie die künstliche Intelligenz gleichzeitig ein auffälliges Bild, eine aussagekräftige Eröffnungsüberschrift und relevante Hashtags in ihrer eigenen Sprache erstellen. Denken Sie nicht darüber nach, was Sie jeden Tag teilen werden, und geben Sie der Agentur kein Geld. Ideal für ein monatliches Inhaltsabonnement.",
+   "ozellikler": [
+    "Bild + Bildunterschrift + Hashtag",
+    "5 plattformfreundliche Töne",
+    "Mehrsprachig",
+    "Abofreundlich"
+   ],
+   "kullanim": [
+    "Tägliche soziale Medien",
+    "Kampagne & Ankündigung",
+    "Produkteinführung",
+    "Alternative zur Agentur"
+   ]
+  },
+  "fr": {
+   "ad": "Forfait de contenu pour les médias sociaux",
+   "aciklama": "Image + légende + hashtag en un clic",
+   "slogan": "Écrivez votre entreprise ; Préparez-vous à partager une image + un texte + un hashtag en un seul clic.",
+   "detay": "Écrivez votre entreprise/sujet, choisissez la plateforme ; Laissez l’intelligence artificielle produire simultanément un visuel accrocheur + une légende d’ouverture forte + des hashtags pertinents dans sa propre langue. Ne pensez pas à ce que vous partagerez chaque jour, ne donnez pas d'argent à l'agence. Idéal pour un abonnement mensuel à du contenu.",
+   "ozellikler": [
+    "Image + légende + hashtag",
+    "5 tons adaptés à la plateforme",
+    "Multilingue",
+    "Compatible avec l'abonnement"
+   ],
+   "kullanim": [
+    "Médias sociaux quotidiens",
+    "Campagne et annonce",
+    "Présentation du produit",
+    "alternative à l'agence"
+   ]
+  },
+  "es": {
+   "ad": "Paquete de contenido de redes sociales",
+   "aciklama": "Imagen + pie de foto + hashtag en un clic",
+   "slogan": "Escribe tu negocio; Obtenga imagen, texto y hashtag listos para compartir con un solo clic.",
+   "detay": "Escribe tu negocio/tema, elige la plataforma; Deje que la inteligencia artificial produzca una imagen llamativa + un título de apertura potente + hashtags relevantes en su propio idioma, todo a la vez. No pienses en lo que compartirás todos los días, no le des dinero a la agencia. Ideal para suscripción mensual de contenidos.",
+   "ozellikler": [
+    "Imagen + título + hashtag",
+    "5 tonos compatibles con plataformas",
+    "Plurilingüe",
+    "Compatible con suscripción"
+   ],
+   "kullanim": [
+    "redes sociales diarias",
+    "Campaña y anuncio",
+    "Introducción del producto",
+    "alternativa a la agencia"
+   ]
+  },
+  "ar": {
+   "ad": "حزمة محتوى وسائل التواصل الاجتماعي",
+   "aciklama": "صورة + تعليق + هاشتاج بنقرة واحدة",
+   "slogan": "اكتب عملك؛ احصل على صورة جاهزة للمشاركة + نص + علامة تصنيف بنقرة واحدة.",
+   "detay": "اكتب عملك/موضوعك، اختر المنصة؛ اسمح للذكاء الاصطناعي بإنتاج صورة جذابة + تعليق افتتاحي قوي + علامات تصنيف ذات صلة بلغته الخاصة، كل ذلك في وقت واحد. لا تفكر فيما ستشاركه كل يوم، ولا تعطي أموالاً للوكالة. مثالية للاشتراك في المحتوى الشهري.",
+   "ozellikler": [
+    "صورة + تعليق + هاشتاج",
+    "5 نغمات صديقة للمنصة",
+    "متعدد اللغات",
+    "الاشتراك ودية"
+   ],
+   "kullanim": [
+    "وسائل التواصل الاجتماعي اليومية",
+    "الحملة والإعلان",
+    "مقدمة المنتج",
+    "بديل للوكالة"
+   ]
+  },
+  "ru": {
+   "ad": "Пакет контента для социальных сетей",
+   "aciklama": "Изображение + подпись + хештег в один клик",
+   "slogan": "Напишите свой бизнес; Получите готовое изображение + текст + хэштег в один клик.",
+   "detay": "Напишите свой бизнес/тему, выберите платформу; Позвольте искусственному интеллекту одновременно создать привлекательный визуальный элемент + яркую вступительную подпись + соответствующие хэштеги на своем родном языке. Не думайте о том, чем будете делиться каждый день, не давайте агентству денег. Идеально подходит для ежемесячной подписки на контент.",
+   "ozellikler": [
+    "Изображение + подпись + хэштег",
+    "5 тонов, удобных для платформы",
+    "Многоязычный",
+    "Удобная подписка"
+   ],
+   "kullanim": [
+    "Ежедневные социальные сети",
+    "Кампания и объявление",
+    "Введение продукта",
+    "альтернатива агентству"
+   ]
+  }
+ },
+ "pro": {
+  "tr": {
+   "ad": "AI Pro Asistan",
+   "aciklama": "gpt-oss 120B güçlü akıl yürütme",
+   "slogan": "En zorlu sorular için üst seviye akıl yürüten AI.",
+   "detay": "120 milyar parametreli gpt-oss modeliyle adım adım akıl yürütme: derin analiz, strateji, planlama, matematik, araştırma ve karmaşık problem çözümü. Standart sohbetin bir üst ligi.",
+   "ozellikler": [
+    "gpt-oss-120B model",
+    "Derin analiz & strateji",
+    "Matematik & teknik",
+    "Yapılandırılmış cevap"
+   ],
+   "kullanim": [
+    "İş/strateji analizi",
+    "Araştırma & rapor",
+    "Teknik çözüm",
+    "Karar desteği"
+   ]
+  },
+  "en": {
+   "ad": "AI Pro Assistant",
+   "aciklama": "gpt-oss 120B strong reasoning",
+   "slogan": "High-level reasoning AI for the toughest questions.",
+   "detay": "Step by step reasoning with the 120 billion parameter gpt-oss model: deep analysis, strategy, planning, mathematics, research and complex problem solving. A league above standard chat.",
+   "ozellikler": [
+    "gpt-oss-120B model",
+    "Deep analysis & strategy",
+    "Mathematics & technology",
+    "structured answer"
+   ],
+   "kullanim": [
+    "Business/strategy analysis",
+    "Research & report",
+    "technical solution",
+    "decision support"
+   ]
+  },
+  "de": {
+   "ad": "AI Pro-Assistent",
+   "aciklama": "gpt-oss 120B starke Argumentation",
+   "slogan": "Hochentwickelte Argumentations-KI für die schwierigsten Fragen.",
+   "detay": "Schritt-für-Schritt-Argumentation mit dem 120-Milliarden-Parameter-gpt-oss-Modell: tiefgreifende Analyse, Strategie, Planung, Mathematik, Forschung und komplexe Problemlösung. Eine Liga über dem Standard-Chat.",
+   "ozellikler": [
+    "gpt-oss-120B-Modell",
+    "Tiefgründige Analyse und Strategie",
+    "Mathematik und Technik",
+    "strukturierte Antwort"
+   ],
+   "kullanim": [
+    "Geschäfts-/Strategieanalyse",
+    "Recherche & Bericht",
+    "technische Lösung",
+    "Entscheidungsunterstützung"
+   ]
+  },
+  "fr": {
+   "ad": "Assistant professionnel IA",
+   "aciklama": "gpt-oss 120B raisonnement fort",
+   "slogan": "Une IA de raisonnement de haut niveau pour les questions les plus difficiles.",
+   "detay": "Raisonnement étape par étape avec le modèle gpt-oss à 120 milliards de paramètres : analyse approfondie, stratégie, planification, mathématiques, recherche et résolution de problèmes complexes. Une ligue au-dessus du chat standard.",
+   "ozellikler": [
+    "modèle gpt-oss-120B",
+    "Analyse approfondie et stratégie",
+    "Mathématiques et technologie",
+    "réponse structurée"
+   ],
+   "kullanim": [
+    "Analyse d'entreprise/stratégie",
+    "Recherche et rapport",
+    "solution technique",
+    "aide à la décision"
+   ]
+  },
+  "es": {
+   "ad": "Asistente profesional de IA",
+   "aciklama": "gpt-oss 120B razonamiento fuerte",
+   "slogan": "IA de razonamiento de alto nivel para las preguntas más difíciles.",
+   "detay": "Razonamiento paso a paso con el modelo gpt-oss de 120 mil millones de parámetros: análisis profundo, estrategia, planificación, matemáticas, investigación y resolución de problemas complejos. Una liga por encima del chat estándar.",
+   "ozellikler": [
+    "modelo gpt-oss-120B",
+    "Análisis profundo y estrategia",
+    "Matemáticas y tecnología",
+    "respuesta estructurada"
+   ],
+   "kullanim": [
+    "Análisis de negocio/estrategia",
+    "Investigación e informe",
+    "solución técnica",
+    "apoyo a la toma de decisiones"
+   ]
+  },
+  "ar": {
+   "ad": "مساعد الذكاء الاصطناعي برو",
+   "aciklama": "gpt-oss 120B المنطق القوي",
+   "slogan": "الذكاء الاصطناعي الاستدلالي عالي المستوى لأصعب الأسئلة.",
+   "detay": "التفكير خطوة بخطوة باستخدام نموذج gpt-oss الذي يحتوي على 120 مليار معلمة: التحليل العميق والاستراتيجية والتخطيط والرياضيات والبحث وحل المشكلات المعقدة. دوري فوق الدردشة القياسية.",
+   "ozellikler": [
+    "نموذج gpt-oss-120B",
+    "التحليل العميق والاستراتيجية",
+    "الرياضيات والتكنولوجيا",
+    "إجابة منظمة"
+   ],
+   "kullanim": [
+    "تحليل الأعمال/الاستراتيجيات",
+    "بحث وتقرير",
+    "الحل الفني",
+    "دعم القرار"
+   ]
+  },
+  "ru": {
+   "ad": "ИИ-помощник",
+   "aciklama": "gpt-oss 120B веские аргументы",
+   "slogan": "Высокоуровневый ИИ для решения самых сложных вопросов.",
+   "detay": "Пошаговые рассуждения с помощью модели gpt-oss со 120 миллиардами параметров: глубокий анализ, стратегия, планирование, математика, исследования и сложное решение проблем. Лига выше стандартного чата.",
+   "ozellikler": [
+    "модель gpt-oss-120B",
+    "Глубокий анализ и стратегия",
+    "Математика и технологии",
+    "структурированный ответ"
+   ],
+   "kullanim": [
+    "Бизнес/стратегический анализ",
+    "Исследования и отчеты",
+    "техническое решение",
+    "поддержка принятия решений"
+   ]
+  }
+ },
+ "yazi": {
+  "tr": {
+   "ad": "AI Yazı Asistanı",
+   "aciklama": "Metin yaz / özetle / yeniden yaz",
+   "slogan": "Aklındaki her metni saniyede profesyonelce yazdır.",
+   "detay": "Sosyal medya paylaşımı, ürün açıklaması, e-posta, reklam metni, blog, özet veya yeniden yazım — kendi dilinde hazır metni saniyede al.",
+   "ozellikler": [
+    "Llama 3.3 70B",
+    "Çok dilli",
+    "Yaz/özetle/yeniden yaz",
+    "Anında hazır metin"
+   ],
+   "kullanim": [
+    "Sosyal & reklam metni",
+    "Ürün açıklaması",
+    "E-posta & resmi yazı",
+    "Blog & özet"
+   ]
+  },
+  "en": {
+   "ad": "AI Writing Assistant",
+   "aciklama": "Write / summarize / rewrite text",
+   "slogan": "Have every text on your mind professionally printed in seconds.",
+   "detay": "Social media post, product description, email, ad copy, blog, summary or rewrite — get text ready in your own language in seconds.",
+   "ozellikler": [
+    "Llama 3.3 70B",
+    "Multilingual",
+    "Write/summarize/rewrite",
+    "Instantly ready text"
+   ],
+   "kullanim": [
+    "Social & ad copy",
+    "Product Description",
+    "Email & official letter",
+    "Blog & summary"
+   ]
+  },
+  "de": {
+   "ad": "KI-Schreibassistent",
+   "aciklama": "Text schreiben/zusammenfassen/umschreiben",
+   "slogan": "Lassen Sie jeden Text, der Ihnen in den Sinn kommt, in Sekundenschnelle professionell ausdrucken.",
+   "detay": "Social-Media-Beiträge, Produktbeschreibungen, E-Mails, Anzeigentexte, Blogs, Zusammenfassungen oder Neufassungen – erstellen Sie Texte in Sekundenschnelle in Ihrer eigenen Sprache.",
+   "ozellikler": [
+    "Lama 3,3 70B",
+    "Mehrsprachig",
+    "Schreiben/Zusammenfassen/Umschreiben",
+    "Sofort fertiger Text"
+   ],
+   "kullanim": [
+    "Social-Media- und Anzeigentexte",
+    "Produktbeschreibung",
+    "E-Mail und offizieller Brief",
+    "Blog & Zusammenfassung"
+   ]
+  },
+  "fr": {
+   "ad": "Assistant d'écriture IA",
+   "aciklama": "Écrire/résumer/réécrire du texte",
+   "slogan": "Imprimez professionnellement chaque texte qui vous vient à l’esprit en quelques secondes.",
+   "detay": "Publication sur les réseaux sociaux, description de produit, e-mail, texte publicitaire, blog, résumé ou réécriture : préparez le texte dans votre propre langue en quelques secondes.",
+   "ozellikler": [
+    "Lama 3.3 70B",
+    "Multilingue",
+    "Écrire/résumer/réécrire",
+    "Texte prêt instantanément"
+   ],
+   "kullanim": [
+    "Copie sociale et publicitaire",
+    "Description du produit",
+    "E-mail et lettre officielle",
+    "Blogue et résumé"
+   ]
+  },
+  "es": {
+   "ad": "Asistente de escritura de IA",
+   "aciklama": "Escribir / resumir / reescribir texto",
+   "slogan": "Imprima profesionalmente cada texto que tenga en mente en segundos.",
+   "detay": "Publicación en redes sociales, descripción de producto, correo electrónico, texto de anuncio, blog, resumen o reescritura: prepare el texto en su propio idioma en segundos.",
+   "ozellikler": [
+    "Llama 3.3 70B",
+    "Plurilingüe",
+    "Escribir/resumir/reescribir",
+    "Texto listo al instante"
+   ],
+   "kullanim": [
+    "Texto social y publicitario",
+    "Descripción del Producto",
+    "Correo electrónico y carta oficial",
+    "Blog y resumen"
+   ]
+  },
+  "ar": {
+   "ad": "مساعد الكتابة بالذكاء الاصطناعي",
+   "aciklama": "كتابة / تلخيص / إعادة كتابة النص",
+   "slogan": "قم بطباعة كل نص يدور في ذهنك بطريقة احترافية في ثوانٍ.",
+   "detay": "منشور على وسائل التواصل الاجتماعي، أو وصف المنتج، أو البريد الإلكتروني، أو نسخة الإعلان، أو المدونة، أو الملخص، أو إعادة الكتابة - احصل على نص جاهز بلغتك الخاصة في ثوانٍ.",
+   "ozellikler": [
+    "اللاما 3.3 70 ب",
+    "متعدد اللغات",
+    "اكتب/لخص/أعد الكتابة",
+    "نص جاهز على الفور"
+   ],
+   "kullanim": [
+    "النسخة الاجتماعية والإعلانية",
+    "وصف المنتج",
+    "البريد الإلكتروني والرسالة الرسمية",
+    "مدونة وملخص"
+   ]
+  },
+  "ru": {
+   "ad": "Помощник по написанию ИИ",
+   "aciklama": "Написать/обобщить/переписать текст",
+   "slogan": "Пусть каждый текст, который придет вам в голову, будет профессионально напечатан за считанные секунды.",
+   "detay": "Публикация в социальных сетях, описание продукта, электронная почта, копия объявления, блог, резюме или переписывание — подготовьте текст на своем родном языке за считанные секунды.",
+   "ozellikler": [
+    "Лама 3.3 70Б",
+    "Многоязычный",
+    "Написать/обобщить/переписать",
+    "Мгновенно готовый текст"
+   ],
+   "kullanim": [
+    "Социальный и рекламный текст",
+    "Описание продукта",
+    "Электронная почта и официальное письмо",
+    "Блог и резюме"
+   ]
+  }
+ },
+ "ceviri": {
+  "tr": {
+   "ad": "AI Çeviri",
+   "aciklama": "Anlamı koruyarak 7+ dile çevir",
+   "slogan": "Metinlerini anlamı koruyarak akıcı şekilde çevir.",
+   "detay": "Herhangi bir metni 7+ dile, anlamı ve tonu koruyarak profesyonelce çevir. Makine çevirisinden daha doğal sonuç.",
+   "ozellikler": [
+    "7+ dil",
+    "Anlam & ton korunur",
+    "Akıcı sonuç",
+    "Uzun metin"
+   ],
+   "kullanim": [
+    "Ticari yazışma",
+    "Ürün açıklaması",
+    "Web & içerik",
+    "Altyazı & doküman"
+   ]
+  },
+  "en": {
+   "ad": "AI Translation",
+   "aciklama": "Translate into 7+ languages ​​while preserving meaning",
+   "slogan": "Translate your texts fluently while preserving the meaning.",
+   "detay": "Professionally translate any text into 7+ languages, preserving meaning and tone. More natural result than machine translation.",
+   "ozellikler": [
+    "7+ languages",
+    "Meaning & tone are preserved",
+    "Smooth result",
+    "long text"
+   ],
+   "kullanim": [
+    "business correspondence",
+    "Product Description",
+    "web & content",
+    "Subtitle & document"
+   ]
+  },
+  "de": {
+   "ad": "KI-Übersetzung",
+   "aciklama": "Übersetzen Sie in mehr als 7 Sprachen und bewahren Sie dabei die Bedeutung",
+   "slogan": "Übersetzen Sie Ihre Texte flüssig und bewahren Sie dabei die Bedeutung.",
+   "detay": "Übersetzen Sie jeden Text professionell in mehr als 7 Sprachen und bewahren Sie dabei Bedeutung und Ton. Natürlicheres Ergebnis als maschinelle Übersetzung.",
+   "ozellikler": [
+    "7+ Sprachen",
+    "Bedeutung und Ton bleiben erhalten",
+    "Glattes Ergebnis",
+    "langer Text"
+   ],
+   "kullanim": [
+    "Geschäftskorrespondenz",
+    "Produktbeschreibung",
+    "Web und Inhalte",
+    "Untertitel und Dokument"
+   ]
+  },
+  "fr": {
+   "ad": "Traduction IA",
+   "aciklama": "Traduire dans plus de 7 langues tout en préservant le sens",
+   "slogan": "Traduisez vos textes avec fluidité tout en préservant le sens.",
+   "detay": "Traduisez professionnellement n’importe quel texte dans plus de 7 langues, en préservant le sens et le ton. Résultat plus naturel que la traduction automatique.",
+   "ozellikler": [
+    "7+ langues",
+    "Le sens et le ton sont préservés",
+    "Résultat fluide",
+    "long texte"
+   ],
+   "kullanim": [
+    "correspondance commerciale",
+    "Description du produit",
+    "Internet et contenu",
+    "Sous-titre et document"
+   ]
+  },
+  "es": {
+   "ad": "Traducción de IA",
+   "aciklama": "Traduce a más de 7 idiomas conservando el significado",
+   "slogan": "Traduce tus textos con fluidez conservando el significado.",
+   "detay": "Traduce profesionalmente cualquier texto a más de 7 idiomas, preservando el significado y el tono. Resultado más natural que la traducción automática.",
+   "ozellikler": [
+    "7+ idiomas",
+    "El significado y el tono se conservan.",
+    "Resultado suave",
+    "texto largo"
+   ],
+   "kullanim": [
+    "correspondencia comercial",
+    "Descripción del Producto",
+    "web y contenido",
+    "Subtítulo y documento"
+   ]
+  },
+  "ar": {
+   "ad": "ترجمة الذكاء الاصطناعي",
+   "aciklama": "ترجم إلى أكثر من 7 لغات مع الحفاظ على المعنى",
+   "slogan": "ترجمة نصوصك بطلاقة مع الحفاظ على المعنى.",
+   "detay": "ترجمة أي نص بشكل احترافي إلى أكثر من 7 لغات، مع الحفاظ على المعنى والنبرة. نتيجة طبيعية أكثر من الترجمة الآلية.",
+   "ozellikler": [
+    "7+ لغات",
+    "يتم الحفاظ على المعنى والنبرة",
+    "نتيجة سلسة",
+    "نص طويل"
+   ],
+   "kullanim": [
+    "المراسلات التجارية",
+    "وصف المنتج",
+    "الويب والمحتوى",
+    "الترجمة والوثيقة"
+   ]
+  },
+  "ru": {
+   "ad": "AI-перевод",
+   "aciklama": "Переведите на 7+ языков, сохранив смысл",
+   "slogan": "Переводите тексты бегло, сохраняя смысл.",
+   "detay": "Профессионально переведите любой текст на 7+ языков, сохранив смысл и тональность. Более естественный результат, чем машинный перевод.",
+   "ozellikler": [
+    "7+ языков",
+    "Смысл и тон сохранены.",
+    "Гладкий результат",
+    "длинный текст"
+   ],
+   "kullanim": [
+    "деловая переписка",
+    "Описание продукта",
+    "сеть и контент",
+    "Подзаголовок и документ"
+   ]
+  }
+ },
+ "seo": {
+  "tr": {
+   "ad": "SEO & Anahtar Kelime",
+   "aciklama": "Başlık + meta + anahtar kelime",
+   "slogan": "Ürün/konuna SEO başlık, meta açıklama ve anahtar kelime üret.",
+   "detay": "Ürün veya konunu yaz; tıklanan SEO başlığı, meta açıklama ve hedef anahtar kelimeleri kendi dilinde üretsin. Arama sıralamanı yükselt.",
+   "ozellikler": [
+    "SEO başlık + meta",
+    "12 hedef kelime",
+    "Çok dilli",
+    "E-ticaret & blog"
+   ],
+   "kullanim": [
+    "Ürün sayfası SEO",
+    "İçerik optimizasyonu",
+    "Reklam kelimeleri",
+    "Pazaryeri listeleme"
+   ]
+  },
+  "en": {
+   "ad": "SEO & Keyword",
+   "aciklama": "Title + meta + keyword",
+   "slogan": "Generate SEO title, meta description and keywords for your product/topic.",
+   "detay": "Write your product or topic; Let it generate the clicked SEO title, meta description and target keywords in its own language. Increase your search rankings.",
+   "ozellikler": [
+    "SEO title + meta",
+    "12 target words",
+    "Multilingual",
+    "E-commerce & blog"
+   ],
+   "kullanim": [
+    "Product page SEO",
+    "Content optimization",
+    "Advertising words",
+    "Marketplace listing"
+   ]
+  },
+  "de": {
+   "ad": "SEO & Keyword",
+   "aciklama": "Titel + Meta + Schlüsselwort",
+   "slogan": "Generieren Sie SEO-Titel, Meta-Beschreibung und Schlüsselwörter für Ihr Produkt/Thema.",
+   "detay": "Schreiben Sie Ihr Produkt oder Thema; Lassen Sie den angeklickten SEO-Titel, die Meta-Beschreibung und die Ziel-Keywords in der eigenen Sprache generieren. Erhöhen Sie Ihr Suchranking.",
+   "ozellikler": [
+    "SEO-Titel + Meta",
+    "12 Zielwörter",
+    "Mehrsprachig",
+    "E-Commerce und Blog"
+   ],
+   "kullanim": [
+    "Produktseiten-SEO",
+    "Inhaltsoptimierung",
+    "Werbeworte",
+    "Marktplatzeintrag"
+   ]
+  },
+  "fr": {
+   "ad": "Référencement et mots clés",
+   "aciklama": "Titre + méta + mot-clé",
+   "slogan": "Générez un titre SEO, une méta description et des mots-clés pour votre produit/sujet.",
+   "detay": "Écrivez votre produit ou votre sujet ; Laissez-le générer le titre SEO sur lequel vous avez cliqué, la méta description et les mots-clés cibles dans sa propre langue. Augmentez votre classement dans les recherches.",
+   "ozellikler": [
+    "Titre SEO + méta",
+    "12 mots cibles",
+    "Multilingue",
+    "Commerce électronique et blog"
+   ],
+   "kullanim": [
+    "Référencement des pages produits",
+    "Optimisation du contenu",
+    "Mots publicitaires",
+    "Liste du marché"
+   ]
+  },
+  "es": {
+   "ad": "SEO y palabras clave",
+   "aciklama": "Título + meta + palabra clave",
+   "slogan": "Genere título SEO, meta descripción y palabras clave para su producto/tema.",
+   "detay": "Escriba su producto o tema; Permítale generar el título SEO en el que se hizo clic, la meta descripción y las palabras clave de destino en su propio idioma. Aumente su ranking de búsqueda.",
+   "ozellikler": [
+    "Título SEO + meta",
+    "12 palabras objetivo",
+    "Plurilingüe",
+    "Comercio electrónico y blogs"
+   ],
+   "kullanim": [
+    "SEO de la página del producto",
+    "Optimización de contenido",
+    "palabras publicitarias",
+    "Listado del mercado"
+   ]
+  },
+  "ar": {
+   "ad": "كبار المسئولين الاقتصاديين والكلمات الرئيسية",
+   "aciklama": "العنوان + التعريف + الكلمة الأساسية",
+   "slogan": "قم بإنشاء عنوان SEO ووصف تعريفي وكلمات رئيسية لمنتجك/موضوعك.",
+   "detay": "اكتب منتجك أو موضوعك؛ اسمح له بإنشاء عنوان SEO الذي تم النقر عليه والوصف التعريفي والكلمات الرئيسية المستهدفة بلغته الخاصة. زيادة تصنيفات البحث الخاصة بك.",
+   "ozellikler": [
+    "عنوان SEO + التعريف",
+    "12 كلمة مستهدفة",
+    "متعدد اللغات",
+    "التجارة الإلكترونية والمدونة"
+   ],
+   "kullanim": [
+    "تحسين محركات البحث لصفحة المنتج",
+    "تحسين المحتوى",
+    "الكلمات الإعلانية",
+    "قائمة السوق"
+   ]
+  },
+  "ru": {
+   "ad": "SEO и ключевые слова",
+   "aciklama": "Заголовок + мета + ключевое слово",
+   "slogan": "Создайте SEO-заголовок, мета-описание и ключевые слова для вашего продукта/темы.",
+   "detay": "Напишите свой продукт или тему; Позвольте ему генерировать SEO-заголовок, мета-описание и целевые ключевые слова на своем родном языке. Повысьте свой рейтинг в поиске.",
+   "ozellikler": [
+    "SEO-заголовок + мета",
+    "12 целевых слов",
+    "Многоязычный",
+    "Электронная коммерция и блог"
+   ],
+   "kullanim": [
+    "SEO страницы продукта",
+    "Оптимизация контента",
+    "Рекламные слова",
+    "Листинг на торговой площадке"
+   ]
+  }
+ },
+ "sohbet": {
+  "tr": {
+   "ad": "AI Sohbet",
+   "aciklama": "Her şeyi sor, akıllı cevap al",
+   "slogan": "Aklındaki her soruyu sor, anında akıllı cevap al.",
+   "detay": "Soru-cevap, fikir üretme, planlama, kod, açıklama — kendi dilinde akıllı bir asistanla sohbet et.",
+   "ozellikler": [
+    "Llama 3.3 70B",
+    "Çok dilli",
+    "Her konuda yardım",
+    "Hızlı"
+   ],
+   "kullanim": [
+    "Soru-cevap",
+    "Fikir üretme",
+    "Planlama",
+    "Açıklama"
+   ]
+  },
+  "en": {
+   "ad": "AI Chat",
+   "aciklama": "Ask anything, get smart answer",
+   "slogan": "Ask any question on your mind and get a smart answer instantly.",
+   "detay": "Q&A, ideation, planning, coding, explaining — chat with an intelligent assistant in your own language.",
+   "ozellikler": [
+    "Llama 3.3 70B",
+    "Multilingual",
+    "Help with everything",
+    "Fast"
+   ],
+   "kullanim": [
+    "Question and answer",
+    "idea generation",
+    "Planning",
+    "Explanation"
+   ]
+  },
+  "de": {
+   "ad": "KI-Chat",
+   "aciklama": "Wenn Sie etwas fragen, erhalten Sie eine kluge Antwort",
+   "slogan": "Stellen Sie jede Frage, die Ihnen durch den Kopf geht, und erhalten Sie sofort eine kluge Antwort.",
+   "detay": "Fragen und Antworten, Ideen entwickeln, planen, programmieren, erklären – chatten Sie mit einem intelligenten Assistenten in Ihrer eigenen Sprache.",
+   "ozellikler": [
+    "Lama 3,3 70B",
+    "Mehrsprachig",
+    "Hilfe bei allem",
+    "Schnell"
+   ],
+   "kullanim": [
+    "Frage und Antwort",
+    "Ideengenerierung",
+    "Planung",
+    "Erläuterung"
+   ]
+  },
+  "fr": {
+   "ad": "Chat IA",
+   "aciklama": "Demandez n'importe quoi, obtenez une réponse intelligente",
+   "slogan": "Posez n'importe quelle question qui vous vient à l'esprit et obtenez une réponse intelligente instantanément.",
+   "detay": "Questions et réponses, idéation, planification, codage, explication : discutez avec un assistant intelligent dans votre propre langue.",
+   "ozellikler": [
+    "Lama 3.3 70B",
+    "Multilingue",
+    "Aide pour tout",
+    "Rapide"
+   ],
+   "kullanim": [
+    "Question et réponse",
+    "génération d'idées",
+    "Planification",
+    "Explication"
+   ]
+  },
+  "es": {
+   "ad": "Chat de IA",
+   "aciklama": "Pregunta cualquier cosa y obtén una respuesta inteligente",
+   "slogan": "Haga cualquier pregunta que tenga en mente y obtenga una respuesta inteligente al instante.",
+   "detay": "Preguntas y respuestas, ideas, planificación, codificación, explicaciones: chatee con un asistente inteligente en su propio idioma.",
+   "ozellikler": [
+    "Llama 3.3 70B",
+    "Plurilingüe",
+    "ayuda con todo",
+    "Rápido"
+   ],
+   "kullanim": [
+    "Pregunta y respuesta",
+    "generación de ideas",
+    "Planificación",
+    "Explicación"
+   ]
+  },
+  "ar": {
+   "ad": "دردشة الذكاء الاصطناعي",
+   "aciklama": "اسأل أي شيء، واحصل على إجابة ذكية",
+   "slogan": "اطرح أي سؤال يدور في ذهنك واحصل على إجابة ذكية على الفور.",
+   "detay": "أسئلة وأجوبة، والتفكير، والتخطيط، والبرمجة، والشرح - قم بالدردشة مع مساعد ذكي بلغتك الخاصة.",
+   "ozellikler": [
+    "اللاما 3.3 70 ب",
+    "متعدد اللغات",
+    "مساعدة في كل شيء",
+    "سريع"
+   ],
+   "kullanim": [
+    "سؤال وجواب",
+    "توليد الفكرة",
+    "تخطيط",
+    "توضيح"
+   ]
+  },
+  "ru": {
+   "ad": "AI-чат",
+   "aciklama": "Спроси что угодно, получи умный ответ",
+   "slogan": "Задайте любой вопрос, который у вас на уме, и мгновенно получите умный ответ.",
+   "detay": "Вопросы и ответы, идеи, планирование, программирование, объяснения — общайтесь с умным помощником на вашем родном языке.",
+   "ozellikler": [
+    "Лама 3.3 70Б",
+    "Многоязычный",
+    "Помогите со всем",
+    "Быстрый"
+   ],
+   "kullanim": [
+    "Вопрос и ответ",
+    "генерация идей",
+    "Планирование",
+    "Объяснение"
+   ]
+  }
+ },
+ "kod": {
+  "tr": {
+   "ad": "AI Kod Asistanı",
+   "aciklama": "Kod yaz / açıkla / düzelt",
+   "slogan": "Kod yaz, açıkla, hatasını bul — saniyede.",
+   "detay": "İstediğin işi tarif et; temiz çalışır kod yazsın, mevcut kodunu açıklasın veya hatanı bulsun. Python, JS, SQL, HTML ve daha fazlası.",
+   "ozellikler": [
+    "Yaz / açıkla / düzelt",
+    "Tüm popüler diller",
+    "Açıklama kendi dilinde",
+    "Llama 3.3 70B"
+   ],
+   "kullanim": [
+    "Fonksiyon/script",
+    "Hata ayıklama",
+    "Kod öğrenme",
+    "SQL/regex"
+   ]
+  },
+  "en": {
+   "ad": "AI Code Assistant",
+   "aciklama": "Write/explain/fix code",
+   "slogan": "Write code, explain it, find the bug — in seconds.",
+   "detay": "Describe the job you want; Let him write clean, working code, explain your current code, or find your bug. Python, JS, SQL, HTML and more.",
+   "ozellikler": [
+    "Write/explain/correct",
+    "All popular languages",
+    "Description in your own language",
+    "Llama 3.3 70B"
+   ],
+   "kullanim": [
+    "Function/script",
+    "debugging",
+    "learn code",
+    "SQL/regex"
+   ]
+  },
+  "de": {
+   "ad": "AI-Code-Assistent",
+   "aciklama": "Code schreiben/erklären/korrigieren",
+   "slogan": "Schreiben Sie Code, erklären Sie ihn, finden Sie den Fehler – in Sekundenschnelle.",
+   "detay": "Beschreiben Sie den Job, den Sie möchten. Lassen Sie ihn sauberen, funktionierenden Code schreiben, Ihren aktuellen Code erklären oder Ihren Fehler finden. Python, JS, SQL, HTML und mehr.",
+   "ozellikler": [
+    "Schreiben/erklären/korrigieren",
+    "Alle gängigen Sprachen",
+    "Beschreibung in Ihrer eigenen Sprache",
+    "Lama 3,3 70B"
+   ],
+   "kullanim": [
+    "Funktion/Skript",
+    "Debuggen",
+    "Code lernen",
+    "SQL/regex"
+   ]
+  },
+  "fr": {
+   "ad": "Assistant de code IA",
+   "aciklama": "Écrire/expliquer/corriger le code",
+   "slogan": "Écrivez du code, expliquez-le, trouvez le bug – en quelques secondes.",
+   "detay": "Décrivez l'emploi que vous désirez ; Laissez-le écrire du code propre et fonctionnel, expliquer votre code actuel ou trouver votre bug. Python, JS, SQL, HTML et plus encore.",
+   "ozellikler": [
+    "Écrire/expliquer/corriger",
+    "Toutes les langues populaires",
+    "Description dans votre propre langue",
+    "Lama 3.3 70B"
+   ],
+   "kullanim": [
+    "Fonction/script",
+    "débogage",
+    "apprendre le code",
+    "SQL/expression régulière"
+   ]
+  },
+  "es": {
+   "ad": "Asistente de código AI",
+   "aciklama": "Escribir/explicar/arreglar código",
+   "slogan": "Escriba código, explíquelo, encuentre el error, en segundos.",
+   "detay": "Describe el trabajo que deseas; Permítale escribir código limpio y funcional, explicar su código actual o encontrar su error. Python, JS, SQL, HTML y más.",
+   "ozellikler": [
+    "Escribir/explicar/corregir",
+    "Todos los idiomas populares",
+    "Descripción en tu propio idioma.",
+    "Llama 3.3 70B"
+   ],
+   "kullanim": [
+    "Función/guión",
+    "depuración",
+    "aprender código",
+    "SQL/expresión regular"
+   ]
+  },
+  "ar": {
+   "ad": "مساعد كود الذكاء الاصطناعي",
+   "aciklama": "كتابة/شرح/إصلاح الكود",
+   "slogan": "اكتب التعليمات البرمجية، واشرحها، واعثر على الخطأ - في ثوانٍ.",
+   "detay": "قم بوصف الوظيفة التي تريدها؛ اسمح له بكتابة تعليمات برمجية نظيفة وفعالة أو شرح التعليمات البرمجية الحالية أو العثور على الخطأ الخاص بك. بايثون، JS، SQL، HTML وأكثر من ذلك.",
+   "ozellikler": [
+    "اكتب/ اشرح/ صحح",
+    "جميع اللغات الشعبية",
+    "الوصف بلغتك الخاصة",
+    "اللاما 3.3 70 ب"
+   ],
+   "kullanim": [
+    "الوظيفة/النص",
+    "تصحيح الأخطاء",
+    "تعلم الكود",
+    "SQL/regex"
+   ]
+  },
+  "ru": {
+   "ad": "Помощник по AI-коду",
+   "aciklama": "Написать/объяснить/исправить код",
+   "slogan": "Напишите код, объясните его, найдите ошибку — за секунды.",
+   "detay": "Опишите желаемую работу; Позвольте ему написать чистый, работающий код, объяснить ваш текущий код или найти вашу ошибку. Python, JS, SQL, HTML и многое другое.",
+   "ozellikler": [
+    "Напишите/объясните/исправьте",
+    "Все популярные языки",
+    "Описание на вашем родном языке",
+    "Лама 3.3 70Б"
+   ],
+   "kullanim": [
+    "Функция/скрипт",
+    "отладка",
+    "изучить код",
+    "SQL/регулярное выражение"
+   ]
+  }
+ },
+ "tts": {
+  "tr": {
+   "ad": "Metni Seslendir",
+   "aciklama": "Metni doğal sese çevir",
+   "slogan": "Yazdığını doğal, akıcı sese dönüştür.",
+   "detay": "Yazdığın metni doğal sese çevir. Video dış sesi, podcast, sesli kitap, IVR için saniyeler içinde ses dosyası.",
+   "ozellikler": [
+    "Doğal ses",
+    "Anında ses dosyası",
+    "Sınırsız uzunluk",
+    "İndir & kullan"
+   ],
+   "kullanim": [
+    "Video voiceover",
+    "Sesli kitap/podcast",
+    "Sosyal anlatım",
+    "IVR anonsu"
+   ]
+  },
+  "en": {
+   "ad": "Speak Text",
+   "aciklama": "Convert text to natural voice",
+   "slogan": "Turn what you type into natural, fluid sound.",
+   "detay": "Convert your text into natural voice. Audio file in seconds for video voiceover, podcast, audiobook, IVR.",
+   "ozellikler": [
+    "natural sound",
+    "instant audio file",
+    "unlimited length",
+    "Download & use"
+   ],
+   "kullanim": [
+    "Video voiceover",
+    "Audiobook/podcast",
+    "social expression",
+    "IVR announcement"
+   ]
+  },
+  "de": {
+   "ad": "Text sprechen",
+   "aciklama": "Wandeln Sie Text in natürliche Sprache um",
+   "slogan": "Verwandeln Sie Ihre Eingabe in natürlichen, flüssigen Klang.",
+   "detay": "Wandeln Sie Ihren Text in natürliche Sprache um. Sekundenschnelle Audiodatei für Video-Voiceover, Podcast, Hörbuch, IVR.",
+   "ozellikler": [
+    "natürlicher Klang",
+    "sofortige Audiodatei",
+    "unbegrenzte Länge",
+    "Herunterladen und verwenden"
+   ],
+   "kullanim": [
+    "Video-Voiceover",
+    "Hörbuch/Podcast",
+    "sozialer Ausdruck",
+    "IVR-Ankündigung"
+   ]
+  },
+  "fr": {
+   "ad": "Parler du texte",
+   "aciklama": "Convertir le texte en voix naturelle",
+   "slogan": "Transformez ce que vous tapez en un son naturel et fluide.",
+   "detay": "Convertissez votre texte en voix naturelle. Fichier audio en quelques secondes pour voix off vidéo, podcast, livre audio, IVR.",
+   "ozellikler": [
+    "son naturel",
+    "fichier audio instantané",
+    "longueur illimitée",
+    "Télécharger et utiliser"
+   ],
+   "kullanim": [
+    "Voix off vidéo",
+    "Livre audio/podcast",
+    "expression sociale",
+    "Annonce RVI"
+   ]
+  },
+  "es": {
+   "ad": "Hablar texto",
+   "aciklama": "Convertir texto a voz natural",
+   "slogan": "Convierte lo que escribes en un sonido natural y fluido.",
+   "detay": "Convierte tu texto en voz natural. Archivo de audio en segundos para locución de video, podcast, audiolibro, IVR.",
+   "ozellikler": [
+    "sonido natural",
+    "archivo de audio instantáneo",
+    "longitud ilimitada",
+    "Descargar y usar"
+   ],
+   "kullanim": [
+    "Locución de vídeo",
+    "Audiolibro/pódcast",
+    "expresión social",
+    "anuncio IVR"
+   ]
+  },
+  "ar": {
+   "ad": "تحدث النص",
+   "aciklama": "تحويل النص إلى صوت طبيعي",
+   "slogan": "حول ما تكتبه إلى صوت طبيعي سلس.",
+   "detay": "تحويل النص الخاص بك إلى صوت طبيعي. ملف صوتي في ثوانٍ للتعليق الصوتي للفيديو، والبودكاست، والكتب الصوتية، والرأي الصوتي التفاعلي (IVR).",
+   "ozellikler": [
+    "الصوت الطبيعي",
+    "ملف صوتي فوري",
+    "طول غير محدود",
+    "تحميل واستخدام"
+   ],
+   "kullanim": [
+    "التعليق الصوتي بالفيديو",
+    "كتاب مسموع/بودكاست",
+    "التعبير الاجتماعي",
+    "إعلان الرد الآلي (IVR)."
+   ]
+  },
+  "ru": {
+   "ad": "Произнести текст",
+   "aciklama": "Преобразование текста в естественный голос",
+   "slogan": "Превратите вводимый текст в естественный, плавный звук.",
+   "detay": "Преобразуйте свой текст в естественный голос. Аудиофайл за считанные секунды для озвучки видео, подкаста, аудиокниги, IVR.",
+   "ozellikler": [
+    "естественный звук",
+    "мгновенный аудиофайл",
+    "неограниченная длина",
+    "Загрузите и используйте"
+   ],
+   "kullanim": [
+    "Озвучка видео",
+    "Аудиокнига/подкаст",
+    "социальное выражение",
+    "IVR-объявление"
+   ]
+  }
+ },
+ "transkript": {
+  "tr": {
+   "ad": "Sesi Yazıya Çevir",
+   "aciklama": "Ses/video → metin + altyazı",
+   "slogan": "Ses ve videolarını dakikalar içinde metne çevir.",
+   "detay": "Whisper large-v3 ile ses/video URL'ini metne çevir, zaman damgalı altyazı çıkar. 90+ dil desteği.",
+   "ozellikler": [
+    "Whisper large-v3",
+    "90+ dil",
+    "Zaman damgalı altyazı",
+    "Toplantı/podcast/video"
+   ],
+   "kullanim": [
+    "Video altyazısı",
+    "Toplantı notu",
+    "Podcast → blog",
+    "Ders metni"
+   ]
+  },
+  "en": {
+   "ad": "Transcribe Audio",
+   "aciklama": "Audio/video → text + subtitles",
+   "slogan": "Convert your audio and video to text in minutes.",
+   "detay": "Convert audio/video URL to text with Whisper large-v3 and extract timestamped subtitles. Support for 90+ languages.",
+   "ozellikler": [
+    "Whisper large-v3",
+    "90+ languages",
+    "Timestamped caption",
+    "Meeting/podcast/video"
+   ],
+   "kullanim": [
+    "video subtitle",
+    "meeting note",
+    "Podcast → blog",
+    "Lesson text"
+   ]
+  },
+  "de": {
+   "ad": "Audio transkribieren",
+   "aciklama": "Audio/Video → Text + Untertitel",
+   "slogan": "Konvertieren Sie Ihre Audio- und Videodateien in wenigen Minuten in Text.",
+   "detay": "Konvertieren Sie Audio-/Video-URLs mit Whisper Large-v3 in Text und extrahieren Sie zeitgestempelte Untertitel. Unterstützung für über 90 Sprachen.",
+   "ozellikler": [
+    "Whisper Large-v3",
+    "Über 90 Sprachen",
+    "Bildunterschrift mit Zeitstempel",
+    "Treffen/Podcast/Video"
+   ],
+   "kullanim": [
+    "Video-Untertitel",
+    "Besprechungsnotiz",
+    "Podcast → Blog",
+    "Unterrichtstext"
+   ]
+  },
+  "fr": {
+   "ad": "Transcrire l'audio",
+   "aciklama": "Audio/vidéo → texte + sous-titres",
+   "slogan": "Convertissez votre audio et votre vidéo en texte en quelques minutes.",
+   "detay": "Convertissez l'URL audio/vidéo en texte avec Whisper large-v3 et extrayez les sous-titres horodatés. Prise en charge de plus de 90 langues.",
+   "ozellikler": [
+    "Chuchotement grand-v3",
+    "90+ langues",
+    "Légende horodatée",
+    "Réunion/podcast/vidéo"
+   ],
+   "kullanim": [
+    "sous-titre vidéo",
+    "note de réunion",
+    "Podcast → blog",
+    "Texte de la leçon"
+   ]
+  },
+  "es": {
+   "ad": "Transcribir audio",
+   "aciklama": "Audio/vídeo → texto + subtítulos",
+   "slogan": "Convierte tu audio y vídeo a texto en minutos.",
+   "detay": "Convierta URL de audio/video a texto con Whisper large-v3 y extraiga subtítulos con marca de tiempo. Soporte para más de 90 idiomas.",
+   "ozellikler": [
+    "Susurro grande-v3",
+    "Más de 90 idiomas",
+    "Título con marca de tiempo",
+    "Reunión/podcast/vídeo"
+   ],
+   "kullanim": [
+    "subtítulo del vídeo",
+    "nota de reunión",
+    "Pódcast → blog",
+    "Texto de la lección"
+   ]
+  },
+  "ar": {
+   "ad": "نسخ الصوت",
+   "aciklama": "الصوت/الفيديو → نص + ترجمة",
+   "slogan": "قم بتحويل الصوت والفيديو إلى نص في دقائق.",
+   "detay": "قم بتحويل عنوان URL للصوت/الفيديو إلى نص باستخدام Whisper Large-v3 واستخرج الترجمات ذات الطابع الزمني. دعم لأكثر من 90 لغة.",
+   "ozellikler": [
+    "الهمس كبير-v3",
+    "أكثر من 90 لغة",
+    "التسمية التوضيحية ذات الطابع الزمني",
+    "اجتماع/بودكاست/فيديو"
+   ],
+   "kullanim": [
+    "عنوان فرعي للفيديو",
+    "مذكرة الاجتماع",
+    "بودكاست → مدونة",
+    "نص الدرس"
+   ]
+  },
+  "ru": {
+   "ad": "Расшифровать аудио",
+   "aciklama": "Аудио/видео → текст + субтитры",
+   "slogan": "Преобразуйте аудио и видео в текст за считанные минуты.",
+   "detay": "Преобразуйте URL-адрес аудио/видео в текст с помощью Whisper big-v3 и извлекайте субтитры с отметкой времени. Поддержка более 90 языков.",
+   "ozellikler": [
+    "Шепот большой-v3",
+    "более 90 языков",
+    "Подпись с отметкой времени",
+    "Встреча/подкаст/видео"
+   ],
+   "kullanim": [
+    "видео с субтитрами",
+    "записка о встрече",
+    "Подкаст → блог",
+    "Текст урока"
+   ]
+  }
+ },
+ "aciklama": {
+  "tr": {
+   "ad": "Görsel Açıklama (Vision)",
+   "aciklama": "Görseli AI anlatsın",
+   "slogan": "Bir görsel yükle, yapay zekâ ne olduğunu kendi dilinde anlatsın.",
+   "detay": "Görseli yükle; AI içeriğini, nesneleri ve sahneyi detaylıca açıklasın — kendi dilinde. Erişilebilirlik, katalog açıklaması, içerik etiketleme için ideal.",
+   "ozellikler": [
+    "Llava vision modeli",
+    "Kendi dilinde",
+    "Detaylı analiz",
+    "Alt-metin/SEO dostu"
+   ],
+   "kullanim": [
+    "Erişilebilirlik alt-metni",
+    "Ürün açıklaması",
+    "İçerik etiketleme",
+    "Görsel analiz"
+   ]
+  },
+  "en": {
+   "ad": "Visual Description (Vision)",
+   "aciklama": "Let AI explain the visual",
+   "slogan": "Upload an image and artificial intelligence will explain what it is in its own language.",
+   "detay": "Upload the image; Let the AI ​​describe the content, objects, and scene in detail — in its own language. Ideal for accessibility, catalog description, content tagging.",
+   "ozellikler": [
+    "Llava vision model",
+    "in your own language",
+    "Detailed analysis",
+    "Alt-text/SEO friendly"
+   ],
+   "kullanim": [
+    "Accessibility subtext",
+    "Product Description",
+    "Content tagging",
+    "visual analysis"
+   ]
+  },
+  "de": {
+   "ad": "Visuelle Beschreibung (Vision)",
+   "aciklama": "Lassen Sie die KI das Visuelle erklären",
+   "slogan": "Laden Sie ein Bild hoch und die künstliche Intelligenz erklärt Ihnen in ihrer eigenen Sprache, was es ist.",
+   "detay": "Laden Sie das Bild hoch. Lassen Sie die KI den Inhalt, die Objekte und die Szene detailliert beschreiben – in ihrer eigenen Sprache. Ideal für Barrierefreiheit, Katalogbeschreibung und Inhaltskennzeichnung.",
+   "ozellikler": [
+    "Llava Vision-Modell",
+    "in Ihrer eigenen Sprache",
+    "Detaillierte Analyse",
+    "Alternativtext/SEO-freundlich"
+   ],
+   "kullanim": [
+    "Subtext zur Barrierefreiheit",
+    "Produktbeschreibung",
+    "Inhaltskennzeichnung",
+    "visuelle Analyse"
+   ]
+  },
+  "fr": {
+   "ad": "Description visuelle (Vision)",
+   "aciklama": "Laissez l'IA expliquer le visuel",
+   "slogan": "Téléchargez une image et l’intelligence artificielle expliquera de quoi il s’agit dans sa propre langue.",
+   "detay": "Téléchargez l'image ; Laissez l'IA décrire le contenu, les objets et la scène en détail, dans son propre langage. Idéal pour l'accessibilité, la description du catalogue, le balisage du contenu.",
+   "ozellikler": [
+    "Modèle de vision Llava",
+    "dans votre propre langue",
+    "Analyse détaillée",
+    "Compatible avec le texte alternatif et le référencement"
+   ],
+   "kullanim": [
+    "Sous-texte d’accessibilité",
+    "Description du produit",
+    "Balisage du contenu",
+    "analyse visuelle"
+   ]
+  },
+  "es": {
+   "ad": "Descripción visual (visión)",
+   "aciklama": "Deje que la IA explique lo visual",
+   "slogan": "Sube una imagen y la inteligencia artificial te explicará de qué se trata en su propio idioma.",
+   "detay": "Sube la imagen; Deje que la IA describa el contenido, los objetos y la escena en detalle, en su propio lenguaje. Ideal para accesibilidad, descripción de catálogos y etiquetado de contenidos.",
+   "ozellikler": [
+    "Modelo de visión de llama",
+    "en tu propio idioma",
+    "Análisis detallado",
+    "Compatible con texto alternativo/SEO"
+   ],
+   "kullanim": [
+    "Subtexto de accesibilidad",
+    "Descripción del Producto",
+    "Etiquetado de contenido",
+    "análisis visual"
+   ]
+  },
+  "ar": {
+   "ad": "الوصف البصري (الرؤية)",
+   "aciklama": "دع الذكاء الاصطناعي يشرح العناصر المرئية",
+   "slogan": "قم بتحميل صورة وسيقوم الذكاء الاصطناعي بشرح ماهيتها بلغته الخاصة.",
+   "detay": "تحميل الصورة. اسمح للذكاء الاصطناعي بوصف المحتوى والأشياء والمشهد بالتفصيل - بلغته الخاصة. مثالية لإمكانية الوصول ووصف الكتالوج ووضع علامات على المحتوى.",
+   "ozellikler": [
+    "نموذج رؤية اللافا",
+    "في لغتك الخاصة",
+    "تحليل مفصل",
+    "نص بديل / صديق لكبار المسئولين الاقتصاديين"
+   ],
+   "kullanim": [
+    "إمكانية الوصول إلى النص الفرعي",
+    "وصف المنتج",
+    "وضع علامات على المحتوى",
+    "التحليل البصري"
+   ]
+  },
+  "ru": {
+   "ad": "Визуальное описание (видение)",
+   "aciklama": "Пусть ИИ объяснит визуальное",
+   "slogan": "Загрузите изображение, и искусственный интеллект объяснит, что это такое, на своем языке.",
+   "detay": "Загрузите изображение; Пусть ИИ подробно описывает контент, объекты и сцену — на своем языке. Идеально подходит для доступности, описания каталога, маркировки контента.",
+   "ozellikler": [
+    "Модель зрения Ллавы",
+    "на твоем родном языке",
+    "Детальный анализ",
+    "Альтернативный текст/оптимизирован для SEO"
+   ],
+   "kullanim": [
+    "Подтекст доступности",
+    "Описание продукта",
+    "Теги контента",
+    "визуальный анализ"
+   ]
+  }
+ },
+ "vsoru": {
+  "tr": {
+   "ad": "Görsele Soru Sor",
+   "aciklama": "Görsel yükle, hakkında sor",
+   "slogan": "Bir görsel yükle, hakkında istediğini sor.",
+   "detay": "Görseli yükle ve serbestçe soru sor: bu ne markası, kaç kişi var, bu yemeğin tarifi ne. AI görseli analiz edip kendi dilinde cevaplar.",
+   "ozellikler": [
+    "Serbest soru-cevap",
+    "Görsel analizi",
+    "Kendi dilinde",
+    "Llava vision"
+   ],
+   "kullanim": [
+    "Ürün/marka tanıma",
+    "Belge/tablo okuma",
+    "Sahne sorgusu",
+    "Eğitim"
+   ]
+  },
+  "en": {
+   "ad": "Ask a Question to the Image",
+   "aciklama": "Upload an image, ask about it",
+   "slogan": "Upload an image, ask whatever you want about it.",
+   "detay": "Upload the image and ask questions freely: what brand is this, how many people are there, what is the recipe for this dish. AI analyzes the image and answers it in its own language.",
+   "ozellikler": [
+    "Free Q&A",
+    "Visual analysis",
+    "in your own language",
+    "Llava vision"
+   ],
+   "kullanim": [
+    "Product/brand recognition",
+    "Reading a document/table",
+    "Scene query",
+    "Education"
+   ]
+  },
+  "de": {
+   "ad": "Stellen Sie eine Frage zum Bild",
+   "aciklama": "Laden Sie ein Bild hoch und fragen Sie danach",
+   "slogan": "Laden Sie ein Bild hoch und fragen Sie, was Sie dazu wollen.",
+   "detay": "Laden Sie das Bild hoch und stellen Sie frei Fragen: Welche Marke ist das, wie viele Leute sind da, was ist das Rezept für dieses Gericht? KI analysiert das Bild und antwortet darauf in ihrer eigenen Sprache.",
+   "ozellikler": [
+    "Kostenlose Fragen und Antworten",
+    "Visuelle Analyse",
+    "in Ihrer eigenen Sprache",
+    "Llava-Vision"
+   ],
+   "kullanim": [
+    "Produkt-/Markenbekanntheit",
+    "Ein Dokument/eine Tabelle lesen",
+    "Szenenabfrage",
+    "Ausbildung"
+   ]
+  },
+  "fr": {
+   "ad": "Poser une question à l'image",
+   "aciklama": "Téléchargez une image, posez des questions",
+   "slogan": "Téléchargez une image, demandez ce que vous voulez à ce sujet.",
+   "detay": "Téléchargez l'image et posez librement des questions : de quelle marque s'agit-il, combien de personnes y a-t-il, quelle est la recette de ce plat. L'IA analyse l'image et y répond dans son propre langage.",
+   "ozellikler": [
+    "Questions et réponses gratuites",
+    "Analyse visuelle",
+    "dans votre propre langue",
+    "Vision de la lave"
+   ],
+   "kullanim": [
+    "Reconnaissance du produit/de la marque",
+    "Lire un document/tableau",
+    "Requête de scène",
+    "Éducation"
+   ]
+  },
+  "es": {
+   "ad": "Haga una pregunta a la imagen",
+   "aciklama": "Sube una imagen, pregunta por ella.",
+   "slogan": "Sube una imagen, pregunta lo que quieras sobre ella.",
+   "detay": "Sube la imagen y pregunta libremente: qué marca es esta, cuántas personas hay, cuál es la receta de este plato. La IA analiza la imagen y responde en su propio idioma.",
+   "ozellikler": [
+    "Preguntas y respuestas gratuitas",
+    "Análisis visual",
+    "en tu propio idioma",
+    "visión de llama"
+   ],
+   "kullanim": [
+    "Reconocimiento de producto/marca",
+    "Leer un documento/tabla",
+    "Consulta de escena",
+    "Educación"
+   ]
+  },
+  "ar": {
+   "ad": "طرح سؤال على الصورة",
+   "aciklama": "قم بتحميل صورة واسأل عنها",
+   "slogan": "قم بتحميل صورة، واسأل عما تريد عنها.",
+   "detay": "قم بتحميل الصورة واطرح الأسئلة بحرية: ما هي العلامة التجارية، كم عدد الأشخاص الموجودين، ما هي الوصفة لهذا الطبق. يقوم الذكاء الاصطناعي بتحليل الصورة والإجابة عليها بلغته الخاصة.",
+   "ozellikler": [
+    "أسئلة وأجوبة مجانية",
+    "التحليل البصري",
+    "في لغتك الخاصة",
+    "رؤية اللافا"
+   ],
+   "kullanim": [
+    "التعرف على المنتج/العلامة التجارية",
+    "قراءة مستند/جدول",
+    "الاستعلام عن المشهد",
+    "تعليم"
+   ]
+  },
+  "ru": {
+   "ad": "Задайте вопрос изображению",
+   "aciklama": "Загрузите изображение, спросите об этом",
+   "slogan": "Загрузите изображение, спросите о нем все, что хотите.",
+   "detay": "Загрузите изображение и свободно задавайте вопросы: что это за бренд, сколько людей, какой рецепт этого блюда. ИИ анализирует изображение и отвечает на него на своем языке.",
+   "ozellikler": [
+    "Бесплатные вопросы и ответы",
+    "Визуальный анализ",
+    "на твоем родном языке",
+    "Видение Ллавы"
+   ],
+   "kullanim": [
+    "Узнаваемость продукта/бренда",
+    "Чтение документа/таблицы",
+    "Запрос сцены",
+    "Образование"
+   ]
+  }
+ },
+ "ocr": {
+  "tr": {
+   "ad": "OCR — Görselden Metin",
+   "aciklama": "Fotoğraftaki yazıyı metne çevir",
+   "slogan": "Fotoğraftaki/taranan yazıyı düzenlenebilir metne çevir.",
+   "detay": "Fatura, fiş, belge, ekran görüntüsü veya tabela fotoğrafındaki yazıyı metne dönüştür (Türkçe + İngilizce). Kopyala, düzenle, kullan.",
+   "ozellikler": [
+    "Türkçe + İngilizce",
+    "Fatura/fiş/belge/ekran",
+    "Saniyeler içinde",
+    "Kopyalanabilir"
+   ],
+   "kullanim": [
+    "Fatura dijitalleştirme",
+    "Belge → metin",
+    "Ekrandan kopya",
+    "Kartvizit/tabela"
+   ]
+  },
+  "en": {
+   "ad": "OCR — Text from Image",
+   "aciklama": "Convert text on photo to text",
+   "slogan": "Convert photo/scanned text to editable text.",
+   "detay": "Convert the text on an invoice, receipt, document, screenshot or sign photo to text (Turkish + English). Copy, edit, use.",
+   "ozellikler": [
+    "Turkish + English",
+    "Invoice/receipt/document/display",
+    "in seconds",
+    "can be copied"
+   ],
+   "kullanim": [
+    "Invoice digitization",
+    "Document → text",
+    "Screen copy",
+    "Business card/sign"
+   ]
+  },
+  "de": {
+   "ad": "OCR – Text aus Bild",
+   "aciklama": "Konvertieren Sie Text auf einem Foto in Text",
+   "slogan": "Konvertieren Sie Fotos/gescannten Text in bearbeitbaren Text.",
+   "detay": "Konvertieren Sie den Text auf einer Rechnung, Quittung, einem Dokument, einem Screenshot oder einem Unterschriftenfoto in Text (Türkisch + Englisch). Kopieren, bearbeiten, verwenden.",
+   "ozellikler": [
+    "Türkisch + Englisch",
+    "Rechnung/Quittung/Dokument/Anzeige",
+    "in Sekunden",
+    "kann kopiert werden"
+   ],
+   "kullanim": [
+    "Digitalisierung von Rechnungen",
+    "Dokument → Text",
+    "Bildschirmkopie",
+    "Visitenkarte/Schild"
+   ]
+  },
+  "fr": {
+   "ad": "OCR — Texte à partir d'une image",
+   "aciklama": "Convertir le texte d'une photo en texte",
+   "slogan": "Convertissez une photo/un texte numérisé en texte modifiable.",
+   "detay": "Convertissez le texte d'une facture, d'un reçu, d'un document, d'une capture d'écran ou d'une photo de signature en texte (turc + anglais). Copiez, modifiez, utilisez.",
+   "ozellikler": [
+    "Turc + Anglais",
+    "Facture/reçu/document/affichage",
+    "en secondes",
+    "peut être copié"
+   ],
+   "kullanim": [
+    "Numérisation des factures",
+    "Document → texte",
+    "Copie d'écran",
+    "Carte de visite/panneau"
+   ]
+  },
+  "es": {
+   "ad": "OCR: texto de imagen",
+   "aciklama": "Convertir texto en foto a texto",
+   "slogan": "Convierta foto/texto escaneado en texto editable.",
+   "detay": "Convierta el texto de una factura, recibo, documento, captura de pantalla o foto de firma en texto (turco + inglés). Copiar, editar, usar.",
+   "ozellikler": [
+    "Turco + Inglés",
+    "Factura/recibo/documento/pantalla",
+    "en segundos",
+    "se puede copiar"
+   ],
+   "kullanim": [
+    "Digitalización de facturas",
+    "Documento → texto",
+    "Copia de pantalla",
+    "Tarjeta de visita/rótulo"
+   ]
+  },
+  "ar": {
+   "ad": "التعرف الضوئي على الحروف - نص من الصورة",
+   "aciklama": "تحويل النص الموجود على الصورة إلى نص",
+   "slogan": "تحويل الصورة/النص الممسوح ضوئيًا إلى نص قابل للتحرير.",
+   "detay": "تحويل النص الموجود على فاتورة أو إيصال أو مستند أو لقطة شاشة أو صورة توقيع إلى نص (تركي + إنجليزي). نسخ، تحرير، استخدام.",
+   "ozellikler": [
+    "التركية + الإنجليزية",
+    "الفاتورة/الاستلام/المستند/العرض",
+    "في ثواني",
+    "يمكن نسخها"
+   ],
+   "kullanim": [
+    "رقمنة الفاتورة",
+    "مستند → نص",
+    "نسخة الشاشة",
+    "بطاقة العمل/التوقيع"
+   ]
+  },
+  "ru": {
+   "ad": "OCR — текст из изображения",
+   "aciklama": "Преобразование текста на фотографии в текст",
+   "slogan": "Преобразование фотографий/отсканированного текста в редактируемый текст.",
+   "detay": "Преобразуйте текст счета, квитанции, документа, снимка экрана или фотографии подписи в текст (турецкий + английский). Копируйте, редактируйте, используйте.",
+   "ozellikler": [
+    "турецкий + английский",
+    "Счет/квитанция/документ/отображение",
+    "в секундах",
+    "можно скопировать"
+   ],
+   "kullanim": [
+    "Оцифровка счетов-фактур",
+    "Документ → текст",
+    "Копия экрана",
+    "Визитная карточка/вывеска"
+   ]
+  }
+ },
+ "faceswap": {
+  "tr": {
+   "ad": "Yüz Değiştir",
+   "aciklama": "Bir yüzü başka fotoğrafa taşı",
+   "slogan": "İki fotoğraf yükle — kaynak yüzü hedef fotoğrafa gerçekçi şekilde yerleştir.",
+   "detay": "Kaynak yüzü (kişi) ve hedef fotoğrafı yükle; AI yüzü doğal ışık ve açıyla hedefe yerleştirir. Net, önden çekilmiş yüzlerle en iyi sonuç.",
+   "ozellikler": [
+    "İnswapper yüz değiştirme",
+    "Gerçekçi ışık/açı uyumu",
+    "Saniyeler içinde sonuç",
+    "Net yüz = en iyi sonuç"
+   ],
+   "kullanim": [
+    "Eğlence & şaka",
+    "Avatar / profil",
+    "Kostüm önizleme",
+    "İçerik üretimi"
+   ]
+  },
+  "en": {
+   "ad": "Face Swap",
+   "aciklama": "Move a face onto another photo",
+   "slogan": "Upload two photos — place the source face onto the target photo realistically.",
+   "detay": "Upload a source face (person) and a target photo; AI places the face with natural light and angle. Clear, front-facing faces give the best result.",
+   "ozellikler": [
+    "Inswapper face swap",
+    "Realistic light/angle match",
+    "Results in seconds",
+    "Clear face = best result"
+   ],
+   "kullanim": [
+    "Fun & memes",
+    "Avatar / profile",
+    "Costume preview",
+    "Content creation"
+   ]
+  }
+ },
+ "pdfozet": {
+  "tr": {
+   "ad": "PDF Özetle",
+   "aciklama": "PDF'i yükle, AI özetlesin",
+   "slogan": "Uzun PDF'leri saniyede anlaşılır özete çevir.",
+   "detay": "PDF dosyanı yükle; metni çıkarılır ve AI ana noktaları madde madde özetler. Taranmış (görüntü) PDF'ler için OCR aracını kullan.",
+   "ozellikler": [
+    "pdftotext + AI özet",
+    "Madde madde çıktı",
+    "Çok dilli özet",
+    "Hızlı"
+   ],
+   "kullanim": [
+    "Rapor / makale özeti",
+    "Sözleşme inceleme",
+    "Ders notu çıkarma",
+    "Araştırma"
+   ]
+  },
+  "en": {
+   "ad": "PDF Summarize",
+   "aciklama": "Upload a PDF, let AI summarize",
+   "slogan": "Turn long PDFs into a clear summary in seconds.",
+   "detay": "Upload your PDF; the text is extracted and AI summarizes the key points as bullets. For scanned (image) PDFs, use the OCR tool.",
+   "ozellikler": [
+    "pdftotext + AI summary",
+    "Bulleted output",
+    "Multilingual summary",
+    "Fast"
+   ],
+   "kullanim": [
+    "Report / article summary",
+    "Contract review",
+    "Study notes",
+    "Research"
+   ]
+  }
+ }
+}
