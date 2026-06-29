@@ -1028,8 +1028,10 @@ struct BizPanelSectionView: View {
     @EnvironmentObject var tema: Tema
     @State private var liste: [[String:Any]] = []
     @State private var yukleniyor = true
+    @State private var ekleAcik = false
 
     private var api: PanelAPI { PanelAPI(host: host, token: bizToken) }
+    private var eklenebilir: Bool { ["stok","randevu","davalar","sureler"].contains(kart.s) }
 
     var body: some View {
         ZStack {
@@ -1051,6 +1053,17 @@ struct BizPanelSectionView: View {
             }
         }
         .navigationTitle(kart.baslik).navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if eklenebilir {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button { ekleAcik = true } label: { Image(systemName: "plus.circle.fill") }
+                }
+            }
+        }
+        .sheet(isPresented: $ekleAcik) {
+            BizEkleForm(ekran: kart.s, host: host, bizToken: bizToken) { Task { await yukle() } }
+                .environmentObject(tema)
+        }
         .task { await yukle() }
     }
 
@@ -1118,6 +1131,90 @@ struct BizPanelSectionView: View {
         case "davalar": liste = await api.bizHukukDavalar()
         case "sureler": liste = await api.bizHukukSureler()
         default:        liste = await api.bizVeri(kart.s)
+        }
+    }
+}
+
+// MARK: - Yeni kayıt ekleme formu (Dashboard'dan tam CRUD — menü/randevu/dava/süre ekle)
+struct BizEkleForm: View {
+    let ekran: String
+    let host: String
+    let bizToken: String
+    let onDone: () -> Void
+    @Environment(\.dismiss) private var dismiss
+    @State private var f1 = ""
+    @State private var f2 = ""
+    @State private var f3 = ""
+    @State private var f4 = ""
+    @State private var f5 = ""
+    @State private var f6 = ""
+    @State private var bekle = false
+    @State private var hata = ""
+
+    private var api: PanelAPI { PanelAPI(host: host, token: bizToken) }
+    private var baslik: String {
+        switch ekran {
+        case "stok": return "Ürün Ekle"
+        case "randevu": return "Randevu Ekle"
+        case "davalar": return "Dava Ekle"
+        case "sureler": return "Süre / Termin Ekle"
+        default: return "Ekle"
+        }
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                switch ekran {
+                case "stok":
+                    TextField("Ürün adı", text: $f1)
+                    TextField("Kategori", text: $f2)
+                    TextField("Fiyat ₺", text: $f3).keyboardType(.numberPad)
+                case "randevu":
+                    TextField("Müşteri adı", text: $f1)
+                    TextField("Telefon", text: $f2).keyboardType(.phonePad)
+                    TextField("Hizmet", text: $f3)
+                    TextField("Fiyat ₺", text: $f4).keyboardType(.numberPad)
+                    TextField("Gün (2026-07-01)", text: $f5)
+                    TextField("Saat (10:00)", text: $f6)
+                case "davalar":
+                    TextField("Dava başlığı", text: $f1)
+                    TextField("Karşı taraf", text: $f2)
+                    TextField("Mahkeme", text: $f3)
+                    TextField("Tür (Hukuk/Ticaret…)", text: $f4)
+                case "sureler":
+                    TextField("Tür (Cevap Dilekçesi…)", text: $f1)
+                    TextField("Son tarih (2026-07-15)", text: $f2)
+                default:
+                    Text("Bu ekran için ekleme yok").foregroundStyle(.secondary)
+                }
+                if !hata.isEmpty { Text(hata).foregroundStyle(.orange).font(.caption) }
+            }
+            .navigationTitle(baslik).navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button("Vazgeç") { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Ekle") { Task { await kaydet() } }.disabled(bekle || f1.isEmpty)
+                }
+            }
+        }
+    }
+
+    func kaydet() async {
+        bekle = true; defer { bekle = false }
+        let (yol, govde) = istek()
+        if yol.isEmpty { dismiss(); return }
+        if await api.bizAksiyon(yol, govde) { onDone(); dismiss() }
+        else { hata = "Eklenemedi — alanları kontrol et." }
+    }
+
+    func istek() -> (String, [String: Any]) {
+        switch ekran {
+        case "stok":    return ("menu", ["name": f1, "category": f2.isEmpty ? "Diğer" : f2, "price": Int(f3) ?? 0])
+        case "randevu": return ("appt", ["name": f1, "phone": f2, "service": f3, "price": Int(f4) ?? 0, "day": f5, "time": f6])
+        case "davalar": return ("dava", ["baslik": f1, "karsi": f2, "mahkeme": f3, "tur": f4])
+        case "sureler": return ("sure", ["tur": f1, "son": f2])
+        default:        return ("", [:])
         }
     }
 }
