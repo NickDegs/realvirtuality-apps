@@ -133,7 +133,15 @@ struct HesabimView: View {
                     BilgiSatiriK(etiket: "Kullanıcı Adı", deger: isl.kadi)
                     BilgiSatiriK(etiket: "Şifre", deger: isl.sifre, gizle: true)
                     BilgiSatiriK(etiket: "Dashboard Kodu", deger: isl.tenant)
-                    Text("NickDegs Dashboard uygulamasından bu kodla SMS ile giriş yapabilirsin.")
+                    NavigationLink {
+                        IsletmePanelView(panelUrl: isl.panel_url, tenant: isl.tenant, kadi: isl.kadi, sifre: isl.sifre)
+                    } label: {
+                        Label("İşletmeyi Yönet (Canlı Panel)", systemImage: "chart.bar.doc.horizontal")
+                            .font(.subheadline.bold()).foregroundStyle(.white)
+                            .frame(maxWidth: .infinity).padding(.vertical, 12)
+                            .background(tema.grad, in: .rect(cornerRadius: 12))
+                    }.padding(.top, 4)
+                    Text("Siparişleri, ciroyu ve menüyü doğrudan uygulamadan yönet.")
                         .font(.caption2).foregroundStyle(.rvMut).padding(.top, 2)
                 }
             } else {
