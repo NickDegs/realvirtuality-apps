@@ -106,25 +106,32 @@ let ARACLAR: [Arac] = [
 struct RootView: View {
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
+    @State private var seciliTab = 0
+    @Environment(\.scenePhase) private var scenePhase
     var body: some View {
-        TabView {
+        TabView(selection: $seciliTab) {
             KategoriView(katlar: [.gorsel], baslik: yerel.t("kat_gorsel"), ikon: Kategori.gorsel.ikon)
-                .tabItem { Label(yerel.p("gorselTab"), systemImage: Kategori.gorsel.ikon) }
+                .tabItem { Label(yerel.p("gorselTab"), systemImage: Kategori.gorsel.ikon) }.tag(0)
             KategoriView(katlar: [.icerik], baslik: yerel.t("kat_icerik"), ikon: Kategori.icerik.ikon)
-                .tabItem { Label(yerel.p("yaziTab"), systemImage: Kategori.icerik.ikon) }
+                .tabItem { Label(yerel.p("yaziTab"), systemImage: Kategori.icerik.ikon) }.tag(1)
             KategoriView(katlar: [.sesvideo, .analiz], baslik: yerel.p("studyoTab"), ikon: "waveform")
-                .tabItem { Label(yerel.p("studyoTab"), systemImage: "waveform") }
+                .tabItem { Label(yerel.p("studyoTab"), systemImage: "waveform") }.tag(2)
             KutuphaneView()
-                .tabItem { Label(yerel.p("kutuphaneTab"), systemImage: "books.vertical.fill") }
+                .tabItem { Label(yerel.p("kutuphaneTab"), systemImage: "books.vertical.fill") }.tag(3)
             // App Store Guideline 3.1.1: harici-ödemeli dijital ürün satışı YASAK.
             // Ürünler sekmesi yalnızca URUNLER_TAB derleme bayrağı tanımlıysa görünür (App Store/TestFlight'ta KAPALI).
             // Para kazanma kredi-IAP ile (ContentView başlık + ToolView) → 3.1.1 uyumlu.
             #if URUNLER_TAB
             UrunlerView()
-                .tabItem { Label(yerel.p("urunlerTab"), systemImage: "bag.fill") }
+                .tabItem { Label(yerel.p("urunlerTab"), systemImage: "bag.fill") }.tag(4)
             #endif
         }
         .tint(tema.c1)
+        // Siri/Kısayollar bekleyen sekme isteği → ilgili sekmeye geç (App Intents köprüsü)
+        .onAppear { if let t = RVNav.bekleyen() { seciliTab = t } }
+        .onChange(of: scenePhase) { _, yeni in
+            if yeni == .active, let t = RVNav.bekleyen() { seciliTab = t }
+        }
     }
 }
 
