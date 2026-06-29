@@ -1,6 +1,7 @@
 import SwiftUI
 import PhotosUI
 import Charts
+import CoreImage.CIFilterBuiltins
 
 // MARK: - Native İşletme Paneli (TÜM SEKTÖRLER) — webteki sektör panellerinin native karşılığı
 // Aile: restoran(sipariş/menü/masa) · randevu+öğretmen(randevu/hizmet/müşteri) · hukuk(dava/süre/duruşma/müvekkil/belge)
@@ -332,9 +333,41 @@ struct AyarSekmesi: View {
     @State private var bilgi = ""
     @State private var logoItem: PhotosPickerItem?
 
+    var musteriURL: String {
+        switch api.aile {
+        case .restoran: return api.taban + "siparis?d=" + api.did
+        case .randevu, .ogretmen: return api.taban + "randevu?d=" + api.did
+        default: return ""
+        }
+    }
+    func qrUret(_ s: String) -> UIImage? {
+        let ctx = CIContext()
+        let f = CIFilter.qrCodeGenerator()
+        f.setValue(Data(s.utf8), forKey: "inputMessage")
+        guard let ci = f.outputImage?.transformed(by: CGAffineTransform(scaleX: 8, y: 8)),
+              let cg = ctx.createCGImage(ci, from: ci.extent) else { return nil }
+        return UIImage(cgImage: cg)
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 12) {
+                if !musteriURL.isEmpty {
+                    panelKart {
+                        Text(api.aile == .restoran ? "Müşteri Sipariş QR" : "Müşteri Randevu QR").font(.subheadline.bold()).foregroundStyle(.rvText)
+                        if let qr = qrUret(musteriURL) {
+                            Image(uiImage: qr).interpolation(.none).resizable().scaledToFit()
+                                .frame(width: 180, height: 180).padding(8).background(Color.white, in: .rect(cornerRadius: 12))
+                                .frame(maxWidth: .infinity)
+                            ShareLink(item: Image(uiImage: qr), preview: SharePreview("Müşteri QR", image: Image(uiImage: qr))) {
+                                Label("QR'ı Kaydet / Yazdır", systemImage: "square.and.arrow.up").font(.caption.bold()).foregroundStyle(.white)
+                                    .frame(maxWidth: .infinity).padding(.vertical, 9).background(tema.grad, in: .rect(cornerRadius: 10))
+                            }
+                        }
+                        Text("Masalara yapıştır — müşteri okutup \(api.aile == .restoran ? "sipariş verir" : "randevu alır").")
+                            .font(.caption2).foregroundStyle(.rvMut)
+                    }
+                }
                 panelKart {
                     Text("Logo").font(.subheadline.bold()).foregroundStyle(.rvText)
                     PhotosPicker(selection: $logoItem, matching: .images) {
