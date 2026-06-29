@@ -37,7 +37,7 @@ struct RandevuPanel: View {
 
     var sekmeler: [(String, String)] {
         [("Özet", "chart.bar.fill"), (randevuAd, "calendar"), (hizmetAd, "list.bullet.rectangle"),
-         (musteriAd, "person.crop.circle"), ("Personel", "person.2.fill"), ("Ayar", "gearshape.fill")]
+         (musteriAd, "person.crop.circle"), ("Kupon", "tag.fill"), ("Personel", "person.2.fill"), ("Ayar", "gearshape.fill")]
     }
 
     var body: some View {
@@ -48,7 +48,8 @@ struct RandevuPanel: View {
             case 1: randevuTab
             case 2: hizmetTab
             case 3: musteriTab
-            case 4: PersonelSekmesi(api: api, tema: tema)
+            case 4: KuponSekmesi(api: api, tema: tema)
+            case 5: PersonelSekmesi(api: api, tema: tema)
             default: AyarSekmesi(api: api, tema: tema)
             }
         }.task { await yenile(); while !Task.isCancelled { try? await Task.sleep(nanoseconds: 25_000_000_000); await yenile() } }

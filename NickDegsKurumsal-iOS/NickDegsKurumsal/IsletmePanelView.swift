@@ -381,6 +381,60 @@ struct AyarSekmesi: View {
     }
 }
 
+// MARK: - Kupon / İndirim (kampanya kodları — satışı artırır)
+struct KuponSekmesi: View {
+    @ObservedObject var api: PanelAPI
+    let tema: Tema
+    @State private var kuponlar: [[String: Any]] = []
+    @State private var kod = ""
+    @State private var tip = "yuzde"
+    @State private var deger = ""
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 10) {
+                panelKart {
+                    Text("Kupon Oluştur").font(.subheadline.bold()).foregroundStyle(.rvText)
+                    TextField("Kod (ör. HOSGELDIN)", text: $kod).autocorrectionDisabled().textInputAutocapitalization(.characters)
+                        .padding(10).background(Color.rvBg, in: .rect(cornerRadius: 10))
+                    HStack {
+                        Picker("", selection: $tip) { Text("% Yüzde").tag("yuzde"); Text("₺ Tutar").tag("tutar") }.pickerStyle(.segmented)
+                        TextField(tip == "yuzde" ? "%" : "₺", text: $deger).keyboardType(.numberPad)
+                            .frame(width: 72).padding(10).background(Color.rvBg, in: .rect(cornerRadius: 10))
+                    }
+                    Button { Task { _ = await api.post("coupon", ["kod": kod, "tip": tip, "deger": Int(deger) ?? 0]); kod = ""; deger = ""; await yukle() } } label: {
+                        Text("Oluştur").font(.caption.bold()).foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 9).background(tema.grad, in: .rect(cornerRadius: 10))
+                    }.disabled(kod.isEmpty || (Int(deger) ?? 0) <= 0)
+                }
+                if kuponlar.isEmpty { Text("Henüz kupon yok").foregroundStyle(.rvMut).padding(.top, 20) }
+                ForEach(Array(kuponlar.enumerated()), id: \.offset) { _, k in
+                    let id = k["id"] as? Int ?? 0
+                    let aktif = (k["aktif"] as? Int ?? 1) == 1
+                    let yuzdeMi = (k["tip"] as? String ?? "") == "yuzde"
+                    panelKart {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(k["kod"] as? String ?? "-").font(.subheadline.bold()).foregroundStyle(.rvText)
+                                Text("\(yuzdeMi ? "%" : "₺")\(k["deger"] as? Int ?? 0) indirim · \(k["kullanim"] as? Int ?? 0) kullanım").font(.caption2).foregroundStyle(.rvMut)
+                            }
+                            Spacer()
+                            Button { Task { _ = await api.post("coupon/\(id)/toggle"); await yukle() } } label: {
+                                Text(aktif ? "Aktif" : "Pasif").font(.caption.bold()).foregroundStyle(aktif ? .green : .orange)
+                                    .padding(.horizontal, 10).padding(.vertical, 5).background((aktif ? Color.green : Color.orange).opacity(0.15), in: .capsule)
+                            }
+                            Button { Task { _ = await api.post("coupon/\(id)/delete"); await yukle() } } label: {
+                                Image(systemName: "trash").foregroundStyle(.red)
+                            }.padding(.leading, 6)
+                        }
+                    }
+                }
+            }.padding()
+        }
+        .task { await yukle() }
+    }
+    func yukle() async { kuponlar = await api.getArr("coupons") }
+}
+
 // MARK: - Rapor (7 gün ciro grafiği + en çok satan) — tüm sektörlerde özet'te
 struct RaporKart: View {
     @ObservedObject var api: PanelAPI

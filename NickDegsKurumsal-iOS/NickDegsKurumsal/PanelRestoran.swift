@@ -20,7 +20,7 @@ struct RestoranPanel: View {
     static let durumAd = ["🆕 Yeni", "👨‍🍳 Hazırlanıyor", "✅ Hazır", "📦 Teslim edildi"]
     static let durumRenk: [Color] = [.blue, .orange, .green, .gray]
     let sekmeler = [("Özet", "chart.bar.fill"), ("Siparişler", "bag.fill"), ("Masalar", "tablecells"),
-                    ("Menü", "fork.knife"), ("Personel", "person.2.fill"), ("Ayar", "gearshape.fill")]
+                    ("Menü", "fork.knife"), ("Kupon", "tag.fill"), ("Personel", "person.2.fill"), ("Ayar", "gearshape.fill")]
 
     var body: some View {
         VStack(spacing: 0) {
@@ -30,7 +30,8 @@ struct RestoranPanel: View {
             case 1: siparisTab
             case 2: masaTab
             case 3: menuTab
-            case 4: PersonelSekmesi(api: api, tema: tema)
+            case 4: KuponSekmesi(api: api, tema: tema)
+            case 5: PersonelSekmesi(api: api, tema: tema)
             default: AyarSekmesi(api: api, tema: tema)
             }
         }
