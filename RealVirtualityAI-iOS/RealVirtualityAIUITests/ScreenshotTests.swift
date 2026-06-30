@@ -35,14 +35,13 @@ final class ScreenshotTests: XCTestCase {
         if kart.count > 0 { kart.element(boundBy: 0).tap(); sleep(2); attach("05_detay") }
 
         // 6) PAYWALL / IAP — kredi satın alma ekranı (IAP review screenshot için EN ÖNEMLİ)
-        // SS_MODE'da mock giriş yapıldığı için "Kredi Al" butonu doğrudan paketleri açar.
-        if tabs.count > 0 { tabs.element(boundBy: 0).tap(); sleep(1) }
-        let krediBtn = app.buttons.matching(NSPredicate(
-            format: "label CONTAINS[c] 'kredi' OR label CONTAINS[c] 'credit' OR label CONTAINS[c] 'bolt'"
-        )).firstMatch
-        if krediBtn.waitForExistence(timeout: 4) {
-            krediBtn.tap(); sleep(3); attach("04_kredi_iap")
-        }
+        // App'i paywall modunda YENİDEN başlat → root doğrudan KrediView olur (navigasyon yok, kesin render).
+        app.terminate()
+        app.launchEnvironment["SS_MODE"] = "1"
+        app.launchEnvironment["SS_SCREEN"] = "paywall"
+        app.launch()
+        sleep(4)
+        attach("04_kredi_iap")
     }
 
     private func attach(_ name: String) {

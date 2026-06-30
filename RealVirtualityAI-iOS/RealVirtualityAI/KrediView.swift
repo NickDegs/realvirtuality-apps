@@ -26,7 +26,8 @@ struct KrediView: View {
                     }
                     Text("⚡ \(api.kredi) " + yerel.t("krediVar")).foregroundStyle(.rvCyan).frame(maxWidth: .infinity, alignment: .leading)
 
-                    // GÜNLÜK ÜCRETSİZ KREDİ
+                    // GÜNLÜK ÜCRETSİZ KREDİ (paywall screenshot modunda gizli — IAP review'ı ilgilendirmez, paketler öne çıksın)
+                    if !RVShot.paywallModu {
                     VStack(alignment: .leading, spacing: 8) {
                         Button {
                             Task {
@@ -72,6 +73,7 @@ struct KrediView: View {
                     }
                     .padding().frame(maxWidth: .infinity, alignment: .leading).rvGlass(16)
                     .task { if let b = await api.davetBilgi() { davet = DavetBilgi(kod: b.kod, link: b.link, sayi: b.davetSayisi, kazanilan: b.kazanilan) } }
+                    }  // /if !RVShot.paywallModu
 
                     if RVShot.aktif {
                         // Screenshot modu: StoreKit simülatörde ürün döndürmez → gerçek paywall UI'ı mock paketle render
