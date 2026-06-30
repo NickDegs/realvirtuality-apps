@@ -1,5 +1,7 @@
 import SwiftUI
 import StoreKit
+import UserNotifications
+import UIKit
 
 // MARK: - Marka renkleri (Dark + Light uyumlu / adaptif)
 extension Color {
@@ -171,11 +173,42 @@ struct RootView: View {
         .fullScreenCover(isPresented: $onboarding) {
             OnboardingView(goster: $onboarding).environmentObject(tema).environmentObject(yerel)
         }
+        .task { if !onboarding { await pushIzniIste() } }
+        .onChange(of: onboarding) { _, yeni in if !yeni { Task { await pushIzniIste() } } }
     }
+
+    // Bildirim izni iste + uzak bildirime kaydol (onboarding bitince → değer görülmüş olur)
+    func pushIzniIste() async {
+        let merkez = UNUserNotificationCenter.current()
+        if let izin = try? await merkez.requestAuthorization(options: [.alert, .sound, .badge]), izin {
+            await MainActor.run { UIApplication.shared.registerForRemoteNotifications() }
+        }
+    }
+}
+
+// MARK: - Push bildirim (günlük kredi/yeni özellik hatırlatması)
+final class PushDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    func application(_ app: UIApplication, didFinishLaunchingWithOptions o: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        UNUserNotificationCenter.current().delegate = self
+        return true
+    }
+    func userNotificationCenter(_ c: UNUserNotificationCenter, willPresent n: UNNotification,
+                                withCompletionHandler h: @escaping (UNNotificationPresentationOptions) -> Void) {
+        h([.banner, .sound, .badge])
+    }
+    func userNotificationCenter(_ c: UNUserNotificationCenter, didReceive r: UNNotificationResponse,
+                                withCompletionHandler h: @escaping () -> Void) { h() }
+    func application(_ app: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let hex = deviceToken.map { String(format: "%02x", $0) }.joined()
+        UserDefaults.standard.set(hex, forKey: "rv_push_token")
+        Task { await API.shared?.pushKaydet() }
+    }
+    func application(_ app: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {}
 }
 
 @main
 struct RealVirtualityAIApp: App {
+    @UIApplicationDelegateAdaptor(PushDelegate.self) var pushDelegate
     @StateObject private var api = API()
     @StateObject private var tema = Tema()
     @StateObject private var yerel = Yerel()

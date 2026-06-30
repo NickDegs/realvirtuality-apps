@@ -41,6 +41,8 @@ struct KutuphaneItem: Identifiable {
 @MainActor
 final class API: ObservableObject {
     static let base = "https://realvirtuality.app"
+    static weak var shared: API?
+    init() { API.shared = self }
 
     @Published var kredi: Int = 0
     @Published var freeKalan: Int = 0
@@ -110,6 +112,12 @@ final class API: ObservableObject {
         let j = (try? await istek("/api/sms-dogrula", ["tel": telno, "kod": kod])) ?? [:]
         if j["ok"] as? Bool == true { iCloudTokenKaydet(); await durumYukle(); return nil }
         return j["err"] as? String ?? "Kod doğrulanamadı"
+    }
+
+    // MARK: - Push bildirim token kaydı
+    func pushKaydet() async {
+        guard let tok = UserDefaults.standard.string(forKey: "rv_push_token"), !tok.isEmpty else { return }
+        _ = try? await istek("/api/push-kaydet", ["device_token": tok])
     }
 
     // MARK: - Günlük kredi + Davet
