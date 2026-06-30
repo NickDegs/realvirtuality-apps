@@ -109,6 +109,7 @@ enum BizShot {
             Plan(id: "i_pro", ad: "Profesyonel", aciklama: "Gelişmiş modüller + analitik + yüksek kapasite",    fiyat: "$2,499.99/yıl"),
             Plan(id: "i_kur", ad: "Kurumsal",    aciklama: "Tüm modüller + çok şube + öncelikli destek",        fiyat: "$3,999.99/yıl"),
         ]
+        }
     }
     static func baslik(_ s: String) -> String {
         ["guvenlik": "Güvenlik Aboneliği", "hush": "Hush Şifreli Sohbet",
