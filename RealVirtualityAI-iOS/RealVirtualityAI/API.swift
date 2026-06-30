@@ -112,6 +112,25 @@ final class API: ObservableObject {
         return j["err"] as? String ?? "Kod doğrulanamadı"
     }
 
+    // MARK: - Günlük kredi + Davet
+    func gunlukKrediAl() async -> (ok: Bool, miktar: Int, seri: Int, bonus: Bool, mesaj: String) {
+        let j = (try? await istek("/api/gunluk-kredi", [:])) ?? [:]
+        if let k = j["kredi"] as? Int { kredi = k }
+        let ok = j["ok"] as? Bool == true
+        return (ok, j["miktar"] as? Int ?? 0, j["seri"] as? Int ?? 0, j["bonus"] as? Bool ?? false,
+                j["mesaj"] as? String ?? (ok ? "" : "Giriş gerekli"))
+    }
+    func davetBilgi() async -> (kod: String, link: String, davetSayisi: Int, kazanilan: Int)? {
+        guard let j = try? await istek("/api/davet-kod", nil, method: "GET"), j["ok"] as? Bool == true else { return nil }
+        return (j["kod"] as? String ?? "", j["link"] as? String ?? "",
+                j["davet_sayisi"] as? Int ?? 0, j["kazanilan"] as? Int ?? 0)
+    }
+    func davetKullan(_ kod: String) async -> String? {
+        let j = (try? await istek("/api/davet-kullan", ["kod": kod])) ?? [:]
+        if j["ok"] as? Bool == true { if let k = j["kredi"] as? Int { kredi = k }; return nil }
+        return j["mesaj"] as? String ?? j["err"] as? String ?? "Hata"
+    }
+
     // MARK: - Çıktı kütüphanesi
     func ciktiKaydet(arac: String, tip: String, baslik: String, prompt: String, dataB64: String? = nil, metin: String? = nil) async {
         var g: [String: Any] = ["arac": arac, "tip": tip, "baslik": baslik, "prompt": prompt]

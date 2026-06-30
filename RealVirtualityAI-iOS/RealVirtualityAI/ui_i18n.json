@@ -772,5 +772,59 @@
   "es": "Ideas de ejemplo",
   "ar": "أفكار أمثلة",
   "ru": "Примеры идей"
+ },
+ "gunlukKrediAl": {
+  "tr": "Günlük Kredini Al",
+  "en": "Claim Daily Credit",
+  "de": "Tägliches Guthaben",
+  "fr": "Crédit quotidien",
+  "es": "Crédito diario",
+  "ar": "رصيد يومي",
+  "ru": "Ежедневный кредит"
+ },
+ "davetEt": {
+  "tr": "Davet Et, Kredi Kazan",
+  "en": "Invite & Earn Credits",
+  "de": "Einladen & Guthaben",
+  "fr": "Inviter & gagner",
+  "es": "Invita y gana",
+  "ar": "ادعُ واربح",
+  "ru": "Пригласи и заработай"
+ },
+ "davetAciklama": {
+  "tr": "Kodunu paylaş — davet ettiğin de sen de kredi kazan.",
+  "en": "Share your code — you and your friend both earn credits.",
+  "de": "Teile deinen Code — du und dein Freund erhaltet Guthaben.",
+  "fr": "Partage ton code — toi et ton ami gagnez des crédits.",
+  "es": "Comparte tu código — tú y tu amigo ganáis créditos.",
+  "ar": "شارك رمزك — تكسب أنت وصديقك رصيداً.",
+  "ru": "Поделись кодом — оба получите кредиты."
+ },
+ "davetKodGir": {
+  "tr": "Davet kodu gir",
+  "en": "Enter invite code",
+  "de": "Einladungscode",
+  "fr": "Code d'invitation",
+  "es": "Código de invitación",
+  "ar": "أدخل رمز الدعوة",
+  "ru": "Введите код"
+ },
+ "kullan": {
+  "tr": "Kullan",
+  "en": "Use",
+  "de": "Nutzen",
+  "fr": "Utiliser",
+  "es": "Usar",
+  "ar": "استخدم",
+  "ru": "Применить"
+ },
+ "paylas": {
+  "tr": "Paylaş",
+  "en": "Share",
+  "de": "Teilen",
+  "fr": "Partager",
+  "es": "Compartir",
+  "ar": "شارك",
+  "ru": "Поделиться"
  }
 }
