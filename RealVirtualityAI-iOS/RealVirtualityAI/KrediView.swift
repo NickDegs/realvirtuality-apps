@@ -73,7 +73,22 @@ struct KrediView: View {
                     .padding().frame(maxWidth: .infinity, alignment: .leading).rvGlass(16)
                     .task { if let b = await api.davetBilgi() { davet = DavetBilgi(kod: b.kod, link: b.link, sayi: b.davetSayisi, kazanilan: b.kazanilan) } }
 
-                    if store.urunler.isEmpty {
+                    if RVShot.aktif {
+                        // Screenshot modu: StoreKit simülatörde ürün döndürmez → gerçek paywall UI'ı mock paketle render
+                        ForEach(RVShot.paketler) { p in
+                            HStack {
+                                VStack(alignment: .leading, spacing: 3) {
+                                    Text(p.ad).font(.headline)
+                                    Text(p.aciklama).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                                }
+                                Spacer()
+                                Text(p.fiyat).font(.headline.bold()).foregroundStyle(.rvCyan)
+                            }
+                            .padding().frame(maxWidth: .infinity)
+                            .rvGlass(16, interactive: true)
+                            .foregroundStyle(.white)
+                        }
+                    } else if store.urunler.isEmpty {
                         ProgressView().padding(.top, 40)
                     } else {
                         ForEach(store.urunler, id: \.id) { p in

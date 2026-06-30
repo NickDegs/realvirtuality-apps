@@ -206,6 +206,24 @@ final class PushDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCen
     func application(_ app: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {}
 }
 
+// MARK: - Screenshot modu (App Store IAP/paywall görselleri — CI simülatör capture, SS_MODE=1)
+// Yalnızca CI screenshot çekiminde aktif (env SS_MODE=1). Gerçek kullanıcıyı/üretimi ETKİLEMEZ.
+enum RVShot {
+    static let aktif = ProcessInfo.processInfo.environment["SS_MODE"] == "1"
+    struct Paket: Identifiable { let id: String; let ad: String; let aciklama: String; let fiyat: String }
+    static let paketler = [
+        Paket(id: "250",  ad: "250 Kredi",   aciklama: "Başlangıç paketi", fiyat: "$7.99"),
+        Paket(id: "750",  ad: "750 Kredi",   aciklama: "En popüler",       fiyat: "$18.99"),
+        Paket(id: "2500", ad: "2.500 Kredi", aciklama: "Avantajlı",        fiyat: "$42.99"),
+        Paket(id: "7000", ad: "7.000 Kredi", aciklama: "En iyi değer",     fiyat: "$99.99"),
+    ]
+    @MainActor static func mockGiris(_ api: API) {
+        api.girisli = true
+        api.email = "review@nickdegs.com"
+        api.kredi = 1250
+    }
+}
+
 @main
 struct RealVirtualityAIApp: App {
     @UIApplicationDelegateAdaptor(PushDelegate.self) var pushDelegate
@@ -223,7 +241,7 @@ struct RealVirtualityAIApp: App {
                 .environment(\.layoutDirection, yerel.yon)
                 .preferredColorScheme(tema.renkSemasi)
                 .tint(tema.c1)
-                .task { await api.durumYukle() }
+                .task { if RVShot.aktif { RVShot.mockGiris(api) } else { await api.durumYukle() } }
                 .task { await bitmemisleriKurtar() }   // launch'ta bekleyen/kesintili satın almalar
                 .task { await islemDinle() }
         }

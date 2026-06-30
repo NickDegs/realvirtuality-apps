@@ -218,6 +218,7 @@ jobs:
   # ─── Ubuntu: FLUX ile cilala + ASC'ye yükle ───────────────────────────────
   flux-composite-upload:
     needs: simulator-screenshots
+    if: ${{ github.ref_name == 'main' }}   # iap-shots branch'te marketing upload YAPMA — sadece ham capture üret
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
