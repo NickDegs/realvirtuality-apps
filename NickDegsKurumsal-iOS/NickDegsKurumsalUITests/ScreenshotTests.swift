@@ -51,6 +51,17 @@ final class ScreenshotTests: XCTestCase {
             sleep(1)
         }
         attach("06_ana_sayfa")
+
+        // 7) ABONELİK PAYWALL'LARI — her sektör için gerçek SatinAlView (IAP review screenshot)
+        // App'i SS_SCREEN=<sektör> ile yeniden başlat → root doğrudan o sektörün abonelik ekranı olur.
+        for sektor in ["guvenlik", "hush", "sunucu", "isletme"] {
+            app.terminate()
+            app.launchEnvironment["SS_MODE"] = "1"
+            app.launchEnvironment["SS_SCREEN"] = sektor
+            app.launch()
+            sleep(4)
+            attach("iap_\(sektor)")
+        }
     }
 
     private func attach(_ name: String) {

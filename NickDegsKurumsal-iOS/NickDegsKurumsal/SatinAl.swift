@@ -83,6 +83,42 @@ let SEKTORLER: [Sektor] = [
     Sektor(id: "diger",      ad: "Diğer İşletme",          ikon: "briefcase.fill"),
 ]
 
+// MARK: - Screenshot modu (App Store abonelik review görselleri — CI simülatör capture, SS_MODE=1 + SS_SCREEN=sektör)
+// Yalnızca CI screenshot çekiminde aktif. Gerçek kullanıcıyı/üretimi ETKİLEMEZ (StoreKit simülatörde ürün vermez).
+enum BizShot {
+    static let aktif = ProcessInfo.processInfo.environment["SS_MODE"] == "1"
+    static let sektor = ProcessInfo.processInfo.environment["SS_SCREEN"]   // guvenlik/hush/sunucu/isletme
+    static var paywallModu: Bool { aktif && sektor != nil }
+    struct Plan: Identifiable { let id: String; let ad: String; let aciklama: String; let fiyat: String }
+    static func planlar(_ s: String) -> [Plan] {
+        switch s {
+        case "guvenlik": return [
+            Plan(id: "g_ay",  ad: "Aylık",  aciklama: "WAF & DDoS koruma, bot engelleme, güvenlik raporu", fiyat: "$229.99/ay"),
+            Plan(id: "g_yil", ad: "Yıllık", aciklama: "2 ay bedava — yıllık güvenlik aboneliği",          fiyat: "$2,299.99/yıl"),
+        ]
+        case "hush": return [
+            Plan(id: "h_ay",  ad: "Aylık",  aciklama: "Uçtan uca şifreli müşteri-destek sohbeti", fiyat: "$119.99/ay"),
+            Plan(id: "h_yil", ad: "Yıllık", aciklama: "2 ay bedava — yıllık Hush aboneliği",      fiyat: "$1,199.99/yıl"),
+        ]
+        case "sunucu": return [
+            Plan(id: "s_ay",  ad: "Aylık",  aciklama: "Yönetilen sunucu hosting + izleme",   fiyat: "$399.99/ay"),
+            Plan(id: "s_yil", ad: "Yıllık", aciklama: "2 ay bedava — yıllık sunucu hosting", fiyat: "$3,999.99/yıl"),
+        ]
+        default: return [ // isletme
+            Plan(id: "i_bas", ad: "Başlangıç",   aciklama: "Temel işletme paneli (personel, stok, QR sipariş)", fiyat: "$1,199.99/yıl"),
+            Plan(id: "i_pro", ad: "Profesyonel", aciklama: "Gelişmiş modüller + analitik + yüksek kapasite",    fiyat: "$2,499.99/yıl"),
+            Plan(id: "i_kur", ad: "Kurumsal",    aciklama: "Tüm modüller + çok şube + öncelikli destek",        fiyat: "$3,999.99/yıl"),
+        ]
+    }
+    static func baslik(_ s: String) -> String {
+        ["guvenlik": "Güvenlik Aboneliği", "hush": "Hush Şifreli Sohbet",
+         "sunucu": "Sunucu Hosting", "isletme": "İşletme Planı"][s] ?? "Abonelik"
+    }
+    static func mockUrun(_ s: String) -> Urun {
+        Urun(id: s, sekme: s, g: "", ic: "", ad: ["tr": baslik(s), "en": baslik(s)], aciklama: ["tr": "", "en": ""], pr: "", demo: nil)
+    }
+}
+
 // MARK: - Satın alma sayfası
 struct SatinAlView: View {
     let urun: Urun
@@ -120,7 +156,7 @@ struct SatinAlView: View {
                             Text("Aboneliğini App Store üzerinden güvenle başlat. Ödeme sonrası paneline anında erişirsin.")
                                 .font(.subheadline).foregroundStyle(.rvMut)
 
-                            if isletmeMi {
+                            if isletmeMi && !BizShot.aktif {
                                 Text("İşletme adı").font(.caption.bold()).foregroundStyle(.rvMut).padding(.top, 4)
                                 TextField("Örn. Köşe Cafe", text: $isletmeAd)
                                     .padding(14).glassEffect(.regular, in: .rect(cornerRadius: 14)).foregroundStyle(.rvText)
@@ -145,7 +181,10 @@ struct SatinAlView: View {
                                 }
                             }
 
-                            if magaza.yukleniyor {
+                            if BizShot.aktif {
+                                // Screenshot modu: StoreKit simülatörde ürün döndürmez → gerçek paywall UI'ı mock planla render
+                                ForEach(BizShot.planlar(BizShot.sektor ?? "isletme")) { p in mockPlanKart(p) }
+                            } else if magaza.yukleniyor {
                                 ProgressView().tint(tema.c1).frame(maxWidth: .infinity).padding()
                             } else if planlar.isEmpty {
                                 Text("Planlar yüklenemedi. İnternet bağlantını kontrol et.").font(.caption).foregroundStyle(.orange)
@@ -189,6 +228,23 @@ struct SatinAlView: View {
             await magaza.yukle(); secili = planlar.first
             await lokalFiyatYukle()
         }
+    }
+
+    // Screenshot modu: gerçek planKart ile aynı görünüm, mock veriyle (Product simülatörde yok)
+    func mockPlanKart(_ p: BizShot.Plan) -> some View {
+        let sec = p.id.hasSuffix("yil") || p.id == "i_pro"   // bir plan seçili görünsün (yıllık/pro öne çıkar)
+        return HStack {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(p.ad).font(.subheadline.bold()).foregroundStyle(.rvText)
+                Text(p.aciklama).font(.caption2).foregroundStyle(.rvMut).lineLimit(1)
+            }
+            Spacer()
+            Text(p.fiyat).font(.subheadline.bold()).foregroundStyle(tema.c2)
+            Image(systemName: sec ? "checkmark.circle.fill" : "circle").foregroundStyle(sec ? tema.c1 : .rvMut)
+        }
+        .padding(15)
+        .background(Color.rvCard, in: .rect(cornerRadius: 14))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(sec ? tema.c1 : Color.rvLine, lineWidth: sec ? 2 : 1))
     }
 
     func planKart(_ p: Product) -> some View {

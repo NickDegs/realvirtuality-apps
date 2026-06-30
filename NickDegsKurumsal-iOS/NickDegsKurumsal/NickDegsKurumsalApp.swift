@@ -111,14 +111,21 @@ struct NickDegsKurumsalApp: App {
     @StateObject private var yerel = Yerel()
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(tema)
-                .environmentObject(yerel)
-                .environment(\.layoutDirection, yerel.yon)
-                .preferredColorScheme(tema.renkSemasi)
-                .tint(tema.c1)
-                .task { await bitmemisleriKurtar() }   // launch'ta bekleyen/kesintili abonelikler
-                .task { await islemDinle() }
+            Group {
+                if BizShot.paywallModu {
+                    // CI screenshot: doğrudan abonelik ekranı (sektöre göre) — navigasyon yok, kesin render
+                    SatinAlView(urun: BizShot.mockUrun(BizShot.sektor ?? "isletme"))
+                } else {
+                    ContentView()
+                        .task { await bitmemisleriKurtar() }   // launch'ta bekleyen/kesintili abonelikler
+                        .task { await islemDinle() }
+                }
+            }
+            .environmentObject(tema)
+            .environmentObject(yerel)
+            .environment(\.layoutDirection, yerel.yon)
+            .preferredColorScheme(BizShot.aktif ? .dark : tema.renkSemasi)   // screenshot: koyu tema zorla
+            .tint(tema.c1)
         }
     }
 
