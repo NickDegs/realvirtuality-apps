@@ -251,7 +251,7 @@ struct RealVirtualityAIApp: App {
             .environmentObject(yerel)
             .environmentObject(tercih)
             .environment(\.layoutDirection, yerel.yon)
-            .preferredColorScheme(tema.renkSemasi)
+            .preferredColorScheme(RVShot.aktif ? .dark : tema.renkSemasi)   // screenshot: koyu tema zorla (app koyu tasarımlı)
             .tint(tema.c1)
         }
     }
