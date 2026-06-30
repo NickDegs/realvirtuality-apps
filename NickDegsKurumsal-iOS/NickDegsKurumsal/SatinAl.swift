@@ -112,8 +112,11 @@ enum BizShot {
         }
     }
     static func baslik(_ s: String) -> String {
-        ["guvenlik": "Güvenlik Aboneliği", "hush": "Hush Şifreli Sohbet",
-         "sunucu": "Sunucu Hosting", "isletme": "İşletme Planı"][s] ?? "Abonelik"
+        let m: [String: String] = [
+            "guvenlik": "Güvenlik Aboneliği", "hush": "Hush Şifreli Sohbet",
+            "sunucu": "Sunucu Hosting", "isletme": "İşletme Planı",
+        ]
+        return m[s] ?? "Abonelik"
     }
     static func mockUrun(_ s: String) -> Urun {
         Urun(id: s, sekme: s, g: "", ic: "", ad: ["tr": baslik(s), "en": baslik(s)], aciklama: ["tr": "", "en": ""], pr: "", demo: nil)
