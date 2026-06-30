@@ -4,15 +4,20 @@ import SwiftUI
 // MARK: - RealVirtuality AI ana ekran widget'ı (launcher — App Group YOK, sadece deep-link)
 // Dokunma → rvai:// şeması ile uygulama ilgili araca/sekmeye açılır (.onOpenURL).
 
-struct RVEntry: TimelineEntry { let date: Date }
+struct RVEntry: TimelineEntry { let date: Date; let kredi: Int }
+
+private func okuKredi() -> Int {
+    UserDefaults(suiteName: "group.com.nickdegs.realvirtualityai")?.integer(forKey: "rv_kredi") ?? 0
+}
 
 struct RVProvider: TimelineProvider {
-    func placeholder(in context: Context) -> RVEntry { RVEntry(date: Date()) }
+    func placeholder(in context: Context) -> RVEntry { RVEntry(date: Date(), kredi: 0) }
     func getSnapshot(in context: Context, completion: @escaping (RVEntry) -> Void) {
-        completion(RVEntry(date: Date()))
+        completion(RVEntry(date: Date(), kredi: okuKredi()))
     }
     func getTimeline(in context: Context, completion: @escaping (Timeline<RVEntry>) -> Void) {
-        completion(Timeline(entries: [RVEntry(date: Date())], policy: .never))
+        let e = RVEntry(date: Date(), kredi: okuKredi())
+        completion(Timeline(entries: [e], policy: .after(Date().addingTimeInterval(3600))))
     }
 }
 
@@ -31,10 +36,17 @@ struct RVWidgetEntryView: View {
         .containerBackground(rvGrad, for: .widget)
     }
 
-    // Küçük: marka + tek dokunuş → görsel üret
+    // Küçük: marka + kredi + tek dokunuş → görsel üret
     var kucuk: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Image(systemName: "wand.and.sparkles").font(.title2).foregroundStyle(.white)
+            HStack {
+                Image(systemName: "wand.and.sparkles").font(.title2).foregroundStyle(.white)
+                Spacer()
+                HStack(spacing: 3) {
+                    Image(systemName: "bolt.fill").font(.caption2).foregroundStyle(.yellow)
+                    Text("\(entry.kredi)").font(.caption.bold()).foregroundStyle(.white)
+                }.padding(.horizontal, 7).padding(.vertical, 3).background(.white.opacity(0.18), in: .capsule)
+            }
             Spacer()
             Text("RealVirtuality AI").font(.caption.bold()).foregroundStyle(.white)
             Text("Görsel üret").font(.caption2).foregroundStyle(.white.opacity(0.85))
@@ -50,6 +62,10 @@ struct RVWidgetEntryView: View {
                 Image(systemName: "wand.and.sparkles").foregroundStyle(.white)
                 Text("RealVirtuality AI").font(.caption.bold()).foregroundStyle(.white)
                 Spacer()
+                HStack(spacing: 3) {
+                    Image(systemName: "bolt.fill").font(.caption2).foregroundStyle(.yellow)
+                    Text("\(entry.kredi)").font(.caption.bold()).foregroundStyle(.white)
+                }.padding(.horizontal, 7).padding(.vertical, 3).background(.white.opacity(0.18), in: .capsule)
             }
             HStack(spacing: 8) {
                 tile("Görsel", "photo.artframe", "rvai://gorsel")

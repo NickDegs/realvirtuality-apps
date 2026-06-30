@@ -1,4 +1,5 @@
 import SwiftUI
+import WidgetKit
 
 // MARK: - Modeller
 struct Durum: Decodable {
@@ -100,7 +101,14 @@ final class API: ObservableObject {
             tel = j["tel"] as? String
             girisli = (email != nil) || (tel != nil)
             if girisli { iCloudTokenKaydet() }
+            widgetGuncelle()
         }
+    }
+
+    // Krediyi App Group'a yaz + widget'ı yenile (ana ekran widget'ı kredi gösterir)
+    func widgetGuncelle() {
+        UserDefaults(suiteName: "group.com.nickdegs.realvirtualityai")?.set(girisli ? kredi : freeKalan, forKey: "rv_kredi")
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     // MARK: - SMS giriş
@@ -123,7 +131,7 @@ final class API: ObservableObject {
     // MARK: - Günlük kredi + Davet
     func gunlukKrediAl() async -> (ok: Bool, miktar: Int, seri: Int, bonus: Bool, mesaj: String) {
         let j = (try? await istek("/api/gunluk-kredi", [:])) ?? [:]
-        if let k = j["kredi"] as? Int { kredi = k }
+        if let k = j["kredi"] as? Int { kredi = k; widgetGuncelle() }
         let ok = j["ok"] as? Bool == true
         return (ok, j["miktar"] as? Int ?? 0, j["seri"] as? Int ?? 0, j["bonus"] as? Bool ?? false,
                 j["mesaj"] as? String ?? (ok ? "" : "Giriş gerekli"))
@@ -135,7 +143,7 @@ final class API: ObservableObject {
     }
     func davetKullan(_ kod: String) async -> String? {
         let j = (try? await istek("/api/davet-kullan", ["kod": kod])) ?? [:]
-        if j["ok"] as? Bool == true { if let k = j["kredi"] as? Int { kredi = k }; return nil }
+        if j["ok"] as? Bool == true { if let k = j["kredi"] as? Int { kredi = k; widgetGuncelle() }; return nil }
         return j["mesaj"] as? String ?? j["err"] as? String ?? "Hata"
     }
 
