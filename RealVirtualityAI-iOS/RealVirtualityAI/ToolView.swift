@@ -48,7 +48,7 @@ struct ToolView: View {
     let kaliteler = [("kaliteli","💎 Kaliteli (çok kredi)"),("dandik","⚡ Hızlı / Ekonomik (az kredi)")]
     let oranlar = [("kare","⬛ Kare 1:1"),("dikey","📱 Dikey 9:16"),("yatay","🖥️ Yatay 16:9")]
     let kaliteAraclar = ["gorsel","logo","urunfoto","icerik","donustur"]
-    let oranAraclar = ["gorsel","logo","icerik"]
+    let oranAraclar = ["gorsel","logo","icerik","genislet"]
 
     private var gorselGerek: Bool { arac.kind == .gorselYukle || arac.kind == .gorselArti || arac.kind == .urunfoto }
     private var ikiGorsel: Bool { arac.kind == .faceswap }

@@ -2982,5 +2982,31 @@
     "steaming coffee in a cafe"
    ]
   }
+ },
+ "genislet": {
+  "tr": {
+   "ad": "Genişlet",
+   "aciklama": "Görseli farklı orana uzat",
+   "slogan": "Kırpmadan genişlet — AI eksik kenarları doğal şekilde tamamlar.",
+   "detay": "Bir görsel yükle ve hedef oranı seç (kare/dikey/yatay). Yapay zekâ görseli o orana, kenarları doğal şekilde doldurarak genişletir. Sosyal medya/banner için ideal.",
+   "ozellikler": [
+    "Kırpmadan genişlet (outpaint)",
+    "Kare / dikey / yatay",
+    "Doğal kenar tamamlama",
+    "Sosyal medya/banner uyumu"
+   ]
+  },
+  "en": {
+   "ad": "Expand",
+   "aciklama": "Extend image to new ratio",
+   "slogan": "Expand without cropping — AI fills the missing edges naturally.",
+   "detay": "Upload an image and pick a target ratio (square/vertical/horizontal). The AI extends it to that ratio, filling the new edges naturally. Great for social media and banners.",
+   "ozellikler": [
+    "Expand without cropping (outpaint)",
+    "Square / vertical / horizontal",
+    "Natural edge fill",
+    "Social media/banner ready"
+   ]
+  }
  }
 }
