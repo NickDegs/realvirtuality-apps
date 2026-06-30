@@ -63,7 +63,7 @@ struct HesabimView: View {
                         }.disabled(bekle).padding(.top, 4)
 
                         if satinaldiklarim != nil {
-                            Button { satinaldiklarim = nil; smsKod = ""; smsGonderildi = false; tel = "" } label: {
+                            Button { satinaldiklarim = nil; smsKod = ""; smsGonderildi = false; tel = ""; oturumSil() } label: {
                                 Text("Çıkış Yap").font(.caption).foregroundStyle(.rvMut)
                             }.padding(.top, 2)
                         }
@@ -72,6 +72,7 @@ struct HesabimView: View {
                 }
             }
             .navigationTitle("Hesabım").navigationBarTitleDisplayMode(.inline)
+            .task { oturumGeriYukle() }   // kapat-aç'ta üyeliği geri yükle (SMS sorma)
         }.tint(tema.c1)
     }
 
@@ -202,6 +203,7 @@ struct HesabimView: View {
         if j["ok"] as? Bool == true {
             let s = SatinAlinanlar(from: j)
             satinaldiklarim = s
+            oturumKaydet(j, tamNumara())   // kapat-aç'ta tekrar SMS isteme
             // İşletme sahibiyse APNs push'a kaydol (yeni sipariş/randevu bildirimi)
             if let isl = s.isletme, !isl.panelToken.isEmpty {
                 UserDefaults.standard.set(isl.panelToken, forKey: "biz_panel_token")
@@ -210,6 +212,46 @@ struct HesabimView: View {
         } else {
             hata = (j["mesaj"] as? String) ?? "Kod doğrulanamadı."
         }
+    }
+
+    // ── Oturum kalıcılığı (Barış 2026-06-30): kapat-aç'ta tekrar SMS login istemesin ──
+    func oturumKaydet(_ j: [String: Any], _ telNo: String) {
+        if let d = try? JSONSerialization.data(withJSONObject: j) {
+            UserDefaults.standard.set(d, forKey: "biz_hesabim_json")
+            UserDefaults.standard.set(telNo, forKey: "biz_hesabim_tel")
+        }
+    }
+    /// Açılışta cache'lenmiş üyeliği geri yükler (SMS sormadan) + arka planda tazeler.
+    func oturumGeriYukle() {
+        guard satinaldiklarim == nil,
+              let d = UserDefaults.standard.data(forKey: "biz_hesabim_json"),
+              let j = try? JSONSerialization.jsonObject(with: d) as? [String: Any],
+              j["ok"] as? Bool == true else { return }
+        tel = UserDefaults.standard.string(forKey: "biz_hesabim_tel") ?? tel
+        satinaldiklarim = SatinAlinanlar(from: j)
+        if let isl = satinaldiklarim?.isletme, !isl.panelToken.isEmpty {
+            UserDefaults.standard.set(isl.panelToken, forKey: "biz_panel_token")
+        }
+        Task { await tazele() }   // arka planda güncel veriyi çek (abonelik/expiry değişmişse)
+    }
+    /// Saklı telefon + imzalı token ile güncel satın alınanları yeniden çek (SMS gerektirmez).
+    func tazele() async {
+        let telNo = UserDefaults.standard.string(forKey: "biz_hesabim_tel") ?? ""
+        var tok = ""
+        if let d = UserDefaults.standard.data(forKey: "biz_hesabim_json"),
+           let j = try? JSONSerialization.jsonObject(with: d) as? [String: Any] {
+            tok = j["durumTok"] as? String ?? ""
+        }
+        guard !telNo.isEmpty, !tok.isEmpty else { return }
+        let j = await post("/api/iap/durum", ["tel": telNo, "tok": tok])
+        if j["ok"] as? Bool == true {
+            satinaldiklarim = SatinAlinanlar(from: j)
+            oturumKaydet(j, telNo)
+        }
+    }
+    func oturumSil() {
+        UserDefaults.standard.removeObject(forKey: "biz_hesabim_json")
+        UserDefaults.standard.removeObject(forKey: "biz_hesabim_tel")
     }
 }
 
