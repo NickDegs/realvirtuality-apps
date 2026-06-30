@@ -2692,6 +2692,56 @@ function initIAP(){
   store.initialize([Platform.APPLE_APPSTORE,Platform.GOOGLE_PLAY]);
 }
 
+// ===== PLAY INTEGRITY (Android korsan/crack koruması) =====
+// SADECE Android. iOS/web → hiç dokunmaz. Backend: realvirtuality.app/integrity
+// enforce SUNUCUDAN gelir (strict.sh on/off) → build almadan rapor↔engelleme.
+const INTEGRITY_BASE='https://realvirtuality.app/integrity';
+function _isAndroid(){ try{return window.Capacitor?.getPlatform?.()==='android';}catch(e){return false;} }
+function _nowSec(){ return Math.floor(Date.now()/1000); }
+function _graceValid(){ try{const g=JSON.parse(localStorage.getItem('ta_grace')||'null'); return !!(g&&g.exp&&g.exp>_nowSec());}catch(e){return false;} }
+async function _integrityVerify(canBlockOnError){
+  const{PlayIntegrity}=window.Capacitor?.Plugins||{};
+  if(!PlayIntegrity) return;                 // plugin yok → fail-open
+  try{
+    const nr=await fetch(INTEGRITY_BASE+'/nonce',{method:'POST'});
+    const nonce=(await nr.json()).nonce;
+    const{token}=await PlayIntegrity.requestIntegrityToken({nonce,googleCloudProjectNumber:0});
+    const vr=await fetch(INTEGRITY_BASE+'/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token})});
+    const res=await vr.json();
+    localStorage.setItem('ta_enf',res.enforce?'1':'0');
+    if(res.allow){
+      localStorage.setItem('ta_grace',JSON.stringify({exp:_nowSec()+(res.ttl||604800)}));
+      localStorage.removeItem('ta_block');
+      const ov=document.getElementById('ta-block-ov'); if(ov) ov.remove();
+    }else if(res.enforce){                   // korsan/crack verdict + engelleme açık
+      localStorage.setItem('ta_block','1'); localStorage.removeItem('ta_grace'); _showIntegrityBlock();
+    }
+  }catch(e){                                 // ağ/plugin hatası
+    if(canBlockOnError && !_graceValid() && localStorage.getItem('ta_enf')==='1') _showIntegrityBlock(true);
+  }
+}
+function initIntegrity(){
+  try{
+    if(!_isAndroid()) return;                 // iOS / web → dokunma
+    if(localStorage.getItem('ta_block')==='1' && !_graceValid()){ _showIntegrityBlock(); _integrityVerify(false); return; }
+    if(_graceValid()){ _integrityVerify(false); return; }   // offline izin + arka planda tazele
+    _integrityVerify(true);
+  }catch(e){}
+}
+function _showIntegrityBlock(offline){
+  if(document.getElementById('ta-block-ov')) return;
+  const ov=document.createElement('div'); ov.id='ta-block-ov';
+  ov.style.cssText='position:fixed;inset:0;z-index:2147483647;background:#0d0906;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;font-family:system-ui,sans-serif';
+  const msg=offline?'Doğrulama için internet bağlantısı gerekli.':'Bu kopya doğrulanamadı.\nLütfen uygulamayı Google Play’den indirin.';
+  ov.innerHTML='<div style="font-size:54px;margin-bottom:18px">🔒</div>'+
+    '<div style="font-size:19px;font-weight:700;line-height:1.5;white-space:pre-line">'+msg+'</div>'+
+    (offline?'<button id="ta-block-retry" style="margin-top:24px;padding:12px 28px;border:0;border-radius:14px;background:#e23744;color:#fff;font-size:16px;font-weight:700">Tekrar dene</button>'
+            :'<button id="ta-block-store" style="margin-top:24px;padding:12px 28px;border:0;border-radius:14px;background:#e23744;color:#fff;font-size:16px;font-weight:700">Google Play’den indir</button>');
+  document.body.appendChild(ov);
+  const rb=document.getElementById('ta-block-retry'); if(rb) rb.onclick=()=>{ov.remove(); initIntegrity();};
+  const sb=document.getElementById('ta-block-store'); if(sb) sb.onclick=()=>{ try{location.href='market://details?id=com.nickdegs.tarifler';}catch(e){ location.href='https://play.google.com/store/apps/details?id=com.nickdegs.tarifler'; } };
+}
+
 // ===== ADMOB =====
 // ===== AdMob reklam birimleri =====
 // iOS = gerçek (canlı app). Android henüz AdMob'da yok → test ID (yayında değil, zararsız).
@@ -2967,6 +3017,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('bl-fav').textContent=L.favs;
   showHome();
   updateCrownBtn();
+  initIntegrity();
   initAdMob();
   initIAP();
   initiOS26();
