@@ -71,6 +71,7 @@ enum PanelAile: String {
 
     @discardableResult
     func post(_ ep: String, _ body: [String: Any] = [:]) async -> [String: Any] {
+        await AppAttest.shared.ensureToken()   // GÜVENLİK: race önle
         var r = req(ep); r.httpMethod = "POST"; r.timeoutInterval = 30
         r.setValue("application/json", forHTTPHeaderField: "Content-Type")
         r.httpBody = try? JSONSerialization.data(withJSONObject: body)
@@ -107,11 +108,13 @@ enum PanelAile: String {
     }
 
     func getArr(_ ep: String) async -> [[String: Any]] {
+        await AppAttest.shared.ensureToken()
         guard let (d, _) = try? await session.data(for: req(ep)),
               let j = try? JSONSerialization.jsonObject(with: d) as? [[String: Any]] else { return [] }
         return j
     }
     func getObj(_ ep: String) async -> [String: Any] {
+        await AppAttest.shared.ensureToken()
         guard let (d, _) = try? await session.data(for: req(ep)),
               let j = try? JSONSerialization.jsonObject(with: d) as? [String: Any] else { return [:] }
         return j

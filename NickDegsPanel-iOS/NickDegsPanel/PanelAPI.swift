@@ -23,10 +23,12 @@ final class PanelAPI {
         return r
     }
     func get(_ yol: String, _ q: [String:String] = [:]) async -> [String:Any]? {
+        await AppAttest.shared.ensureToken()
         guard let (d,_) = try? await URLSession.shared.data(for: req(yol,q)) else { return nil }
         return try? JSONSerialization.jsonObject(with: d) as? [String:Any]
     }
     func getArr(_ yol: String, _ q: [String:String] = [:]) async -> [[String:Any]] {
+        await AppAttest.shared.ensureToken()
         guard let (d,_) = try? await URLSession.shared.data(for: req(yol,q)) else { return [] }
         if let a = try? JSONSerialization.jsonObject(with: d) as? [[String:Any]] { return a }
         if let o = try? JSONSerialization.jsonObject(with: d) as? [String:Any] {
@@ -38,6 +40,7 @@ final class PanelAPI {
         return []
     }
     private func post(_ yol: String, _ body: [String:Any]) async -> [String:Any]? {
+        await AppAttest.shared.ensureToken()   // GÜVENLİK: race önle
         var r = req(yol); r.httpMethod = "POST"; r.timeoutInterval = 40
         r.setValue("application/json", forHTTPHeaderField: "Content-Type")
         var b = body; b["t"] = token

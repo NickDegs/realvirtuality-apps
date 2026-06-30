@@ -83,6 +83,7 @@ final class API: ObservableObject {
     }
 
     private func istek(_ yol: String, _ govde: [String: Any]? = nil, method: String = "POST", timeout: TimeInterval = 60) async throws -> [String: Any] {
+        await AppAttest.shared.ensureToken()   // GÜVENLİK: istekten önce attest token garanti (race önle)
         var r = URLRequest(url: URL(string: API.base + yol)!)
         r.httpMethod = method
         r.timeoutInterval = timeout

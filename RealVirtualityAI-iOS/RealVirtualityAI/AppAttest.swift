@@ -66,6 +66,14 @@ final class AppAttest: ObservableObject {
     /// API isteklerine eklenecek header (token yoksa boş — backend grace/deny politikasına göre).
     var header: [String: String] { token.map { ["X-Attest-Token": $0] } ?? [:] }
 
+    /// İstekten ÖNCE çağrılır (race önleme): token yoksa (ilk açılış) attest yapar, varsa anında döner.
+    /// ENFORCE modunda ilk isteğin token'sız gitmesini engeller.
+    func ensureToken() async {
+        if !AppAttest.headerSync().isEmpty { return }   // UserDefaults'ta token var → hızlı çık
+        guard service.isSupported else { return }       // simülatör/desteklemeyen → boş geç
+        _ = await hazirla()
+    }
+
     // ── Sunucu çağrıları ──
     private func challenge() async throws -> String {
         let r = try await post("/challenge", ["app": appId])
