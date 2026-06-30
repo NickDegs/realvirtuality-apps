@@ -61,9 +61,16 @@ enum PanelAile: String {
         URL(string: taban + "api/" + ep + (ep.contains("?") ? "&" : "?") + "d=" + did)!
     }
 
+    // GÜVENLİK: her isteğe App Attest token'ı (X-Attest-Token) — sideload/tamper edilmiş app token üretemez.
+    private func req(_ ep: String) -> URLRequest {
+        var r = URLRequest(url: url(ep))
+        for (k, v) in AppAttest.shared.header { r.setValue(v, forHTTPHeaderField: k) }
+        return r
+    }
+
     @discardableResult
     func post(_ ep: String, _ body: [String: Any] = [:]) async -> [String: Any] {
-        var r = URLRequest(url: url(ep)); r.httpMethod = "POST"; r.timeoutInterval = 30
+        var r = req(ep); r.httpMethod = "POST"; r.timeoutInterval = 30
         r.setValue("application/json", forHTTPHeaderField: "Content-Type")
         r.httpBody = try? JSONSerialization.data(withJSONObject: body)
         guard let (d, _) = try? await session.data(for: r),
@@ -75,7 +82,7 @@ enum PanelAile: String {
     func upload(_ ep: String, field: String, filename: String, mime: String,
                 fileData: Data, extra: [String: String] = [:]) async -> [String: Any] {
         let boundary = "ndg-\(UUID().uuidString)"
-        var r = URLRequest(url: url(ep)); r.httpMethod = "POST"; r.timeoutInterval = 90
+        var r = req(ep); r.httpMethod = "POST"; r.timeoutInterval = 90
         r.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         var b = Data()
         func add(_ s: String) { b.append(s.data(using: .utf8)!) }
@@ -92,19 +99,19 @@ enum PanelAile: String {
 
     // Dosya indirme (şifreli belge kasası → geçici dosya URL'i, paylaşım sayfasına)
     func indir(_ ep: String, adKaydet: String) async -> URL? {
-        guard let (d, _) = try? await session.data(from: url(ep)) else { return nil }
+        guard let (d, _) = try? await session.data(for: req(ep)) else { return nil }
         let u = FileManager.default.temporaryDirectory.appendingPathComponent(adKaydet)
         try? d.write(to: u)
         return u
     }
 
     func getArr(_ ep: String) async -> [[String: Any]] {
-        guard let (d, _) = try? await session.data(from: url(ep)),
+        guard let (d, _) = try? await session.data(for: req(ep)),
               let j = try? JSONSerialization.jsonObject(with: d) as? [[String: Any]] else { return [] }
         return j
     }
     func getObj(_ ep: String) async -> [String: Any] {
-        guard let (d, _) = try? await session.data(from: url(ep)),
+        guard let (d, _) = try? await session.data(for: req(ep)),
               let j = try? JSONSerialization.jsonObject(with: d) as? [String: Any] else { return [:] }
         return j
     }

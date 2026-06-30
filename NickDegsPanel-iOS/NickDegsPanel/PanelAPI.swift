@@ -16,12 +16,18 @@ final class PanelAPI {
         c.queryItems = items
         return c.url!
     }
+    // GÜVENLİK: her isteğe App Attest token'ı (sideload/tamper edilmiş app token üretemez).
+    private func req(_ yol: String, _ q: [String:String] = [:]) -> URLRequest {
+        var r = URLRequest(url: url(yol, q))
+        for (k,v) in AppAttest.headerSync() { r.setValue(v, forHTTPHeaderField: k) }
+        return r
+    }
     func get(_ yol: String, _ q: [String:String] = [:]) async -> [String:Any]? {
-        guard let (d,_) = try? await URLSession.shared.data(from: url(yol,q)) else { return nil }
+        guard let (d,_) = try? await URLSession.shared.data(for: req(yol,q)) else { return nil }
         return try? JSONSerialization.jsonObject(with: d) as? [String:Any]
     }
     func getArr(_ yol: String, _ q: [String:String] = [:]) async -> [[String:Any]] {
-        guard let (d,_) = try? await URLSession.shared.data(from: url(yol,q)) else { return [] }
+        guard let (d,_) = try? await URLSession.shared.data(for: req(yol,q)) else { return [] }
         if let a = try? JSONSerialization.jsonObject(with: d) as? [[String:Any]] { return a }
         if let o = try? JSONSerialization.jsonObject(with: d) as? [String:Any] {
             // farklı backend anahtarlarını dene (items/recent/data/list/kayitlar/...)
@@ -32,7 +38,7 @@ final class PanelAPI {
         return []
     }
     private func post(_ yol: String, _ body: [String:Any]) async -> [String:Any]? {
-        var r = URLRequest(url: url(yol)); r.httpMethod = "POST"; r.timeoutInterval = 40
+        var r = req(yol); r.httpMethod = "POST"; r.timeoutInterval = 40
         r.setValue("application/json", forHTTPHeaderField: "Content-Type")
         var b = body; b["t"] = token
         r.httpBody = try? JSONSerialization.data(withJSONObject: b)

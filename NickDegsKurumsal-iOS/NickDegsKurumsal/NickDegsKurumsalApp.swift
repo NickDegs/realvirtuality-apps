@@ -117,6 +117,7 @@ struct NickDegsKurumsalApp: App {
                 .environment(\.layoutDirection, yerel.yon)
                 .preferredColorScheme(tema.renkSemasi)
                 .tint(tema.c1)
+                .task { await AppAttest.shared.hazirla() }   // GÜVENLİK: donanım bütünlüğü (sideload/tamper engeli)
                 .task { await bitmemisleriKurtar() }   // launch'ta bekleyen/kesintili abonelikler
                 .task { await islemDinle() }
         }

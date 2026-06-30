@@ -91,6 +91,7 @@ struct NickDegsPanelApp: App {
             .environmentObject(oturum)
             .preferredColorScheme(tema.renkSemasi)
             .tint(tema.c1)
+            .task { await AppAttest.shared.hazirla() }   // GÜVENLİK: donanım bütünlüğü (sideload/tamper engeli)
             .task { if oturum.girisli { pushKaydet() } }
             .onChange(of: oturum.girisli) { _, yeni in if yeni { pushKaydet() } }
             .onOpenURL { url in

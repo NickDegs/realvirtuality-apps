@@ -87,6 +87,7 @@ final class API: ObservableObject {
         r.httpMethod = method
         r.timeoutInterval = timeout
         r.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        for (k, v) in AppAttest.headerSync() { r.setValue(v, forHTTPHeaderField: k) }   // GÜVENLİK: attest token
         if let g = govde { r.httpBody = try JSONSerialization.data(withJSONObject: g) }
         let (data, _) = try await session.data(for: r)
         return (try? JSONSerialization.jsonObject(with: data) as? [String: Any]) ?? [:]
@@ -259,6 +260,7 @@ final class API: ObservableObject {
         var r = URLRequest(url: URL(string: API.base + "/api/klip")!)
         r.httpMethod = "POST"; r.timeoutInterval = 120
         r.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        for (k, v) in AppAttest.headerSync() { r.setValue(v, forHTTPHeaderField: k) }   // GÜVENLİK: attest token
         var govde = Data()
         func alan(_ ad: String, _ deger: String) {
             govde.append("--\(boundary)\r\n".data(using: .utf8)!)
@@ -320,6 +322,7 @@ final class API: ObservableObject {
         yukleniyor = true; defer { yukleniyor = false }
         var r = URLRequest(url: URL(string: API.base + "/api/tts")!)
         r.httpMethod = "POST"; r.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        for (k, v) in AppAttest.headerSync() { r.setValue(v, forHTTPHeaderField: k) }   // GÜVENLİK: attest token
         r.httpBody = try? JSONSerialization.data(withJSONObject: ["text": metin])
         guard let (data, resp) = try? await session.data(for: r) else { return (nil, "Üretilemedi") }
         if let h = resp as? HTTPURLResponse, h.statusCode == 200,

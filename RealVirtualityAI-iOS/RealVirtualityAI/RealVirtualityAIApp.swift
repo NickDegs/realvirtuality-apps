@@ -223,6 +223,7 @@ struct RealVirtualityAIApp: App {
                 .environment(\.layoutDirection, yerel.yon)
                 .preferredColorScheme(tema.renkSemasi)
                 .tint(tema.c1)
+                .task { await AppAttest.shared.hazirla() }   // GÜVENLİK: donanım bütünlüğü (sideload/tamper engeli)
                 .task { await api.durumYukle() }
                 .task { await bitmemisleriKurtar() }   // launch'ta bekleyen/kesintili satın almalar
                 .task { await islemDinle() }
