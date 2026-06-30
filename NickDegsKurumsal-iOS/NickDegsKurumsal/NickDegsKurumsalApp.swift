@@ -61,18 +61,20 @@ extension ShapeStyle where Self == Color {
 
 // MARK: - Sekmeler (B2B: İşletme + Güvenlik + Hesabım)
 enum Sekme: String, CaseIterable, Identifiable {
-    case isletme, guvenlik, hesabim
+    case isletmeler, isletme, guvenlik, hesabim
     var id: String { rawValue }
     var ikon: String {
         switch self {
-        case .isletme: return "building.2.fill"
+        case .isletmeler: return "storefront.fill"
+        case .isletme: return "square.grid.2x2.fill"
         case .guvenlik: return "lock.shield.fill"
         case .hesabim: return "person.crop.circle.fill"
         }
     }
     var baslik: String {
         switch self {
-        case .isletme: return "İşletme"
+        case .isletmeler: return "İşletmeler"
+        case .isletme: return "Çözümler"
         case .guvenlik: return "Güvenlik"
         case .hesabim: return "Hesabım"
         }

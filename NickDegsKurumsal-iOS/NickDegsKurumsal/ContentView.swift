@@ -45,7 +45,9 @@ struct SekmeView: View {
     }
 
     var body: some View {
-        if sekme == .hesabim {
+        if sekme == .isletmeler {
+            IsletmelerView()
+        } else if sekme == .hesabim {
             HesabimView()
         } else {
             katalogEkrani
