@@ -48,6 +48,7 @@ enum PanelAile: String {
         c.httpShouldSetCookies = true
         c.httpCookieAcceptPolicy = .always
         session = URLSession(configuration: c)
+        oturumGeriYukle()   // kapat-aç'ta oturumu geri yükle (tekrar SMS login isteme)
     }
 
     var cihaz: String {
@@ -119,15 +120,46 @@ enum PanelAile: String {
     func giris(_ u: String, _ p: String) async {
         hata = ""; yukleniyor = true; defer { yukleniyor = false }
         let j = await post("login", ["username": u, "password": p, "device": cihaz, "remember": true])
-        if j["ok"] as? Bool == true { rol = j["role"] as? String ?? ""; girisli = true }
+        if j["ok"] as? Bool == true { rol = j["role"] as? String ?? ""; girisli = true; oturumKaydet() }
         else if j["needotp"] as? Bool == true { otpGerek = true; otpHint = j["hint"] as? String ?? "" }
         else { hata = j["err"] as? String ?? "Giriş başarısız" }
     }
     func otpDogrula(_ kod: String) async {
         hata = ""; yukleniyor = true; defer { yukleniyor = false }
         let j = await post("verifydev", ["code": kod])
-        if j["ok"] as? Bool == true { rol = j["role"] as? String ?? ""; girisli = true; otpGerek = false }
+        if j["ok"] as? Bool == true { rol = j["role"] as? String ?? ""; girisli = true; otpGerek = false; oturumKaydet() }
         else { hata = j["err"] as? String ?? "Kod hatalı" }
+    }
+
+    // ── Oturum kalıcılığı (Barış 2026-06-30): kapat-aç'ta tekrar SMS login istemesin ──
+    private var oturumKey: String { "biz_oturum_" + (URL(string: taban)?.host ?? "x") }
+    func oturumKaydet() {
+        guard let url = URL(string: taban) else { return }
+        let cookies = HTTPCookieStorage.shared.cookies(for: url) ?? []
+        let arr: [[String: String]] = cookies.map { ["n": $0.name, "v": $0.value, "d": $0.domain, "p": $0.path] }
+        if let d = try? JSONSerialization.data(withJSONObject: arr) {
+            UserDefaults.standard.set(d, forKey: oturumKey)
+            UserDefaults.standard.set(rol, forKey: oturumKey + "_rol")
+        }
+    }
+    /// Launch'ta çağrılır: kayıtlı oturum cookie'lerini 30-gün kalıcı olarak geri yükler + girisli=true.
+    func oturumGeriYukle() {
+        guard let d = UserDefaults.standard.data(forKey: oturumKey),
+              let arr = try? JSONSerialization.jsonObject(with: d) as? [[String: String]], !arr.isEmpty else { return }
+        for c in arr {
+            if let n = c["n"], let v = c["v"], let dom = c["d"], let p = c["p"],
+               let cookie = HTTPCookie(properties: [
+                .name: n, .value: v, .domain: dom, .path: p,
+                .expires: Date(timeIntervalSinceNow: 86400 * 30)]) {
+                HTTPCookieStorage.shared.setCookie(cookie)
+            }
+        }
+        rol = UserDefaults.standard.string(forKey: oturumKey + "_rol") ?? rol
+        girisli = true   // optimist: oturum geçerli; sunucu reddederse kullanıcı tekrar girer
+    }
+    func oturumSil() {
+        UserDefaults.standard.removeObject(forKey: oturumKey)
+        UserDefaults.standard.removeObject(forKey: oturumKey + "_rol")
     }
 
     var sahip: Bool { rol == "owner" }
@@ -422,7 +454,7 @@ struct AyarSekmesi: View {
                     }
                 }
                 if !bilgi.isEmpty { Text(bilgi).font(.caption).foregroundStyle(.green) }
-                Button(role: .destructive) { Task { _ = await api.post("logout"); api.girisli = false } } label: {
+                Button(role: .destructive) { Task { _ = await api.post("logout"); api.girisli = false; api.oturumSil() } } label: {
                     Text("Çıkış Yap").font(.caption.bold()).foregroundStyle(.red).frame(maxWidth: .infinity).padding(.vertical, 10)
                 }
             }.padding()
