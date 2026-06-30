@@ -129,6 +129,7 @@ struct RootView: View {
     @EnvironmentObject var tema: Tema
     @EnvironmentObject var yerel: Yerel
     @State private var seciliTab = 0
+    @State private var onboarding = !UserDefaults.standard.bool(forKey: "rv_onboarding_v1")
     @Environment(\.scenePhase) private var scenePhase
     var body: some View {
         TabView(selection: $seciliTab) {
@@ -166,6 +167,9 @@ struct RootView: View {
             case "kutuphane": seciliTab = 4
             default: break
             }
+        }
+        .fullScreenCover(isPresented: $onboarding) {
+            OnboardingView(goster: $onboarding).environmentObject(tema).environmentObject(yerel)
         }
     }
 }

@@ -826,5 +826,77 @@
   "es": "Compartir",
   "ar": "شارك",
   "ru": "Поделиться"
+ },
+ "obBaslik1": {
+  "tr": "Yapay zekânın tüm gücü",
+  "en": "All the power of AI",
+  "de": "Die ganze Kraft der KI",
+  "fr": "Toute la puissance de l'IA",
+  "es": "Todo el poder de la IA",
+  "ar": "كل قوة الذكاء الاصطناعي",
+  "ru": "Вся сила ИИ"
+ },
+ "obAlt1": {
+  "tr": "Görsel, video, logo, müzik ve metin — hepsi tek uygulamada, saniyeler içinde.",
+  "en": "Images, video, logos, music and text — all in one app, in seconds.",
+  "de": "Bilder, Videos, Logos, Musik und Text — alles in einer App, in Sekunden.",
+  "fr": "Images, vidéos, logos, musique et texte — tout en une app, en quelques secondes.",
+  "es": "Imágenes, vídeo, logos, música y texto — todo en una app, en segundos.",
+  "ar": "صور وفيديو وشعارات وموسيقى ونصوص — في تطبيق واحد، خلال ثوانٍ.",
+  "ru": "Картинки, видео, логотипы, музыка и текст — всё в одном приложении за секунды."
+ },
+ "obBaslik2": {
+  "tr": "40'a yakın AI aracı",
+  "en": "Nearly 40 AI tools",
+  "de": "Fast 40 KI-Tools",
+  "fr": "Près de 40 outils IA",
+  "es": "Casi 40 herramientas IA",
+  "ar": "قرابة 40 أداة ذكاء اصطناعي",
+  "ru": "Почти 40 ИИ-инструментов"
+ },
+ "obAlt2": {
+  "tr": "Görsel üret, foto düzenle, video yap, logo tasarla, renklendir, büyüt ve daha fazlası.",
+  "en": "Generate images, edit photos, make videos, design logos, colorize, upscale and more.",
+  "de": "Bilder erzeugen, Fotos bearbeiten, Videos erstellen, Logos designen, kolorieren, hochskalieren u.v.m.",
+  "fr": "Générez des images, éditez des photos, créez des vidéos, concevez des logos, colorisez, agrandissez et plus.",
+  "es": "Genera imágenes, edita fotos, crea vídeos, diseña logos, colorea, amplía y más.",
+  "ar": "أنشئ صوراً، عدّل الصور، اصنع فيديو، صمم شعارات، لوّن، كبّر والمزيد.",
+  "ru": "Создавайте картинки, редактируйте фото, делайте видео, дизайн логотипов, раскрашивайте и больше."
+ },
+ "obBaslik3": {
+  "tr": "Her gün ücretsiz kredi",
+  "en": "Free credits every day",
+  "de": "Täglich Gratis-Guthaben",
+  "fr": "Crédits gratuits chaque jour",
+  "es": "Créditos gratis cada día",
+  "ar": "رصيد مجاني كل يوم",
+  "ru": "Бесплатные кредиты каждый день"
+ },
+ "obAlt3": {
+  "tr": "Her gün giriş yap, bedava kredi kazan. Arkadaşını davet et, ikiniz de kazanın.",
+  "en": "Log in daily for free credits. Invite a friend and you both earn.",
+  "de": "Täglich einloggen für Gratis-Guthaben. Lade einen Freund ein — ihr beide gewinnt.",
+  "fr": "Connecte-toi chaque jour pour des crédits gratuits. Invite un ami, vous gagnez tous les deux.",
+  "es": "Inicia sesión a diario para créditos gratis. Invita a un amigo y ganáis los dos.",
+  "ar": "سجّل دخولك يومياً لرصيد مجاني. ادعُ صديقاً واربحا معاً.",
+  "ru": "Заходи каждый день за бесплатными кредитами. Пригласи друга — выиграете оба."
+ },
+ "obBasla": {
+  "tr": "Başla",
+  "en": "Get Started",
+  "de": "Loslegen",
+  "fr": "Commencer",
+  "es": "Empezar",
+  "ar": "ابدأ",
+  "ru": "Начать"
+ },
+ "obAtla": {
+  "tr": "Atla",
+  "en": "Skip",
+  "de": "Überspringen",
+  "fr": "Passer",
+  "es": "Saltar",
+  "ar": "تخطّي",
+  "ru": "Пропустить"
  }
 }
