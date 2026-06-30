@@ -898,5 +898,14 @@
   "es": "Saltar",
   "ar": "تخطّي",
   "ru": "Пропустить"
+ },
+ "promptKopyala": {
+  "tr": "İstemi Kopyala",
+  "en": "Copy Prompt",
+  "de": "Prompt kopieren",
+  "fr": "Copier le prompt",
+  "es": "Copiar prompt",
+  "ar": "نسخ الأمر",
+  "ru": "Копировать запрос"
  }
 }

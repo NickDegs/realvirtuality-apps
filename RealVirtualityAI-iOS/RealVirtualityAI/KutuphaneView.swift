@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 // MARK: - Kütüphane: kullanıcının ürettiği tüm çıktılar (kalıcı, tekrar yüklenebilir)
 struct KutuphaneView: View {
@@ -144,7 +145,13 @@ struct KutuphaneDetay: View {
                     }
                     if let p = item.prompt, !p.isEmpty {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text("İstem").font(.caption.bold()).foregroundStyle(.rvMut)
+                            HStack {
+                                Text("İstem").font(.caption.bold()).foregroundStyle(.rvMut)
+                                Spacer()
+                                Button { UIPasteboard.general.string = p } label: {
+                                    Label(yerel.t("promptKopyala"), systemImage: "doc.on.doc").font(.caption2).foregroundStyle(tema.c1)
+                                }
+                            }
                             Text(p).font(.callout).foregroundStyle(.rvText)
                         }.frame(maxWidth: .infinity, alignment: .leading).padding(16)
                         .background(Color.rvCard.opacity(0.6), in: .rect(cornerRadius: 16))
