@@ -219,10 +219,27 @@ struct ToolView: View {
     }
 
     var metinAlani: some View {
-        TextField(ipucu, text: $girdi, axis: .vertical)
-            .lineLimit(3...10).padding().foregroundStyle(.rvText)
-            .background(Color.rvCard, in: .rect(cornerRadius: 16))
-            .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.rvLine, lineWidth: 1))
+        VStack(alignment: .leading, spacing: 10) {
+            TextField(ipucu, text: $girdi, axis: .vertical)
+                .lineLimit(3...10).padding().foregroundStyle(.rvText)
+                .background(Color.rvCard, in: .rect(cornerRadius: 16))
+                .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.rvLine, lineWidth: 1))
+            let ornekler = yerel.aracDizi(arac.id, "ornekler")
+            if !ornekler.isEmpty {
+                Text(yerel.t("ornekFikirler")).font(.caption2).foregroundStyle(.rvMut)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(ornekler, id: \.self) { o in
+                            Button { girdi = o } label: {
+                                Text(o).font(.caption).foregroundStyle(tema.c1).lineLimit(1)
+                                    .padding(.horizontal, 12).padding(.vertical, 7)
+                                    .background(tema.c1.opacity(0.12), in: .capsule)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     var dilSecici: some View {

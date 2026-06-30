@@ -144,6 +144,12 @@
     "Ürün/konsept görselleri",
     "Afiş & kapak",
     "İllüstrasyon"
+   ],
+   "ornekler": [
+    "gün batımında dağ manzarası, sinematik",
+    "sevimli bir robot, 3D render",
+    "neon ışıklı gece şehri",
+    "minimal pastel arka plan"
    ]
   },
   "en": {
@@ -162,6 +168,12 @@
     "Product/concept images",
     "Poster & cover",
     "illustration"
+   ],
+   "ornekler": [
+    "mountain at sunset, cinematic",
+    "a cute robot, 3D render",
+    "neon night city",
+    "minimal pastel background"
    ]
   },
   "de": {
@@ -272,6 +284,12 @@
     "Uygulama ikonu",
     "Sosyal avatar",
     "Sticker & rozet"
+   ],
+   "ornekler": [
+    "modern fırın logosu",
+    "kuaför salonu amblemi",
+    "yazılım startup logosu",
+    "organik market markası"
    ]
   },
   "en": {
@@ -290,6 +308,12 @@
     "application icon",
     "social avatar",
     "Sticker & badge"
+   ],
+   "ornekler": [
+    "modern bakery logo",
+    "hair salon emblem",
+    "software startup logo",
+    "organic market brand"
    ]
   },
   "de": {
@@ -784,6 +808,12 @@
     "Kampanya & duyuru",
     "Ürün tanıtımı",
     "Ajansa alternatif"
+   ],
+   "ornekler": [
+    "yeni kahve çekirdeği tanıtımı",
+    "spor salonu üyelik kampanyası",
+    "el yapımı takı koleksiyonu",
+    "restoran hafta sonu menüsü"
    ]
   },
   "en": {
@@ -802,6 +832,12 @@
     "Campaign & announcement",
     "Product introduction",
     "alternative to agency"
+   ],
+   "ornekler": [
+    "new coffee bean launch",
+    "gym membership campaign",
+    "handmade jewelry collection",
+    "restaurant weekend menu"
    ]
   },
   "de": {
@@ -912,6 +948,12 @@
     "Araştırma & rapor",
     "Teknik çözüm",
     "Karar desteği"
+   ],
+   "ornekler": [
+    "bu iş planını analiz et",
+    "şu metni özetle ve eleştir",
+    "bir pazarlama stratejisi öner",
+    "bu kararın artı/eksilerini sırala"
    ]
   },
   "en": {
@@ -930,6 +972,12 @@
     "Research & report",
     "technical solution",
     "decision support"
+   ],
+   "ornekler": [
+    "analyze this business plan",
+    "summarize and critique this text",
+    "suggest a marketing strategy",
+    "list pros and cons of this decision"
    ]
   },
   "de": {
@@ -1040,6 +1088,12 @@
     "Ürün açıklaması",
     "E-posta & resmi yazı",
     "Blog & özet"
+   ],
+   "ornekler": [
+    "instagram için ürün açıklaması",
+    "etkileyici bir e-posta başlığı",
+    "kısa bir blog girişi yaz",
+    "ürün için 5 satış cümlesi"
    ]
   },
   "en": {
@@ -1058,6 +1112,12 @@
     "Product Description",
     "Email & official letter",
     "Blog & summary"
+   ],
+   "ornekler": [
+    "product caption for Instagram",
+    "a catchy email subject",
+    "write a short blog intro",
+    "5 sales lines for a product"
    ]
   },
   "de": {
@@ -2420,6 +2480,12 @@
     "Hızlı (saniyeler içinde)",
     "Sosyal medyaya hazır",
     "Sinematik hareket"
+   ],
+   "ornekler": [
+    "sahilde koşan altın köpek",
+    "uzayda süzülen astronot",
+    "şehir trafiği hızlandırılmış",
+    "çiçeklerin açması, yakın çekim"
    ]
   },
   "en": {
@@ -2432,6 +2498,12 @@
     "Fast (seconds)",
     "Social-ready",
     "Cinematic motion"
+   ],
+   "ornekler": [
+    "golden dog running on the beach",
+    "astronaut floating in space",
+    "city traffic timelapse",
+    "flowers blooming, close-up"
    ]
   }
  },
@@ -2498,6 +2570,12 @@
     "Özgün/telifsiz",
     "Tür & ruh hali seçimi",
     "İndirilebilir"
+   ],
+   "ornekler": [
+    "sakin lo-fi çalışma müziği",
+    "enerjik elektronik dans",
+    "akustik gitar, huzurlu",
+    "sinematik epik orkestra"
    ]
   },
   "en": {
@@ -2510,6 +2588,12 @@
     "Original/royalty-free",
     "Genre & mood",
     "Downloadable"
+   ],
+   "ornekler": [
+    "calm lo-fi study beat",
+    "energetic electronic dance",
+    "acoustic guitar, peaceful",
+    "cinematic epic orchestra"
    ]
   }
  },
@@ -2732,6 +2816,12 @@
     "Afiş / poster / kapak",
     "Sosyal medya görselleri",
     "Birden çok stil"
+   ],
+   "ornekler": [
+    "'AÇILIŞA ÖZEL %50' yazan modern poster",
+    "kahve dükkanı için 'TAZE' yazılı afiş",
+    "doğum günü davetiyesi tasarımı",
+    "'YENİ' rozeti, canlı renkler"
    ]
   },
   "en": {
@@ -2744,6 +2834,12 @@
     "Poster / flyer / cover",
     "Social media graphics",
     "Multiple styles"
+   ],
+   "ornekler": [
+    "modern poster saying 'GRAND OPENING 50% OFF'",
+    "cafe flyer with 'FRESH' text",
+    "birthday invitation design",
+    "a 'NEW' badge, vivid colors"
    ]
   }
  },
@@ -2758,6 +2854,12 @@
     "Yüksek detay",
     "Profesyonel kullanım",
     "Her konu"
+   ],
+   "ornekler": [
+    "lüks bir restoran iç mekanı, foto-gerçekçi",
+    "yağmurlu sokakta klasik araba",
+    "stüdyo ışığında parfüm şişesi",
+    "kar kaplı orman, sabah sisi"
    ]
   },
   "en": {
@@ -2770,6 +2872,12 @@
     "High detail",
     "Professional use",
     "Any subject"
+   ],
+   "ornekler": [
+    "luxury restaurant interior, photorealistic",
+    "classic car on a rainy street",
+    "perfume bottle in studio light",
+    "snowy forest, morning mist"
    ]
   }
  },
@@ -2784,6 +2892,12 @@
     "Vektör/illüstrasyon stili",
     "Marka tasarımı",
     "Net & profesyonel"
+   ],
+   "ornekler": [
+    "kahve dükkanı için minimal logo",
+    "teknoloji şirketi amblemi, mavi",
+    "el yapımı sabun markası logosu",
+    "spor salonu için güçlü ikon"
    ]
   },
   "en": {
@@ -2796,6 +2910,12 @@
     "Vector/illustration style",
     "Brand design",
     "Clean & professional"
+   ],
+   "ornekler": [
+    "minimal logo for a coffee shop",
+    "tech company emblem, blue",
+    "handmade soap brand logo",
+    "bold icon for a gym"
    ]
   }
  },
@@ -2836,6 +2956,12 @@
     "Sinematik hareket",
     "Metinden video",
     "Reels/TikTok/YouTube"
+   ],
+   "ornekler": [
+    "dağ zirvesinde gün doğumu, sinematik",
+    "dalgaların kıyıya vurması",
+    "kar yağarken orman yolu",
+    "kafede buharı tüten kahve"
    ]
   },
   "en": {
@@ -2848,6 +2974,12 @@
     "Cinematic motion",
     "Text to video",
     "Reels/TikTok/YouTube"
+   ],
+   "ornekler": [
+    "sunrise over a mountain peak, cinematic",
+    "waves crashing on the shore",
+    "forest road as snow falls",
+    "steaming coffee in a cafe"
    ]
   }
  }

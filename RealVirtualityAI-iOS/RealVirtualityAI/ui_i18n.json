@@ -763,5 +763,14 @@
   "es": "Continuar con este resultado",
   "ar": "المتابعة بهذه النتيجة",
   "ru": "Продолжить с этим результатом"
+ },
+ "ornekFikirler": {
+  "tr": "Örnek fikirler",
+  "en": "Example ideas",
+  "de": "Beispielideen",
+  "fr": "Idées d'exemple",
+  "es": "Ideas de ejemplo",
+  "ar": "أفكار أمثلة",
+  "ru": "Примеры идей"
  }
 }
