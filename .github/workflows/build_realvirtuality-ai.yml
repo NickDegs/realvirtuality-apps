@@ -1,8 +1,8 @@
 name: Build RealVirtuality AI
 on:
   workflow_dispatch:
-#  schedule:  (2026-07-01 kapatıldı — sürpriz TestFlight build önleme, elle re-enable)
-#    - cron: '0 7 3 * *'  # ayda 1 oto-rebuild (3. gün 07:00) → TestFlight süresi dolmasın
+  schedule:
+    - cron: '0 7 3 * *'  # ayda 1 oto-rebuild (3. gün 07:00) → TestFlight süresi dolmasın
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true

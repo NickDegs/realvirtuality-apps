@@ -12,8 +12,8 @@ on:
       submit_review:
         description: "App Store incelemeye gönder? (yalnızca 'true' yazınca gönderir)"
         default: "false"
-#  schedule:  (2026-07-01 kapatıldı — sürpriz TestFlight build önleme, elle re-enable)
-#    - cron: '0 6 1 * *'  # ayda 1 oto-rebuild → TestFlight süresi dolmasın
+  schedule:
+    - cron: '0 6 1 * *'  # ayda 1 oto-rebuild → TestFlight süresi dolmasın
 jobs:
   ios-native:
     runs-on: macos-latest
