@@ -79,6 +79,8 @@ final class PanelAPI {
     func isletmeEkle(ad: String, kod: String, tel: String, sifre: String, slug: String) async -> [String:Any]? {
         await post("/api/panel/isletme-ekle", ["ad":ad,"kod":kod,"tel":tel,"sifre":sifre,"slug":slug])
     }
+    // 🎟️ Tek-seferlik davet linki üret (esnaf-bot köprüsü) — işletme kendi kursun
+    func esnafDavet() async -> [String:Any]? { await post("/api/panel/esnaf-davet", [:]) }
     // Personel (işletme → çalışan)
     func personelListe() async -> [[String:Any]] { ((await get("/api/panel/personel-liste"))?["personel"] as? [[String:Any]]) ?? [] }
     func personelEkle(ad: String, kod: String, tel: String, sifre: String) async -> [String:Any]? {

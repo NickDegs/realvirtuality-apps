@@ -1016,12 +1016,35 @@ struct IsletmeEkleNative: View {
     @State private var sonuc = ""
     @State private var basari = false
     @State private var bekle = false
+    @State private var davetUrl = ""
+    @State private var davetWa = ""
+    @State private var davetBekle = false
     private var api: PanelAPI { PanelAPI(host: oturum.host, token: oturum.token) }
     var body: some View {
         ZStack {
             AnimatedArka(c1: tema.c1, c2: tema.c2)
             ScrollView { VStack(spacing: 12) {
-                Text("Yeni işletme oluştur — kod/şifre üret, müşteriye ver.").font(.subheadline).foregroundStyle(.rvMut).frame(maxWidth:.infinity,alignment:.leading)
+                // 🎟️ DAVET (önerilen) — işletme kendi kursun, WhatsApp+panel+PDF otomatik
+                VStack(alignment:.leading, spacing:8) {
+                    Text("🎟️ Davet linki üret").font(.headline).foregroundStyle(.rvText)
+                    Text("Tek-seferlik link üret, işletmeye gönder. Kendi kurar; WhatsApp sipariş/randevu sistemi + panel + kurulum PDF'i otomatik gelir. Kod/şifre uğraşmazsın.").font(.caption).foregroundStyle(.rvMut)
+                    Button { Task { await davetUret() } } label: {
+                        HStack{ if davetBekle { ProgressView().tint(.white) }; Image(systemName:"ticket.fill"); Text("Davet Linki Üret").bold() }
+                            .foregroundStyle(.white).frame(maxWidth:.infinity).padding(.vertical,14)
+                            .background(LinearGradient(colors:[Color(red:0.49,green:0.36,blue:1),Color(red:0.35,green:0.25,blue:0.84)],startPoint:.leading,endPoint:.trailing),in:.rect(cornerRadius:14))
+                    }.disabled(davetBekle)
+                    if !davetUrl.isEmpty {
+                        Text(davetUrl).font(.caption).foregroundStyle(tema.c1).textSelection(.enabled)
+                            .frame(maxWidth:.infinity,alignment:.leading).padding(10).glassEffect(.regular,in:.rect(cornerRadius:10))
+                        ShareLink(item: davetWa) {
+                            HStack{ Image(systemName:"square.and.arrow.up"); Text("Gönder / Paylaş").bold() }
+                                .foregroundStyle(.white).frame(maxWidth:.infinity).padding(.vertical,12)
+                                .background(Color(red:0.14,green:0.83,blue:0.4),in:.rect(cornerRadius:12))
+                        }
+                    }
+                }.padding(14).glassEffect(.regular,in:.rect(cornerRadius:16))
+                 .overlay(RoundedRectangle(cornerRadius:16).stroke(Color(red:0.49,green:0.36,blue:1).opacity(0.5),lineWidth:1))
+                Text("— ya da elle kod/şifre üret —").font(.caption2).foregroundStyle(.rvMut).frame(maxWidth:.infinity).padding(.top,4)
                 alan("İşletme adı", $ad); alan("Giriş kodu", $kod)
                 alan("Telefon (+90… opsiyonel)", $tel); alan("Şifre (boş=otomatik)", $sifre)
                 if !sluglar.isEmpty {
@@ -1051,6 +1074,14 @@ struct IsletmeEkleNative: View {
             basari = true; sonuc = "✓ Oluşturuldu\nKod: \(r?["kod"] ?? "")\nŞifre: \(r?["sifre"] ?? "")" + (slug.isEmpty ? "" : "\nPanel: \(slug)")
             ad=""; kod=""; tel=""; sifre=""; slug=""
         } else { basari = false; sonuc = "⚠️ " + ((r?["mesaj"] as? String) ?? "Hata") }
+    }
+    func davetUret() async {
+        davetBekle = true; defer { davetBekle = false }
+        let r = await api.esnafDavet()
+        if r?["ok"] as? Bool == true {
+            davetUrl = (r?["url"] as? String) ?? ""
+            davetWa = (r?["wa_metni"] as? String) ?? davetUrl
+        } else { basari = false; sonuc = "⚠️ " + ((r?["mesaj"] as? String) ?? "Davet üretilemedi") }
     }
 }
 
