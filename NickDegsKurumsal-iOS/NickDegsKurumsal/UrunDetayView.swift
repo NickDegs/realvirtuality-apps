@@ -17,11 +17,9 @@ struct UrunDetayView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     baslik
-                    if !urun.pr.isEmpty {
-                        Text(urun.pr).font(.title3.bold()).foregroundStyle(tema.c2)
-                            .padding(.horizontal, 16).padding(.vertical, 9)
-                            .glassEffect(.regular.tint(tema.c2.opacity(0.18)), in: .capsule)
-                    }
+                    Text(yerel.t("planDahil")).font(.subheadline.bold()).foregroundStyle(tema.c2)
+                        .padding(.horizontal, 16).padding(.vertical, 9)
+                        .glassEffect(.regular.tint(tema.c2.opacity(0.18)), in: .capsule)
                     Text(yerel.u(urun.aciklama))
                         .font(.callout).foregroundStyle(.rvText).opacity(0.95)
                         .fixedSize(horizontal: false, vertical: true)

@@ -225,9 +225,9 @@ struct UrunKart: View {
                     .lineLimit(1)
                 Text(yerel.u(urun.aciklama)).font(.caption).foregroundStyle(.rvMut)
                     .lineLimit(2).lineSpacing(2).fixedSize(horizontal: false, vertical: true)
-                if !urun.pr.isEmpty {
-                    Text(urun.pr).font(.subheadline.bold()).foregroundStyle(tema.c2).padding(.top, 3)
-                }
+                Text(yerel.t("planDahil")).font(.caption2.weight(.semibold)).foregroundStyle(tema.c2)
+                    .padding(.horizontal, 9).padding(.vertical, 4)
+                    .background(tema.c2.opacity(0.14), in: .capsule).padding(.top, 3)
             }
             .frame(maxWidth: .infinity, alignment: .leading).padding(16)
         }
