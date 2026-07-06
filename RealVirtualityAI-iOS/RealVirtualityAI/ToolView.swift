@@ -79,7 +79,7 @@ struct ToolView: View {
                     if gorselGerek { gorselSecici }
                     if ikiGorsel { ikiGorselSecici }
                     if pdfGerek { pdfSecici }
-                    if videoGerek { videoSecici; klipSecenekler }
+                    if videoGerek { videoSecici; if arac.id != "videoupscale" { klipSecenekler } }
                     if metinGerek { metinAlani }
                     if arac.kind == .ceviri { dilSecici }
                     if arac.kind == .urunfoto { secici(yerel.t("sahne"), sahneler, $sahne) }
@@ -454,7 +454,9 @@ struct ToolView: View {
         // Video oto-klip — multipart upload + iş kuyruğu, ayrı akış
         if arac.kind == .video {
             guard let vurl = videoURL else { return }
-            let (s, e) = await api.klipUret(vurl, adet: klipAdet, format: klipFormat, altyazi: klipAltyazi, muzik: klipMuzik)
+            let (s, e) = arac.id == "videoupscale"
+                ? await api.videoUpscaleUret(vurl)
+                : await api.klipUret(vurl, adet: klipAdet, format: klipFormat, altyazi: klipAltyazi, muzik: klipMuzik)
             if let e = e { e == "kota_doldu" ? (kotaUyari = true) : (hata = e) } else { sonuc = s }
             return
         }

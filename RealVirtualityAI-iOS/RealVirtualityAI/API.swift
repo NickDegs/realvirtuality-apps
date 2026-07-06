@@ -309,6 +309,44 @@ final class API: ObservableObject {
         return (nil, "İşlem zaman aşımına uğradı, kütüphaneden kontrol et")
     }
 
+    // Video büyüt/netleştir — multipart upload + iş kuyruğu (poll), tek video döndürür
+    func videoUpscaleUret(_ videoURL: URL) async -> (UretimSonuc?, String?) {
+        guard let veri = try? Data(contentsOf: videoURL) else { return (nil, "Video okunamadı") }
+        let boundary = "rvb-\(UUID().uuidString)"
+        var r = URLRequest(url: URL(string: API.base + "/api/videoupscale")!)
+        r.httpMethod = "POST"; r.timeoutInterval = 120
+        r.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        for (k, v) in AppAttest.headerSync() { r.setValue(v, forHTTPHeaderField: k) }   // GÜVENLİK: attest token
+        var govde = Data()
+        govde.append("--\(boundary)\r\n".data(using: .utf8)!)
+        govde.append("Content-Disposition: form-data; name=\"video\"; filename=\"video.mp4\"\r\n".data(using: .utf8)!)
+        govde.append("Content-Type: video/mp4\r\n\r\n".data(using: .utf8)!)
+        govde.append(veri)
+        govde.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+        r.httpBody = govde
+        guard let (d, _) = try? await session.upload(for: r, from: govde),
+              let j = try? JSONSerialization.jsonObject(with: d) as? [String: Any] else { return (nil, "Yüklenemedi") }
+        if j["ok"] as? Bool != true {
+            if (j["err"] as? String) == "kota_doldu" { return (nil, "kota_doldu") }
+            return (nil, (j["mesaj"] as? String) ?? (j["err"] as? String) ?? "Yüklenemedi")
+        }
+        if let k = j["kredi"] as? Int { kredi = k }
+        guard let jid = j["job"] as? String else { return (nil, "İş başlatılamadı") }
+        // İş kuyruğu polling (~8 dk) — video upscale uzun sürebilir
+        for _ in 0..<120 {
+            try? await Task.sleep(nanoseconds: 4_000_000_000)
+            let p = (try? await istek("/api/videoupscale/\(jid)", nil, method: "GET", timeout: 30)) ?? [:]
+            if let k = p["kredi"] as? Int { kredi = k }
+            if let v = p["video"] as? String, !v.isEmpty {
+                return (UretimSonuc(metin: nil, gorselData: nil, videoURL: v), nil)
+            }
+            if (p["err"] as? String) != nil, (p["durum"] as? String) != "bekliyor" {
+                return (nil, (p["mesaj"] as? String) ?? "Video büyütülemedi, tekrar dene.")
+            }
+        }
+        return (nil, "İşlem zaman aşımına uğradı, kütüphaneden kontrol et")
+    }
+
     // Katalog ürün siparişi — native akış, SMS ile ödeme linki gönderilir
     func urunSiparis(_ urunId: String) async -> (siparisId: String?, mesaj: String?, hata: String?) {
         let j = (try? await istek("/api/urun-siparis", ["urun_id": urunId])) ?? [:]

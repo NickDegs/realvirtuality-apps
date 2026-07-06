@@ -20,6 +20,11 @@ workflows:
         APP_STORE_APPLE_ID: "6782458951"   # App Store Connect'te uygulama oluşturunca Apple ID (rakam) buraya
     working_directory: RealVirtualityAI-iOS
     scripts:
+      - name: Build numarası (timestamp — TestFlight çakışması olmasın)
+        script: |
+          BN=$(date +%s)
+          sed -i '' -E "s/(CURRENT_PROJECT_VERSION: )\"[0-9]+\"/\1\"$BN\"/" project.yml
+          echo "build number = $BN"
       - name: XcodeGen ile proje üret
         script: |
           brew install xcodegen

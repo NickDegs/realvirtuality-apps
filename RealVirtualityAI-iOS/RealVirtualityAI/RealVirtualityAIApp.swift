@@ -115,6 +115,7 @@ let ARACLAR: [Arac] = [
     Arac(id: "img2video", ikon: "photo.badge.arrow.down.fill", kind: .gorselYukle, kredi: 17, kategori: .video, oneCikan: true),
     Arac(id: "avatar", ikon: "person.crop.rectangle.badge.plus", kind: .gorselArti, kredi: 17, kategori: .video, oneCikan: true),
     Arac(id: "klip", ikon: "scissors.badge.ellipsis", kind: .video, kredi: 5, kategori: .video, oneCikan: true),
+    Arac(id: "videoupscale", ikon: "4k.tv.fill", kind: .video, kredi: 75, kategori: .video, oneCikan: true),
     // Ses
     Arac(id: "muzik", ikon: "music.note", kind: .prompt, kredi: 9, kategori: .ses, oneCikan: true),
     Arac(id: "tts", ikon: "speaker.wave.3.fill", kind: .metin, kredi: 2, kategori: .ses),

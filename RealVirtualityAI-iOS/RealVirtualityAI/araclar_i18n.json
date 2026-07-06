@@ -3008,5 +3008,49 @@
     "Social media/banner ready"
    ]
   }
+ },
+ "videoupscale": {
+  "tr": {
+   "ad": "Video Büyüt/Netleştir",
+   "aciklama": "Bulanık/küçük videoyu 2x büyüt, netleştir",
+   "slogan": "Videonu yükle — AI çözünürlüğü 2x artırıp netleştirir.",
+   "detay": "Real-ESRGAN ile düşük çözünürlüklü/bulanık videoları 2x büyütüp detayları keskinleştirir. Kısa klipler önerilir."
+  },
+  "en": {
+   "ad": "Video Upscale",
+   "aciklama": "Upscale & sharpen blurry/small video 2x",
+   "slogan": "Upload your video — AI doubles the resolution and sharpens it.",
+   "detay": "Uses Real-ESRGAN to upscale low-res/blurry videos 2x and sharpen details. Short clips recommended."
+  },
+  "de": {
+   "ad": "Video hochskalieren",
+   "aciklama": "Unscharfes Video 2x hochskalieren",
+   "slogan": "Lade dein Video hoch — die KI verdoppelt die Auflösung.",
+   "detay": "Nutzt Real-ESRGAN, um Videos mit niedriger Auflösung 2x hochzuskalieren und zu schärfen. Kurze Clips empfohlen."
+  },
+  "fr": {
+   "ad": "Améliorer la vidéo",
+   "aciklama": "Agrandir/nettoyer une vidéo 2x",
+   "slogan": "Téléverse ta vidéo — l'IA double la résolution.",
+   "detay": "Utilise Real-ESRGAN pour agrandir 2x les vidéos basse résolution et les rendre nettes. Clips courts recommandés."
+  },
+  "es": {
+   "ad": "Mejorar video",
+   "aciklama": "Mejora y agranda video 2x",
+   "slogan": "Sube tu video — la IA duplica la resolución.",
+   "detay": "Usa Real-ESRGAN para escalar videos de baja resolución 2x y afinar los detalles. Se recomiendan clips cortos."
+  },
+  "ar": {
+   "ad": "تحسين الفيديو",
+   "aciklama": "تكبير وتوضيح الفيديو 2x",
+   "slogan": "ارفع الفيديو — يضاعف الذكاء الاصطناعي الدقة ويوضّحه.",
+   "detay": "يستخدم Real-ESRGAN لتكبير الفيديوهات منخفضة الدقة 2x وتوضيح التفاصيل. يُنصح بمقاطع قصيرة."
+  },
+  "ru": {
+   "ad": "Улучшить видео",
+   "aciklama": "Увеличить и улучшить видео 2x",
+   "slogan": "Загрузите видео — ИИ удвоит разрешение и повысит четкость.",
+   "detay": "Использует Real-ESRGAN для увеличения видео низкого разрешения в 2 раза и повышения четкости. Рекомендуются короткие клипы."
+  }
  }
 }
