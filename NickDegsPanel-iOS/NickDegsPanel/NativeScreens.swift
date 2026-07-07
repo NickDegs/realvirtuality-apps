@@ -402,6 +402,9 @@ struct AdminNative: View {
     @State private var yetki: [[String:Any]] = []
     // system
     @State private var sistemVeri: [String:Any] = [:]
+    // hush yasal export
+    @State private var hCase = ""; @State private var hPhone = ""; @State private var hWith = ""
+    @State private var hSonuc = ""; @State private var hHata = false
 
     @State private var yukleniyor = false
     @State private var islemMesaj = ""
@@ -414,7 +417,7 @@ struct AdminNative: View {
         ("payments","💳 Ödeme"), ("services","📋 Plan"),  ("ips","🛡️ IP"),
         ("containers","🐳 Cont"),("logs","🗒️ Log"),      ("leads","📣 Lead"),
         ("teslimat","📦 Teslimat"),("coupons","🏷️ Kupon"),("broadcast","📢 Duyuru"),
-        ("apps","🔐 Yetki"),    ("system","🖥️ Sistem")
+        ("apps","🔐 Yetki"),    ("system","🖥️ Sistem"), ("hush","⚖️ Hush")
     ]
 
     var body: some View {
@@ -471,7 +474,66 @@ struct AdminNative: View {
         case "coupons":    kuponSekmesi
         case "broadcast":  duyuruSekmesi
         case "apps":       yetkiSekmesi
+        case "hush":       hushSekmesi
         default:           sistemSekmesi
+        }
+    }
+
+    // MARK: Hush Yasal Export (hedefli, audit'li; dosya Telegram'a düşer)
+    var hushSekmesi: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text("⚖️ Hush — Yasal Talep Export").font(.headline.bold()).foregroundStyle(.rvText)
+            Text("Hedefli, belgeli, audit'li export — sadece geçerli hukuki talep üzerine. Dosya Telegram'a otomatik gönderilir.")
+                .font(.caption).foregroundStyle(.rvMut)
+            Group {
+                hushAlan("Dosya / Talep No *", "2026/1234 X Başsavcılığı", $hCase)
+                hushAlan("Hedef — Telefon no", "+905551234567", $hPhone)
+                hushAlan("Diğer kişi — sadece bu kişiyle (ops.)", "+905559876543 / @p905...", $hWith)
+            }
+            Button {
+                Task { await hushExport() }
+            } label: {
+                Text(bekle ? "Export alınıyor…" : "⚖️ Yasal Export Al")
+                    .font(.subheadline.bold()).foregroundStyle(.white)
+                    .frame(maxWidth: .infinity).padding(.vertical, 12)
+                    .background(tema.grad, in: .rect(cornerRadius: 12))
+            }.disabled(bekle).padding(.top, 4)
+            if !hSonuc.isEmpty {
+                Text(hSonuc).font(.caption).foregroundStyle(hHata ? .red : .green)
+                    .padding(10).frame(maxWidth: .infinity, alignment: .leading)
+                    .background(.white.opacity(0.05), in: .rect(cornerRadius: 10))
+            }
+        }.padding(16)
+    }
+    func hushAlan(_ baslik: String, _ ph: String, _ deger: Binding<String>) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(baslik).font(.caption2).foregroundStyle(.rvMut)
+            TextField(ph, text: deger).textFieldStyle(.plain).autocorrectionDisabled()
+                .textInputAutocapitalization(.never).foregroundStyle(.rvText)
+                .padding(10).background(.white.opacity(0.06), in: .rect(cornerRadius: 10))
+        }
+    }
+    func hushExport() async {
+        let c = hCase.trimmingCharacters(in: .whitespaces)
+        let p = hPhone.trimmingCharacters(in: .whitespaces)
+        let w = hWith.trimmingCharacters(in: .whitespaces)
+        hSonuc = ""; hHata = false
+        if c.isEmpty { hSonuc = "Dosya/Talep no zorunlu."; hHata = true; return }
+        if p.isEmpty && w.isEmpty { hSonuc = "Telefon veya kullanıcı/oda ID gerekli."; hHata = true; return }
+        bekle = true; defer { bekle = false }
+        var body: [String:Any] = ["case": c]
+        if !p.isEmpty { body["phone"] = p }
+        if !w.isEmpty { body["with"] = w }
+        let r = await api.adminPost("hush-legal-export", body)
+        if let r = r, r["ok"] as? Bool == true {
+            let hedef = r["target"] as? String ?? ""
+            let kapsam = r["scope"] as? String ?? (w.isEmpty ? "tüm sohbetler" : "iki kişi arası")
+            let msg = r["messages"] as? Int ?? 0
+            hHata = false
+            hSonuc = "✓ Export hazır · 📨 Telegram'a gönderildi\nHedef: \(hedef)\nKapsam: \(kapsam) · \(msg) mesaj"
+        } else {
+            hHata = true
+            hSonuc = "⚠️ " + ((r?["err"] as? String) ?? "Export başarısız")
         }
     }
 
