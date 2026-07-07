@@ -50,6 +50,7 @@ final class PanelAPI {
     }
 
     // Sunucu
+    func hesapSil() async -> Bool { (await post("/api/panel/hesap-sil", [:]))?["ok"] as? Bool ?? false }
     func durum() async -> [String:Any]? { await get("/api/panel/durum") }
     func servisRestart(_ svc: String) async -> Bool { (await post("/api/panel/servis-restart", ["svc":svc]))?["ok"] as? Bool ?? false }
 #if IPTV_MODULE

@@ -16,6 +16,7 @@ struct MainView: View {
     @State private var ad = ""
     @State private var yukleniyor = true
     @State private var hata = false
+    @State private var silOnay = false
 
     var body: some View {
         Group {
@@ -119,8 +120,15 @@ struct GrupView: View {
                         if !ad.isEmpty { Text(ad) }
                         Button { sifreAcik = true } label: { Label("Şifre Değiştir", systemImage: "lock.rotation") }
                         Button("Çıkış Yap", role: .destructive) { oturum.cikis() }
+                        Button("Hesabımı Sil", role: .destructive) { silOnay = true }
                     } label: {
                         HStack(spacing: 7) { Image(systemName: "diamond.fill").foregroundStyle(tema.grad); Text("NickDegs").font(.headline.bold()).foregroundStyle(.rvText) }
+                    }
+                    .confirmationDialog("Hesabını kalıcı olarak silmek istiyor musun? Bu işlem geri alınamaz.", isPresented: $silOnay, titleVisibility: .visible) {
+                        Button("Hesabı Sil", role: .destructive) {
+                            Task { _ = await PanelAPI(host: oturum.host, token: oturum.token).hesapSil(); oturum.cikis() }
+                        }
+                        Button("Vazgeç", role: .cancel) {}
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {

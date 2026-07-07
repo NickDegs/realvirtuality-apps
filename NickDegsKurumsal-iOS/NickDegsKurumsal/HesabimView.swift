@@ -16,6 +16,7 @@ struct HesabimView: View {
     @State private var hata = ""
     @State private var satinaldiklarim: SatinAlinanlar? = nil
     @State private var restoreMsg = ""
+    @State private var silOnay = false
     @StateObject private var magaza = Magaza()
 
     var body: some View {
@@ -66,6 +67,13 @@ struct HesabimView: View {
                             Button { satinaldiklarim = nil; smsKod = ""; smsGonderildi = false; tel = ""; oturumSil() } label: {
                                 Text("Çıkış Yap").font(.caption).foregroundStyle(.rvMut)
                             }.padding(.top, 2)
+                            Button(role: .destructive) { silOnay = true } label: {
+                                Text("Hesabımı Sil").font(.caption.bold()).foregroundStyle(.red)
+                            }.padding(.top, 6)
+                            .confirmationDialog("Hesabını kalıcı olarak sil? Kişisel erişimin ve verilerin silinir. Aboneliğin App Store'dan yönetilir (Ayarlar > Apple Kimliği > Abonelikler).", isPresented: $silOnay, titleVisibility: .visible) {
+                                Button("Hesabı Sil", role: .destructive) { Task { await hesapSil() } }
+                                Button("Vazgeç", role: .cancel) {}
+                            }
                         }
                         Spacer()
                     }.padding(24).frame(maxWidth: 480)
@@ -252,6 +260,21 @@ struct HesabimView: View {
     func oturumSil() {
         UserDefaults.standard.removeObject(forKey: "biz_hesabim_json")
         UserDefaults.standard.removeObject(forKey: "biz_hesabim_tel")
+    }
+    // Apple 5.1.1(v): uygulama-içi hesap silme. Sunucuda kişisel erişim/entitlement kayıtlarını siler,
+    // oturumu kapatır. Abonelik Apple'da kalır (Restore ile geri gelir).
+    func hesapSil() async {
+        let telNo = UserDefaults.standard.string(forKey: "biz_hesabim_tel") ?? ""
+        var tok = ""
+        if let d = UserDefaults.standard.data(forKey: "biz_hesabim_json"),
+           let j = try? JSONSerialization.jsonObject(with: d) as? [String: Any] {
+            tok = j["durumTok"] as? String ?? ""
+        }
+        if !telNo.isEmpty, !tok.isEmpty {
+            _ = await post("/api/iap/hesap-sil", ["tel": telNo, "tok": tok])
+        }
+        satinaldiklarim = nil; smsKod = ""; smsGonderildi = false; tel = ""
+        oturumSil()
     }
 }
 
