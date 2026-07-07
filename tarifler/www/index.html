@@ -556,6 +556,11 @@ body[data-theme="light"] .hero-input { color: var(--txt); border-color: rgba(120
 }
 #dimg.loaded { filter: none; opacity: 1; }
 #dbody { padding: 18px 16px 60px }
+/* ── Light tema düzeltmesi (2026-07 kullanıcı bildirimi): tarif detayı/başlık/sheet
+   sabit koyu arka planlıydı → açık temada koyu yazı koyu zeminde OKUNMUYORDU. Açık yapıldı. ── */
+body[data-theme="light"] #detail { background: rgba(240,234,255,0.95) }
+body[data-theme="light"] #dhead  { background: rgba(240,234,255,0.82); border-bottom-color: rgba(130,90,220,0.18) }
+body[data-theme="light"] .sheet  { background: rgba(245,241,255,0.96); border-color: rgba(130,90,220,0.18) }
 .dmeta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px }
 .dmeta-tag {
   background: var(--gl); border: 1px solid var(--gl-bdr);
