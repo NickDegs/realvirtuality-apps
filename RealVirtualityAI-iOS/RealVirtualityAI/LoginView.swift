@@ -11,6 +11,7 @@ struct LoginView: View {
     @State private var hata = ""
     @State private var bekle = false
     @State private var bilgi = ""
+    @State private var silOnay = false
 
     var body: some View {
         ZStack {
@@ -25,6 +26,14 @@ struct LoginView: View {
                         Button(yerel.t("cikisYap")) { Task { await api.cikis(); dismiss() } }
                             .padding().frame(maxWidth: .infinity)
                             .rvGlass(14).foregroundStyle(.rvText)
+                        Button(role: .destructive) { silOnay = true } label: {
+                            Text(yerel.secim == "tr" ? "Hesabımı Sil" : "Delete Account")
+                                .padding().frame(maxWidth: .infinity)
+                        }.foregroundStyle(.red)
+                        .confirmationDialog(yerel.secim == "tr" ? "Hesabın ve tüm üretimlerin kalıcı olarak silinsin mi? Bu işlem geri alınamaz." : "Permanently delete your account and all your creations? This cannot be undone.", isPresented: $silOnay, titleVisibility: .visible) {
+                            Button(yerel.secim == "tr" ? "Hesabı Sil" : "Delete Account", role: .destructive) { Task { if await api.hesapSil() { dismiss() } } }
+                            Button(yerel.secim == "tr" ? "Vazgeç" : "Cancel", role: .cancel) {}
+                        }
                     } else {
                         Image(systemName: "sparkles").font(.system(size: 46)).foregroundStyle(.linearGradient(colors: [.rvViolet, .rvCyan], startPoint: .leading, endPoint: .trailing))
                         Text(yerel.t("girisBaslik")).font(.title2.bold()).foregroundStyle(.rvText)

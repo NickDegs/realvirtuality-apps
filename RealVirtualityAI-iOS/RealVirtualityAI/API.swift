@@ -189,6 +189,17 @@ final class API: ObservableObject {
         girisli = false; email = nil; tel = nil; await durumYukle()
     }
 
+    // Apple 5.1.1(v): uygulama-içi hesap silme. Sunucuda hesabı+çıktıları siler, oturumu kapatır.
+    func hesapSil() async -> Bool {
+        let j = (try? await istek("/api/hesap-sil")) ?? [:]
+        if j["ok"] as? Bool == true {
+            kv.removeObject(forKey: "rv_sid"); kv.synchronize()
+            girisli = false; email = nil; tel = nil; await durumYukle()
+            return true
+        }
+        return false
+    }
+
     private func aracAdi(_ yol: String) -> String { yol.split(separator: "/").last.map(String.init) ?? "arac" }
 
     // IAP makbuzunu sunucuda doğrula → kredi yüklenir
