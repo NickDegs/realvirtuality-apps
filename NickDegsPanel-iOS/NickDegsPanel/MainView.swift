@@ -16,7 +16,6 @@ struct MainView: View {
     @State private var ad = ""
     @State private var yukleniyor = true
     @State private var hata = false
-    @State private var silOnay = false
 
     var body: some View {
         Group {
@@ -84,6 +83,7 @@ struct GrupView: View {
     @Environment(\.horizontalSizeClass) var hsc
     @State private var sifreAcik = false
     @State private var hedef: HubKart? = nil
+    @State private var silOnay = false
 
     private var kolonlar: [GridItem] { Array(repeating: GridItem(.flexible(), spacing: 16), count: hsc == .regular ? 3 : 2) }
 
