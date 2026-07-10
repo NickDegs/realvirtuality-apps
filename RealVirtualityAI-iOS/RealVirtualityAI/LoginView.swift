@@ -22,7 +22,7 @@ struct LoginView: View {
                         Image(systemName: "person.crop.circle.fill").font(.system(size: 54)).foregroundStyle(.rvViolet)
                         Text(api.tel ?? api.email ?? "").font(.headline).foregroundStyle(.rvText)
                         Text("⚡ \(api.kredi) kredi").foregroundStyle(.rvCyan)
-                        Text("Oturum iCloud ile cihazların arasında senkron.").font(.caption2).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                        Text("Oturum iCloud ile cihazların arasında senkron.").font(.caption2).foregroundStyle(.rvMut).multilineTextAlignment(.center)
                         Button(yerel.t("cikisYap")) { Task { await api.cikis(); dismiss() } }
                             .padding().frame(maxWidth: .infinity)
                             .rvGlass(14).foregroundStyle(.rvText)
@@ -38,7 +38,7 @@ struct LoginView: View {
                         Image(systemName: "sparkles").font(.system(size: 46)).foregroundStyle(.linearGradient(colors: [.rvViolet, .rvCyan], startPoint: .leading, endPoint: .trailing))
                         Text(yerel.t("girisBaslik")).font(.title2.bold()).foregroundStyle(.rvText)
                         Text(adim == 0 ? yerel.p("telefon") : yerel.p("smsKodu"))
-                            .font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                            .font(.subheadline).foregroundStyle(.rvMut).multilineTextAlignment(.center)
 
                         if adim == 0 {
                             HStack(spacing: 10) {
@@ -64,7 +64,7 @@ struct LoginView: View {
                                 .font(.caption).foregroundStyle(.rvCyan)
                         }
                         Text("Telefon numaranla giriş yaparsın. Kredi ve üretimlerin hesabına bağlı, cihazlar arası senkron.")
-                            .font(.caption2).foregroundStyle(.secondary).multilineTextAlignment(.center).padding(.top, 4)
+                            .font(.caption2).foregroundStyle(.rvMut).multilineTextAlignment(.center).padding(.top, 4)
                     }
                 }
                 .padding(24)

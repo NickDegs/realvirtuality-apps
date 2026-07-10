@@ -31,9 +31,9 @@ extension Color {
     // Ana metin
     static let rvText = Color(UIColor { t in
         t.userInterfaceStyle == .dark ? UIColor(white: 0.96, alpha: 1) : UIColor(red: 0.06, green: 0.07, blue: 0.13, alpha: 1) })
-    // İkincil metin
+    // İkincil metin (okunurluk için kontrast artırıldı — Apple 4.0 "hard to read" fiksi)
     static let rvMut = Color(UIColor { t in
-        t.userInterfaceStyle == .dark ? UIColor(red: 0.66, green: 0.70, blue: 0.80, alpha: 1) : UIColor(red: 0.42, green: 0.46, blue: 0.56, alpha: 1) })
+        t.userInterfaceStyle == .dark ? UIColor(red: 0.80, green: 0.84, blue: 0.92, alpha: 1) : UIColor(red: 0.30, green: 0.34, blue: 0.43, alpha: 1) })
 }
 extension ShapeStyle where Self == Color {
     static var rvViolet: Color { .rvViolet }

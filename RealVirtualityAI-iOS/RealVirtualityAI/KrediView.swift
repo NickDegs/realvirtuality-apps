@@ -22,7 +22,7 @@ struct KrediView: View {
                     HStack {
                         Text(yerel.t("krediBaslik")).font(.title2.bold())
                         Spacer()
-                        Button { dismiss() } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.secondary).font(.title2) }
+                        Button { dismiss() } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.rvMut).font(.title2) }
                     }
                     Text("⚡ \(api.kredi) " + yerel.t("krediVar")).foregroundStyle(.rvCyan).frame(maxWidth: .infinity, alignment: .leading)
 
@@ -40,7 +40,7 @@ struct KrediView: View {
                                 Image(systemName: "gift.fill").foregroundStyle(.yellow)
                                 Text(yerel.t("gunlukKrediAl")).font(.headline).foregroundStyle(.white)
                                 Spacer()
-                                if gunAliniyor { ProgressView() } else { Image(systemName: "chevron.right").foregroundStyle(.secondary) }
+                                if gunAliniyor { ProgressView() } else { Image(systemName: "chevron.right").foregroundStyle(.rvMut) }
                             }.padding().frame(maxWidth: .infinity).rvGlass(16, interactive: true)
                         }.disabled(gunAliniyor)
                         if !gunMesaj.isEmpty { Text(gunMesaj).font(.caption).foregroundStyle(gunMesaj.hasPrefix("🎁") ? .green : .orange) }
@@ -49,7 +49,7 @@ struct KrediView: View {
                     // DAVET ET → KREDİ KAZAN
                     VStack(alignment: .leading, spacing: 10) {
                         HStack(spacing: 8) { Image(systemName: "person.2.fill").foregroundStyle(.rvViolet); Text(yerel.t("davetEt")).font(.headline) }
-                        Text(yerel.t("davetAciklama")).font(.caption).foregroundStyle(.secondary)
+                        Text(yerel.t("davetAciklama")).font(.caption).foregroundStyle(.rvMut)
                         if let d = davet {
                             HStack {
                                 Text(d.kod).font(.title3.bold().monospaced()).foregroundStyle(.rvCyan)
@@ -81,7 +81,7 @@ struct KrediView: View {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 3) {
                                         Text(p.displayName).font(.headline)
-                                        Text(p.description).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                                        Text(p.description).font(.caption).foregroundStyle(.rvMut).lineLimit(1)
                                     }
                                     Spacer()
                                     if store.aliniyor == p.id { ProgressView() }
@@ -98,7 +98,7 @@ struct KrediView: View {
                         Text(store.mesaj).font(.subheadline).foregroundStyle(store.mesaj.hasPrefix("✓") ? .green : .orange)
                     }
                     Text(yerel.t("krediNotu"))
-                        .font(.caption2).foregroundStyle(.secondary).multilineTextAlignment(.center).padding(.top, 6)
+                        .font(.caption2).foregroundStyle(.rvMut).multilineTextAlignment(.center).padding(.top, 6)
                 }
                 .padding(20)
             }
