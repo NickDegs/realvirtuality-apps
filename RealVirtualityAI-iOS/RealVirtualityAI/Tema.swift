@@ -47,3 +47,34 @@ final class Tema: ObservableObject {
     var grad: LinearGradient { palet.grad }
     var renkSemasi: ColorScheme? { mod == "koyu" ? .dark : mod == "acik" ? .light : nil }
 }
+
+// MARK: - Tasarım Sistemi (RV) — merkezi tipografi + metin renkleri (okunurluk + şıklık)
+// Apple "okunması zor yazı tipi" redini çözmek için: net hiyerarşi, yeterli boyut/ağırlık,
+// yüksek kontrast, rounded tasarım (modern + okunaklı). Tüm ekranlar bu ölçekleri kullanır.
+enum RVType {
+    static let ekranBaslik   = Font.system(size: 30, weight: .bold,     design: .rounded)   // ekran başlığı
+    static let baslik        = Font.system(size: 22, weight: .bold,     design: .rounded)   // bölüm/kart başlığı
+    static let altBaslik     = Font.system(size: 18, weight: .semibold, design: .rounded)
+    static let govde         = Font.system(size: 16, weight: .regular,  design: .rounded)   // ana metin (min 16 — okunaklı)
+    static let govdeVurgu    = Font.system(size: 16, weight: .semibold, design: .rounded)
+    static let kucuk         = Font.system(size: 14, weight: .medium,   design: .rounded)   // ikincil
+    static let etiket        = Font.system(size: 12.5, weight: .semibold, design: .rounded) // rozet/etiket (min ~13)
+    static let buton         = Font.system(size: 17, weight: .semibold, design: .rounded)
+}
+
+extension Color {
+    // Yüksek kontrastlı metin renkleri (hem koyu hem açık modda okunaklı)
+    static let rvBirincil  = Color.primary                    // ana metin
+    static let rvIkincil   = Color.primary.opacity(0.72)      // ikincil (eski .secondary'den daha okunaklı)
+    static let rvSolgun    = Color.primary.opacity(0.55)      // en soluk (ipucu) — yine de okunur
+}
+
+extension View {
+    // Kolay uygulama: Text("...").rvGovde()  gibi
+    func rvEkranBaslik() -> some View { self.font(RVType.ekranBaslik) }
+    func rvBaslik()      -> some View { self.font(RVType.baslik) }
+    func rvAltBaslik()   -> some View { self.font(RVType.altBaslik) }
+    func rvGovde()       -> some View { self.font(RVType.govde).lineSpacing(2) }
+    func rvKucuk()       -> some View { self.font(RVType.kucuk) }
+    func rvEtiket()      -> some View { self.font(RVType.etiket) }
+}

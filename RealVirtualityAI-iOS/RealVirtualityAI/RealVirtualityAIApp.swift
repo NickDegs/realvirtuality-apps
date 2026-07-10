@@ -87,7 +87,6 @@ let ARACLAR: [Arac] = [
     Arac(id: "donustur", ikon: "wand.and.stars", kind: .gorselArti, kredi: 5, kategori: .gorsel),
     Arac(id: "upscale", ikon: "arrow.up.left.and.arrow.down.right", kind: .gorselYukle, kredi: 3, kategori: .gorsel),
     Arac(id: "bgremove", ikon: "scissors", kind: .gorselYukle, kredi: 2, kategori: .gorsel),
-    Arac(id: "faceswap", ikon: "person.2.crop.square.stack.fill", kind: .faceswap, kredi: 6, kategori: .gorsel, oneCikan: true),
     Arac(id: "tryon", ikon: "tshirt.fill", kind: .faceswap, kredi: 8, kategori: .gorsel, oneCikan: true),
     Arac(id: "duzenle", ikon: "wand.and.rays", kind: .gorselArti, kredi: 7, kategori: .gorsel, oneCikan: true),
     Arac(id: "bgreplace", ikon: "person.and.background.dotted", kind: .gorselArti, kredi: 7, kategori: .gorsel),

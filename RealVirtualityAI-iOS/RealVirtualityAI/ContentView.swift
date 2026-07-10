@@ -128,7 +128,8 @@ struct KategoriView: View {
         }
         ToolbarItem(placement: .topBarTrailing) {
             HStack(spacing: 8) {
-                Button { api.girisli ? (krediAcik = true) : (girisAcik = true) } label: {
+                // Misafir de kredi/satın alma ekranına doğrudan erişir (kayıt zorunlu DEĞİL — Apple 5.1.1v)
+                Button { krediAcik = true } label: {
                     HStack(spacing: 4) {
                         Image(systemName: "bolt.fill").font(.caption2).foregroundStyle(.yellow)
                         Text("\(api.girisli ? api.kredi : api.freeKalan)").font(.subheadline.bold()).foregroundStyle(.rvText)
@@ -139,7 +140,7 @@ struct KategoriView: View {
                 }
                 Menu {
                     Button { ayarlarAcik = true } label: { Label(yerel.t("gorunumTema"), systemImage: "paintpalette.fill") }
-                    Button { api.girisli ? (krediAcik = true) : (girisAcik = true) } label: { Label(yerel.t("krediAl"), systemImage: "bolt.fill") }
+                    Button { krediAcik = true } label: { Label(yerel.t("krediAl"), systemImage: "bolt.fill") }
                     Divider()
                     Button { girisAcik = true } label: { Label(api.girisli ? (api.email ?? yerel.t("hesabim")) : yerel.t("girisYap"), systemImage: "person.crop.circle") }
                 } label: {
