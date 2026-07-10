@@ -162,7 +162,7 @@ struct SatinAlView: View {
                                 }
                                 .font(.headline.bold()).foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 16)
                                 .background(tema.grad, in: .rect(cornerRadius: 16))
-                            }.disabled(bekle || secili == nil || (isletmeMi && isletmeAd.trimmingCharacters(in: .whitespaces).isEmpty))
+                            }.disabled(bekle)   // buton HER ZAMAN tepki verir; eksik alan varsa satinAl() uyarır (Apple 2.1b fiksi)
                             .padding(.top, 6)
 
                             Text("Abonelik otomatik yenilenir, dilediğin an iptal edebilirsin. Ödeme Apple hesabından alınır.")
@@ -197,12 +197,12 @@ struct SatinAlView: View {
         return Button { secili = p } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(p.displayName).font(.subheadline.bold()).foregroundStyle(.rvText)
+                    Text(p.displayName).font(.subheadline.bold()).foregroundStyle(.rvText).lineLimit(1).minimumScaleFactor(0.7)
                     Text(p.description).font(.caption2).foregroundStyle(.rvMut).lineLimit(1)
                 }
-                Spacer()
+                Spacer(minLength: 8)
                 VStack(alignment: .trailing, spacing: 1) {
-                    Text(gosterFiyat).font(.subheadline.bold()).foregroundStyle(tema.c2)
+                    Text(gosterFiyat).font(.subheadline.bold()).foregroundStyle(tema.c2).lineLimit(1).minimumScaleFactor(0.6)
                     if lokalFiyatlar[p.id] != nil {
                         Text(p.displayPrice).font(.system(size: 9)).foregroundStyle(.rvMut)
                     }
@@ -268,7 +268,14 @@ struct SatinAlView: View {
     }
 
     func satinAl() async {
-        guard let p = secili else { return }
+        // Buton her zaman tepki verir; eksik alanları burada net uyarı ile bildir (Apple 2.1b)
+        if isletmeMi && isletmeAd.trimmingCharacters(in: .whitespaces).isEmpty {
+            hata = "Lütfen önce işletme adını girin."; return
+        }
+        guard let p = secili ?? planlar.first else {
+            hata = "Bir abonelik planı seçin (planlar yüklenemediyse internet bağlantını kontrol et)."; return
+        }
+        secili = p
         hata = ""; bekle = true; defer { bekle = false }
         let (jws, tx, h) = await magaza.satinAl(p)
         if let h = h { if h != "iptal" { hata = h }; return }
