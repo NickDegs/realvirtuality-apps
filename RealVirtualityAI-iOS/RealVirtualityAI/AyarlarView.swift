@@ -53,6 +53,7 @@ struct AyarlarView: View {
                             .padding(.top, 6)
                         }
                     }
+                    .padding(.horizontal, 20).padding(.top, 8)   // ekran kenarına yapışma/taşma fiksi (iPhone 17)
                     // Gizlilik & Kullanım Koşulları
                     HStack(spacing: 16) {
                         Link(yerel.p("gizlilikPolitikasi"), destination: URL(string: "https://nickdegs.com/legal/privacy")!)
