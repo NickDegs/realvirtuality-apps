@@ -121,14 +121,14 @@ jobs:
           /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName Tarif Abi" ios/App/App/Info.plist 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Add :CFBundleDisplayName string Tarif Abi" ios/App/App/Info.plist || true
           /usr/libexec/PlistBuddy -c "Set :CFBundleName Tarif Abi" ios/App/App/Info.plist 2>/dev/null || true
-          # Sürüm 1.0.4 (gerçek AdMob reklamları) + benzersiz/artan build numarası (run_id)
+          # Sürüm 1.0.5 (gerçek AdMob reklamları) + benzersiz/artan build numarası (run_id)
           BUILD_NO=${{ github.run_id }}
-          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0.4" ios/App/App/Info.plist 2>/dev/null || \
-          /usr/libexec/PlistBuddy -c "Add :CFBundleShortVersionString string 1.0.4" ios/App/App/Info.plist || true
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0.5" ios/App/App/Info.plist 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Add :CFBundleShortVersionString string 1.0.5" ios/App/App/Info.plist || true
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NO" ios/App/App/Info.plist 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string $BUILD_NO" ios/App/App/Info.plist || true
           PBX2=ios/App/App.xcodeproj/project.pbxproj
-          sed -i '' -E "s/MARKETING_VERSION = [^;]+;/MARKETING_VERSION = 1.0.4;/g" "$PBX2" 2>/dev/null || true
+          sed -i '' -E "s/MARKETING_VERSION = [^;]+;/MARKETING_VERSION = 1.0.5;/g" "$PBX2" 2>/dev/null || true
           sed -i '' -E "s/CURRENT_PROJECT_VERSION = [^;]+;/CURRENT_PROJECT_VERSION = $BUILD_NO;/g" "$PBX2" 2>/dev/null || true
           # Şifreleme yok
           /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool false" ios/App/App/Info.plist 2>/dev/null || \

@@ -2164,8 +2164,6 @@ function closeDetail(){
   overlay.addEventListener('animationend',()=>{
     overlay.classList.remove('open','closing');
   },{once:true});
-  // Doğal geçiş noktası: tarif kapanınca ara sıra tam ekran reklam (premium hariç)
-  if(typeof maybeShowInterstitial==='function') maybeShowInterstitial();
 }
 
 function toggleFavD(){
@@ -2749,14 +2747,13 @@ function _showIntegrityBlock(offline){
 
 // ===== ADMOB =====
 // ===== AdMob reklam birimleri =====
+// SADECE alttaki ince banner. Tam ekran GEÇİŞ (interstitial) reklamı 2026-07-17'de
+// kaldırıldı (Barış kararı: rahatsız ediyordu). "Reklamsız"/Premium banner'ı kaldırır.
 // iOS = gerçek (canlı app). Android henüz AdMob'da yok → test ID (yayında değil, zararsız).
 const ADMOB_BANNER_IOS='ca-app-pub-6398211808735195/3527307300';
-const ADMOB_INTERSTITIAL_IOS='ca-app-pub-6398211808735195/5666806945';
 const ADMOB_BANNER_TEST='ca-app-pub-3940256099942544/6300978111';
-const ADMOB_INTERSTITIAL_TEST='ca-app-pub-3940256099942544/1033173712';
 function _isIOS(){ try{return window.Capacitor?.getPlatform?.()==='ios';}catch(e){return false;} }
 function bannerAdId(){ return _isIOS()?ADMOB_BANNER_IOS:ADMOB_BANNER_TEST; }
-function interstitialAdId(){ return _isIOS()?ADMOB_INTERSTITIAL_IOS:ADMOB_INTERSTITIAL_TEST; }
 
 async function initAdMob(){
   // ATT prompt'u app AKTİF değilken (launch/splash) çağrılırsa iOS sessizce yutar →
@@ -2788,34 +2785,8 @@ async function initAdMob(){
         isTesting:false
       });
       window._adBannerShown=true;
-      // Geçiş (tam ekran) reklamını arka planda hazırla
-      _prepInterstitial();
     }
   }catch(e){console.warn('AdMob init:',e);}
-}
-
-// ===== Geçiş (Interstitial) reklamı — doğal geçişte, rahatsız etmeden, premium hariç =====
-var _interstitialReady=false, _lastInterstitial=0, _detailCloseCount=0;
-async function _prepInterstitial(){
-  try{
-    const{AdMob}=window.Capacitor?.Plugins||{}; if(!AdMob)return;
-    await AdMob.prepareInterstitial({adId:interstitialAdId(), isTesting:false});
-    _interstitialReady=true;
-  }catch(e){ _interstitialReady=false; }
-}
-async function maybeShowInterstitial(){
-  if(isNoAds())return;                       // premium/reklamsız → asla
-  const{AdMob}=window.Capacitor?.Plugins||{}; if(!AdMob)return;
-  _detailCloseCount++;
-  const now=Date.now();
-  if(_detailCloseCount<3) return;            // en az 3. tarif kapanışı
-  if(now-_lastInterstitial < 120000) return; // son reklamdan en az 2 dk geçsin
-  if(!_interstitialReady){ _prepInterstitial(); return; }
-  try{
-    await AdMob.showInterstitial();
-    _lastInterstitial=now; _detailCloseCount=0; _interstitialReady=false;
-    _prepInterstitial();                     // sonraki için hazırla
-  }catch(e){ _interstitialReady=false; _prepInterstitial(); }
 }
 
 // ===== iOS 26 SMOOTH ANIMATION ENGINE =====
