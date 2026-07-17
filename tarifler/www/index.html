@@ -1387,7 +1387,11 @@ let activeCat=null;
 let searchMode='name';
 let currentRecipe=null;
 let sTimer=null;
-const MAPI='https://www.themealdb.com/api/json/v1/1/';
+// Yemek verisi KENDİ AYNAMIZDAN gelir: themealdb.com 2026-07-17'de komple çöktü (HTTP 500)
+// ve uygulamanın tüm içeriği gitti. Ayna = 744 tarif + tüm görseller bizim sunucuda,
+// birebir aynı JSON formatı. (/opt/tarifler-mealdb, haftalık refresh; themealdb çökse
+// tazeleme iptal olur, veri korunur.) Böylece üçüncü parti çökmesi bizi etkilemez.
+const MAPI='https://realvirtuality.app/mealdb/';
 const CAPI='https://www.thecocktaildb.com/api/json/v1/1/';
 const TTL=86400000;
 let favs=JSON.parse(localStorage.getItem('favs2')||'{}');
