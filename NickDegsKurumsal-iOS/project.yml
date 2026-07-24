@@ -24,6 +24,7 @@ targets:
       path: NickDegsKurumsal/Info.plist
       properties:
         CFBundleDisplayName: NickDegs Business
+        CFBundleShortVersionString: "1.1"
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         ITSAppUsesNonExemptEncryption: false
