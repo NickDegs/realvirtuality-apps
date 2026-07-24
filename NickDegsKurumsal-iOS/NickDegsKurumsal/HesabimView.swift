@@ -18,6 +18,7 @@ struct HesabimView: View {
     @State private var restoreMsg = ""
     @State private var silOnay = false
     @StateObject private var magaza = Magaza()
+    @Environment(\.openURL) private var acURL
 
     var body: some View {
         NavigationStack {
@@ -101,19 +102,32 @@ struct HesabimView: View {
                 Text("Aktif Aboneliklerin").font(.headline.bold()).foregroundStyle(.rvText)
             }
             ForEach(magaza.aktifEntitlementlar) { e in
-                HStack {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(magaza.urun(e.id)?.displayName ?? Magaza.urunAdi(e.id))
-                            .font(.subheadline.bold()).foregroundStyle(tema.c1)
-                        if let b = e.bitis {
-                            Text("Yenilenme: \(b.formatted(date: .abbreviated, time: .omitted))")
-                                .font(.caption2).foregroundStyle(.rvMut)
-                        } else {
-                            Text("Aktif").font(.caption2).foregroundStyle(.green)
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(Magaza.urunAdi(e.id))     // net Türkçe ad (ör. İşletme Profesyonel (Yıllık))
+                                .font(.subheadline.bold()).foregroundStyle(tema.c1)
+                            if let b = e.bitis {
+                                Text("Yenilenme: \(b.formatted(date: .abbreviated, time: .omitted))")
+                                    .font(.caption2).foregroundStyle(.rvMut)
+                            } else {
+                                Text("Aktif").font(.caption2).foregroundStyle(.green)
+                            }
+                        }
+                        Spacer()
+                        Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
+                    }
+                    // İşletme aboneliği → Dashboard uygulamasında işletme sahibi olarak aç
+                    if e.id.contains(".isletme.") {
+                        Button {
+                            dashboardUygulamasiniAc(token: UserDefaults.standard.string(forKey: "biz_panel_token"), acURL)
+                        } label: {
+                            Label("Dashboard'da Aç (İşletme Sahibi)", systemImage: "arrow.right.app.fill")
+                                .font(.subheadline.bold()).foregroundStyle(.white)
+                                .frame(maxWidth: .infinity).padding(.vertical, 12)
+                                .background(tema.grad, in: .rect(cornerRadius: 12))
                         }
                     }
-                    Spacer()
-                    Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
                 }
                 .padding(12).background(Color.rvCard, in: .rect(cornerRadius: 12))
             }

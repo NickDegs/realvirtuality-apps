@@ -1,6 +1,21 @@
 import SwiftUI
 import StoreKit
 
+// NickDegs Dashboard uygulamasını aç. Kurulu değilse App Store'daki Dashboard
+// sayfasını açar (App Store ID 6782606941) — web sitesine DÜŞMEZ.
+@MainActor
+func dashboardUygulamasiniAc(token: String?, _ ac: OpenURLAction) {
+    let dashYukle = URL(string: "https://apps.apple.com/app/id6782606941")!
+    let scheme = (token?.isEmpty == false) ? "nickdegs-panel://login?t=\(token!)" : "nickdegs-panel://"
+    if let deeplink = URL(string: scheme) {
+        ac(deeplink) { acildi in
+            if !acildi { ac(dashYukle) }   // Dashboard app yoksa yükleme sayfası
+        }
+    } else {
+        ac(dashYukle)
+    }
+}
+
 // MARK: - StoreKit Mağaza yöneticisi (App Store içi satın alma + sunucu provision)
 @MainActor
 final class Magaza: ObservableObject {
@@ -291,32 +306,22 @@ struct SatinAlView: View {
             if let url = s["url"] as? String, !url.isEmpty { satir("Panel adresi", url) }
             if let sf = s["sifre"] as? String, !sf.isEmpty { satir("Şifre (kaydet)", sf) }
 
-            // Panele git — direkt tetiklenir: önce Dashboard app'i dener, kurulu değilse
-            // web paneli açar (her zaman çalışır, 302 ile otomatik giriş yapılır).
-            if let urlStr = s["url"] as? String, let webURL = URL(string: urlStr) {
-                Button {
-                    let pt = (s["panel_token"] as? String) ?? ""
-                    if !pt.isEmpty, let deeplink = URL(string: "nickdegs-panel://login?t=\(pt)") {
-                        acURL(deeplink) { acildi in
-                            if !acildi { acURL(webURL) }   // Dashboard app yoksa web panele düş
-                        }
-                    } else {
-                        acURL(webURL)
-                    }
-                } label: {
-                    HStack(spacing: 10) {
-                        Image(systemName: "arrow.right.app.fill")
-                        Text("Paneli Hemen Aç")
-                    }
-                    .font(.headline.bold()).foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 16)
-                    .background(tema.grad, in: .rect(cornerRadius: 16))
-                }.padding(.top, 4)
-                Text("Panelin açılır ve otomatik giriş yapılır.")
-                    .font(.caption2).foregroundStyle(.rvMut).multilineTextAlignment(.center)
-            } else if let kod = s["dashboard_kod"] as? String ?? s["tenant"] as? String {
+            // Panele git → NickDegs Dashboard uygulamasını aç (işletme sahibi görünümü).
+            // Kurulu değilse App Store'daki Dashboard sayfasına gider — web'e DÜŞMEZ.
+            Button {
+                dashboardUygulamasiniAc(token: s["panel_token"] as? String, acURL)
+            } label: {
+                HStack(spacing: 10) {
+                    Image(systemName: "arrow.right.app.fill")
+                    Text("Dashboard'da Aç")
+                }
+                .font(.headline.bold()).foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 16)
+                .background(tema.grad, in: .rect(cornerRadius: 16))
+            }.padding(.top, 4)
+            Text("NickDegs Dashboard uygulaması işletme sahibi olarak açılır. Kurulu değilse App Store'dan yükleyebilirsin.")
+                .font(.caption2).foregroundStyle(.rvMut).multilineTextAlignment(.center)
+            if let kod = s["dashboard_kod"] as? String ?? s["tenant"] as? String {
                 satir("Dashboard giriş kodu", kod)
-                Text("NickDegs Dashboard uygulamasından bu kod ile giriş yapabilirsin.")
-                    .font(.caption).foregroundStyle(.rvMut).padding(.top, 4)
             }
 
             Button("Kapat") { dismiss() }.font(.subheadline).foregroundStyle(.rvMut)
@@ -347,6 +352,10 @@ struct SatinAlView: View {
         if r["ok"] as? Bool == true {
             // Provision başarılı → şimdi finish()
             if let tx = tx { await tx.finish() }
+            // Dashboard oto-giriş token'ını sakla (Hesabım'daki 'Dashboard'da Aç' bunu kullanır)
+            if let pt = r["panel_token"] as? String, !pt.isEmpty {
+                UserDefaults.standard.set(pt, forKey: "biz_panel_token")
+            }
             sonuc = r
         } else {
             // Provision başarısız — transaction bitmedi, Apple yeniden deneyecek
