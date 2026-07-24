@@ -90,6 +90,7 @@ struct SatinAlView: View {
     @EnvironmentObject var yerel: Yerel
     @StateObject private var magaza = Magaza()
     @Environment(\.dismiss) var dismiss
+    @Environment(\.openURL) private var acURL
     @State private var isletmeAd = ""
     @State private var seciliSektor: Sektor = SEKTORLER[0]
     @State private var secili: Product? = nil
@@ -237,10 +238,19 @@ struct SatinAlView: View {
             if let url = s["url"] as? String, !url.isEmpty { satir("Panel adresi", url) }
             if let sf = s["sifre"] as? String, !sf.isEmpty { satir("Şifre (kaydet)", sf) }
 
-            // Otomatik giriş butonu — panel_token varsa tek tıkla Dashboard açılır
-            if let pt = s["panel_token"] as? String, !pt.isEmpty,
-               let deeplink = URL(string: "nickdegs-panel://login?t=\(pt)") {
-                Link(destination: deeplink) {
+            // Panele git — direkt tetiklenir: önce Dashboard app'i dener, kurulu değilse
+            // web paneli açar (her zaman çalışır, 302 ile otomatik giriş yapılır).
+            if let urlStr = s["url"] as? String, let webURL = URL(string: urlStr) {
+                Button {
+                    let pt = (s["panel_token"] as? String) ?? ""
+                    if !pt.isEmpty, let deeplink = URL(string: "nickdegs-panel://login?t=\(pt)") {
+                        acURL(deeplink) { acildi in
+                            if !acildi { acURL(webURL) }   // Dashboard app yoksa web panele düş
+                        }
+                    } else {
+                        acURL(webURL)
+                    }
+                } label: {
                     HStack(spacing: 10) {
                         Image(systemName: "arrow.right.app.fill")
                         Text("Paneli Hemen Aç")
@@ -248,7 +258,7 @@ struct SatinAlView: View {
                     .font(.headline.bold()).foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 16)
                     .background(tema.grad, in: .rect(cornerRadius: 16))
                 }.padding(.top, 4)
-                Text("NickDegs Dashboard uygulaması açılır ve otomatik giriş yapılır.")
+                Text("Panelin açılır ve otomatik giriş yapılır.")
                     .font(.caption2).foregroundStyle(.rvMut).multilineTextAlignment(.center)
             } else if let kod = s["dashboard_kod"] as? String ?? s["tenant"] as? String {
                 satir("Dashboard giriş kodu", kod)

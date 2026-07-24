@@ -5,7 +5,7 @@ options:
     iOS: "26.0"
 settings:
   base:
-    MARKETING_VERSION: "1.1"
+    MARKETING_VERSION: "1.2"
     CURRENT_PROJECT_VERSION: "1"
     PRODUCT_BUNDLE_IDENTIFIER: com.nickdegs.business
     TARGETED_DEVICE_FAMILY: "1"            # 1 = sadece iPhone
@@ -24,7 +24,7 @@ targets:
       path: NickDegsKurumsal/Info.plist
       properties:
         CFBundleDisplayName: NickDegs Business
-        CFBundleShortVersionString: "1.1"
+        CFBundleShortVersionString: "1.2"
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         ITSAppUsesNonExemptEncryption: false
