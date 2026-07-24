@@ -34,6 +34,11 @@ struct HesabimView: View {
                             Text("Satın aldıklarını görmek için numaranı doğrula").font(.subheadline).foregroundStyle(.rvMut).multilineTextAlignment(.center)
                         }
 
+                        // Bu Apple Kimliğinde aktif abonelikler — SMS'siz, StoreKit'ten direkt
+                        if !magaza.aktifEntitlementlar.isEmpty {
+                            aktifAbonelikKart
+                        }
+
                         if let s = satinaldiklarim {
                             satinAldiklarimGorunum(s)
                         } else {
@@ -80,8 +85,42 @@ struct HesabimView: View {
                 }
             }
             .navigationTitle("Hesabım").navigationBarTitleDisplayMode(.inline)
-            .task { oturumGeriYukle() }   // kapat-aç'ta üyeliği geri yükle (SMS sorma)
+            .task {
+                oturumGeriYukle()                    // kapat-aç'ta üyeliği geri yükle (SMS sorma)
+                await magaza.yukle()                  // ürün adlarını çek
+                await magaza.entitlementleriYukle()   // aktif abonelikleri StoreKit'ten oku
+            }
         }.tint(tema.c1)
+    }
+
+    // MARK: Aktif abonelikler (StoreKit currentEntitlements — SMS gerektirmez)
+    var aktifAbonelikKart: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                Image(systemName: "checkmark.seal.fill").foregroundStyle(.green)
+                Text("Aktif Aboneliklerin").font(.headline.bold()).foregroundStyle(.rvText)
+            }
+            ForEach(magaza.aktifEntitlementlar) { e in
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(magaza.urun(e.id)?.displayName ?? Magaza.urunAdi(e.id))
+                            .font(.subheadline.bold()).foregroundStyle(tema.c1)
+                        if let b = e.bitis {
+                            Text("Yenilenme: \(b.formatted(date: .abbreviated, time: .omitted))")
+                                .font(.caption2).foregroundStyle(.rvMut)
+                        } else {
+                            Text("Aktif").font(.caption2).foregroundStyle(.green)
+                        }
+                    }
+                    Spacer()
+                    Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
+                }
+                .padding(12).background(Color.rvCard, in: .rect(cornerRadius: 12))
+            }
+            Text("App Store'dan aldığın aktif aboneliklerin. Yönetmek için: Ayarlar > Apple Kimliği > Abonelikler.")
+                .font(.caption2).foregroundStyle(.rvMut)
+        }
+        .padding(16).background(Color.rvCard.opacity(0.5), in: .rect(cornerRadius: 16))
     }
 
     // MARK: SMS giriş formu

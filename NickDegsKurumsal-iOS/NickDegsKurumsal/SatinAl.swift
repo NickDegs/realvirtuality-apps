@@ -46,10 +46,48 @@ final class Magaza: ObservableObject {
     func restorePurchases() async -> String {
         do {
             try await AppStore.sync()
+            await entitlementleriYukle()
             return "ok"
         } catch {
             return error.localizedDescription
         }
+    }
+
+    // Bu Apple Kimliği/cihazda AKTİF olan abonelikler (StoreKit currentEntitlements)
+    // — SMS/sunucu gerektirmez, satın alım anında görünür.
+    struct EntitlementBilgi: Identifiable {
+        let id: String        // productId
+        let bitis: Date?      // yenilenme/bitiş tarihi
+    }
+    @Published var aktifEntitlementlar: [EntitlementBilgi] = []
+
+    func entitlementleriYukle() async {
+        var list: [EntitlementBilgi] = []
+        for await sonuc in Transaction.currentEntitlements {
+            guard case .verified(let t) = sonuc else { continue }
+            if t.revocationDate != nil { continue }              // iptal/iade edilmiş
+            guard Magaza.urunIdleri.contains(t.productID) else { continue }
+            if !list.contains(where: { $0.id == t.productID }) {
+                list.append(EntitlementBilgi(id: t.productID, bitis: t.expirationDate))
+            }
+        }
+        aktifEntitlementlar = list.sorted { $0.id < $1.id }
+    }
+
+    // productId → okunabilir ad (StoreKit ürünü yüklü değilse yedek)
+    static func urunAdi(_ id: String) -> String {
+        let map: [String: String] = [
+            "com.nickdegs.business.isletme.baslangic.yil": "İşletme Başlangıç (Yıllık)",
+            "com.nickdegs.business.isletme.pro.yil":       "İşletme Profesyonel (Yıllık)",
+            "com.nickdegs.business.isletme.kurumsal.yil":  "İşletme Kurumsal (Yıllık)",
+            "com.nickdegs.business.guvenlik.ay":  "Güvenlik (Aylık)",
+            "com.nickdegs.business.guvenlik.yil": "Güvenlik (Yıllık)",
+            "com.nickdegs.business.hush.ay":      "Hush Sohbet (Aylık)",
+            "com.nickdegs.business.hush.yil":     "Hush Sohbet (Yıllık)",
+            "com.nickdegs.business.sunucu.ay":    "Sunucu (Aylık)",
+            "com.nickdegs.business.sunucu.yil":   "Sunucu (Yıllık)",
+        ]
+        return map[id] ?? id
     }
 
     // Provision: işletme aboneliği alındıysa sunucuda tenant + Dashboard hesabı açtırır
@@ -107,6 +145,10 @@ struct SatinAlView: View {
         return p.isEmpty ? magaza.urunler.filter { $0.id.contains("isletme") } : p
     }
     private var isletmeMi: Bool { urun.sekme != "guvenlik" }
+    // Bu ekranda gösterilen planlardan zaten sahip olunanlar (tekrar satın almayı önler)
+    private var sahipOlunanPlanlar: [Product] {
+        planlar.filter { p in magaza.aktifEntitlementlar.contains { $0.id == p.id } }
+    }
 
     var body: some View {
         NavigationStack {
@@ -154,6 +196,16 @@ struct SatinAlView: View {
                                 ForEach(planlar, id: \.id) { p in planKart(p) }
                             }
 
+                            // Zaten sahip olunan abonelik varsa uyar (tekrar satın alma yerine yönlendir)
+                            if !sahipOlunanPlanlar.isEmpty {
+                                HStack(spacing: 10) {
+                                    Image(systemName: "checkmark.seal.fill").foregroundStyle(.green)
+                                    Text("Bu aboneliğe zaten sahipsin. 'Hesabım' sekmesinden görebilir, App Store > Abonelikler'den yönetebilirsin.")
+                                        .font(.caption).foregroundStyle(.rvText)
+                                }
+                                .padding(12).background(Color.green.opacity(0.12), in: .rect(cornerRadius: 12))
+                            }
+
                             if !hata.isEmpty { Text(hata).font(.caption).foregroundStyle(.orange) }
 
                             Button { Task { await satinAl() } } label: {
@@ -189,6 +241,7 @@ struct SatinAlView: View {
         .task {
             await magaza.yukle(); secili = planlar.first
             await lokalFiyatYukle()
+            await magaza.entitlementleriYukle()   // zaten sahip olunanları işaretle
         }
     }
 
